@@ -37,7 +37,9 @@ let msg: string = "Score: ${x}";           // 错误：x 是运行时值
 
 ```mcrs
 let score: int = scoreboard_get(@s, #kills);
+let player: Player = @s;
 say(f"You have {score} kills!");
+say(f"Welcome {player}!");
 title(@s, f"Score: {score}");
 actionbar(@s, f"HP: {hp}");
 ```
@@ -60,7 +62,7 @@ tellraw @a [{"text":"You have "},{"score":{"name":"$t0","objective":"rs"}},{"tex
 
 - f-string 只能用于输出函数
 - 不能把 f-string 的结果存入变量
-- 占位符必须是 `int` 类型（用于记分板值）
+- 占位符可以是运行时记分板值，也可以是 `Player` 这类受支持的显示类型
 
 ```mcrs
 // OK

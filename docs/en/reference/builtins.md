@@ -20,6 +20,13 @@ subtitle(@p, "Congratulations!");
 actionbar(@a, "Score: ${score}");
 ```
 
+Chat and display builtins accept runtime f-strings in v1.2:
+
+```rs
+say(f"Welcome {player}!");
+actionbar(@a, f"Score: {score}");
+```
+
 ## Entity Management
 
 | Function | Description |
@@ -218,23 +225,22 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | Transform array |
 | `filter(array, lambda)` | Filter array |
 | `random(min, max)` | Random integer |
-| `setTimeout(delay, callback)` | Run callback once after delay |
-| `setInterval(interval, callback)` | Run callback repeatedly |
-| `clearInterval(id)` | Cancel repeating callback |
+
+## Scheduling
+
+| Function | Description |
+|----------|-------------|
+| `setTimeout(delay, callback)` | Run a callback once after `delay` ticks |
+| `setInterval(interval, callback)` | Run a callback repeatedly |
+| `clearInterval(id)` | Cancel a repeating callback |
 
 ```rs
-repeat(5) {
-    summon("zombie", ~0, ~0, ~0);
-}
-
-let result = random(1, 100);
-
-setTimeout(100, () => {
+setTimeout(200, () => {
     say("Delayed!");
 });
 
 let id = setInterval(20, () => {
-    say("Repeating!");
+    actionbar(@a, f"Tick: {score}");
 });
 
 clearInterval(id);

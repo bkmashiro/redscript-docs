@@ -17,14 +17,14 @@ hero:
 features:
   - icon: 🎯
     title: Type Safe
-    details: Catch errors at compile time, not in-game. Variables, functions, and structs are fully typed.
+    details: Catch errors at compile time, not in-game. Variables, functions, structs, and entity narrowing are fully typed.
   - icon: ⚡
     title: Clean Syntax
-    details: Write game logic in a familiar C-like syntax. No more scoreboard spaghetti.
+    details: Write game logic with impl blocks, methods, events, and f-strings instead of scoreboard spaghetti.
   - icon: 🔧
-    title: Rich Tooling
-    details: VSCode extension with syntax highlighting, auto-complete, and error checking.
+    title: Runtime Helpers
+    details: Timer OOP APIs, setTimeout, setInterval, and a growing standard library accelerate datapack gameplay logic.
   - icon: 🚀
     title: Fast Compilation
-    details: Compile your entire project in milliseconds. Hot reload support included.
+    details: Compile your project with optimizer passes including dead code elimination, then iterate quickly with tooling support.
 ---

@@ -1,6 +1,6 @@
 # 标准库
 
-RedScript 包含常用工具函数的标准库。
+RedScript 包含常用工具函数的标准库，并在 v1.2 中新增了 Timer OOP API 与 313 个 Minecraft 标签常量。
 
 ## 使用方法
 
@@ -177,6 +177,8 @@ fn update_timer() {
 - `timer_tick(id)`
 - `timer_done(id)`
 
+对于新代码，推荐优先使用面向对象风格 API。它和 `impl` 块配合自然，也更方便把计时器状态与行为放在一起。
+
 ### 调度辅助函数
 
 RedScript 还提供了基于 Minecraft 调度系统的回调式计时辅助函数。
@@ -200,6 +202,22 @@ clearInterval(id);
 | `clearInterval(id)` | 取消重复回调 |
 
 这些辅助函数会编译为通过 Minecraft `schedule function` 命令调度的生成函数。
+
+### tags.mcrs
+
+用于物品、方块和实体的 Minecraft 标签常量。
+
+```mcrs
+import "stdlib/tags.mcrs"
+
+fn mark_tools() {
+    if (held_item_is(#minecraft_tools)) {
+        say("Tool detected");
+    }
+}
+```
+
+RedScript v1.2 内置了 313 个预定义标签常量，引用常用标签时不需要再手写原始字符串。
 
 ### player.mcrs
 

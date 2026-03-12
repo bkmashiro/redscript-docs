@@ -28,9 +28,16 @@ The parameter type should match the event payload. For player events, that is us
 | `EntityKill` | `entity` | An entity is killed |
 | `ItemUse` | `Player` | A player uses an item |
 
+Multiple handlers can subscribe to the same event. RedScript generates one dispatcher per event kind and invokes each matching handler.
+
 ## Example
 
 ```mcrs
+@on(PlayerJoin)
+fn welcome(player: Player) {
+    say(f"Welcome {player}!");
+}
+
 @on(BlockBreak)
 fn reward_mining(player: Player) {
     scoreboard_add_score(player, "blocks", 1);
@@ -55,6 +62,8 @@ This keeps event code concise while still compiling to regular datapack function
 ## Choosing Between `@on(...)` and Older Decorators
 
 Use `@on(...)` when you want a typed event API shared across different event kinds. Keep using specialized decorators when you want their existing semantics.
+
+`@on(...)` works well with f-strings and entity typing, so player-oriented event handlers can stay both concise and type-safe.
 
 ## Next Steps
 

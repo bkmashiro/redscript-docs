@@ -17,14 +17,14 @@ hero:
 features:
   - icon: 🎯
     title: 类型安全
-    details: 编译时捕获错误，而非游戏内。变量、函数、结构体完全类型化。
+    details: 在编译期捕获错误，而不是进游戏后才发现。变量、函数、结构体和实体收窄都具备类型信息。
   - icon: ⚡
     title: 简洁语法
-    details: 用熟悉的 C 风格语法编写游戏逻辑。告别记分板面条代码。
+    details: 用 impl 块、方法、事件和 f-string 编写游戏逻辑，告别记分板面条代码。
   - icon: 🔧
-    title: 丰富工具
-    details: VSCode 插件支持语法高亮、自动补全、错误检查。
+    title: 运行时辅助
+    details: Timer OOP API、setTimeout、setInterval 与持续扩展的标准库让玩法脚本更直接。
   - icon: 🚀
     title: 快速编译
-    details: 毫秒级编译整个项目。支持热重载。
+    details: 通过包含死代码消除在内的优化流程快速编译项目，并保持高效迭代。
 ---

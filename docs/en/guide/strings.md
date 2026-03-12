@@ -37,7 +37,9 @@ For runtime values in output, use f-strings:
 
 ```mcrs
 let score: int = scoreboard_get(@s, #kills);
+let player: Player = @s;
 say(f"You have {score} kills!");
+say(f"Welcome {player}!");
 title(@s, f"Score: {score}");
 actionbar(@s, f"HP: {hp}");
 ```
@@ -60,7 +62,7 @@ tellraw @a [{"text":"You have "},{"score":{"name":"$t0","objective":"rs"}},{"tex
 
 - f-strings can only be used in output functions
 - Cannot store f-string result in a variable
-- Placeholders must be `int` type (for scoreboard values)
+- Placeholders can include runtime scoreboard-backed values and supported typed display values such as players
 
 ```mcrs
 // OK

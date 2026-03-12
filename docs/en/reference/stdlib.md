@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript includes a standard library with common utilities.
+RedScript includes a standard library with common utilities, including the v1.2 Timer OOP API and 313 Minecraft tag constants.
 
 ## Usage
 
@@ -178,6 +178,8 @@ fn update_timer() {
 - `timer_tick(id)`
 - `timer_done(id)`
 
+The object-style API is the recommended interface for new code. It works naturally with `impl` blocks and keeps timer state grouped with its behavior.
+
 ### Scheduling helpers
 
 RedScript also includes callback-style timer helpers built on top of Minecraft scheduling.
@@ -201,6 +203,22 @@ clearInterval(id);
 | `clearInterval(id)` | Cancel a repeating callback |
 
 These helpers compile to generated functions scheduled with Minecraft's `schedule function` command.
+
+### tags.mcrs
+
+Minecraft tag constants for items, blocks, and entities.
+
+```mcrs
+import "stdlib/tags.mcrs"
+
+fn mark_tools() {
+    if (held_item_is(#minecraft_tools)) {
+        say("Tool detected");
+    }
+}
+```
+
+RedScript v1.2 ships with 313 predefined tag constants so you can reference common tags without raw strings.
 
 ### player.mcrs
 

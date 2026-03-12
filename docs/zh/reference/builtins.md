@@ -20,6 +20,13 @@ subtitle(@p, "Congratulations!");
 actionbar(@a, "Score: ${score}");
 ```
 
+在 v1.2 中，聊天和显示类内置函数也支持运行时 f-string：
+
+```rs
+say(f"Welcome {player}!");
+actionbar(@a, f"Score: {score}");
+```
+
 ## 实体管理
 
 | 函数 | 描述 |
@@ -218,23 +225,22 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | 转换数组 |
 | `filter(array, lambda)` | 过滤数组 |
 | `random(min, max)` | 随机整数 |
-| `setTimeout(delay, callback)` | 延迟一次执行回调 |
-| `setInterval(interval, callback)` | 按间隔重复执行回调 |
+
+## 调度
+
+| 函数 | 描述 |
+|------|------|
+| `setTimeout(delay, callback)` | 在 `delay` 个 tick 后执行一次回调 |
+| `setInterval(interval, callback)` | 按固定间隔重复执行回调 |
 | `clearInterval(id)` | 取消重复回调 |
 
 ```rs
-repeat(5) {
-    summon("zombie", ~0, ~0, ~0);
-}
-
-let result = random(1, 100);
-
-setTimeout(100, () => {
+setTimeout(200, () => {
     say("Delayed!");
 });
 
 let id = setInterval(20, () => {
-    say("Repeating!");
+    actionbar(@a, f"Tick: {score}");
 });
 
 clearInterval(id);

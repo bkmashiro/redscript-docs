@@ -146,6 +146,8 @@ foreach (e in @e) {
 
 Inside each matching branch, `e` is treated as the narrowed type.
 
+This is especially useful in generic event handlers such as `@on(EntityKill)` where the incoming payload starts as `entity`.
+
 ### How It Compiles
 
 Type narrowing compiles to Minecraft entity checks on the current executor:
