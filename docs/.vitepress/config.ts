@@ -1,0 +1,127 @@
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  title: 'RedScript',
+  description: 'A typed scripting language for Minecraft datapacks',
+  
+  locales: {
+    en: {
+      label: 'English',
+      lang: 'en',
+      link: '/en/',
+      themeConfig: {
+        nav: [
+          { text: 'Guide', link: '/en/guide/getting-started' },
+          { text: 'Reference', link: '/en/reference/syntax' },
+          { text: 'Online IDE', link: 'https://redscript-ide.pages.dev' },
+        ],
+        sidebar: {
+          '/en/guide/': [
+            {
+              text: 'Introduction',
+              items: [
+                { text: 'What is RedScript?', link: '/en/guide/what-is-redscript' },
+                { text: 'Getting Started', link: '/en/guide/getting-started' },
+                { text: 'Your First Datapack', link: '/en/guide/first-datapack' },
+              ]
+            },
+            {
+              text: 'Core Concepts',
+              items: [
+                { text: 'Variables & Types', link: '/en/guide/variables' },
+                { text: 'Functions', link: '/en/guide/functions' },
+                { text: 'Decorators', link: '/en/guide/decorators' },
+                { text: 'Structs & Enums', link: '/en/guide/structs-enums' },
+              ]
+            },
+            {
+              text: 'Advanced',
+              items: [
+                { text: 'Lambdas', link: '/en/guide/lambdas' },
+                { text: 'NBT Data', link: '/en/guide/nbt' },
+                { text: 'Selectors', link: '/en/guide/selectors' },
+              ]
+            }
+          ],
+          '/en/reference/': [
+            {
+              text: 'Reference',
+              items: [
+                { text: 'Syntax', link: '/en/reference/syntax' },
+                { text: 'Built-in Functions', link: '/en/reference/builtins' },
+                { text: 'Decorators', link: '/en/reference/decorators' },
+                { text: 'CLI', link: '/en/reference/cli' },
+              ]
+            }
+          ]
+        }
+      }
+    },
+    zh: {
+      label: '中文',
+      lang: 'zh-CN',
+      link: '/zh/',
+      themeConfig: {
+        nav: [
+          { text: '指南', link: '/zh/guide/getting-started' },
+          { text: '参考', link: '/zh/reference/syntax' },
+          { text: '在线 IDE', link: 'https://redscript-ide.pages.dev' },
+        ],
+        sidebar: {
+          '/zh/guide/': [
+            {
+              text: '介绍',
+              items: [
+                { text: 'RedScript 是什么？', link: '/zh/guide/what-is-redscript' },
+                { text: '快速开始', link: '/zh/guide/getting-started' },
+                { text: '第一个数据包', link: '/zh/guide/first-datapack' },
+              ]
+            },
+            {
+              text: '核心概念',
+              items: [
+                { text: '变量与类型', link: '/zh/guide/variables' },
+                { text: '函数', link: '/zh/guide/functions' },
+                { text: '装饰器', link: '/zh/guide/decorators' },
+                { text: '结构体与枚举', link: '/zh/guide/structs-enums' },
+              ]
+            },
+            {
+              text: '进阶',
+              items: [
+                { text: 'Lambda 表达式', link: '/zh/guide/lambdas' },
+                { text: 'NBT 数据', link: '/zh/guide/nbt' },
+                { text: '选择器', link: '/zh/guide/selectors' },
+              ]
+            }
+          ],
+          '/zh/reference/': [
+            {
+              text: '参考',
+              items: [
+                { text: '语法', link: '/zh/reference/syntax' },
+                { text: '内置函数', link: '/zh/reference/builtins' },
+                { text: '装饰器', link: '/zh/reference/decorators' },
+                { text: '命令行', link: '/zh/reference/cli' },
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+
+  themeConfig: {
+    logo: '/logo.svg',
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/bkmashiro/redscript' }
+    ],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2026 bkmashiro'
+    },
+    search: {
+      provider: 'local'
+    }
+  }
+})
