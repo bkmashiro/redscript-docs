@@ -89,6 +89,12 @@ scoreboard_set(@a, "kills", 0);
 scoreboard_add_score(@s, "kills", 1);
 ```
 
+### 命名空间前缀
+
+记分板目标在编译时会自动加上数据包命名空间前缀。
+
+例如，在命名空间 `minigame` 中写 `scoreboard_add("kills", "dummy")`，生成的数据包里会使用类似 `minigame_kills` 的目标名。这样可以避免不同数据包之间的目标名冲突。
+
 ## 队伍
 
 | 函数 | 描述 |
@@ -212,6 +218,9 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | 转换数组 |
 | `filter(array, lambda)` | 过滤数组 |
 | `random(min, max)` | 随机整数 |
+| `setTimeout(delay, callback)` | 延迟一次执行回调 |
+| `setInterval(interval, callback)` | 按间隔重复执行回调 |
+| `clearInterval(id)` | 取消重复回调 |
 
 ```rs
 repeat(5) {
@@ -219,7 +228,19 @@ repeat(5) {
 }
 
 let result = random(1, 100);
+
+setTimeout(100, () => {
+    say("Delayed!");
+});
+
+let id = setInterval(20, () => {
+    say("Repeating!");
+});
+
+clearInterval(id);
 ```
+
+这些计时辅助函数会编译为通过 Minecraft `schedule function` 命令调度的生成函数。
 
 ## 游戏模式
 

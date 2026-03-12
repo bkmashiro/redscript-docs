@@ -128,8 +128,36 @@ foreach (z in @e[type=zombie]) {
 }
 ```
 
-## Coming Soon
+## `is` Type Narrowing
 
-- `is` type narrowing: `if (e is Player) { ... }`
+Use `is` to narrow a generic entity to a specific subtype inside an `if` block.
+
+```mcrs
+foreach (e in @e) {
+    if (e is Player) {
+        say("Found player");
+    }
+
+    if (e is Zombie) {
+        kill(e);
+    }
+}
+```
+
+Inside each matching branch, `e` is treated as the narrowed type.
+
+### How It Compiles
+
+Type narrowing compiles to Minecraft entity checks on the current executor:
+
+```mcfunction
+execute if entity @s[type=player] run ...
+execute if entity @s[type=zombie] run ...
+```
+
+This keeps the source strongly typed while emitting simple selector-based checks.
+
+## Future Work
+
 - Explicit type assertions: `e as Zombie`
 - Custom entity types with tags

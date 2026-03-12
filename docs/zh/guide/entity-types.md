@@ -128,8 +128,36 @@ foreach (z in @e[type=zombie]) {
 }
 ```
 
-## 即将推出
+## `is` 类型收窄
 
-- `is` 类型收窄：`if (e is Player) { ... }`
+使用 `is` 可以在 `if` 分支中把通用实体收窄为具体子类型。
+
+```mcrs
+foreach (e in @e) {
+    if (e is Player) {
+        say("Found player");
+    }
+
+    if (e is Zombie) {
+        kill(e);
+    }
+}
+```
+
+在匹配成功的分支内，`e` 会被视为收窄后的具体类型。
+
+### 编译方式
+
+类型收窄会编译为针对当前执行者的 Minecraft 实体检查：
+
+```mcfunction
+execute if entity @s[type=player] run ...
+execute if entity @s[type=zombie] run ...
+```
+
+这样既保留了强类型源码，也会生成简单的基于选择器的检查。
+
+## 后续计划
+
 - 显式类型断言：`e as Zombie`
 - 基于标签的自定义实体类型

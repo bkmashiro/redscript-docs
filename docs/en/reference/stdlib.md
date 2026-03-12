@@ -147,23 +147,60 @@ fn tick_cooldowns() {
 
 ### timer.mcrs
 
-Timer utilities.
+Timer utilities and the v1.2 object-style Timer API.
 
 ```mcrs
 import "stdlib/timer.mcrs"
 
-fn start_game() {
-    timer_start("game", 6000);  // 5 minute timer
-}
+let timer = Timer::new(200);
+timer.start();
 
 @tick
-fn check_timer() {
-    timer_tick();
-    if (timer_done("game") == 1) {
-        announce("Game Over!");
+fn update_timer() {
+    timer.tick();
+
+    if (timer.done()) {
+        say("Time's up!");
     }
 }
 ```
+
+**Instance methods:**
+- `Timer::new(duration)` — Create a new timer
+- `timer.start()` — Start the timer
+- `timer.tick()` — Advance the timer, usually once per tick
+- `timer.done()` — Check whether it has finished
+- `timer.pause()` — Pause without resetting progress
+- `timer.reset()` — Reset progress to the initial duration
+
+**Legacy functional API:**
+- `timer_start(id, duration)`
+- `timer_tick(id)`
+- `timer_done(id)`
+
+### Scheduling helpers
+
+RedScript also includes callback-style timer helpers built on top of Minecraft scheduling.
+
+```mcrs
+setTimeout(100, () => {
+    say("Delayed!");
+});
+
+let id = setInterval(20, () => {
+    say("Repeating!");
+});
+
+clearInterval(id);
+```
+
+| Function | Description |
+|----------|-------------|
+| `setTimeout(delay, callback)` | Run a callback once after `delay` ticks |
+| `setInterval(interval, callback)` | Run a callback repeatedly |
+| `clearInterval(id)` | Cancel a repeating callback |
+
+These helpers compile to generated functions scheduled with Minecraft's `schedule function` command.
 
 ### player.mcrs
 

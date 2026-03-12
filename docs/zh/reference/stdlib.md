@@ -146,23 +146,60 @@ fn tick_cooldowns() {
 
 ### timer.mcrs
 
-计时器工具。
+计时器工具，以及 v1.2 的面向对象 Timer API。
 
 ```mcrs
 import "stdlib/timer.mcrs"
 
-fn start_game() {
-    timer_start("game", 6000);  // 5 分钟计时
-}
+let timer = Timer::new(200);
+timer.start();
 
 @tick
-fn check_timer() {
-    timer_tick();
-    if (timer_done("game") == 1) {
-        announce("游戏结束！");
+fn update_timer() {
+    timer.tick();
+
+    if (timer.done()) {
+        say("Time's up!");
     }
 }
 ```
+
+**实例方法：**
+- `Timer::new(duration)` — 创建新计时器
+- `timer.start()` — 启动计时器
+- `timer.tick()` — 推进计时器，通常每 tick 调用一次
+- `timer.done()` — 检查是否结束
+- `timer.pause()` — 暂停但不重置进度
+- `timer.reset()` — 重置到初始时长
+
+**旧版函数式 API：**
+- `timer_start(id, duration)`
+- `timer_tick(id)`
+- `timer_done(id)`
+
+### 调度辅助函数
+
+RedScript 还提供了基于 Minecraft 调度系统的回调式计时辅助函数。
+
+```mcrs
+setTimeout(100, () => {
+    say("Delayed!");
+});
+
+let id = setInterval(20, () => {
+    say("Repeating!");
+});
+
+clearInterval(id);
+```
+
+| 函数 | 描述 |
+|------|------|
+| `setTimeout(delay, callback)` | 在 `delay` 个 tick 后执行一次回调 |
+| `setInterval(interval, callback)` | 按固定间隔重复执行回调 |
+| `clearInterval(id)` | 取消重复回调 |
+
+这些辅助函数会编译为通过 Minecraft `schedule function` 命令调度的生成函数。
 
 ### player.mcrs
 

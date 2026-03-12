@@ -89,6 +89,12 @@ scoreboard_set(@a, "kills", 0);
 scoreboard_add_score(@s, "kills", 1);
 ```
 
+### Namespace Prefixing
+
+Scoreboard objectives are automatically prefixed with your datapack namespace during compilation.
+
+For example, `scoreboard_add("kills", "dummy")` in namespace `minigame` becomes an objective like `minigame_kills` in the generated datapack. This avoids collisions between packs that use the same short objective names.
+
 ## Teams
 
 | Function | Description |
@@ -212,6 +218,9 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | Transform array |
 | `filter(array, lambda)` | Filter array |
 | `random(min, max)` | Random integer |
+| `setTimeout(delay, callback)` | Run callback once after delay |
+| `setInterval(interval, callback)` | Run callback repeatedly |
+| `clearInterval(id)` | Cancel repeating callback |
 
 ```rs
 repeat(5) {
@@ -219,7 +228,19 @@ repeat(5) {
 }
 
 let result = random(1, 100);
+
+setTimeout(100, () => {
+    say("Delayed!");
+});
+
+let id = setInterval(20, () => {
+    say("Repeating!");
+});
+
+clearInterval(id);
 ```
+
+The timer helpers compile to generated functions scheduled with Minecraft's `schedule function` command.
 
 ## Game Mode
 
