@@ -84,6 +84,56 @@ effect(@a[scores={health=1..5}], "regeneration", 5, 2);
 @a[sort=random, limit=1]
 ```
 
+## 视角过滤器
+
+检测玩家看向的方向：
+
+```rs
+// 抬头看 (俯仰角 < -45)
+foreach (p in @a[x_rotation=-90..-45]) {
+    say("在看天空！");
+}
+
+// 低头看 (俯仰角 > 45)
+foreach (p in @a[x_rotation=45..90]) {
+    say("在看地面！");
+}
+
+// 面向北方 (偏航角约 180)
+foreach (p in @a[y_rotation=135..225]) {
+    say("面向北方！");
+}
+```
+
+## 位置过滤器
+
+按坐标选择：
+
+```rs
+// 在特定区域内的玩家
+foreach (p in @a[x=-10..10, y=60..70, z=-10..10]) {
+    effect(@s, "glowing", 1, 0);
+}
+```
+
+## 变量选择器语法 <Badge type="tip" text="v1.1.0" />
+
+在 `foreach` 循环内，可以对循环变量使用过滤器：
+
+```rs
+foreach (p in @a) {
+    // p[filters] 自动转换为 @s[filters]
+    execute if entity p[x_rotation=-90..-45] run {
+        tag_add(@s, "looking_up");
+    }
+    execute unless entity p[x_rotation=-90..-45] run {
+        tag_remove(@s, "looking_up");
+    }
+}
+```
+
+这是语法糖 —— `p[x_rotation=-90..-45]` 编译为 `@s[x_rotation=-90..-45]`。
+
 ## 命名空间语法
 
 使用 `#mc_name` 作为 Minecraft 命名空间 ID 的简写：

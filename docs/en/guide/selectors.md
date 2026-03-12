@@ -84,6 +84,56 @@ effect(@a[scores={health=1..5}], "regeneration", 5, 2);
 @a[sort=random, limit=1]
 ```
 
+## Rotation Filters
+
+Check where players are looking:
+
+```rs
+// Looking up (pitch < -45)
+foreach (p in @a[x_rotation=-90..-45]) {
+    say("Looking at the sky!");
+}
+
+// Looking down (pitch > 45)
+foreach (p in @a[x_rotation=45..90]) {
+    say("Looking at the ground!");
+}
+
+// Facing north (yaw around 180)
+foreach (p in @a[y_rotation=135..225]) {
+    say("Facing north!");
+}
+```
+
+## Position Filters
+
+Select by coordinates:
+
+```rs
+// Players in a specific area
+foreach (p in @a[x=-10..10, y=60..70, z=-10..10]) {
+    effect(@s, "glowing", 1, 0);
+}
+```
+
+## Variable Selector Syntax <Badge type="tip" text="v1.1.0" />
+
+Inside `foreach` loops, you can use the loop variable with filters:
+
+```rs
+foreach (p in @a) {
+    // p[filters] is automatically converted to @s[filters]
+    execute if entity p[x_rotation=-90..-45] run {
+        tag_add(@s, "looking_up");
+    }
+    execute unless entity p[x_rotation=-90..-45] run {
+        tag_remove(@s, "looking_up");
+    }
+}
+```
+
+This is syntactic sugar — `p[x_rotation=-90..-45]` compiles to `@s[x_rotation=-90..-45]`.
+
 ## Namespace Syntax
 
 Use `#mc_name` as shorthand for Minecraft namespaced IDs:
