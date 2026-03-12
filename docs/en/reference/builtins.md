@@ -152,30 +152,6 @@ particle("flame", ~0, ~2, ~0);
 particle("heart", ~0, ~2, ~0, 0.5, 0.5, 0.5, 0.1, 10);
 ```
 
-## Execute Context
-
-| Function | Description |
-|----------|-------------|
-| `execute_as(target) { }` | Run as entity |
-| `execute_at(target) { }` | Run at position |
-| `execute_if_score(target, obj, range) { }` | Run if score matches |
-| `execute_if_block(x, y, z, block) { }` | Run if block matches |
-| `execute_in(dimension) { }` | Run in dimension |
-
-```rs
-execute_as(@a) {
-    say("I am ${@s}");
-}
-
-execute_at(@e[type=zombie]) {
-    particle("flame", ~0, ~1, ~0);
-}
-
-execute_if_score(@s, "score", "10..") {
-    say("Score is 10 or higher");
-}
-```
-
 ## Tags
 
 | Function | Description |

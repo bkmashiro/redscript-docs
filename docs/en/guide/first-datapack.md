@@ -40,8 +40,10 @@ Use `@tick` to check scores and give rewards:
 @tick(rate=20)
 fn check_rewards() {
     // Check if any player reached the threshold
-    execute_if_score(@a, "kills", "${REWARD_THRESHOLD}..") {
-        grant_reward(@s);
+    foreach (player in @a) {
+        if (scoreboard_get(player, "kills") >= REWARD_THRESHOLD) {
+            grant_reward(player);
+        }
     }
 }
 
@@ -99,8 +101,10 @@ fn init() {
 
 @tick(rate=20)
 fn check_rewards() {
-    execute_if_score(@a, "kills", "${REWARD_THRESHOLD}..") {
-        grant_reward(@s);
+    foreach (player in @a) {
+        if (scoreboard_get(player, "kills") >= REWARD_THRESHOLD) {
+            grant_reward(player);
+        }
     }
 }
 

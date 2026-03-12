@@ -152,30 +152,6 @@ particle("flame", ~0, ~2, ~0);
 particle("heart", ~0, ~2, ~0, 0.5, 0.5, 0.5, 0.1, 10);
 ```
 
-## Execute 上下文
-
-| 函数 | 描述 |
-|------|------|
-| `execute_as(target) { }` | 以实体身份运行 |
-| `execute_at(target) { }` | 在位置运行 |
-| `execute_if_score(target, obj, range) { }` | 分数匹配时运行 |
-| `execute_if_block(x, y, z, block) { }` | 方块匹配时运行 |
-| `execute_in(dimension) { }` | 在维度中运行 |
-
-```rs
-execute_as(@a) {
-    say("I am ${@s}");
-}
-
-execute_at(@e[type=zombie]) {
-    particle("flame", ~0, ~1, ~0);
-}
-
-execute_if_score(@s, "score", "10..") {
-    say("Score is 10 or higher");
-}
-```
-
 ## 标签
 
 | 函数 | 描述 |

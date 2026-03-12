@@ -231,18 +231,20 @@ let g = (x: int) => {
 [L; 100L, 200L]                // long array
 ```
 
-## execute Commands
+## foreach
 
 ```rs
-execute_as(@a) {
-    // runs as each player
+// Run code as each entity matching the selector
+foreach (z in @e[type=zombie]) {
+    kill(z);  // z becomes @s in the compiled function
 }
 
-execute_at(@e[type=zombie]) {
-    // runs at each zombie's position
+foreach (player in @a) {
+    give(player, "minecraft:diamond", 1);
 }
+```
 
-execute_if_score(@a, "score", "10..") {
-    // runs if score >= 10
-}
+Compiles to:
+```mcfunction
+execute as @e[type=minecraft:zombie] run function ns:fn/foreach_0
 ```

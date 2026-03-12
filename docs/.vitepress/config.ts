@@ -40,6 +40,7 @@ export default defineConfig({
                 { text: 'Lambdas', link: '/en/guide/lambdas' },
                 { text: 'NBT Data', link: '/en/guide/nbt' },
                 { text: 'Selectors', link: '/en/guide/selectors' },
+                { text: 'Testing with Paper', link: '/en/guide/testing' },
               ]
             }
           ],
@@ -92,6 +93,7 @@ export default defineConfig({
                 { text: 'Lambda 表达式', link: '/zh/guide/lambdas' },
                 { text: 'NBT 数据', link: '/zh/guide/nbt' },
                 { text: '选择器', link: '/zh/guide/selectors' },
+                { text: 'Paper 服务器测试', link: '/zh/guide/testing' },
               ]
             }
           ],

@@ -231,18 +231,20 @@ let g = (x: int) => {
 [L; 100L, 200L]                // 长整数数组
 ```
 
-## execute 命令
+## foreach
 
 ```rs
-execute_as(@a) {
-    // 以每个玩家身份运行
+// 以每个匹配选择器的实体身份运行代码
+foreach (z in @e[type=zombie]) {
+    kill(z);  // z 在编译后的函数中变为 @s
 }
 
-execute_at(@e[type=zombie]) {
-    // 在每个僵尸位置运行
+foreach (player in @a) {
+    give(player, "minecraft:diamond", 1);
 }
+```
 
-execute_if_score(@a, "score", "10..") {
-    // 分数 >= 10 时运行
-}
+编译为：
+```mcfunction
+execute as @e[type=minecraft:zombie] run function ns:fn/foreach_0
 ```

@@ -21,8 +21,10 @@ fn init() {
 ```rs
 @tick
 fn check_health() {
-    execute_if_score(@a, "health", "..5") {
-        effect(@s, "glowing", 1, 1);
+    foreach (player in @a) {
+        if (scoreboard_get(player, "health") <= 5) {
+            effect(player, "glowing", 1, 1);
+        }
     }
 }
 ```
