@@ -41,6 +41,7 @@ export default defineConfig({
                 { text: 'Lambdas', link: '/en/guide/lambdas' },
                 { text: 'NBT Data', link: '/en/guide/nbt' },
                 { text: 'Selectors', link: '/en/guide/selectors' },
+                { text: 'Entity Types', link: '/en/guide/entity-types' },
               ]
             },
             {
@@ -113,6 +114,7 @@ export default defineConfig({
                 { text: 'Lambda 表达式', link: '/zh/guide/lambdas' },
                 { text: 'NBT 数据', link: '/zh/guide/nbt' },
                 { text: '选择器', link: '/zh/guide/selectors' },
+                { text: '实体类型', link: '/zh/guide/entity-types' },
               ]
             },
             {
