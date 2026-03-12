@@ -2,7 +2,7 @@
 
 Official documentation for [RedScript](https://github.com/bkmashiro/redscript).
 
-🔗 **Live site**: https://docs.redscript.dev (coming soon)
+🔗 **Live site**: https://redscript-docs.pages.dev
 
 ## Development
 
