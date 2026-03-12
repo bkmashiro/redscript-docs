@@ -30,6 +30,7 @@ export default defineConfig({
               text: 'Core Concepts',
               items: [
                 { text: 'Variables & Types', link: '/en/guide/variables' },
+                { text: 'Strings', link: '/en/guide/strings' },
                 { text: 'Functions', link: '/en/guide/functions' },
                 { text: 'Decorators', link: '/en/guide/decorators' },
                 { text: 'Structs & Enums', link: '/en/guide/structs-enums' },
@@ -105,6 +106,7 @@ export default defineConfig({
               text: '核心概念',
               items: [
                 { text: '变量与类型', link: '/zh/guide/variables' },
+                { text: '字符串', link: '/zh/guide/strings' },
                 { text: '函数', link: '/zh/guide/functions' },
                 { text: '装饰器', link: '/zh/guide/decorators' },
                 { text: '结构体与枚举', link: '/zh/guide/structs-enums' },
