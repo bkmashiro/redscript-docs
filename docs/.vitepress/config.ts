@@ -50,6 +50,7 @@ export default defineConfig({
               items: [
                 { text: 'Syntax', link: '/en/reference/syntax' },
                 { text: 'Built-in Functions', link: '/en/reference/builtins' },
+                { text: 'Standard Library', link: '/en/reference/stdlib' },
                 { text: 'Decorators', link: '/en/reference/decorators' },
                 { text: 'CLI', link: '/en/reference/cli' },
               ]
@@ -103,6 +104,7 @@ export default defineConfig({
               items: [
                 { text: '语法', link: '/zh/reference/syntax' },
                 { text: '内置函数', link: '/zh/reference/builtins' },
+                { text: '标准库', link: '/zh/reference/stdlib' },
                 { text: '装饰器', link: '/zh/reference/decorators' },
                 { text: '命令行', link: '/zh/reference/cli' },
               ]
