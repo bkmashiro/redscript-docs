@@ -12,6 +12,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Guide', link: '/en/guide/getting-started' },
+          { text: 'Tutorials', link: '/en/tutorials/' },
           { text: 'Reference', link: '/en/reference/syntax' },
           { text: 'Online IDE', link: 'https://redscript-ide.pages.dev' },
         ],
@@ -55,6 +56,17 @@ export default defineConfig({
                 { text: 'CLI', link: '/en/reference/cli' },
               ]
             }
+          ],
+          '/en/tutorials/': [
+            {
+              text: 'Tutorials',
+              items: [
+                { text: 'Overview', link: '/en/tutorials/' },
+                { text: 'Zombie Survival', link: '/en/tutorials/zombie-survival' },
+                { text: 'Capture the Flag', link: '/en/tutorials/capture-the-flag' },
+                { text: 'Parkour Race', link: '/en/tutorials/parkour-race' },
+              ]
+            }
           ]
         }
       }
@@ -66,6 +78,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: '指南', link: '/zh/guide/getting-started' },
+          { text: '教程', link: '/zh/tutorials/' },
           { text: '参考', link: '/zh/reference/syntax' },
           { text: '在线 IDE', link: 'https://redscript-ide.pages.dev' },
         ],
@@ -107,6 +120,17 @@ export default defineConfig({
                 { text: '标准库', link: '/zh/reference/stdlib' },
                 { text: '装饰器', link: '/zh/reference/decorators' },
                 { text: '命令行', link: '/zh/reference/cli' },
+              ]
+            }
+          ],
+          '/zh/tutorials/': [
+            {
+              text: '教程',
+              items: [
+                { text: '概览', link: '/zh/tutorials/' },
+                { text: '僵尸生存', link: '/zh/tutorials/zombie-survival' },
+                { text: '夺旗战', link: '/zh/tutorials/capture-the-flag' },
+                { text: '跑酷竞速', link: '/zh/tutorials/parkour-race' },
               ]
             }
           ]
