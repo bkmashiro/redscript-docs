@@ -54,19 +54,23 @@ spawn_at(px, 64, pz);     // 有变量 → 使用宏
 
 ## 支持的内置函数
 
-以下内置函数支持自动宏编译：
+**所有内置函数都支持宏参数。** 任何参数都可以是运行时变量：
 
-| 内置函数 | 宏支持的位置 |
-|---------|-------------|
-| `summon` | 坐标、实体类型 |
-| `teleport` / `tp` | 坐标 |
-| `particle` | 坐标 |
-| `setblock` | 坐标、方块类型 |
-| `fill` | 坐标、方块类型 |
-| `clone` | 坐标 |
-| `playsound` | 坐标 |
-| `effect` | 效果类型、持续时间、等级 |
-| `give` | 物品类型、数量 |
+```rs
+fn dynamic_say(msg: string) {
+    say(msg);  // 可以！
+}
+
+fn dynamic_effect(eff: string, dur: int) {
+    effect(@s, eff, dur, 1);  // 可以！
+}
+
+fn dynamic_setblock(x: int, y: int, z: int, block: string) {
+    setblock(x, y, z, block);  // 可以！
+}
+```
+
+包括 `say`、`tell`、`give`、`effect`、`summon`、`teleport`、`particle`、`setblock`、`fill`、`clone`、`playsound`、`weather`、`time_set`、`gamerule`、`tag_add`、`tag_remove` 以及所有其他内置函数。
 
 ## 示例：动态传送
 

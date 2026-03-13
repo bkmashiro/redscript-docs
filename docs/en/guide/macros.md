@@ -54,19 +54,23 @@ spawn_at(px, 64, pz);     // Has variables → uses macro
 
 ## Supported Builtins
 
-The following builtins support automatic macro compilation:
+**All builtin functions support macro parameters.** Any argument can be a runtime variable:
 
-| Builtin | Macro-enabled positions |
-|---------|------------------------|
-| `summon` | coordinates, entity type |
-| `teleport` / `tp` | coordinates |
-| `particle` | coordinates |
-| `setblock` | coordinates, block type |
-| `fill` | coordinates, block type |
-| `clone` | coordinates |
-| `playsound` | coordinates |
-| `effect` | effect type, duration, amplifier |
-| `give` | item type, count |
+```rs
+fn dynamic_say(msg: string) {
+    say(msg);  // Works!
+}
+
+fn dynamic_effect(eff: string, dur: int) {
+    effect(@s, eff, dur, 1);  // Works!
+}
+
+fn dynamic_setblock(x: int, y: int, z: int, block: string) {
+    setblock(x, y, z, block);  // Works!
+}
+```
+
+This includes `say`, `tell`, `give`, `effect`, `summon`, `teleport`, `particle`, `setblock`, `fill`, `clone`, `playsound`, `weather`, `time_set`, `gamerule`, `tag_add`, `tag_remove`, and all other builtins.
 
 ## Example: Dynamic Teleportation
 
