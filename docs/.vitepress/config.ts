@@ -41,6 +41,7 @@ export default defineConfig({
               text: 'Advanced',
               items: [
                 { text: 'Lambdas', link: '/en/guide/lambdas' },
+                { text: 'Macro Functions', link: '/en/guide/macros' },
                 { text: 'NBT Data', link: '/en/guide/nbt' },
                 { text: 'Selectors', link: '/en/guide/selectors' },
                 { text: 'Entity Types', link: '/en/guide/entity-types' },
@@ -117,6 +118,7 @@ export default defineConfig({
               text: '进阶',
               items: [
                 { text: 'Lambda 表达式', link: '/zh/guide/lambdas' },
+                { text: '宏函数', link: '/zh/guide/macros' },
                 { text: 'NBT 数据', link: '/zh/guide/nbt' },
                 { text: '选择器', link: '/zh/guide/selectors' },
                 { text: '实体类型', link: '/zh/guide/entity-types' },
