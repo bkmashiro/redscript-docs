@@ -73,10 +73,14 @@ fn name() { }
 | `@load` | 数据包加载时运行 |
 | `@tick` | 每个游戏刻运行 |
 | `@tick(rate=N)` | 每 N 个游戏刻运行 |
-| `@on_trigger("name")` | 触发器激活时运行 |
+| `@on_trigger("name")` | 玩家激活触发器时运行 |
 | `@on_death` | 实体死亡时运行 |
-| `@on_join` | 玩家加入时运行 |
-| `@on_respawn` | 玩家重生时运行 |
+| `@on_login` | 玩家加入服务器时运行 |
+| `@on_advancement("id")` | 玩家获得进度时运行 |
+| `@on_craft("item")` | 玩家合成物品时运行 |
+| `@on_join_team("team")` | 玩家加入队伍时运行 |
+| `@on(EventType)` | 静态事件触发时运行（PlayerDeath、PlayerJoin、BlockBreak、EntityKill、ItemUse） |
+| `@keep` | 阻止 DCE 移除该函数 |
 
 ## 控制流
 
@@ -104,13 +108,27 @@ if (condition) {
 
 ### match
 
+Match 支持枚举模式和整数范围模式：
+
 ```rs
+// 枚举模式
 match value {
     Pattern::A => { },
     Pattern::B => { },
     _ => { },
 }
+
+// 整数范围模式
+let score: int = scoreboard_get(@s, #points);
+match score {
+    90..100 => { say("A 等级"); },
+    80..89  => { say("B 等级"); },
+    70..79  => { say("C 等级"); },
+    _       => { say("C 以下"); },
+}
 ```
+
+范围模式使用 `min..max`（两端均包含）。
 
 ### repeat
 
@@ -119,6 +137,73 @@ repeat(count) {
     // 循环 count 次
 }
 ```
+
+### break / continue
+
+`break` 提前退出最内层循环，`continue` 跳到下一次迭代：
+
+```rs
+while (true) {
+    if (score(@s, #lives) <= 0) {
+        break;
+    }
+    // ...
+}
+
+foreach (player in @a) {
+    if (score(player, #skip) == 1) {
+        continue;
+    }
+    give(player, "diamond", 1);
+}
+```
+
+`break` 和 `continue` 在 `while`、`foreach` 和 `for i in range` 循环中均可使用。
+
+### execute
+
+`execute` 语句直接映射到 Minecraft 的 `execute` 命令，并带有类型化的代码块：
+
+```rs
+execute as @a at @s run {
+    setblock ~ ~-1 ~ "stone";
+}
+
+execute if block ~ ~-1 ~ "grass_block" run {
+    say("Standing on grass!");
+}
+
+execute positioned 0 64 0 run {
+    particle("heart", ~0, ~1, ~0);
+}
+
+execute store result score @s #points run {
+    // 产生结果的命令
+}
+```
+
+**支持的子命令：**
+
+| 子命令 | 描述 |
+|--------|------|
+| `as <selector>` | 改变执行者 |
+| `at <selector>` | 将位置/朝向改为实体 |
+| `positioned <x> <y> <z>` | 设置执行位置 |
+| `positioned as <selector>` | 将位置设为实体位置 |
+| `rotated <yaw> <pitch>` | 覆盖朝向 |
+| `rotated as <selector>` | 复制实体朝向 |
+| `facing <x> <y> <z>` | 面向某个位置 |
+| `facing entity <selector>` | 面向某个实体 |
+| `anchored eyes\|feet` | 设置坐标锚点 |
+| `align <axes>` | 对齐到方块网格 |
+| `in <dimension>` | 切换维度 |
+| `on <relation>` | 导航实体关系 |
+| `if block <x> <y> <z> <block>` | 条件：方块类型 |
+| `if score <target> <obj> matches <range>` | 条件：分数 |
+| `unless block ...` | 取反的方块条件 |
+| `unless score ...` | 取反的分数条件 |
+| `store result score <target> <obj>` | 将结果存入分数 |
+| `store success score <target> <obj>` | 将成功标志存入分数 |
 
 ## 运算符
 
@@ -288,3 +373,24 @@ foreach (p in @a) at @s rotated ~ 0 facing entity @e[type=zombie,limit=1,sort=ne
 # foreach (p in @a) at @s positioned ~ ~2 ~
 execute as @a at @s positioned ~ ~2 ~ run function ns:fn/foreach_1
 ```
+
+## 死代码消除（DCE）
+
+RedScript 的优化器会自动从编译输出中移除不可达函数。
+
+**可见性规则：**
+
+- 名称**不以** `_` 开头的函数为**公有**——始终生成（可通过 `/function namespace:name` 调用）
+- 以 `_` 开头的函数为**私有**——仅在被可达代码调用时保留
+- 带有装饰器（`@tick`、`@load`、`@on_*`、`@on`、`@keep`）的函数始终保留
+
+```rs
+fn public_fn() { }       // 公有，始终生成
+
+fn _helper() { }         // 私有，未被调用时移除
+
+@keep
+fn _kept_helper() { }    // 私有名称，但 @keep 强制保留
+```
+
+这意味着你可以自由编写私有工具函数——如果从未被调用，它们不会增大数据包体积。

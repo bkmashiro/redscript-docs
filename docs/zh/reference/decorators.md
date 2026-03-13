@@ -106,7 +106,7 @@ fn open_menu() {
 @on_death
 fn handle_death() {
     tellraw(@s, "You died!");
-    scoreboard_add_score(@s, "deaths", 1);
+    scoreboard_add(@s, "deaths", 1);
 }
 ```
 
@@ -114,55 +114,132 @@ fn handle_death() {
 
 **上下文：** `@s` 指代死亡的玩家。
 
-## @on_join
+## @on_login
 
-当玩家加入服务器时运行。
+当玩家登录（加入）服务器时运行。
 
-**语法：** `@on_join`
+**语法：** `@on_login`
 
 ```rs
-@on_join
+@on_login
 fn welcome() {
     title(@s, "Welcome!");
     tag_add(@s, "joined");
 }
 ```
 
-**编译为：** 检测没有 "joined" 标签的玩家并运行函数。
+**编译为：** 基于标签的检测——每 tick 检查没有加入标签的玩家。
 
 **上下文：** `@s` 指代加入的玩家。
 
-## @on_respawn
+## @on_advancement
 
-当玩家死亡后重生时运行。
+当玩家获得特定进度时运行。
 
-**语法：** `@on_respawn`
+**语法：** `@on_advancement("advancement_id")`
 
 ```rs
-@on_respawn
-fn on_respawn() {
-    effect(@s, "regeneration", 10, 1);
-    give(@s, "bread", 5);
+@on_advancement("story/mine_diamond")
+fn got_diamonds() {
+    tellraw(@s, "You found diamonds! Here's a reward.");
+    give(@s, "emerald", 5);
 }
 ```
 
-**编译为：** 基于进度的重生检测。
+**编译为：** 使用进度奖励函数机制。
 
-**上下文：** `@s` 指代重生的玩家。
+**上下文：** `@s` 指代获得进度的玩家。
 
-## 组合装饰器
+## @on_craft
 
-函数可以有多个装饰器：
+当玩家合成特定物品时运行。
+
+**语法：** `@on_craft("item_id")`
 
 ```rs
-@load
-@tick(rate=200)
-fn refresh_display() {
-    sidebar_set("Stats", @a, "kills");
+@on_craft("minecraft:diamond_sword")
+fn crafted_sword() {
+    tellraw(@s, "You crafted a diamond sword!");
+    effect(@s, "strength", 200, 1);
 }
 ```
 
-此函数在加载时和每 10 秒都会运行。
+**编译为：** 带 `inventory_changed` 触发器条件的进度检测。
+
+**上下文：** `@s` 指代合成的玩家。
+
+## @on_join_team
+
+当玩家加入特定队伍时运行。
+
+**语法：** `@on_join_team("team_name")`
+
+```rs
+@on_join_team("red")
+fn joined_red_team() {
+    title(@s, "Red Team!");
+    effect(@s, "speed", 200, 1);
+}
+```
+
+**编译为：** 队伍加入检测。
+
+**上下文：** `@s` 指代加入队伍的玩家。
+
+## @on(EventType)
+
+处理静态事件类型。事件处理器每 tick 通过标签检测轮询。
+
+**语法：** `@on(EventType)`
+
+**支持的事件类型：**
+
+| 事件 | 描述 | 检测方式 |
+|------|------|----------|
+| `PlayerDeath` | 玩家死亡 | 基于分数 |
+| `PlayerJoin` | 玩家加入服务器 | 基于标签 |
+| `BlockBreak` | 玩家破坏方块 | 基于进度 |
+| `EntityKill` | 玩家击杀实体 | 基于分数 |
+| `ItemUse` | 玩家使用物品 | 基于分数 |
+
+```rs
+@on(PlayerDeath)
+fn handle_player_death() {
+    say("A player has died!");
+    scoreboard_add(@s, "deaths", 1);
+}
+
+@on(PlayerJoin)
+fn handle_player_join() {
+    title(@s, "Welcome to the Server!");
+}
+
+@on(BlockBreak)
+fn handle_block_break() {
+    scoreboard_add(@s, "blocks_broken", 1);
+}
+```
+
+**编译为：** 每 tick 使用事件内部标签（如 `rs.just_died`）对 `@a` 进行标签检查。
+
+## @keep
+
+阻止死代码消除（DCE）优化器移除函数。
+
+**语法：** `@keep`
+
+默认情况下，以 `_` 开头的函数被视为私有函数，如果不可达则可能被移除。`@keep` 强制将其包含在编译输出中。
+
+```rs
+@keep
+fn _internal_helper() {
+    // 即使名称以 _ 开头，也会保留
+}
+```
+
+**使用场景：**
+- 只通过游戏内 `/function` 调用的工具函数
+- 需要在激进 DCE 后仍保留的函数
 
 ## 装饰器总结
 
@@ -173,5 +250,9 @@ fn refresh_display() {
 | `@tick(rate=N)` | 每 N 个游戏刻 | 服务器 |
 | `@on_trigger("x")` | 玩家运行 `/trigger x` | 触发的玩家 |
 | `@on_death` | 实体死亡 | 死亡的实体 |
-| `@on_join` | 玩家加入 | 加入的玩家 |
-| `@on_respawn` | 玩家重生 | 重生的玩家 |
+| `@on_login` | 玩家加入服务器 | 加入的玩家 |
+| `@on_advancement("id")` | 玩家获得进度 | 玩家 |
+| `@on_craft("item")` | 玩家合成物品 | 合成的玩家 |
+| `@on_join_team("team")` | 玩家加入队伍 | 玩家 |
+| `@on(EventType)` | 静态事件触发 | 事件玩家 |
+| `@keep` | （优化器提示，无运行时效果） | — |

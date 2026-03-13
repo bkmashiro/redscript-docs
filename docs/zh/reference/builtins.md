@@ -80,27 +80,39 @@ effect_clear(@s, "poison");
 
 | 函数 | 描述 |
 |------|------|
-| `scoreboard_add(name, criteria)` | 创建目标 |
-| `scoreboard_remove(name)` | 移除目标 |
-| `scoreboard_display(slot, name)` | 显示目标 |
-| `scoreboard_set(target, name, value)` | 设置分数 |
-| `scoreboard_add_score(target, name, value)` | 增加分数 |
-| `scoreboard_remove_score(target, name, value)` | 减少分数 |
-| `scoreboard_reset(target, name)` | 重置分数 |
-| `scoreboard_get(target, name)` | 获取分数 |
+| `scoreboard_add_objective(name, criteria)` | 创建新目标 |
+| `scoreboard_remove_objective(name)` | 移除目标 |
+| `scoreboard_display(slot, objective)` | 在槽位显示目标（`sidebar`、`list`、`belowname`） |
+| `scoreboard_hide(slot)` | 隐藏槽位的显示 |
+| `scoreboard_set(target, objective, value)` | 设置玩家分数 |
+| `scoreboard_add(target, objective, value)` | 增加玩家分数 |
+| `scoreboard_get(target, objective)` | 获取玩家分数（返回 `int`） |
+| `score(target, objective)` | `scoreboard_get` 的别名 |
 
 ```rs
-scoreboard_add("kills", "playerKillCount");
+scoreboard_add_objective("kills", "playerKillCount");
 scoreboard_display("sidebar", "kills");
 scoreboard_set(@a, "kills", 0);
-scoreboard_add_score(@s, "kills", 1);
+scoreboard_add(@s, "kills", 1);
+
+let k: int = scoreboard_get(@s, "kills");
+let k2: int = score(@s, #kills);  // #name 语法不需要引号
+```
+
+### 目标名称语法
+
+目标名称可以写为带引号的字符串，也可以使用 `#name` 语法表示裸标识符：
+
+```rs
+scoreboard_set(@s, "kills", 0);       // 字符串字面量
+scoreboard_set(@s, #kills, 0);        // 裸标识符（无引号）
 ```
 
 ### 命名空间前缀
 
 记分板目标在编译时会自动加上数据包命名空间前缀。
 
-例如，在命名空间 `minigame` 中写 `scoreboard_add("kills", "dummy")`，生成的数据包里会使用类似 `minigame_kills` 的目标名。这样可以避免不同数据包之间的目标名冲突。
+例如，在命名空间 `minigame` 中写 `scoreboard_add_objective("kills", "dummy")`，生成的数据包里会使用类似 `minigame_kills` 的目标名。这样可以避免不同数据包之间的目标名冲突。
 
 ## 队伍
 

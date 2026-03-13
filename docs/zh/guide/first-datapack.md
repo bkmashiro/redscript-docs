@@ -25,8 +25,8 @@ const REWARD_THRESHOLD: int = 10;
 ```rs
 @load
 fn init() {
-    scoreboard_add("kills", "playerKillCount");
-    scoreboard_add("level", "dummy");
+    scoreboard_add_objective("kills", "playerKillCount");
+    scoreboard_add_objective("level", "dummy");
     scoreboard_display("sidebar", "kills");
     say("Kill Counter datapack loaded!");
 }
@@ -54,7 +54,7 @@ fn grant_reward(player: selector) {
     title(player, "Level Up!");
 
     // 增加等级并重置击杀数
-    scoreboard_add_score(player, "level", 1);
+    scoreboard_add(player, "level", 1);
     scoreboard_set(player, "kills", 0);
 
     // 广播
@@ -65,7 +65,7 @@ fn grant_reward(player: selector) {
 ## 第 5 步：欢迎新玩家
 
 ```rs
-@on_join
+@on_login
 fn welcome(player: selector) {
     title(player, "Kill Counter");
     subtitle(player, "Kill mobs to earn rewards!");
@@ -93,8 +93,8 @@ const REWARD_THRESHOLD: int = 10;
 
 @load
 fn init() {
-    scoreboard_add("kills", "playerKillCount");
-    scoreboard_add("level", "dummy");
+    scoreboard_add_objective("kills", "playerKillCount");
+    scoreboard_add_objective("level", "dummy");
     scoreboard_display("sidebar", "kills");
     say("Kill Counter datapack loaded!");
 }
@@ -112,12 +112,12 @@ fn grant_reward(player: selector) {
     give(player, "diamond", 1);
     effect(player, "regeneration", 10, 2);
     title(player, "Level Up!");
-    scoreboard_add_score(player, "level", 1);
+    scoreboard_add(player, "level", 1);
     scoreboard_set(player, "kills", 0);
     tellraw(@a, "${player} leveled up!");
 }
 
-@on_join
+@on_login
 fn welcome(player: selector) {
     title(player, "Kill Counter");
     subtitle(player, "Kill mobs to earn rewards!");
@@ -155,7 +155,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 
 - `@load` — 在数据包加载时运行代码
 - `@tick(rate=N)` — 定期运行代码
-- `@on_join` / `@on_death` — 响应玩家事件
+- `@on_login` / `@on_death` — 响应玩家事件
 - 记分板函数 — 追踪和显示数据
 - `give` / `effect` / `title` — 与玩家交互
 
