@@ -72,6 +72,31 @@ fn dynamic_setblock(x: int, y: int, z: int, block: string) {
 
 This includes `say`, `tell`, `give`, `effect`, `summon`, `teleport`, `particle`, `setblock`, `fill`, `clone`, `playsound`, `weather`, `time_set`, `gamerule`, `tag_add`, `tag_remove`, and all other builtins.
 
+## Relative Coordinate Offsets (`~ident`)
+
+You can use a variable as a **relative coordinate offset** with the `~varname` syntax:
+
+```rs
+fn launch_up(target: selector, height: int) {
+    tp(target, ~0, ~height, ~0);   // relative by 'height' blocks on Y axis
+}
+```
+
+::: warning Why this requires macros
+Minecraft's `~N` syntax only accepts a **literal number** at N. There is no command that reads a scoreboard value as a relative offset.
+
+`~height` means *"relative by height blocks from current position"* — fundamentally different from `height` as an absolute coordinate. The only way to express this at the MC level is to substitute the value into the literal command text, which is exactly what 1.20.2+ function macros do.
+
+**Without macros, this would be impossible.** You'd have to pre-compute the absolute Y and pass that instead (losing the relative semantics).
+:::
+
+**Compiles to:**
+```mcfunction
+$tp $(target) ~0 ~$(height) ~0
+```
+
+Called with `function ns:launch_up with storage rs:macro_args` — the macro substitutes the value of `height` into the tilde offset at runtime.
+
 ## Example: Dynamic Teleportation
 
 ```rs

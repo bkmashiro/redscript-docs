@@ -72,6 +72,31 @@ fn dynamic_setblock(x: int, y: int, z: int, block: string) {
 
 包括 `say`、`tell`、`give`、`effect`、`summon`、`teleport`、`particle`、`setblock`、`fill`、`clone`、`playsound`、`weather`、`time_set`、`gamerule`、`tag_add`、`tag_remove` 以及所有其他内置函数。
 
+## 相对坐标偏移（`~ident`）
+
+你可以用 `~变量名` 语法将一个变量作为**相对坐标偏移**：
+
+```rs
+fn launch_up(target: selector, height: int) {
+    tp(target, ~0, ~height, ~0);   // 在 Y 轴相对当前位置偏移 height 格
+}
+```
+
+::: warning 为什么这里必须用宏？
+Minecraft 的 `~N` 语法要求 N 是**字面量数字**，不存在任何命令能把计分板值作为相对偏移读取。
+
+`~height` 的含义是*「从当前位置相对偏移 height 格」*，与把 `height` 作为绝对坐标传入是本质不同的。在 MC 命令层面，唯一的实现方式是在运行时把数值替换进命令文本中，这正是 1.20.2+ 函数宏做的事。
+
+**如果没有宏，这在 MC 中是不可能实现的。** 替代方案是预先算出绝对 Y 值传入——但那样就失去了相对移动的语义。
+:::
+
+**编译结果：**
+```mcfunction
+$tp $(target) ~0 ~$(height) ~0
+```
+
+调用时通过 `function ns:launch_up with storage rs:macro_args`，宏在运行时将 `height` 的值替换进波浪号偏移中。
+
 ## 示例：动态传送
 
 ```rs
