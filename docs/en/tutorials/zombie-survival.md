@@ -100,7 +100,7 @@ fn start_prep_phase() {
     state.prep_timer = WAVE_DELAY;
     state.wave = state.wave + 1;
     
-    announce("§4[ZS] §eWave " + state.wave + " incoming!");
+    announce(f"§4[ZS] §eWave {state.wave} incoming!");
     
     if (state.wave > 1) {
         announce("§a[Shop] §fType /trigger buy to purchase items");
@@ -121,7 +121,7 @@ fn start_combat_phase() {
     bossbar_set_max("zs_wave", zombie_count);
     bossbar_set_value("zs_wave", zombie_count);
     
-    title(@a, "§cWave " + state.wave);
+    title(@a, f"§cWave {state.wave}");
     
     spawn_zombies(zombie_count);
 }
@@ -194,14 +194,14 @@ fn combat_tick() {
 
 ```mcrs
 fn wave_complete() {
-    announce("§4[ZS] §aWave " + state.wave + " complete!");
+    announce(f"§4[ZS] §aWave {state.wave} complete!");
     
     // Reward coins
     let reward: int = 50 + (state.wave * 25);
     foreach (p in @a) {
         scoreboard_add(p, "zs_coins", reward);
     }
-    announce("§6+" + reward + " coins");
+    announce(f"§6+{reward} coins");
     
     // Check for victory
     if (state.wave == 10) {
@@ -273,7 +273,7 @@ fn game_over() {
     state.running = 0;
     
     title(@a, "§cGame Over");
-    subtitle(@a, "§7Survived " + state.wave + " waves");
+    subtitle(@a, f"§7Survived {state.wave} waves");
     
     // Cleanup
     kill(@e[type=zombie]);

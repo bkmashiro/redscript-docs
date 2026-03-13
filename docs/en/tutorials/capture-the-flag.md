@@ -181,7 +181,7 @@ fn check_flag_capture() {
         execute if entity p[x=45..55, y=62..68, z=-5..5] run {
             game.blue_score = game.blue_score + 1;
             
-            announce("§9Blue Team §ascored! §f(" + game.blue_score + "/" + WIN_SCORE + ")");
+            announce(f"§9Blue Team §ascored! §f({game.blue_score}/{WIN_SCORE})");
             
             // Clear flag carrier status
             tag_remove(p, "has_flag");
@@ -198,7 +198,7 @@ fn check_flag_capture() {
     foreach (p in @a[team=red, tag=has_flag]) {
         execute if entity p[x=-55..-45, y=62..68, z=-5..5] run {
             game.red_score = game.red_score + 1;
-            announce("§cRed Team §ascored! §f(" + game.red_score + "/" + WIN_SCORE + ")");
+            announce(f"§cRed Team §ascored! §f({game.red_score}/{WIN_SCORE})");
             tag_remove(p, "has_flag");
             effect_clear(p, "minecraft:glowing");
             place_flags();
