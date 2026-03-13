@@ -1,5 +1,11 @@
 # Macro Functions
 
+::: tip TL;DR
+This is an internal implementation detail — **you don't need to understand it to use RedScript**. Everything "just works."
+
+But if you're wondering: "Wait, Minecraft commands don't support variables in coordinates... how does this work?" — this chapter explains the magic behind the scenes.
+:::
+
 RedScript automatically uses MC 1.20.2+ function macros when needed, allowing runtime variables in positions that normally require compile-time literals (coordinates, entity types, etc.).
 
 ## The Problem
