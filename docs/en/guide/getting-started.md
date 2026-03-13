@@ -22,6 +22,7 @@ Features:
 - Hover documentation
 - Error checking
 - Code snippets
+- **Go-to-definition** (F12) for all built-in functions
 
 ## Install CLI
 
