@@ -17,6 +17,13 @@ const PI: float = 3.14;
 PI = 3.15; // 错误：不能重新赋值常量
 ```
 
+`const` 声明支持负数字面量：
+
+```rs
+const MIN_SCORE: int = -50;
+const DEPTH: int = -64;      // 例如 Minecraft 基岩层高度
+```
+
 ## 类型
 
 RedScript 有四种基本类型：
@@ -84,6 +91,14 @@ let health = 20;        // 推断为 int
 let name = "Steve";     // 推断为 string
 let alive = true;       // 推断为 bool
 let speed = 1.5;        // 推断为 float
+```
+
+`const` 也支持类型推断 — 类型注解是可选的：
+
+```rs
+const MAX_PLAYERS = 16;     // 推断为 int
+const PREFIX = "[Game]";    // 推断为 string
+const RATE = 0.5;           // 推断为 float
 ```
 
 显式类型声明更清晰，但不是必须的。

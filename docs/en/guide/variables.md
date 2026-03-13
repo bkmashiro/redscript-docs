@@ -17,6 +17,13 @@ const PI: float = 3.14;
 PI = 3.15; // Error: cannot reassign constant
 ```
 
+Negative literals work in `const` declarations:
+
+```rs
+const MIN_SCORE: int = -50;
+const DEPTH: int = -64;      // e.g. Minecraft bedrock level
+```
+
 ## Types
 
 RedScript has four primitive types:
@@ -84,6 +91,14 @@ let health = 20;        // inferred as int
 let name = "Steve";     // inferred as string
 let alive = true;       // inferred as bool
 let speed = 1.5;        // inferred as float
+```
+
+This also works for `const` — the type annotation is optional:
+
+```rs
+const MAX_PLAYERS = 16;     // inferred as int
+const PREFIX = "[Game]";    // inferred as string
+const RATE = 0.5;           // inferred as float
 ```
 
 Explicit types are recommended for clarity, but optional.
