@@ -121,6 +121,36 @@ say Hello 5
 > 
 ```
 
+### upgrade
+
+将 RedScript CLI 升级到 npm 上的最新版本。
+
+```bash
+redscript upgrade
+```
+
+```bash
+redscript upgrade
+# Upgrading redscript-mc to latest...
+# ✓ Upgraded to 0.9.2
+```
+
+### generate-dts
+
+生成 `builtins.d.mcrs` 声明文件，列出所有内置函数及其类型签名。可用作参考或工具集成。
+
+```bash
+redscript generate-dts [--output <file>]
+```
+
+```bash
+# 输出到标准输出
+redscript generate-dts
+
+# 写入文件
+redscript generate-dts --output builtins.d.mcrs
+```
+
 ### version
 
 显示版本信息。
@@ -128,6 +158,18 @@ say Hello 5
 ```bash
 redscript --version
 ```
+
+## 自动更新检查
+
+运行 `compile` 或 `check` 时，RedScript 会在后台检查是否有新版本。如果有更新，编译完成后会显示提示：
+
+```
+✓ Compiled successfully
+
+💡 New version available: 0.9.2 (you have 0.9.1). Run `redscript upgrade` to update.
+```
+
+此检查在后台运行，不会影响编译速度。
 
 ## 输出目标
 

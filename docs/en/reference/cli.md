@@ -121,6 +121,36 @@ say Hello 5
 > 
 ```
 
+### upgrade
+
+Upgrade the RedScript CLI to the latest version from npm.
+
+```bash
+redscript upgrade
+```
+
+```bash
+redscript upgrade
+# Upgrading redscript-mc to latest...
+# ✓ Upgraded to 0.9.2
+```
+
+### generate-dts
+
+Generate a `builtins.d.mcrs` declaration file listing all built-in functions with their type signatures. Useful as a reference or for tooling.
+
+```bash
+redscript generate-dts [--output <file>]
+```
+
+```bash
+# Write to stdout
+redscript generate-dts
+
+# Write to a file
+redscript generate-dts --output builtins.d.mcrs
+```
+
 ### version
 
 Show version information.
@@ -128,6 +158,18 @@ Show version information.
 ```bash
 redscript --version
 ```
+
+## Auto Update Check
+
+When you run `compile` or `check`, RedScript performs a background check for newer versions. If a newer version is available, a notice is printed after compilation:
+
+```
+✓ Compiled successfully
+
+💡 New version available: 0.9.2 (you have 0.9.1). Run `redscript upgrade` to update.
+```
+
+This check runs in the background and never delays compilation.
 
 ## Output Targets
 
