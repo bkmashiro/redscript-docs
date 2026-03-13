@@ -56,6 +56,45 @@ redscript compile hello.mcrs -o ./my-datapack
 
 将 `my-datapack` 复制到 Minecraft 存档的 `datapacks` 文件夹，然后在游戏内运行 `/reload`。
 
+## 更完整的示例
+
+这是一个粒子演示，展示了状态管理、tick 函数和玩家遍历：
+
+```rs
+// particle_demo.mcrs
+let counter: int = 0;
+let running: bool = false;
+
+@tick fn demo_tick() {
+    if (!running) { return; }
+    counter = counter + 1;
+    
+    // 在每个玩家位置生成粒子
+    foreach (p in @a) at @s {
+        particle("minecraft:end_rod", ~0, ~1, ~0, 0.5, 0.5, 0.5, 0.1, 5);
+    }
+    
+    if (counter % 20 == 0) {
+        say(f"已运行 {counter} ticks");
+    }
+}
+
+@keep fn start() {
+    running = true;
+    counter = 0;
+    say(f"Demo 已启动！");
+}
+
+@keep fn stop() {
+    running = false;
+    say(f"Demo 已停止，共运行 {counter} ticks。");
+}
+```
+
+游戏内命令：
+- `/function particle_demo:start` — 启动粒子效果
+- `/function particle_demo:stop` — 停止
+
 ## 下一步
 
 - [变量与类型](/zh/guide/variables) — 学习数据类型

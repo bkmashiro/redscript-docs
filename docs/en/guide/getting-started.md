@@ -56,6 +56,45 @@ redscript compile hello.mcrs -o ./my-datapack
 
 Copy `my-datapack` to your Minecraft world's `datapacks` folder, then run `/reload` in-game.
 
+## A More Complete Example
+
+Here's a particle demo that shows state management, tick functions, and player iteration:
+
+```rs
+// particle_demo.mcrs
+let counter: int = 0;
+let running: bool = false;
+
+@tick fn demo_tick() {
+    if (!running) { return; }
+    counter = counter + 1;
+    
+    // Spawn particles at each player's position
+    foreach (p in @a) at @s {
+        particle("minecraft:end_rod", ~0, ~1, ~0, 0.5, 0.5, 0.5, 0.1, 5);
+    }
+    
+    if (counter % 20 == 0) {
+        say(f"Running for {counter} ticks");
+    }
+}
+
+@keep fn start() {
+    running = true;
+    counter = 0;
+    say(f"Demo started!");
+}
+
+@keep fn stop() {
+    running = false;
+    say(f"Demo stopped at {counter} ticks.");
+}
+```
+
+In-game commands:
+- `/function particle_demo:start` — Start the particle effect
+- `/function particle_demo:stop` — Stop it
+
 ## Next Steps
 
 - [Variables & Types](/en/guide/variables) — Learn about data types
