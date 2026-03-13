@@ -248,3 +248,43 @@ Compiles to:
 ```mcfunction
 execute as @e[type=minecraft:zombie] run function ns:fn/foreach_0
 ```
+
+### Execute Context Modifiers
+
+You can attach execute context modifiers directly to a `foreach` loop to control where and how the body runs. Modifiers are appended after the selector, before the block, and can be stacked in any order.
+
+```rs
+// Execute at each player's position
+foreach (p in @a) at @s {
+    // body runs at each player's coordinates
+}
+
+// Execute 2 blocks above each zombie
+foreach (z in @e[type=zombie]) at @s positioned ~ ~2 ~ {
+    // body runs 2 blocks above each zombie
+}
+
+// Execute at each player's position, facing the nearest zombie
+foreach (p in @a) at @s rotated ~ 0 facing entity @e[type=zombie,limit=1,sort=nearest] {
+    // body runs at player position, rotated to face nearest zombie
+}
+```
+
+#### Supported Modifiers
+
+| Modifier | Description |
+|----------|-------------|
+| `at @s` | Execute at the iterated entity's position and rotation |
+| `positioned <x> <y> <z>` | Offset the execution position (supports relative `~` and local `^` coordinates) |
+| `rotated <yaw> <pitch>` | Override the execution rotation (degrees; `~` keeps current axis) |
+| `facing entity <selector>` | Rotate execution to face the matched entity |
+| `facing <x> <y> <z>` | Rotate execution to face a fixed position |
+| `anchored eyes\|feet` | Set the anchor point for `^`-relative coordinates |
+| `align <axes>` | Align position to the block grid on the specified axes (e.g., `xyz`, `xz`) |
+
+Modifiers compile directly to `execute` sub-commands in the generated `.mcfunction` file. For example:
+
+```mcfunction
+# foreach (p in @a) at @s positioned ~ ~2 ~
+execute as @a at @s positioned ~ ~2 ~ run function ns:fn/foreach_1
+```

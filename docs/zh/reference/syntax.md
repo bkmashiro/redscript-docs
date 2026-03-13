@@ -248,3 +248,43 @@ foreach (player in @a) {
 ```mcfunction
 execute as @e[type=minecraft:zombie] run function ns:fn/foreach_0
 ```
+
+### 执行上下文修饰符
+
+可以在 `foreach` 循环中附加执行上下文修饰符，用于控制循环体的执行位置和方式。修饰符写在选择器之后、代码块之前，可以任意顺序叠加使用。
+
+```rs
+// 在每个玩家的位置执行
+foreach (p in @a) at @s {
+    // 循环体在每个玩家的坐标处运行
+}
+
+// 在每只僵尸上方 2 格处执行
+foreach (z in @e[type=zombie]) at @s positioned ~ ~2 ~ {
+    // 循环体在每只僵尸上方 2 格处运行
+}
+
+// 在每个玩家位置执行，面向最近的僵尸
+foreach (p in @a) at @s rotated ~ 0 facing entity @e[type=zombie,limit=1,sort=nearest] {
+    // 循环体在玩家位置、朝向最近僵尸的角度运行
+}
+```
+
+#### 支持的修饰符
+
+| 修饰符 | 说明 |
+|--------|------|
+| `at @s` | 在被迭代实体的位置和朝向处执行 |
+| `positioned <x> <y> <z>` | 偏移执行坐标（支持相对坐标 `~` 和局部坐标 `^`） |
+| `rotated <yaw> <pitch>` | 覆盖执行朝向（单位为度；`~` 保持当前轴向） |
+| `facing entity <selector>` | 将执行朝向旋转为面向匹配的实体 |
+| `facing <x> <y> <z>` | 将执行朝向旋转为面向固定坐标 |
+| `anchored eyes\|feet` | 设置 `^` 相对坐标的锚点（`eyes` 或 `feet`） |
+| `align <axes>` | 将坐标对齐到指定轴的方块网格（如 `xyz`、`xz`） |
+
+修饰符会直接编译为生成的 `.mcfunction` 文件中的 `execute` 子命令，例如：
+
+```mcfunction
+# foreach (p in @a) at @s positioned ~ ~2 ~
+execute as @a at @s positioned ~ ~2 ~ run function ns:fn/foreach_1
+```
