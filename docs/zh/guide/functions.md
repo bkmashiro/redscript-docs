@@ -88,6 +88,45 @@ fn init() {
 }
 ```
 
+## 范围循环
+
+使用 `for i in start..end` 遍历整数范围。上界可以是变量：
+
+```rs
+fn give_reward(player: selector, count: int) {
+    for i in 0..count {
+        give(player, "diamond", 1);
+    }
+}
+
+give_reward(@s, 5);   // 给予 5 颗钻石
+```
+
+两个边界都可以是变量：
+
+```rs
+let start: int = 1;
+let end: int = 10;
+for i in start..end {
+    say("${i}");
+}
+```
+
+范围是**左闭右开**的（`0..5` 遍历 0、1、2、3、4）。
+
+## 仅声明函数
+
+使用 `declare fn` 声明函数签名而不提供函数体。用于声明文件（如 `builtins.d.mcrs`）中，向类型检查器描述内置函数：
+
+```rs
+// builtins.d.mcrs
+declare fn say(msg: string);
+declare fn give(target: selector, item: string, count: int);
+declare fn effect(target: selector, effect: string, duration: int, amplifier: int);
+```
+
+`declare fn` 桩函数不会被编译为 `.mcfunction` 文件 — 它们仅用于类型检查和 IDE 支持。
+
 ## 下一步
 
 - [装饰器](/zh/guide/decorators) — 自动触发函数

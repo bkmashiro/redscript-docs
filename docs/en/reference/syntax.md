@@ -138,6 +138,23 @@ repeat(count) {
 }
 ```
 
+### for i in range
+
+Iterate over an integer range. The upper bound can be a literal **or a variable**:
+
+```rs
+for i in 0..10 {
+    say("${i}");   // 0 through 9
+}
+
+let count: int = get_score(@s, #rounds);
+for i in 0..count {
+    // runs 'count' times
+}
+```
+
+The range is exclusive on the upper end (`0..n` → 0, 1, …, n-1).
+
 ### break / continue
 
 `break` exits the innermost loop early. `continue` skips to the next iteration:

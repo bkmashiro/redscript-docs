@@ -138,6 +138,23 @@ repeat(count) {
 }
 ```
 
+### for i in 范围
+
+遍历整数范围。上界可以是字面量**或变量**：
+
+```rs
+for i in 0..10 {
+    say("${i}");   // 0 到 9
+}
+
+let count: int = get_score(@s, #rounds);
+for i in 0..count {
+    // 循环 count 次
+}
+```
+
+范围是左闭右开的（`0..n` → 0、1、…、n-1）。
+
 ### break / continue
 
 `break` 提前退出最内层循环，`continue` 跳到下一次迭代：
