@@ -134,17 +134,23 @@ foreach (p in @a) {
 
 这是语法糖 —— `p[x_rotation=-90..-45]` 编译为 `@s[x_rotation=-90..-45]`。
 
-## 命名空间语法
+## 实体类型语法
 
-使用 `#mc_name` 作为 Minecraft 命名空间 ID 的简写：
+在选择器中，未指定命名空间的实体类型会自动补全为 `minecraft:`：
 
 ```rs
-// 以下两种写法等价：
-kill(@e[type=#mc_zombie]);
-kill(@e[type=minecraft:zombie]);
+// 以下两种写法等价（裸名自动补全）：
+kill(@e[type=zombie]);              // 警告：自动补全为 minecraft:zombie
+kill(@e[type=minecraft:zombie]);    // 显式命名空间
 
-// 适用于任何命名空间引用
-give(@a, #mc_diamond_sword, 1);
+// 自定义/模组实体使用完整命名空间：
+kill(@e[type=modname:custom_mob]);
+```
+
+物品在函数参数中使用字符串：
+
+```rs
+give(@a, "minecraft:diamond_sword", 1);
 ```
 
 ## 选择器作为参数

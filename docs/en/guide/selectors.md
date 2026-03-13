@@ -134,17 +134,23 @@ foreach (p in @a) {
 
 This is syntactic sugar — `p[x_rotation=-90..-45]` compiles to `@s[x_rotation=-90..-45]`.
 
-## Namespace Syntax
+## Entity Type Syntax
 
-Use `#mc_name` as shorthand for Minecraft namespaced IDs:
+In selectors, entity types are auto-qualified to `minecraft:` if no namespace is given:
 
 ```rs
-// These are equivalent:
-kill(@e[type=#mc_zombie]);
-kill(@e[type=minecraft:zombie]);
+// These are equivalent (bare name auto-qualifies):
+kill(@e[type=zombie]);              // Warning: auto-qualifying to minecraft:zombie
+kill(@e[type=minecraft:zombie]);    // Explicit namespace
 
-// Works with any namespace reference
-give(@a, #mc_diamond_sword, 1);
+// For custom/modded entities, use full namespace:
+kill(@e[type=modname:custom_mob]);
+```
+
+For items in function arguments, use strings:
+
+```rs
+give(@a, "minecraft:diamond_sword", 1);
 ```
 
 ## Selectors as Parameters
