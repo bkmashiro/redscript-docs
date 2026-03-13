@@ -25,8 +25,8 @@ Use `@load` to initialize scoreboards when the datapack loads:
 ```rs
 @load
 fn init() {
-    scoreboard_add("kills", "playerKillCount");
-    scoreboard_add("level", "dummy");
+    scoreboard_add_objective("kills", "playerKillCount");
+    scoreboard_add_objective("level", "dummy");
     scoreboard_display("sidebar", "kills");
     say("Kill Counter datapack loaded!");
 }
@@ -54,7 +54,7 @@ fn grant_reward(player: selector) {
     title(player, "Level Up!");
 
     // Increment level and reset kills
-    scoreboard_add_score(player, "level", 1);
+    scoreboard_add(player, "level", 1);
     scoreboard_set(player, "kills", 0);
 
     // Announce
@@ -65,7 +65,7 @@ fn grant_reward(player: selector) {
 ## Step 5: Welcome New Players
 
 ```rs
-@on_join
+@on_login
 fn welcome(player: selector) {
     title(player, "Kill Counter");
     subtitle(player, "Kill mobs to earn rewards!");
@@ -93,8 +93,8 @@ const REWARD_THRESHOLD: int = 10;
 
 @load
 fn init() {
-    scoreboard_add("kills", "playerKillCount");
-    scoreboard_add("level", "dummy");
+    scoreboard_add_objective("kills", "playerKillCount");
+    scoreboard_add_objective("level", "dummy");
     scoreboard_display("sidebar", "kills");
     say("Kill Counter datapack loaded!");
 }
@@ -112,12 +112,12 @@ fn grant_reward(player: selector) {
     give(player, "diamond", 1);
     effect(player, "regeneration", 10, 2);
     title(player, "Level Up!");
-    scoreboard_add_score(player, "level", 1);
+    scoreboard_add(player, "level", 1);
     scoreboard_set(player, "kills", 0);
     tellraw(@a, "${player} leveled up!");
 }
 
-@on_join
+@on_login
 fn welcome(player: selector) {
     title(player, "Kill Counter");
     subtitle(player, "Kill mobs to earn rewards!");
@@ -155,7 +155,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 
 - `@load` — Run code when the datapack loads
 - `@tick(rate=N)` — Run code periodically
-- `@on_join` / `@on_death` — React to player events
+- `@on_login` / `@on_death` — React to player events
 - Scoreboard functions — Track and display data
 - `give` / `effect` / `title` — Interact with players
 

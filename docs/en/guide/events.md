@@ -40,7 +40,7 @@ fn welcome(player: Player) {
 
 @on(BlockBreak)
 fn reward_mining(player: Player) {
-    scoreboard_add_score(player, "blocks", 1);
+    scoreboard_add(player, "blocks", 1);
 }
 
 @on(ItemUse)

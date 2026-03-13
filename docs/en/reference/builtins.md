@@ -80,27 +80,39 @@ effect_clear(@s, "poison");
 
 | Function | Description |
 |----------|-------------|
-| `scoreboard_add(name, criteria)` | Create objective |
-| `scoreboard_remove(name)` | Remove objective |
-| `scoreboard_display(slot, name)` | Display objective |
-| `scoreboard_set(target, name, value)` | Set score |
-| `scoreboard_add_score(target, name, value)` | Add to score |
-| `scoreboard_remove_score(target, name, value)` | Remove from score |
-| `scoreboard_reset(target, name)` | Reset score |
-| `scoreboard_get(target, name)` | Get score value |
+| `scoreboard_add_objective(name, criteria)` | Create a new objective |
+| `scoreboard_remove_objective(name)` | Remove an objective |
+| `scoreboard_display(slot, objective)` | Display objective in a slot (`sidebar`, `list`, `belowname`) |
+| `scoreboard_hide(slot)` | Hide the display for a slot |
+| `scoreboard_set(target, objective, value)` | Set a player's score |
+| `scoreboard_add(target, objective, value)` | Add to a player's score |
+| `scoreboard_get(target, objective)` | Get a player's score (returns `int`) |
+| `score(target, objective)` | Alias for `scoreboard_get` |
 
 ```rs
-scoreboard_add("kills", "playerKillCount");
+scoreboard_add_objective("kills", "playerKillCount");
 scoreboard_display("sidebar", "kills");
 scoreboard_set(@a, "kills", 0);
-scoreboard_add_score(@s, "kills", 1);
+scoreboard_add(@s, "kills", 1);
+
+let k: int = scoreboard_get(@s, "kills");
+let k2: int = score(@s, #kills);  // #name syntax skips quotes
+```
+
+### Objective Name Syntax
+
+Objective names can be written as quoted strings or using the `#name` syntax for bare identifiers:
+
+```rs
+scoreboard_set(@s, "kills", 0);       // string literal
+scoreboard_set(@s, #kills, 0);        // bare identifier (no quotes)
 ```
 
 ### Namespace Prefixing
 
 Scoreboard objectives are automatically prefixed with your datapack namespace during compilation.
 
-For example, `scoreboard_add("kills", "dummy")` in namespace `minigame` becomes an objective like `minigame_kills` in the generated datapack. This avoids collisions between packs that use the same short objective names.
+For example, `scoreboard_add_objective("kills", "dummy")` in namespace `minigame` becomes an objective like `minigame_kills` in the generated datapack. This avoids collisions between packs that use the same short objective names.
 
 ## Teams
 

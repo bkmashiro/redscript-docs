@@ -73,10 +73,14 @@ fn name() { }
 | `@load` | Run on datapack load |
 | `@tick` | Run every game tick |
 | `@tick(rate=N)` | Run every N ticks |
-| `@on_trigger("name")` | Run on trigger |
+| `@on_trigger("name")` | Run when player activates trigger |
 | `@on_death` | Run on entity death |
-| `@on_join` | Run on player join |
-| `@on_respawn` | Run on player respawn |
+| `@on_login` | Run when player joins server |
+| `@on_advancement("id")` | Run when player earns advancement |
+| `@on_craft("item")` | Run when player crafts item |
+| `@on_join_team("team")` | Run when player joins a team |
+| `@on(EventType)` | Run on static event (PlayerDeath, PlayerJoin, BlockBreak, EntityKill, ItemUse) |
+| `@keep` | Prevent DCE from removing the function |
 
 ## Control Flow
 
@@ -104,13 +108,27 @@ if (condition) {
 
 ### match
 
+Match supports both enum patterns and integer range patterns:
+
 ```rs
+// Enum patterns
 match value {
     Pattern::A => { },
     Pattern::B => { },
     _ => { },
 }
+
+// Integer range patterns
+let score: int = scoreboard_get(@s, #points);
+match score {
+    90..100 => { say("A grade"); },
+    80..89  => { say("B grade"); },
+    70..79  => { say("C grade"); },
+    _       => { say("Below C"); },
+}
 ```
+
+Range patterns use `min..max` (inclusive on both ends).
 
 ### repeat
 
@@ -119,6 +137,73 @@ repeat(count) {
     // body runs count times
 }
 ```
+
+### break / continue
+
+`break` exits the innermost loop early. `continue` skips to the next iteration:
+
+```rs
+while (true) {
+    if (score(@s, #lives) <= 0) {
+        break;
+    }
+    // ...
+}
+
+foreach (player in @a) {
+    if (score(player, #skip) == 1) {
+        continue;
+    }
+    give(player, "diamond", 1);
+}
+```
+
+Both `break` and `continue` work in `while`, `foreach`, and `for i in range` loops.
+
+### execute
+
+The `execute` statement maps directly to Minecraft's `execute` command with a typed body block:
+
+```rs
+execute as @a at @s run {
+    setblock ~ ~-1 ~ "stone";
+}
+
+execute if block ~ ~-1 ~ "grass_block" run {
+    say("Standing on grass!");
+}
+
+execute positioned 0 64 0 run {
+    particle("heart", ~0, ~1, ~0);
+}
+
+execute store result score @s #points run {
+    // commands that produce a result
+}
+```
+
+**Supported subcommands:**
+
+| Subcommand | Description |
+|------------|-------------|
+| `as <selector>` | Change executor |
+| `at <selector>` | Change position/rotation to entity |
+| `positioned <x> <y> <z>` | Set execution position |
+| `positioned as <selector>` | Set position to entity |
+| `rotated <yaw> <pitch>` | Override rotation |
+| `rotated as <selector>` | Copy entity rotation |
+| `facing <x> <y> <z>` | Face a position |
+| `facing entity <selector>` | Face an entity |
+| `anchored eyes\|feet` | Set coordinate anchor |
+| `align <axes>` | Align to block grid |
+| `in <dimension>` | Change dimension |
+| `on <relation>` | Navigate entity relations |
+| `if block <x> <y> <z> <block>` | Condition on block type |
+| `if score <target> <obj> matches <range>` | Condition on score |
+| `unless block ...` | Negated block condition |
+| `unless score ...` | Negated score condition |
+| `store result score <target> <obj>` | Store result in score |
+| `store success score <target> <obj>` | Store success flag |
 
 ## Operators
 
@@ -288,3 +373,24 @@ Modifiers compile directly to `execute` sub-commands in the generated `.mcfuncti
 # foreach (p in @a) at @s positioned ~ ~2 ~
 execute as @a at @s positioned ~ ~2 ~ run function ns:fn/foreach_1
 ```
+
+## Dead Code Elimination (DCE)
+
+RedScript's optimizer automatically removes unreachable functions from the compiled output.
+
+**Visibility rules:**
+
+- Functions **not** starting with `_` are **public** — always emitted (callable via `/function namespace:name`)
+- Functions starting with `_` are **private** — only kept if called from reachable code
+- Decorated functions (`@tick`, `@load`, `@on_*`, `@on`, `@keep`) are always kept
+
+```rs
+fn public_fn() { }       // public, always emitted
+
+fn _helper() { }         // private, removed if not called
+
+@keep
+fn _kept_helper() { }    // private name, but @keep forces retention
+```
+
+This means you can write private utility functions freely — if they're never called, they won't bloat your datapack.
