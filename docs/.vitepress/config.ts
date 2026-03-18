@@ -14,6 +14,7 @@ export default defineConfig({
           { text: 'Guide', link: '/en/guide/getting-started' },
           { text: 'Tutorials', link: '/en/tutorials/' },
           { text: 'Reference', link: '/en/reference/syntax' },
+          { text: 'Dev Log', link: '/en/blog/' },
           { text: 'Online IDE', link: 'https://redscript-ide.pages.dev' },
         ],
         sidebar: {
@@ -78,6 +79,15 @@ export default defineConfig({
                 { text: 'Parkour Race', link: '/en/tutorials/parkour-race' },
               ]
             }
+          ],
+          '/en/blog/': [
+            {
+              text: 'Dev Log',
+              items: [
+                { text: 'All Posts', link: '/en/blog/' },
+                { text: 'v2.5.0 — Double Precision & Stdlib', link: '/en/blog/v2-5-0-double-precision' },
+              ]
+            }
           ]
         }
       }
@@ -91,6 +101,7 @@ export default defineConfig({
           { text: '指南', link: '/zh/guide/getting-started' },
           { text: '教程', link: '/zh/tutorials/' },
           { text: '参考', link: '/zh/reference/syntax' },
+          { text: '开发日志', link: '/zh/blog/' },
           { text: '在线 IDE', link: 'https://redscript-ide.pages.dev' },
         ],
         sidebar: {
@@ -153,6 +164,15 @@ export default defineConfig({
                 { text: '僵尸生存', link: '/zh/tutorials/zombie-survival' },
                 { text: '夺旗战', link: '/zh/tutorials/capture-the-flag' },
                 { text: '跑酷竞速', link: '/zh/tutorials/parkour-race' },
+              ]
+            }
+          ],
+          '/zh/blog/': [
+            {
+              text: '开发日志',
+              items: [
+                { text: '全部文章', link: '/zh/blog/' },
+                { text: 'v2.5.0 — 双精度浮点与标准库', link: '/zh/blog/v2-5-0-double-precision' },
               ]
             }
           ]
