@@ -89,9 +89,39 @@ export default defineConfig({
           ],
           '/en/tutorials/': [
             {
-              text: 'Tutorials',
+              text: 'Overview',
               items: [
-                { text: 'Overview', link: '/en/tutorials/' },
+                { text: 'All Tutorials', link: '/en/tutorials/' },
+              ]
+            },
+            {
+              text: 'Beginner',
+              items: [
+                { text: '01 — Hello Datapack', link: '/en/tutorials/01-hello-datapack' },
+                { text: '02 — Variables & Control Flow', link: '/en/tutorials/02-variables' },
+                { text: '03 — Functions & Structs', link: '/en/tutorials/03-functions-structs' },
+                { text: '04 — Selectors & Execute Context', link: '/en/tutorials/04-selectors-context' },
+              ]
+            },
+            {
+              text: 'Intermediate',
+              items: [
+                { text: '05 — Decorators & Scheduling', link: '/en/tutorials/05-decorators' },
+                { text: '06 — Math & Particles', link: '/en/tutorials/06-stdlib-math' },
+                { text: '07 — Random & Noise', link: '/en/tutorials/07-stdlib-random' },
+              ]
+            },
+            {
+              text: 'Advanced',
+              items: [
+                { text: '08 — Coroutines', link: '/en/tutorials/08-coroutines' },
+                { text: '09 — Precision Arithmetic', link: '/en/tutorials/09-precision-arithmetic' },
+                { text: '10 — Full Game: Kill Race', link: '/en/tutorials/10-full-game' },
+              ]
+            },
+            {
+              text: 'Mini-Games',
+              items: [
                 { text: 'Zombie Survival', link: '/en/tutorials/zombie-survival' },
                 { text: 'Capture the Flag', link: '/en/tutorials/capture-the-flag' },
                 { text: 'Parkour Race', link: '/en/tutorials/parkour-race' },
