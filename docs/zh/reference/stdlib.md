@@ -721,6 +721,30 @@ fn big_add_example() {
 | `bigint_div_small(a,divisor,result,len)` | 除以小整数，返回余数 |
 | `bigint_mod_small(a, divisor, len)` | a % divisor |
 | `bigint_chunk(a, i)` | 读取第 i 个块 |
+| `bigint_mul(a, b, result, la, lb)` | 大整数 × 大整数全精度乘法；result 需有 `la+lb` 块（预置零） |
+| `bigint_mul_result_len(la, lb)` | 返回 `bigint_mul` 所需结果数组长度（`la + lb`） |
+| `bigint_sq(a, result, len)` | 大整数平方：result = a²；result 需有 `len*2` 块（预置零） |
+
+#### 全精度乘法（v2.5.0）
+
+```mcrs
+import "stdlib/bigint.mcrs"
+
+fn multiply_example() {
+    let a: int[] = [0, 0, 1234, 5678];  // 4 块
+    let b: int[] = [0, 0, 9999];         // 3 块
+    let result: int[] = [0, 0, 0, 0, 0, 0, 0];  // la+lb = 7，预置零
+    bigint_mul(a, b, result, 4, 3);
+}
+
+fn square_example() {
+    let n: int[] = [1, 2345, 6789];          // 3 块
+    let sq: int[] = [0, 0, 0, 0, 0, 0];     // len*2 = 6，预置零
+    bigint_sq(n, sq, 3);
+}
+```
+
+> **溢出安全：** 每块 ∈ [0, 9999]，故 9999 × 9999 = 99,980,001 < INT32_MAX。累加安全，进位归一化在所有局部积求和后完成。`bigint_sq` 使用上三角加倍优化。
 
 ### advanced.mcrs
 
@@ -750,6 +774,9 @@ fn showcase() {
 | `noise1d(x)` | 一维值噪声；x ×1000，输出 [0, 999] |
 | `bezier_quad(p0,p1,p2,t)` | 二次贝塞尔曲线；t ∈ [0, 1000] |
 | `bezier_cubic(p0,p1,p2,p3,t)` | 三次贝塞尔曲线；t ∈ [0, 1000] |
+| `bezier_quartic(p0,p1,p2,p3,p4,t)` | 四次贝塞尔曲线（5 个控制点）；t ∈ [0, 1000] |
+| `bezier_n(pts, n, t)` | N 阶贝塞尔（De Casteljau）；**原地修改** `pts`；t ∈ [0, 1000] |
+| `bezier_n_safe(pts, work, n, t)` | 非破坏性 N 阶贝塞尔；先将 `pts` 复制到 `work` |
 | `mandelbrot_iter(cx,cy,max_iter)` | Mandelbrot 迭代次数；cx/cy ×1000 |
 | `julia_iter(z0r,z0i,cr,ci,max_iter)` | Julia 集迭代次数 |
 | `angle_between(x1,y1,x2,y2)` | 两个二维向量夹角（度）[0, 180] |
@@ -757,6 +784,30 @@ fn showcase() {
 | `newton_sqrt(n)` | Newton 法整数平方根 |
 | `digital_root(n)` | 反复求各位之和直至单位数 |
 | `spiral_ring(n)` | Ulam 螺旋环号 |
+
+#### 高阶贝塞尔曲线（v2.5.0）
+
+```mcrs
+import "stdlib/advanced.mcrs"
+
+// 四次曲线（5 个控制点）— 平滑摄像机弧线
+fn camera_path(t: int) -> int {
+    return bezier_quartic(0, 250, 500, 750, 1000, t);
+}
+
+// 任意 N 点曲线（原地修改 pts）
+fn n_order_example() {
+    let pts: int[] = [0, 100, 500, 900, 1000, 800];
+    let result: int = bezier_n(pts, 6, 500);  // 6 点曲线中点
+}
+
+// 非破坏性版本（保留原 pts）
+fn n_order_safe() {
+    let pts: int[]  = [0, 100, 500, 900, 1000, 800];
+    let work: int[] = [0, 0, 0, 0, 0, 0];  // 暂存区，与 pts 等长
+    let result: int = bezier_n_safe(pts, work, 6, 500);
+}
+```
 
 ### calculus.mcrs
 
@@ -998,6 +1049,45 @@ fn example() {
 | `div3_hp(a, b, c, d)` | 三个值同除以 d；结果存于 `$div3_x/y/z` 记分板 |
 | `sqrt_hp(x)` | 高精度平方根；x ×10000，返回 ×10000 |
 | `norm3_hp(x, y, z)` | 三维向量模长 √(x²+y²+z²)；输入 ×10000 |
+| `double_add(a, b)` | 利用实体坐标技巧实现的 IEEE 754 双精度加法 |
+| `double_sub(a, b)` | IEEE 754 双精度减法（取反 b 后相加） |
+| `double_mul(a, b)` | 基于 ×10000 记分板的双精度乘法（约 4 位有效小数） |
+| `double_div(a, b)` | 利用展示实体 SVD 技巧实现的 IEEE 754 双精度除法 |
+| `double_mul_fixed(d, f)` | 双精度 `d` 乘以定点数 `f`（÷10000），全双精度运算 |
+| `ln_hp(x)` | Newton 精炼自然对数；x ×10000；约 8–9 位有效数字 |
+| `ln_5term(x)` | 5 项 atanh 级数自然对数；x ×10000；约 6 位有效数字 |
+
+#### 双精度算术（v2.5.0）
+
+```mcrs
+import "stdlib/math_hp.mcrs"
+
+@load fn setup() {
+    init_trig();
+    init_div();
+}
+
+fn hp_example() {
+    // double_add：实体 Pos[] 技巧 — 全双精度
+    let a: double = 1000000 as double;
+    let b: double = 0 as double;  // 极小值用 double_add 精确保留
+    let sum: double = double_add(a, b);
+
+    // double_div：SVD 技巧 — 真 IEEE 754 除法
+    let pi_approx: double = double_div(355 as double, 113 as double);
+
+    // double_mul_fixed：双精度数 × 定点系数
+    let half: double = double_mul_fixed(pi_approx, 5000);  // pi/2
+
+    // ln_hp：Newton 精炼对数（约 9 位有效数字）
+    let ln2: int = ln_hp(20000);  // ln(2.0) ≈ 6931
+
+    // ln_5term：更快的 6 位精度估算
+    let ln2_fast: int = ln_5term(20000);
+}
+```
+
+> `double_add` / `double_sub` 精度约 15 位有效数字；`double_mul` 仅约 4 位（记分板整数路径）；`double_mul_fixed` 和 `double_div` 均为全双精度；`ln_hp` 约 8–9 位，`ln_5term` 约 6 位。
 
 ### sets.mcrs
 

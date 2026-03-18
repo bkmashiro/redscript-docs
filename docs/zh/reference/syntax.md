@@ -29,14 +29,17 @@ let name = value;             // 类型推断
 
 | 类型 | 描述 | 示例 |
 |------|------|------|
-| `int` | 整数 | `42` |
-| `float` | 小数 | `3.14` |
+| `int` | 整数（记分板，32 位有符号） | `42` |
+| `fixed` | 定点数 ×10000（v2.5.0 中 `float` 重命名） | `10000`（= 1.0） |
+| `double` | IEEE 754 双精度，NBT 存储（v2.5.0 新增） | `x as double` |
 | `string` | 字符串 | `"hello"` |
 | `bool` | 布尔值 | `true`、`false` |
 | `int[]` | 整数数组 | `[1, 2, 3]` |
 | `string[]` | 字符串数组 | `["a", "b"]` |
 | `selector` | 实体选择器 | `@a`、`@e[type=zombie]` |
 | `nbt` | NBT 数据 | `{Health: 20f}` |
+
+> **v2.5.0：** `float` 已废弃并重命名为 `fixed`。v2.5.0 起数值转换必须使用显式 `as` 转换，不再支持隐式转换。对 `fixed` 值做乘法但未使用 `mulfix`/`divfix` 时会触发 lint 警告。
 
 ## 函数
 
