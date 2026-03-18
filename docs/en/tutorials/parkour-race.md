@@ -97,7 +97,7 @@ fn race_tick() {
             let time: int = scoreboard_get(p, "pk_time");
             let seconds: int = time / 20;
             let ms: int = (time % 20) * 5;
-            actionbar(p, "§e⏱ " + seconds + "." + ms + "s");
+            actionbar(p, f"§e⏱ {seconds}.{ms}s");
             
             // Check for fall
             check_fall(p);
@@ -120,7 +120,7 @@ fn check_fall(player: selector) {
         // Respawn at checkpoint
         respawn_at_checkpoint(player, cp);
         
-        tell(player, "§cFell! Back to checkpoint " + cp);
+        tell(player, f"§cFell! Back to checkpoint {cp}");
         angry(player);
     }
 }
@@ -192,7 +192,7 @@ fn check_checkpoints(player: selector) {
 fn reach_checkpoint(player: selector, cp: int) {
     scoreboard_set(player, "pk_checkpoint", cp);
     
-    subtitle(player, "§aCheckpoint " + cp + "/" + CHECKPOINT_COUNT);
+    subtitle(player, f"§aCheckpoint {cp}/{CHECKPOINT_COUNT}");
     
     happy(player);
     playsound("minecraft:entity.experience_orb.pickup", "player", player);
@@ -216,17 +216,17 @@ fn finish_race(player: selector) {
         // First completion
         scoreboard_set(player, "pk_best", time);
         title(player, "§6Finished!");
-        subtitle(player, "§e" + seconds + "." + ms + "s §7(First Record)");
+        subtitle(player, f"§e{seconds}.{ms}s §7(First Record)");
     } else {
         if (time < best) {
             // New personal best!
             scoreboard_set(player, "pk_best", time);
             title(player, "§6New Record!");
-            subtitle(player, "§e" + seconds + "." + ms + "s");
-            announce("§b[Parkour] §6New Record! §e" + seconds + "." + ms + "s");
+            subtitle(player, f"§e{seconds}.{ms}s");
+            announce(f"§b[Parkour] §6New Record! §e{seconds}.{ms}s");
         } else {
             title(player, "§aFinished!");
-            subtitle(player, "§e" + seconds + "." + ms + "s");
+            subtitle(player, f"§e{seconds}.{ms}s");
         }
     }
     

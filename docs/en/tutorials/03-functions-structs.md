@@ -106,12 +106,12 @@ fn damage_boss() {
     if (new_phase != boss.phase) {
         boss.phase = new_phase
         let phase_name: string = describe_phase(boss.phase)
-        announce("Boss entered phase " + boss.phase + ": " + phase_name + "!")
-        title(@a, "Phase " + boss.phase)
+        announce(f"Boss entered phase {boss.phase}: {phase_name}!")
+        title(@a, f"Phase {boss.phase}")
     }
 
     let pct: int = hp_percentage(boss.current_hp, boss.max_hp)
-    announce("Boss HP: " + boss.current_hp + "/" + boss.max_hp + " (" + pct + "%)")
+    announce(f"Boss HP: {boss.current_hp}/{boss.max_hp} ({pct}%)")
 
     if (boss.current_hp <= 0) {
         kill_boss()

@@ -85,7 +85,7 @@ fn compound_interest() {
 
     // Expected: 1000 * 1.05^10 ≈ 1628.89
     // Fixed result: 1628 (truncation each step accumulates small errors)
-    tell(@s, "Fixed result: " + amount + " (expected ~1629)")
+    tell(@s, f"Fixed result: {amount} (expected ~1629)")
     scoreboard_set("#result_fx", "result_display", amount)
 }
 ```
@@ -112,7 +112,7 @@ fn compound_double() {
     // Convert to ×10000 int for display
     let result_int: int = result as int   // 16289
     scoreboard_set("#result_dbl", "result_display", result_int)
-    tell(@s, "Double result (×10000): " + result_int + " = 1.6289")
+    tell(@s, f"Double result (×10000): {result_int} = 1.6289")
 }
 ```
 

@@ -63,13 +63,13 @@ fn every_second() {
 
 ```rs
 fn show_countdown(sec: int) {
-    tell(@a, "Countdown: " + sec)
+    tell(@a, f"Countdown: {sec}")
     if (sec <= 3) {
         subtitle(@a, "Hurry!")
-        actionbar(@a, "⏱ " + sec + " seconds!")
+        actionbar(@a, f"⏱ {sec} seconds!")
     } else {
         subtitle(@a, "Get ready...")
-        actionbar(@a, "Countdown: " + sec)
+        actionbar(@a, f"Countdown: {sec}")
     }
 }
 ```

@@ -57,7 +57,7 @@ fn race_tick() {
             scoreboard_add(p, "pk_time", 1);
             let time: int = scoreboard_get(p, "pk_time");
             let seconds: int = time / 20;
-            actionbar(p, "§e⏱ " + seconds + " 秒");
+            actionbar(p, f"§e⏱ {seconds} 秒");
         }
     }
 }
@@ -68,7 +68,7 @@ fn race_tick() {
 ```mcrs
 fn reach_checkpoint(player: selector, cp: int) {
     scoreboard_set(player, "pk_checkpoint", cp);
-    subtitle(player, "§a检查点 " + cp);
+    subtitle(player, f"§a检查点 {cp}");
     playsound("minecraft:entity.experience_orb.pickup", "player", player);
 }
 ```

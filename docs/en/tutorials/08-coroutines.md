@@ -132,7 +132,7 @@ fn run_scan() {
         // Show progress every 1000 blocks
         if (scan.blocks_checked % 1000 == 0) {
             let pct: int = scan.blocks_checked * 100 / 10000
-            actionbar(@a, "Scanning: " + pct + "%")
+            actionbar(@a, f"Scanning: {pct}%")
         }
 
         i = i + 1
@@ -149,12 +149,12 @@ fn scan_complete() {
     scan.scan_running = 0
 
     say("=== Scan Complete! ===")
-    say("Checked: " + scan.blocks_checked + " blocks")
-    say("Special: " + scan.special_found + " blocks found")
+    say(f"Checked: {scan.blocks_checked} blocks")
+    say(f"Special: {scan.special_found} blocks found")
 
     title(@a, "Scan Done!")
     let found: int = scan.special_found
-    subtitle(@a, "Special blocks found: " + found)
+    subtitle(@a, f"Special blocks found: {found}")
 }
 ```
 

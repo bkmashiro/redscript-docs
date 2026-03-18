@@ -104,7 +104,7 @@ fn tally() {
 
     // 定点数百分比：先乘后除以保留精度
     let yes_pct: fixed = (yes_count * 10000 / total) as fixed
-    announce("YES percentage (×10000): " + yes_pct)
+    announce(f"YES percentage (×10000): {yes_pct}")
 }
 ```
 
@@ -133,7 +133,7 @@ fn reset_votes() {
 fn count_down() {
     let i: int = 5
     while (i > 0) {
-        tell(@s, "Countdown: " + i)
+        tell(@s, f"Countdown: {i}")
         i = i - 1
     }
     tell(@s, "Done!")

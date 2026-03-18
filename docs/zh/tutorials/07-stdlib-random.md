@@ -110,10 +110,10 @@ fn open_chest() {
     let bonus: int = binomial_sample(3, 2500, seed3)
 
     give(@s, item, count)
-    tell(@s, "Found: " + count + "x loot!")
+    tell(@s, f"Found: {count}x loot!")
 
     if (bonus > 0) {
-        tell(@s, "BONUS: " + bonus + " extra chests!")
+        tell(@s, f"BONUS: {bonus} extra chests!")
         let b: int = 0
         while (b < bonus) {
             let bseed: int = advance_seed()
