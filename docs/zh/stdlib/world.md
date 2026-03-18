@@ -1,104 +1,104 @@
-# `world` — World queries and manipulation
+# `world` — 世界查询与操作
 
 Import: `import world;`
 
-World manipulation helpers: time control, weather, gamerules, difficulty, fill helpers, and sun angle calculations. Sun angle functions use `×10000` scale and require `math` for `sin_fixed`.
+世界操作辅助函数：时间控制、天气、游戏规则、难度、区域填充辅助以及太阳角度计算。太阳角度函数使用 `×10000` 缩放，并依赖 `math` 中的 `sin_fixed`。
 
 ## Functions
 
 ### `set_day()`
 
-Set world time to day (tick 1000).
+将世界时间设为白天（tick 1000）。
 
 ---
 
 ### `set_night()`
 
-Set world time to night (tick 13000).
+将世界时间设为夜晚（tick 13000）。
 
 ---
 
 ### `set_noon()`
 
-Set world time to noon (tick 6000).
+将世界时间设为正午（tick 6000）。
 
 ---
 
 ### `set_midnight()`
 
-Set world time to midnight (tick 18000).
+将世界时间设为午夜（tick 18000）。
 
 ---
 
 ### `weather_clear()`
 
-Set weather to clear.
+将天气设为晴天。
 
 ---
 
 ### `weather_rain()`
 
-Set weather to rain.
+将天气设为下雨。
 
 ---
 
 ### `weather_thunder()`
 
-Set weather to thunder.
+将天气设为雷雨。
 
 ---
 
 ### `enable_keep_inventory()`
 
-Set `keepInventory` gamerule to true.
+将 `keepInventory` 游戏规则设为 true。
 
 ---
 
 ### `disable_keep_inventory()`
 
-Set `keepInventory` gamerule to false.
+将 `keepInventory` 游戏规则设为 false。
 
 ---
 
 ### `disable_mob_griefing()`
 
-Set `mobGriefing` gamerule to false.
+将 `mobGriefing` 游戏规则设为 false。
 
 ---
 
 ### `disable_fire_spread()`
 
-Set `doFireTick` gamerule to false.
+将 `doFireTick` 游戏规则设为 false。
 
 ---
 
 ### `set_peaceful()`
 
-Set difficulty to peaceful.
+将难度设为和平。
 
 ---
 
 ### `set_easy()`
 
-Set difficulty to easy.
+将难度设为简单。
 
 ---
 
 ### `set_normal()`
 
-Set difficulty to normal.
+将难度设为普通。
 
 ---
 
 ### `set_hard()`
 
-Set difficulty to hard.
+将难度设为困难。
 
 ---
 
 ### `barrier_wall(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
 
-Fill region with `minecraft:barrier` blocks.
+用 `minecraft:barrier`（屏障）方块填充区域。
 
 **Example:**
 ```rs
@@ -110,13 +110,13 @@ barrier_wall(-50, 0, -50, 50, 256, -50);
 
 ### `clear_area(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
 
-Fill region with `minecraft:air`.
+用 `minecraft:air`（空气）填充区域。
 
 ---
 
 ### `glass_box(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
 
-Create a hollow glass box: fills outer shell with glass, clears interior with air.
+创建空心玻璃盒：用玻璃填充外壳，用空气清空内部。
 
 **Example:**
 ```rs
@@ -130,22 +130,22 @@ glass_box(0, 64, 0, 10, 74, 10);
 
 > **Requires:** `math:tables` NBT storage must be pre-loaded (uses `sin_fixed`)
 
-Sun elevation above the horizon ×10000. Noon (tick 6000) → 900000 (+90°); midnight (tick 18000) → -900000 (-90°). Uses `sin_fixed`.
+太阳地平线以上的仰角 ×10000。正午（tick 6000）→ 900000（+90°）；午夜（tick 18000）→ -900000（-90°）。使用 `sin_fixed`。
 
 **Example:**
 ```rs
 import world;
-let alt: int = sun_altitude(6000);  // 900000 (directly overhead)
+let alt: int = sun_altitude(6000);  // 900000（正头顶）
 ```
 
 ---
 
 ### `sun_azimuth(ticks: int): int`
 
-Compass angle of the sun ×10000. Tick 0 = 0° (east), increases linearly to 3600000 over 24000 ticks.
+太阳的罗盘方位角 ×10000。Tick 0 = 0°（东方），在 24000 tick 内线性增加到 3600000。
 
 **Example:**
 ```rs
 import world;
-let az: int = sun_azimuth(12000);  // 1800000 (180°, west)
+let az: int = sun_azimuth(12000);  // 1800000（180°，西方）
 ```

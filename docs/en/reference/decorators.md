@@ -241,6 +241,44 @@ fn _internal_helper() {
 - Utility functions called only via `/function` in-game
 - Functions that should survive aggressive DCE
 
+## @coroutine
+
+Marks a function as a coroutine — a long-running task that can yield control back to Minecraft at loop back-edges, preventing server timeout on expensive computations.
+
+**Syntax:** `@coroutine` or `@coroutine(batch=N)` or `@coroutine(onDone="fn_name")`
+
+```rs
+@coroutine(batch=10, onDone="on_done")
+fn process_all_players() {
+    foreach (p in @a) {
+        heavy_computation(p);
+        // yields every 10 iterations at the loop back-edge
+    }
+}
+
+fn on_done() {
+    say("Processing complete!");
+}
+```
+
+**Parameters:**
+
+| Parameter | Description |
+|-----------|-------------|
+| `batch=N` | Number of loop iterations to execute per tick before yielding. Default: 1 (yield every iteration). |
+| `onDone="fn"` | Name of a no-arg function to call when the coroutine finishes all iterations. |
+
+**Behaviour:**
+- Yields at loop back-edges (end of each `foreach` / `for` / `while` body iteration).
+- Uses `schedule function ... 1t` to resume on the next tick.
+- State is preserved between ticks in a dedicated scoreboard.
+- Only one instance of a coroutine runs at a time; starting a new one while it is running is a no-op.
+
+**Use cases:**
+- Processing large entity lists without causing `/tick warp` timeouts
+- Spreading heavy map generation over multiple ticks
+- Chunked bulk operations (inventory scans, world edits)
+
 ## Decorator Summary
 
 | Decorator | Trigger | `@s` Context |
@@ -256,3 +294,4 @@ fn _internal_helper() {
 | `@on_join_team("team")` | Player joins team | Player |
 | `@on(EventType)` | Static event fires | Event player |
 | `@keep` | (Optimizer hint, no runtime effect) | — |
+| `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |

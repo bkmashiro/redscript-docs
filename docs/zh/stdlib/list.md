@@ -1,8 +1,8 @@
-# `list` — Array aggregates and sorting
+# `list` — 数组聚合与排序
 
 Import: `import list;`
 
-Array utilities including static min/max/avg/sum helpers for up to 5 values, optimal sorting networks for 2–5 values, weighted random choice, dynamic sorting (bubble sort, ascending/descending) and aggregates (sum, avg, min, max, contains, index_of, shuffle, dedup count) for arbitrary-length arrays.
+数组工具库，包含最多 5 个值的静态 min/max/avg/sum 辅助函数、2–5 个值的最优排序网络、加权随机选择、动态排序（冒泡排序升序/降序）以及任意长度数组的聚合操作（sum、avg、min、max、contains、index_of、shuffle、dedup 计数）。
 
 > **Note:** Dynamic array functions (those taking `arr: int[]`) require RedScript ≥ 2.4.0 (array parameter by reference).
 
@@ -10,53 +10,53 @@ Array utilities including static min/max/avg/sum helpers for up to 5 values, opt
 
 ### `sort2_min(a: int, b: int): int`
 
-Minimum of two values.
+两值中的最小值。
 
 ### `sort2_max(a: int, b: int): int`
 
-Maximum of two values.
+两值中的最大值。
 
 ### `list_min3(a: int, b: int, c: int): int`
 
-Minimum of three values.
+三值中的最小值。
 
 ### `list_max3(a: int, b: int, c: int): int`
 
-Maximum of three values.
+三值中的最大值。
 
 ### `list_min5(a: int, b: int, c: int, d: int, e: int): int`
 
-Minimum of five values.
+五值中的最小值。
 
 ### `list_max5(a: int, b: int, c: int, d: int, e: int): int`
 
-Maximum of five values.
+五值中的最大值。
 
 ### `list_sum3(a: int, b: int, c: int): int`
 
-Sum of three values.
+三值之和。
 
 ### `list_sum4(a: int, b: int, c: int, d: int): int`
 
-Sum of four values.
+四值之和。
 
 ### `list_sum5(a: int, b: int, c: int, d: int, e: int): int`
 
-Sum of five values.
+五值之和。
 
 ### `avg3(a: int, b: int, c: int): int`
 
-Integer average of three values.
+三值整数均值。
 
 ### `avg5(a: int, b: int, c: int, d: int, e: int): int`
 
-Integer average of five values.
+五值整数均值。
 
 ---
 
 ### `sort3(a: int, b: int, c: int, pos: int): int`
 
-Sort three values, returning the value at sorted position `pos` (0=min, 1=mid, 2=max). Uses a 3-comparison sorting network.
+对三个值排序，返回排序后位置 `pos` 处的值（0=最小，1=中间，2=最大）。使用 3 次比较排序网络。
 
 **Example:**
 ```rs
@@ -68,31 +68,31 @@ let median: int = sort3(30, 10, 20, 1);  // 20
 
 ### `sort4(a: int, b: int, c: int, d: int, pos: int): int`
 
-Sort four values, returning the value at sorted position `pos` (0=min, 3=max). Uses a 5-comparison optimal sorting network.
+对四个值排序，返回排序后位置 `pos` 处的值（0=最小，3=最大）。使用 5 次比较最优排序网络。
 
 ---
 
 ### `sort5(a: int, b: int, c: int, d: int, e: int, pos: int): int`
 
-Sort five values, returning the value at sorted position `pos`. Uses a 9-comparison sorting network (Batcher odd-even merge).
+对五个值排序，返回排序后位置 `pos` 处的值。使用 9 次比较排序网络（Batcher 奇偶归并）。
 
 ---
 
 ### `weighted2(seed: int, w0: int, w1: int): int`
 
-Choose 0 or 1 with weights `w0`, `w1`. Returns the index selected. Uses LCG from `seed`.
+按权重 `w0`、`w1` 选择 0 或 1，返回所选索引。使用来自 `seed` 的 LCG。
 
 **Example:**
 ```rs
 import list;
-let choice: int = weighted2(12345, 70, 30);  // 70% chance of 0, 30% chance of 1
+let choice: int = weighted2(12345, 70, 30);  // 70% 概率选 0，30% 概率选 1
 ```
 
 ---
 
 ### `weighted3(seed: int, w0: int, w1: int, w2: int): int`
 
-Choose 0, 1, or 2 with given weights. Returns the index selected.
+按给定权重选择 0、1 或 2，返回所选索引。
 
 ---
 
@@ -100,7 +100,7 @@ Choose 0, 1, or 2 with given weights. Returns the index selected.
 
 > **Cost:** O(n²) — bubble sort
 
-In-place ascending bubble sort of `len` elements.
+对 `len` 个元素原地升序冒泡排序。
 
 **Example:**
 ```rs
@@ -115,7 +115,7 @@ list_sort_asc(nums, 3);  // [10, 20, 30]
 
 > **Cost:** O(n²) — bubble sort
 
-In-place descending bubble sort of `len` elements.
+对 `len` 个元素原地降序冒泡排序。
 
 ---
 
@@ -123,7 +123,7 @@ In-place descending bubble sort of `len` elements.
 
 > **Cost:** O(n)
 
-Sum of all `len` elements in `arr`.
+`arr` 中所有 `len` 个元素之和。
 
 ---
 
@@ -131,7 +131,7 @@ Sum of all `len` elements in `arr`.
 
 > **Cost:** O(n)
 
-Arithmetic mean ×10000 (fixed-point). Returns `(sum × 10000) / len`. Returns 0 for empty array.
+算术均值 ×10000（定点数）。返回 `(sum × 10000) / len`。空数组返回 0。
 
 ---
 
@@ -139,7 +139,7 @@ Arithmetic mean ×10000 (fixed-point). Returns `(sum × 10000) / len`. Returns 0
 
 > **Cost:** O(n)
 
-Minimum element in `arr`.
+`arr` 中的最小元素。
 
 ---
 
@@ -147,7 +147,7 @@ Minimum element in `arr`.
 
 > **Cost:** O(n)
 
-Maximum element in `arr`.
+`arr` 中的最大元素。
 
 ---
 
@@ -155,7 +155,7 @@ Maximum element in `arr`.
 
 > **Cost:** O(n)
 
-Returns 1 if `val` is in `arr`, 0 otherwise.
+若 `val` 在 `arr` 中则返回 1，否则返回 0。
 
 ---
 
@@ -163,7 +163,7 @@ Returns 1 if `val` is in `arr`, 0 otherwise.
 
 > **Cost:** O(n)
 
-First index of `val` in `arr`, or -1 if not found.
+`val` 在 `arr` 中第一次出现的索引，未找到返回 -1。
 
 ---
 
@@ -171,7 +171,7 @@ First index of `val` in `arr`, or -1 if not found.
 
 > **Cost:** O(n)
 
-Fisher-Yates shuffle in-place using LCG RNG. Returns `arr`. Uses `next_lcg` from `random`.
+使用 LCG 随机数原地 Fisher-Yates 洗牌。返回 `arr`。使用 `random` 中的 `next_lcg`。
 
 **Example:**
 ```rs
@@ -186,4 +186,4 @@ list_shuffle(deck, 5, 99999);
 
 > **Cost:** O(n²) — suitable for small arrays
 
-Count of unique values in `arr`.
+统计 `arr` 中唯一值的数量。

@@ -1,14 +1,14 @@
-# `easing` — Easing functions for animations and transitions
+# `easing` — 动画与过渡缓动函数
 
 Import: `import easing;`
 
-Standard easing functions for smooth animations, UI transitions, and projectile arcs. All functions take `t ∈ [0, 10000]` (fixed-point ×10000) and return a value in `[0, 10000]` (elastic/bounce may slightly exceed this range). Requires `math` for `abs`, `clamp`.
+用于平滑动画、UI 过渡和抛射体弧线的标准缓动函数。所有函数接受 `t ∈ [0, 10000]`（定点数 ×10000），返回值 ∈ `[0, 10000]`（弹性/弹跳可能略超出此范围）。依赖 `math` 中的 `abs`、`clamp`。
 
 ## Functions
 
 ### `ease_linear(t: int): int`
 
-Linear easing — no transformation.
+线性缓动——无变换。
 
 **Example:**
 ```rs
@@ -20,7 +20,7 @@ let v: int = ease_linear(5000);  // 5000
 
 ### `ease_in_quad(t: int): int`
 
-Quadratic ease-in: slow start, fast end. `f(t) = t²`.
+二次缓入：慢起步，快结束。`f(t) = t²`。
 
 **Example:**
 ```rs
@@ -32,126 +32,126 @@ let v: int = ease_in_quad(5000);  // 2500
 
 ### `ease_out_quad(t: int): int`
 
-Quadratic ease-out: fast start, slow end.
+二次缓出：快起步，慢结束。
 
 ---
 
 ### `ease_in_out_quad(t: int): int`
 
-Quadratic ease-in-out: slow start and end, fast middle.
+二次缓入缓出：慢起步慢结束，中间快。
 
 ---
 
 ### `ease_in_cubic(t: int): int`
 
-Cubic ease-in: `f(t) = t³`.
+三次缓入：`f(t) = t³`。
 
 ---
 
 ### `ease_out_cubic(t: int): int`
 
-Cubic ease-out.
+三次缓出。
 
 ---
 
 ### `ease_in_out_cubic(t: int): int`
 
-Cubic ease-in-out.
+三次缓入缓出。
 
 ---
 
 ### `ease_in_quart(t: int): int`
 
-Quartic ease-in: `f(t) = t⁴`.
+四次缓入：`f(t) = t⁴`。
 
 ---
 
 ### `ease_out_quart(t: int): int`
 
-Quartic ease-out.
+四次缓出。
 
 ---
 
 ### `ease_in_sine(t: int): int`
 
-Sine-approximated ease-in using a polynomial approximation of `1 - cos(t×π/2)`.
+正弦近似缓入，使用 `1 - cos(t×π/2)` 的多项式近似。
 
 ---
 
 ### `ease_out_sine(t: int): int`
 
-Sine-approximated ease-out.
+正弦近似缓出。
 
 ---
 
 ### `ease_in_out_sine(t: int): int`
 
-Sine-approximated ease-in-out.
+正弦近似缓入缓出。
 
 ---
 
 ### `ease_in_expo(t: int): int`
 
-Exponential ease-in: very slow start, explosive end. Uses cubic proxy approximation.
+指数缓入：极慢起步，爆发式结束。使用三次代理近似。
 
 ---
 
 ### `ease_out_expo(t: int): int`
 
-Exponential ease-out.
+指数缓出。
 
 ---
 
 ### `ease_in_back(t: int): int`
 
-Back ease-in: slight pullback before moving forward. Overshoot constant c1 ≈ 1.70158.
+回弹缓入：前进前先轻微后退。过冲常数 c1 ≈ 1.70158。
 
 ---
 
 ### `ease_out_back(t: int): int`
 
-Back ease-out.
+回弹缓出。
 
 ---
 
 ### `ease_in_out_back(t: int): int`
 
-Back ease-in-out.
+回弹缓入缓出。
 
 ---
 
 ### `ease_out_bounce(t: int): int`
 
-Bounce ease-out: bounces at the end (ball-dropping effect). Piecewise with 4 bounce segments.
+弹跳缓出：结尾产生弹跳效果（落球效果）。分段实现，含 4 段弹跳。
 
 ---
 
 ### `ease_in_bounce(t: int): int`
 
-Bounce ease-in.
+弹跳缓入。
 
 ---
 
 ### `ease_in_out_bounce(t: int): int`
 
-Bounce ease-in-out.
+弹跳缓入缓出。
 
 ---
 
 ### `ease_smooth(t: int): int`
 
-Smoothstep: `3t² - 2t³`. Equivalent to Ken Perlin's smoothstep, re-exported here for convenience.
+Smoothstep：`3t² - 2t³`。等价于 Ken Perlin 的 smoothstep，在此重新导出以方便使用。
 
 ---
 
 ### `ease_smoother(t: int): int`
 
-Smootherstep (Ken Perlin's order-5): `6t⁵ - 15t⁴ + 10t³`. Even smoother acceleration curve with zero first and second derivatives at both endpoints.
+Smootherstep（Ken Perlin 5 阶）：`6t⁵ - 15t⁴ + 10t³`。加速曲线更平滑，两端一阶和二阶导数均为零。
 
 **Example:**
 ```rs
 import easing;
-let t: int = 3000;  // 30% through animation
+let t: int = 3000;  // 动画进行到 30%
 let v: int = ease_out_bounce(t);
-// use v to interpolate a position
+// 使用 v 插值位置
 ```
