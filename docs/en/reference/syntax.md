@@ -29,14 +29,17 @@ let name = value;             // type inferred
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `int` | Integer | `42` |
-| `float` | Decimal | `3.14` |
+| `int` | Integer (scoreboard, 32-bit signed) | `42` |
+| `fixed` | Fixed-point ×10000 (renamed from `float` in v2.5.0) | `10000` (= 1.0) |
+| `double` | IEEE 754 double, NBT-backed (new in v2.5.0) | `x as double` |
 | `string` | Text | `"hello"` |
 | `bool` | Boolean | `true`, `false` |
 | `int[]` | Array of int | `[1, 2, 3]` |
 | `string[]` | Array of string | `["a", "b"]` |
 | `selector` | Entity selector | `@a`, `@e[type=zombie]` |
 | `nbt` | NBT data | `{Health: 20f}` |
+
+> **v2.5.0:** `float` is deprecated and renamed to `fixed`. Use `x as fixed` / `x as double` for explicit numeric conversions — implicit coercion is no longer allowed. The compiler will warn on `float` arithmetic used without `mulfix`.
 
 ## Functions
 

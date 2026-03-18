@@ -2,6 +2,34 @@
 
 RedScript 包含常用工具函数的标准库，并在 v1.2 中新增了 Timer OOP API 与 313 个 Minecraft 标签常量。
 
+## v2.5.0 新特性
+
+### `double` 和 `fixed` 类型
+
+v2.5.0 引入了两项重要类型系统变更：
+
+**`fixed` 类型（原 `float` 重命名）：** 定点整数，缩放比例 ×10000。`10000` = 1.0，`15000` = 1.5。乘法使用 `mulfix(a, b)`（内部除以 1000 重新缩放）。用 `as fixed` 从 `int` 或 `double` 转换。
+
+**`double` 类型：** IEEE 754 双精度浮点数，存储在 NBT（`rs:d`）中。用于高精度三角函数、物理模拟或超出 int32 范围的计算。`math_hp.mcrs` 中的函数操作 `double` 值。
+
+```mcrs
+let x: int    = 5;
+let f: fixed  = x as fixed;   // 50000 (5 × 10000)
+let d: double = x as double;  // 5.0
+
+// 反向转换
+let n2: int   = d as int;     // 5
+let f2: fixed = d as fixed;   // 50000
+```
+
+> **必须显式转换。** v2.5.0 移除了隐式数值类型转换。不加 `as` 直接将 `int` 赋给 `fixed` 或 `double` 会导致编译错误。
+>
+> **`float` 算术 lint 警告。** 对 `fixed`（原 `float`）值做乘法但未使用 `mulfix`/`divfix` 时，编译器会发出警告：*"fixed-point multiplication without mulfix — result will not be rescaled"*。
+
+### 关键说明：`mulfix(a, b)` 除数为 1000
+
+`mulfix` 将原始乘积除以 **1000**，而非 10000。对于两个 ×10000 的定点值相乘，请直接用 `(a * b / 10000)`，或使用 `mulfix(a/10, b/10)`。
+
 ## 使用方法
 
 ```mcrs
@@ -441,6 +469,55 @@ fn terrain_gen(x: int, z: int) {
 | `fbm_2d(x_fx, z_fx, octaves, persistence_fx)` | 二维分形布朗运动 |
 | `terrain_height(x, z, base_y, amplitude)` | 使用 3 倍频 fBm 生成地形高度 |
 
+### parabola.mcrs
+
+抛射体轨迹辅助函数，使用 Minecraft 原生定点缩放（×10000）。计算箭、雪球、火球等抛射体的发射速度、飞行位置和逐 tick 阻力物理。依赖 `math.mcrs`（`mulfix`）。
+
+**缩放约定：**
+- 位置：方块（整数）
+- 速度：方块/tick ×10000（如 `8000` = 0.8 方块/tick）
+- 重力常量：`800`（≈ 0.08 方块/tick²）
+- MC 箭矢阻力：`9900`（每 tick × 0.99）
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/parabola.mcrs"
+
+// 瞄准目标：水平 10 格，垂直 3 格，15 tick 后到达
+fn shoot_at(target_dx: int, target_dy: int, target_dz: int) {
+    let ticks: int = 15;
+    let vx: int = parabola_vx(target_dx, ticks);  // ×10000
+    let vy: int = parabola_vy(target_dy, ticks);  // ×10000
+    let vz: int = parabola_vz(target_dz, ticks);  // ×10000
+}
+
+// 带阻力的逐 tick 箭矢飞行模拟
+fn tick_arrow() {
+    let arrow_drag: int = 9900;
+    arrow_vy = parabola_step_vy(arrow_vy, arrow_drag);
+    arrow_vx = parabola_step_vx(arrow_vx, arrow_drag);
+}
+```
+
+| 函数 | 描述 |
+|-----|------|
+| `parabola_gravity()` | 重力常量：`800`（0.08 方块/tick² ×10000） |
+| `parabola_gravity_half()` | 半重力：`400`（用于位移公式） |
+| `parabola_vx(dx, ticks)` | X 轴发射速度 ×10000，使 `dx` 方块在 `ticks` tick 后到达 |
+| `parabola_vy(dy, ticks)` | Y 轴发射速度 ×10000，使 `dy` 方块在 `ticks` tick 后到达 |
+| `parabola_vz(dz, ticks)` | Z 轴发射速度 ×10000，使 `dz` 方块在 `ticks` tick 后到达 |
+| `parabola_speed_xz(dx, dz, ticks)` | 水平发射速度 √(vx²+vz²) ×10000 |
+| `parabola_x(vx0, t)` | t tick 后的 X 位置（方块），初速度 ×10000 |
+| `parabola_y(vy0, t)` | t tick 后的 Y 位置（方块），初速度 ×10000 |
+| `parabola_z(vz0, t)` | t tick 后的 Z 位置（方块），初速度 ×10000 |
+| `parabola_flight_time(vy0)` | 抛射体回到发射高度所需 tick 数；vy0 ≤ 0 时返回 0 |
+| `parabola_max_height(vy0)` | 发射点以上最高高度（方块） |
+| `parabola_step_vx(vx, drag)` | 对 X 速度施加一 tick 阻力 |
+| `parabola_step_vy(vy, drag)` | 对 Y 速度施加重力后再施加阻力（一 tick） |
+| `parabola_step_vz(vz, drag)` | 对 Z 速度施加一 tick 阻力 |
+| `parabola_ticks_for_range(range)` | 估算水平距离所需 tick 数（箭矢启发式） |
+| `parabola_in_range(dx, dz, max_range)` | 目标在水平范围内返回 1 |
+
 ### physics.mcrs
 
 简单定点数物理模拟（位置/速度 ×100，1 方块 = 100 单位，1 tick = 1/20 秒）。包含抛体运动、阻力、弹簧和匀速圆周运动。
@@ -507,6 +584,59 @@ fn spin_display(angle_fx: int) {
 | `billboard_y(player_yaw_fx)` | 面向玩家的广告牌 Y 旋转 |
 | `lerp_angle(a_fx, b_fx, t)` | 角度最短路径插值 |
 
+### quaternion.mcrs
+
+用于 Minecraft 展示实体旋转的四元数数学。所有分量使用 ×10000 缩放（如 `7071` = 0.7071）。依赖 `math.mcrs`（`sin_fixed`、`cos_fixed`、`mulfix`、`isqrt`）。
+
+**MC 展示实体四元数格式：** `[x, y, z, w]` — 以浮点数存储在 `left_rotation` / `right_rotation` 中。单位四元数满足 x²+y²+z²+w² = 1。
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/quaternion.mcrs"
+
+// 绕 Y 轴旋转 45°
+fn rotate_display_y45() {
+    let qx: int = quat_axis_y_x(45);  // 0
+    let qy: int = quat_axis_y_y(45);  // sin(22.5°) × 10000 ≈ 3827
+    let qz: int = quat_axis_y_z(45);  // 0
+    let qw: int = quat_axis_y_w(45);  // cos(22.5°) × 10000 ≈ 9239
+    raw("data modify entity @e[tag=my_display,limit=1] transformation.left_rotation set value [{qx}f,{qy}f,{qz}f,{qw}f]");
+}
+
+// 在 20 tick 内平滑插值旋转
+let interp_tick: int = 0;
+fn slerp_step() {
+    interp_tick = interp_tick + 50;  // 1000/20 = 每 tick 50
+    if (interp_tick > 1000) { interp_tick = 1000; }
+    let rx: int = quat_slerp_x(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let ry: int = quat_slerp_y(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let rz: int = quat_slerp_z(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let rw: int = quat_slerp_w(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+}
+```
+
+**构造函数：**
+
+| 函数 | 描述 |
+|-----|------|
+| `quat_identity_x/y/z/w()` | 单位四元数 (0, 0, 0, 10000) — 无旋转 |
+| `quat_axis_x_x/y/z/w(angle_deg)` | 绕 X 轴旋转 `angle_deg` 度的四元数 |
+| `quat_axis_y_x/y/z/w(angle_deg)` | 绕 Y 轴旋转的四元数 |
+| `quat_axis_z_x/y/z/w(angle_deg)` | 绕 Z 轴旋转的四元数 |
+| `quat_euler_x/y/z/w(yaw, pitch, roll)` | 欧拉角 → 四元数（YXZ 顺序，MC 约定） |
+
+**运算：**
+
+| 函数 | 描述 |
+|-----|------|
+| `quat_mul_x/y/z/w(ax,ay,az,aw, bx,by,bz,bw)` | 四元数乘法 a × b；所有分量 ×10000 |
+| `quat_conj_x/y/z/w(qx,qy,qz,qw)` | 共轭（对单位四元数即为逆）：x/y/z 取反，w 不变 |
+| `quat_dot(ax,ay,az,aw, bx,by,bz,bw)` | 四元数点积 ×10000 |
+| `quat_mag_sq(qx,qy,qz,qw)` | 模长平方 ×10000（单位四元数应为 10000） |
+| `quat_slerp_x/y/z/w(ax,ay,az,aw, bx,by,bz,bw, t)` | SLERP 插值；t ∈ [0, 1000] |
+
+> **SLERP 实现：** 使用归一化线性插值（nlerp）近似，比真正的球面插值更高效，对 Minecraft 动画速度完全够用。结果始终为单位四元数。
+
 ### signal.mcrs
 
 用于战利品表、生成权重和游戏事件的统计分布与概率辅助函数。值 ×10000。`exp_dist_approx` 依赖 `math.mcrs`。
@@ -530,6 +660,33 @@ fn loot_roll(seed: int) {
 | `bernoulli(seed, p_fx)` | 以 p/10000 概率返回 1，否则返回 0 |
 | `weighted2(seed, w0, w1)` | 加权选 0 或 1 |
 | `weighted3(seed, w0, w1, w2)` | 加权选 0、1 或 2 |
+| `gamma_sample(shape_k, scale_theta, seed)` | Gamma(k, θ) 变量 ×10000；shape_k 和 scale_theta ×10000；k ∈ [1, 5] |
+| `poisson_sample(lambda, seed)` | Poisson(λ) 计数（普通 int）；lambda ×10000；λ ≤ 20 效果最佳 |
+| `geometric_sample(p_success, seed)` | Geometric(p) — 首次成功前的失败次数；p_success ×10000 |
+| `negative_binomial_sample(r, p_success, seed)` | NegBin(r, p) — r 次成功前的总失败次数；p_success ×10000 |
+
+#### 新分布（v2.5.0）
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/signal.mcrs"
+
+fn loot_example(seed: int) {
+    // Gamma 分布 — 武器伤害（形状=2，尺度=1.5）
+    let dmg: int = gamma_sample(20000, 15000, seed);  // Gamma(2, 1.5) ×10000
+
+    // Poisson 分布 — 每波随机刷怪数（λ=3）
+    let spawns: int = poisson_sample(30000, seed);    // 整数计数
+
+    // 几何分布 — 直到合成成功的尝试次数（p=0.3）
+    let tries: int = geometric_sample(3000, seed);    // 整数计数
+
+    // 负二项分布 — 3 次成功前的总失败数（p=0.5）
+    let total_fail: int = negative_binomial_sample(3, 5000, seed);
+}
+```
+
+> `gamma_sample` 使用 `stdlib/math.mcrs` 中的 `ln`（整数 ×10000 对数），支持整数形状参数 k = 1..5（×10000 表示为 10000..50000）。`poisson_sample` 使用 `stdlib/math.mcrs` 中的 `exp_fx`。
 
 ### bigint.mcrs
 

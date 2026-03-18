@@ -2,6 +2,43 @@
 
 RedScript includes a standard library with common utilities, including the v1.2 Timer OOP API and 313 Minecraft tag constants.
 
+## v2.5.0 New Features
+
+### `double` and `fixed` types
+
+v2.5.0 introduces two significant type system changes:
+
+**`fixed` type (renamed from `float`):** Fixed-point integers at ×10000 scale. `10000` = 1.0, `15000` = 1.5. Use `mulfix(a, b)` for multiplication (divides by 1000 internally to re-scale). Use `as fixed` to convert from `int` or `double`.
+
+**`double` type:** IEEE 754 double-precision float backed by NBT storage (`rs:d`). Used for high-precision trig, physics, and computations that overflow int32. Functions in `math_hp.mcrs` operate on `double` values.
+
+```mcrs
+let x: int    = 5;
+let f: fixed  = x as fixed;   // 50000 (5 × 10000)
+let d: double = x as double;  // 5.0
+
+// Convert back
+let n2: int   = d as int;     // 5
+let f2: fixed = d as fixed;   // 50000
+```
+
+> **Casting is required.** Implicit numeric coercion is removed in v2.5.0. Assigning an `int` to a `fixed` or `double` without `as` is a compile error.
+>
+> **`float` arithmetic lint warning.** Any arithmetic on `fixed` (previously `float`) values that bypasses `mulfix`/`divfix` will emit a lint warning: *"fixed-point multiplication without mulfix — result will not be rescaled"*.
+
+### Key fact: `mulfix(a, b)` divisor is 1000
+
+`mulfix` divides the raw product by **1000**, not 10000. This is intentional for the ×1000-scale sub-operations used in `vec.mcrs`, `easing.mcrs`, and similar modules. When working at ×10000 scale, keep this in mind:
+
+```mcrs
+// Both a, b are ×10000 → raw product is ×100,000,000 → ÷1000 → ×100,000 ???
+// Actually mulfix is designed for ×1000 operands in most stdlib usage.
+// For two ×10000 fixed values: use (a * b) / 10000 directly, or mulfix(a/10, b/10).
+let result: int = mulfix(15000, 20000);  // 15000*20000/1000 = 300,000  (not 30000!)
+// For ×10000 × ×10000 → ×10000: use (a * b / 10000)
+let r2: int = 15000 * 20000 / 10000;    // 30000 ✓
+```
+
 ## Usage
 
 ```mcrs
@@ -448,6 +485,59 @@ fn terrain_gen(x: int, z: int) {
 | `fbm_2d(x_fx, z_fx, octaves, persistence_fx)` | Fractal Brownian motion in 2D |
 | `terrain_height(x, z, base_y, amplitude)` | Terrain height using 3-octave fBm; x, z in block coords |
 
+### parabola.mcrs
+
+Ballistic trajectory helpers using Minecraft's native fixed-point scale (×10000). Computes launch velocities, positions, and per-tick drag physics for projectiles (arrows, snowballs, fireballs). Requires `math.mcrs` (for `mulfix`).
+
+**Scale conventions:**
+- Positions: blocks (integer)
+- Velocities: blocks/tick ×10000 (e.g. `8000` = 0.8 blocks/tick)
+- Gravity constant: `800` (≈ 0.08 blocks/tick²)
+- MC arrow drag: `9900` (0.99 per tick)
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/parabola.mcrs"
+
+// Aim at a target 10 blocks away, 3 blocks up, arriving in 15 ticks
+fn shoot_at(target_dx: int, target_dy: int, target_dz: int) {
+    let ticks: int = 15;
+    let vx: int = parabola_vx(target_dx, ticks);  // ×10000
+    let vy: int = parabola_vy(target_dy, ticks);  // ×10000
+    let vz: int = parabola_vz(target_dz, ticks);  // ×10000
+
+    // Use vx, vy, vz to set Motion NBT on your projectile
+    raw("data modify entity @e[tag=arrow,limit=1] Motion set value [{vx}d, {vy}d, {vz}d]");
+}
+
+// Simulate one tick of arrow flight with drag
+fn tick_arrow() {
+    // vy_new = (vy - gravity) * drag
+    let arrow_drag: int = 9900;
+    arrow_vy = parabola_step_vy(arrow_vy, arrow_drag);
+    arrow_vx = parabola_step_vx(arrow_vx, arrow_drag);
+}
+```
+
+| Function | Description |
+|----------|-------------|
+| `parabola_gravity()` | Gravity constant: `800` (0.08 blocks/tick² ×10000) |
+| `parabola_gravity_half()` | Half gravity: `400` (for displacement formula) |
+| `parabola_vx(dx, ticks)` | X launch velocity ×10000 to reach `dx` blocks in `ticks` |
+| `parabola_vy(dy, ticks)` | Y launch velocity ×10000 to reach `dy` blocks in `ticks` |
+| `parabola_vz(dz, ticks)` | Z launch velocity ×10000 to reach `dz` blocks in `ticks` |
+| `parabola_speed_xz(dx, dz, ticks)` | Horizontal launch speed √(vx²+vz²) ×10000 |
+| `parabola_x(vx0, t)` | X position (blocks) at tick `t` given initial velocity ×10000 |
+| `parabola_y(vy0, t)` | Y position (blocks) at tick `t` given initial velocity ×10000 |
+| `parabola_z(vz0, t)` | Z position (blocks) at tick `t` given initial velocity ×10000 |
+| `parabola_flight_time(vy0)` | Ticks until projectile returns to launch height; 0 if vy0 ≤ 0 |
+| `parabola_max_height(vy0)` | Maximum height above launch point in blocks |
+| `parabola_step_vx(vx, drag)` | Apply drag factor to X velocity (one tick) |
+| `parabola_step_vy(vy, drag)` | Apply gravity then drag to Y velocity (one tick) |
+| `parabola_step_vz(vz, drag)` | Apply drag factor to Z velocity (one tick) |
+| `parabola_ticks_for_range(range)` | Estimated ticks to reach a horizontal range (arrow heuristic) |
+| `parabola_in_range(dx, dz, max_range)` | Returns 1 if target is within horizontal range |
+
 ### physics.mcrs
 
 Simple fixed-point physics simulation (positions/velocities ×100, 1 block = 100 units, 1 tick = 1/20 s). Includes projectile motion, drag, spring, and circular movement.
@@ -520,6 +610,72 @@ fn spin_display(angle_fx: int) {
 | `billboard_y(player_yaw_fx)` | Y rotation for a billboard facing the player |
 | `lerp_angle(a_fx, b_fx, t)` | Lerp between two angles taking shortest path |
 
+### quaternion.mcrs
+
+Quaternion math for Minecraft Display Entity rotations. All components use ×10000 scale (e.g. `7071` = 0.7071). Requires `math.mcrs` (for `sin_fixed`, `cos_fixed`, `mulfix`, `isqrt`).
+
+**MC Display Entity quaternion format:** `[x, y, z, w]` — stored as floats in `left_rotation` / `right_rotation`. A unit quaternion satisfies x²+y²+z²+w² = 1 (i.e. sum of components² = 10000² in ×10000 scale).
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/quaternion.mcrs"
+
+// Spin a Display Entity 45° around the Y axis
+fn rotate_display_y45() {
+    let qx: int = quat_axis_y_x(45);  // 0
+    let qy: int = quat_axis_y_y(45);  // sin(22.5°) × 10000 ≈ 3827
+    let qz: int = quat_axis_y_z(45);  // 0
+    let qw: int = quat_axis_y_w(45);  // cos(22.5°) × 10000 ≈ 9239
+    raw("data modify entity @e[tag=my_display,limit=1] transformation.left_rotation set value [{qx}f,{qy}f,{qz}f,{qw}f]");
+}
+
+// Combine two rotations (pitch then yaw)
+fn combined_rotation(yaw: int, pitch: int) {
+    let yx: int = quat_axis_y_x(yaw);   let yy: int = quat_axis_y_y(yaw);
+    let yz: int = quat_axis_y_z(yaw);   let yw: int = quat_axis_y_w(yaw);
+    let px: int = quat_axis_x_x(pitch); let py: int = quat_axis_x_y(pitch);
+    let pz: int = quat_axis_x_z(pitch); let pw: int = quat_axis_x_w(pitch);
+    // q = yaw * pitch
+    let rx: int = quat_mul_x(yx, yy, yz, yw, px, py, pz, pw);
+    let ry: int = quat_mul_y(yx, yy, yz, yw, px, py, pz, pw);
+    let rz: int = quat_mul_z(yx, yy, yz, yw, px, py, pz, pw);
+    let rw: int = quat_mul_w(yx, yy, yz, yw, px, py, pz, pw);
+}
+
+// Smoothly interpolate rotation from q_a to q_b over 20 ticks
+let interp_tick: int = 0;
+fn slerp_step() {
+    interp_tick = interp_tick + 50;  // 1000/20 = 50 per tick
+    if (interp_tick > 1000) { interp_tick = 1000; }
+    let rx: int = quat_slerp_x(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let ry: int = quat_slerp_y(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let rz: int = quat_slerp_z(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+    let rw: int = quat_slerp_w(ax, ay, az, aw, bx, by, bz, bw, interp_tick);
+}
+```
+
+**Constructors:**
+
+| Function | Description |
+|----------|-------------|
+| `quat_identity_x/y/z/w()` | Identity quaternion (0, 0, 0, 10000) — no rotation |
+| `quat_axis_x_x/y/z/w(angle_deg)` | Quaternion for rotation around X axis by `angle_deg` degrees |
+| `quat_axis_y_x/y/z/w(angle_deg)` | Quaternion for rotation around Y axis |
+| `quat_axis_z_x/y/z/w(angle_deg)` | Quaternion for rotation around Z axis |
+| `quat_euler_x/y/z/w(yaw, pitch, roll)` | Euler angles → quaternion (YXZ order, MC convention) |
+
+**Operations:**
+
+| Function | Description |
+|----------|-------------|
+| `quat_mul_x/y/z/w(ax,ay,az,aw, bx,by,bz,bw)` | Quaternion multiplication a × b; all components ×10000 |
+| `quat_conj_x/y/z/w(qx, qy, qz, qw)` | Conjugate (= inverse for unit quaternion): negate x/y/z, keep w |
+| `quat_dot(ax,ay,az,aw, bx,by,bz,bw)` | Dot product of two quaternions ×10000 |
+| `quat_mag_sq(qx, qy, qz, qw)` | Magnitude squared ×10000 (should be 10000 for unit quaternion) |
+| `quat_slerp_x/y/z/w(ax,ay,az,aw, bx,by,bz,bw, t)` | SLERP: interpolate between two quaternions; t ∈ [0, 1000] |
+
+> **SLERP implementation:** Uses normalized LERP (nlerp) approximation — cheaper than true spherical interpolation and sufficient for Minecraft animations at typical angular speeds. Result is always a unit quaternion.
+
 ### signal.mcrs
 
 Statistical distributions and probability helpers for loot tables, spawn weights, and game events. Values ×10000 where noted. Requires `math.mcrs` for `exp_dist_approx`.
@@ -543,6 +699,33 @@ fn loot_roll(seed: int) {
 | `bernoulli(seed, p_fx)` | 1 with probability p/10000, else 0 |
 | `weighted2(seed, w0, w1)` | Choose 0 or 1 with weights |
 | `weighted3(seed, w0, w1, w2)` | Choose 0, 1, or 2 with weights |
+| `gamma_sample(shape_k, scale_theta, seed)` | Gamma(k, θ) variate ×10000; shape_k and scale_theta ×10000; k ∈ [1, 5] |
+| `poisson_sample(lambda, seed)` | Poisson(λ) count (plain int); lambda ×10000; best for λ ≤ 20 |
+| `geometric_sample(p_success, seed)` | Geometric(p) failures before first success; p_success ×10000 |
+| `negative_binomial_sample(r, p_success, seed)` | NegBin(r, p) total failures before r successes; p_success ×10000 |
+
+#### New distributions (v2.5.0)
+
+```mcrs
+import "stdlib/math.mcrs"
+import "stdlib/signal.mcrs"
+
+fn loot_example(seed: int) {
+    // Gamma — weapon damage with variance (shape=2, scale=1.5)
+    let dmg: int = gamma_sample(20000, 15000, seed);  // Gamma(2, 1.5) ×10000
+
+    // Poisson — random mob spawns per wave (λ=3)
+    let spawns: int = poisson_sample(30000, seed);    // integer count
+
+    // Geometric — tries until a crafting success (p=0.3)
+    let tries: int = geometric_sample(3000, seed);    // integer count
+
+    // Negative Binomial — total failures before 3 successes (p=0.5)
+    let total_fail: int = negative_binomial_sample(3, 5000, seed);
+}
+```
+
+> **Note:** `gamma_sample` uses `ln` from `stdlib/math.mcrs` (integer ×10000 log), and supports integer shape parameter k = 1..5 (shape_k = 10000..50000 in ×10000 scale). `poisson_sample` uses `exp_fx` from `stdlib/math.mcrs`.
 
 ### bigint.mcrs
 
@@ -581,6 +764,36 @@ fn big_add_example() {
 | `bigint_div_small(a, divisor, result, len)` | Divide by small int; returns remainder |
 | `bigint_mod_small(a, divisor, len)` | a % divisor |
 | `bigint_chunk(a, i)` | Read chunk at index i |
+| `bigint_mul(a, b, result, la, lb)` | Full bigint × bigint multiplication; result must have `la+lb` chunks (pre-zeroed) |
+| `bigint_mul_result_len(la, lb)` | Returns required result array length (`la + lb`) |
+| `bigint_sq(a, result, len)` | Square a bigint: result = a²; result must have `len*2` chunks (pre-zeroed) |
+
+#### Full multiplication (v2.5.0)
+
+`bigint_mul` and `bigint_sq` were added in v2.5.0 for arbitrary-precision multiplication.
+
+```mcrs
+import "stdlib/bigint.mcrs"
+
+fn multiply_example() {
+    // Multiply two 4-chunk numbers
+    let a: int[] = [0, 0, 1234, 5678];  // represents 1234_5678 in base-10000
+    let b: int[] = [0, 0, 9999];         // 3-chunk
+    let result: int[] = [0, 0, 0, 0, 0, 0, 0];  // la+lb = 7, pre-zeroed
+    bigint_mul(a, b, result, 4, 3);
+    // result now holds a * b in big-endian base-10000 chunks
+}
+
+fn square_example() {
+    // Square a 3-chunk number
+    let n: int[] = [1, 2345, 6789];   // 1_0002345_6789
+    let sq: int[] = [0, 0, 0, 0, 0, 0];  // len*2 = 6, pre-zeroed
+    bigint_sq(n, sq, 3);
+    // sq = n² in 6 chunks
+}
+```
+
+> **Overflow safety:** Each chunk is in `[0, 9999]`, so `9999 × 9999 = 99,980,001 < INT32_MAX`. Accumulation is safe; carry normalization happens after all partial products are summed. `bigint_sq` uses the optimized upper-triangle doubling method.
 
 ### advanced.mcrs
 
@@ -610,6 +823,9 @@ fn showcase() {
 | `noise1d(x)` | 1D value noise; x ×1000, output in [0, 999] |
 | `bezier_quad(p0, p1, p2, t)` | Quadratic Bézier; t ∈ [0, 1000] |
 | `bezier_cubic(p0, p1, p2, p3, t)` | Cubic Bézier; t ∈ [0, 1000] |
+| `bezier_quartic(p0, p1, p2, p3, p4, t)` | Quartic (4th-order) Bézier; 5 control points; t ∈ [0, 1000] |
+| `bezier_n(pts, n, t)` | N-th order Bézier via De Casteljau; modifies `pts` in-place; t ∈ [0, 1000] |
+| `bezier_n_safe(pts, work, n, t)` | Non-destructive N-th order Bézier; copies `pts` into `work` first |
 | `mandelbrot_iter(cx, cy, max_iter)` | Mandelbrot iteration count; cx/cy ×1000 |
 | `julia_iter(z0r, z0i, cr, ci, max_iter)` | Julia set iteration count |
 | `angle_between(x1, y1, x2, y2)` | Angle between two 2D vectors in degrees [0, 180] |
@@ -617,6 +833,32 @@ fn showcase() {
 | `newton_sqrt(n)` | Integer square root via Newton's method |
 | `digital_root(n)` | Repeatedly sum digits until single digit |
 | `spiral_ring(n)` | Ulam spiral ring number for integer n |
+
+#### Higher-order Bézier curves (v2.5.0)
+
+`bezier_quartic` and `bezier_n` were added in v2.5.0 to support smooth 5+ point animation paths.
+
+```mcrs
+import "stdlib/advanced.mcrs"
+
+// Quartic (5 control points) — smooth camera arc
+fn camera_path(t: int) -> int {
+    return bezier_quartic(0, 250, 500, 750, 1000, t);
+}
+
+// Arbitrary N-point curve (modifies pts in-place)
+fn n_order_example() {
+    let pts: int[] = [0, 100, 500, 900, 1000, 800];
+    let result: int = bezier_n(pts, 6, 500);  // midpoint of 6-point curve
+}
+
+// Non-destructive version (preserves pts)
+fn n_order_safe() {
+    let pts: int[]  = [0, 100, 500, 900, 1000, 800];
+    let work: int[] = [0, 0, 0, 0, 0, 0];  // scratch buffer, same length
+    let result: int = bezier_n_safe(pts, work, 6, 500);
+}
+```
 
 ### calculus.mcrs
 
@@ -872,6 +1114,55 @@ fn example() {
 | `div3_hp(a, b, c, d)` | Divide three values by d; results in `$div3_x/y/z` scoreboards |
 | `sqrt_hp(x)` | High-precision square root; x ×10000, returns ×10000 |
 | `norm3_hp(x, y, z)` | 3D vector magnitude √(x²+y²+z²); inputs ×10000 |
+| `double_add(a, b)` | IEEE 754 double addition using entity position trick |
+| `double_sub(a, b)` | IEEE 754 double subtraction (negates b then adds) |
+| `double_mul(a, b)` | Double multiplication via ×10000 scoreboard (~4 decimal digits) |
+| `double_div(a, b)` | IEEE 754 double division via Display Entity SVD trick |
+| `double_mul_fixed(d, f)` | Multiply double `d` by fixed-point `f` (÷10000) in true double precision |
+| `ln_hp(x)` | Newton-refined natural log; x ×10000; ~8–9 significant digits |
+| `ln_5term(x)` | 5-term atanh series ln; x ×10000; ~6 significant digits |
+
+#### Double-precision arithmetic (v2.5.0)
+
+v2.5.0 adds full IEEE 754 `double` arithmetic functions. These require the `double` type (see [Types & Casting](#double-and-fixed-types-v250)).
+
+```mcrs
+import "stdlib/math_hp.mcrs"
+
+@load fn setup() {
+    init_trig();
+    init_div();
+}
+
+fn hp_example() {
+    // double_add: entity Pos[] trick — full double precision
+    let a: double = 1000000 as double;
+    let b: double = 0.000001 as double;  // would be lost at ×10000 int scale
+    let sum: double = double_add(a, b);  // 1000000.000001 exactly
+
+    // double_div: SVD trick — true IEEE 754 division
+    let pi_approx: double = double_div(355 as double, 113 as double);  // 3.14159292...
+
+    // double_mul_fixed: multiply a double by a fixed-point coefficient
+    let half: double = double_mul_fixed(pi_approx, 5000);  // pi / 2
+
+    // ln_hp: Newton-refined log (~9 significant digits)
+    let ln2: int = ln_hp(6931);    // ln(0.6931) — note: input ×10000
+    // For ln(2): ln_hp(20000) ≈ 6931 ≈ 0.6931 ×10000
+
+    // ln_5term: cheaper estimate (~6 digits, no Newton step)
+    let ln2_fast: int = ln_5term(20000);
+}
+```
+
+> **Setup:** `double_add` and `double_sub` require an AEC marker entity created by `init_double_add()` (called automatically via `@require_on_load`). `double_div` requires `init_div()`. Both are idempotent — safe to call multiple times in `@load`.
+>
+> **Precision notes:**
+> - `double_add` / `double_sub` / `double_div`: full ~15 significant digits (Java double)
+> - `double_mul`: only ~4 decimal digits (scoreboard integer path); safe for `|a|, |b| ≤ ~21474`
+> - `double_mul_fixed`: full double precision for the multiplication step
+> - `ln_hp`: one Newton refinement step, effective ~8–9 digits
+> - `ln_5term`: 5-term atanh series, ~6 digits (faster, no Newton step)
 
 ### sets.mcrs
 
