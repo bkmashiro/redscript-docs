@@ -10,10 +10,10 @@ A treasure chest generator that uses random loot tables, value noise for a natur
 
 ## What You'll Learn
 
-- `import random::*` — LCG-based pseudo-random numbers
+- `import "stdlib/random.mcrs"` — LCG-based pseudo-random numbers
 - `next_lcg`, `random_range`, `random_bool`
 - `binomial_sample` — probabilistic trial counting
-- `import noise::*` — smooth procedural noise
+- `import "stdlib/noise.mcrs"` — smooth procedural noise
 - `value_noise_1d`, `fbm_1d`, `terrain_height`
 
 ## Step 1: The LCG Seed Pattern
@@ -21,7 +21,7 @@ A treasure chest generator that uses random loot tables, value noise for a natur
 RedScript's `random` module uses a **Linear Congruential Generator** (LCG). You maintain a seed variable, advance it with `next_lcg`, and extract values from it:
 
 ```rs
-import random::*
+import "stdlib/random.mcrs"
 
 @load
 fn setup() {
@@ -65,7 +65,7 @@ fn pick_loot_item(seed: int) -> string {
 `random_range` gives independent random values. `value_noise_1d` gives **smooth** values that transition gradually — great for natural-feeling rewards:
 
 ```rs
-import noise::*
+import "stdlib/noise.mcrs"
 
 // value_noise_1d(x_fx) → [0, 10000]
 // x_fx is a fixed-point position (×10000)

@@ -10,7 +10,7 @@ A collection of visual effects: a circle of flame particles, a helix of enchant 
 
 ## What You'll Learn
 
-- `import math::*` and `import particles::*`
+- `import "stdlib/math.mcrs"` and `import "stdlib/particles.mcrs"`
 - `sin_fixed`, `cos_fixed` — trig in degrees, result ×1000
 - `sqrt_fixed`, `sqrt_fx` — square roots
 - `lerp`, `clamp`, `abs`, `min`, `max`
@@ -20,11 +20,11 @@ A collection of visual effects: a circle of flame particles, a helix of enchant 
 ## Step 1: Importing
 
 ```rs
-import math::*
-import particles::*
+import "stdlib/math.mcrs"
+import "stdlib/particles.mcrs"
 ```
 
-`import math::*` pulls in all functions from the `math` standard library. No path needed — RedScript resolves stdlib modules automatically.
+`import "stdlib/math.mcrs"` pulls in all functions from the `math` standard library. No path needed — RedScript resolves stdlib modules automatically.
 
 ## Step 2: Core Math Functions
 

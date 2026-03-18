@@ -29,10 +29,10 @@
 
 namespace tutorial10
 
-import effects::*
-import bossbar::*
-import teams::*
-import random::*
+import "stdlib/effects.mcrs"
+import "stdlib/bossbar.mcrs"
+import "stdlib/teams.mcrs"
+import "stdlib/random.mcrs"
 
 // ─── 常量 ───────────────────────────────────────────────────────────────────
 
@@ -316,10 +316,10 @@ fn cleanup_game() {
 ### 第一步 —— 导入与常量
 
 ```mcrs
-import effects::*
-import bossbar::*
-import teams::*
-import random::*
+import "stdlib/effects.mcrs"
+import "stdlib/bossbar.mcrs"
+import "stdlib/teams.mcrs"
+import "stdlib/random.mcrs"
 ```
 
 这个游戏使用了**四个标准库模块**：

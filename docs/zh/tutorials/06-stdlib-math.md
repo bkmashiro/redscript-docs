@@ -10,7 +10,7 @@
 
 ## 你将学到什么
 
-- `import math::*` 和 `import particles::*`
+- `import "stdlib/math.mcrs"` 和 `import "stdlib/particles.mcrs"`
 - `sin_fixed`、`cos_fixed` —— 角度制三角函数，结果 ×1000
 - `sqrt_fixed`、`sqrt_fx` —— 平方根
 - `lerp`、`clamp`、`abs`、`min`、`max`
@@ -20,11 +20,11 @@
 ## 第一步：导入
 
 ```rs
-import math::*
-import particles::*
+import "stdlib/math.mcrs"
+import "stdlib/particles.mcrs"
 ```
 
-`import math::*` 引入 `math` 标准库的所有函数。无需指定路径 —— RedScript 会自动解析标准库模块。
+`import "stdlib/math.mcrs"` 引入 `math` 标准库的所有函数。无需指定路径 —— RedScript 会自动解析标准库模块。
 
 ## 第二步：核心数学函数
 
