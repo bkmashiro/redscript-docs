@@ -1,0 +1,49 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "mcfunction",
+  "scopeName": "source.mcfunction",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#command" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.number-sign.mcfunction",
+      "match": "#.*$"
+    },
+    "command": {
+      "patterns": [
+        {
+          "name": "keyword.control.mcfunction",
+          "match": "\\b(execute|run|if|unless|as|at|in|positioned|facing|anchored|rotated|store|result|success|align|on|summon|entity|block|score|matches|dimension|distance|dx|dy|dz|tag|sort|limit|gamemode|level|type|predicate|advancements|loot|nbt|biome)\\b"
+        },
+        {
+          "name": "keyword.other.mcfunction",
+          "match": "\\b(function|say|tell|tellraw|title|give|effect|particle|tp|teleport|setblock|fill|clone|kill|scoreboard|data|playsound|stopsound|gamerule|difficulty|time|weather|worldborder|bossbar|schedule|team|advancement|recipe|experience|xp|enchant|clear|item|attribute|damage|ride|return|random)\\b"
+        },
+        {
+          "name": "string.quoted.double.mcfunction",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "name": "constant.character.escape.mcfunction", "match": "\\\\." }]
+        },
+        {
+          "name": "constant.numeric.mcfunction",
+          "match": "-?\\b\\d+(\\.\\d+)?[bBsSlLfFdD]?\\b"
+        },
+        {
+          "name": "variable.other.selector.mcfunction",
+          "match": "@[aeprs](\\[[^\\]]*\\])?"
+        },
+        {
+          "name": "constant.other.namespace.mcfunction",
+          "match": "\\b[a-z_][a-z0-9_]*:[a-z0-9_/.-]+"
+        },
+        {
+          "name": "variable.other.relative.mcfunction",
+          "match": "[~^]-?\\d*(\\.\\d+)?"
+        }
+      ]
+    }
+  }
+}

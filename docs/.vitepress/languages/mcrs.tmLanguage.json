@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "RedScript",
+  "scopeName": "source.mcrs",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#decorator" },
+    { "include": "#keyword" },
+    { "include": "#type" },
+    { "include": "#string" },
+    { "include": "#number" },
+    { "include": "#selector" },
+    { "include": "#function-call" },
+    { "include": "#operator" }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        { "name": "comment.line.double-slash.mcrs", "match": "//.*$" },
+        { "name": "comment.block.mcrs", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "decorator": {
+      "name": "entity.name.decorator.mcrs",
+      "match": "@[a-zA-Z_][a-zA-Z0-9_]*(\\([^)]*\\))?"
+    },
+    "keyword": {
+      "name": "keyword.control.mcrs",
+      "match": "\\b(fn|let|if|else|while|for|foreach|return|in|as|import|module|struct|enum|impl|yield|namespace|library|true|false|null)\\b"
+    },
+    "type": {
+      "name": "storage.type.mcrs",
+      "match": "\\b(int|bool|fixed|double|float|string|void|Option|Some|None)\\b"
+    },
+    "string": {
+      "name": "string.quoted.double.mcrs",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [{ "name": "constant.character.escape.mcrs", "match": "\\\\." }]
+    },
+    "number": {
+      "patterns": [
+        { "name": "constant.numeric.double.mcrs", "match": "-?\\b\\d+(\\.\\d+)?[dD]\\b" },
+        { "name": "constant.numeric.mcrs", "match": "-?\\b\\d+(\\.\\d+)?\\b" }
+      ]
+    },
+    "selector": {
+      "name": "variable.language.selector.mcrs",
+      "match": "@[aeprs](\\[[^\\]]*\\])?"
+    },
+    "function-call": {
+      "name": "entity.name.function.mcrs",
+      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+    },
+    "operator": {
+      "name": "keyword.operator.mcrs",
+      "match": "(\\+|-|\\*|/|%|==|!=|<=|>=|<|>|&&|\\|\\||!|=|\\+=|-=|\\*=|/=|%=)"
+    }
+  }
+}

@@ -1,9 +1,26 @@
 import { defineConfig } from 'vitepress'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
 export default defineConfig({
   title: 'RedScript',
   description: 'A typed scripting language for Minecraft datapacks',
-  
+
+  markdown: {
+    languages: [
+      {
+        ...JSON.parse(readFileSync(resolve(__dirname, 'languages/mcfunction.tmLanguage.json'), 'utf-8')),
+        name: 'mcfunction',
+        aliases: ['mcf'],
+      },
+      {
+        ...JSON.parse(readFileSync(resolve(__dirname, 'languages/mcrs.tmLanguage.json'), 'utf-8')),
+        name: 'mcrs',
+        aliases: [],
+      }
+    ]
+  },
+
   locales: {
     en: {
       label: 'English',
@@ -14,6 +31,7 @@ export default defineConfig({
           { text: 'Guide', link: '/en/guide/getting-started' },
           { text: 'Tutorials', link: '/en/tutorials/' },
           { text: 'Reference', link: '/en/reference/syntax' },
+          { text: 'Standard Library', link: '/en/stdlib/' },
           { text: 'Dev Log', link: '/en/blog/' },
           { text: 'Online IDE', link: 'https://redscript-ide.pages.dev' },
         ],
@@ -69,6 +87,82 @@ export default defineConfig({
               ]
             }
           ],
+          '/en/stdlib/': [
+            {
+              text: 'Standard Library',
+              items: [{ text: 'Overview', link: '/en/stdlib/' }]
+            },
+            {
+              text: 'Mathematics',
+              items: [
+                { text: 'math', link: '/en/stdlib/math' },
+                { text: 'math_hp', link: '/en/stdlib/math_hp' },
+                { text: 'bits', link: '/en/stdlib/bits' },
+                { text: 'bigint', link: '/en/stdlib/bigint' },
+                { text: 'calculus', link: '/en/stdlib/calculus' },
+              ]
+            },
+            {
+              text: 'Data Structures',
+              items: [
+                { text: 'list', link: '/en/stdlib/list' },
+                { text: 'sets', link: '/en/stdlib/sets' },
+                { text: 'matrix', link: '/en/stdlib/matrix' },
+                { text: 'vec', link: '/en/stdlib/vec' },
+                { text: 'quaternion', link: '/en/stdlib/quaternion' },
+              ]
+            },
+            {
+              text: 'Randomness & Statistics',
+              items: [
+                { text: 'random', link: '/en/stdlib/random' },
+                { text: 'noise', link: '/en/stdlib/noise' },
+              ]
+            },
+            {
+              text: 'Signal Processing',
+              items: [
+                { text: 'signal', link: '/en/stdlib/signal' },
+                { text: 'expr', link: '/en/stdlib/expr' },
+              ]
+            },
+            {
+              text: 'Geometry & Graphics',
+              items: [
+                { text: 'geometry', link: '/en/stdlib/geometry' },
+                { text: 'advanced', link: '/en/stdlib/advanced' },
+                { text: 'parabola', link: '/en/stdlib/parabola' },
+                { text: 'easing', link: '/en/stdlib/easing' },
+                { text: 'particles', link: '/en/stdlib/particles' },
+                { text: 'color', link: '/en/stdlib/color' },
+              ]
+            },
+            {
+              text: 'Physics',
+              items: [
+                { text: 'physics', link: '/en/stdlib/physics' },
+              ]
+            },
+            {
+              text: 'Minecraft Mechanics',
+              items: [
+                { text: 'player', link: '/en/stdlib/player' },
+                { text: 'mobs', link: '/en/stdlib/mobs' },
+                { text: 'combat', link: '/en/stdlib/combat' },
+                { text: 'effects', link: '/en/stdlib/effects' },
+                { text: 'spawn', link: '/en/stdlib/spawn' },
+                { text: 'interactions', link: '/en/stdlib/interactions' },
+                { text: 'inventory', link: '/en/stdlib/inventory' },
+                { text: 'bossbar', link: '/en/stdlib/bossbar' },
+                { text: 'cooldown', link: '/en/stdlib/cooldown' },
+                { text: 'timer', link: '/en/stdlib/timer' },
+                { text: 'tags', link: '/en/stdlib/tags' },
+                { text: 'teams', link: '/en/stdlib/teams' },
+                { text: 'strings', link: '/en/stdlib/strings' },
+                { text: 'world', link: '/en/stdlib/world' },
+              ]
+            },
+          ],
           '/en/tutorials/': [
             {
               text: 'Tutorials',
@@ -101,6 +195,7 @@ export default defineConfig({
           { text: '指南', link: '/zh/guide/getting-started' },
           { text: '教程', link: '/zh/tutorials/' },
           { text: '参考', link: '/zh/reference/syntax' },
+          { text: '标准库', link: '/zh/stdlib/' },
           { text: '开发日志', link: '/zh/blog/' },
           { text: '在线 IDE', link: 'https://redscript-ide.pages.dev' },
         ],
@@ -155,6 +250,82 @@ export default defineConfig({
                 { text: '命令行', link: '/zh/reference/cli' },
               ]
             }
+          ],
+          '/zh/stdlib/': [
+            {
+              text: '标准库',
+              items: [{ text: '概览', link: '/zh/stdlib/' }]
+            },
+            {
+              text: '数学',
+              items: [
+                { text: 'math', link: '/zh/stdlib/math' },
+                { text: 'math_hp', link: '/zh/stdlib/math_hp' },
+                { text: 'bits', link: '/zh/stdlib/bits' },
+                { text: 'bigint', link: '/zh/stdlib/bigint' },
+                { text: 'calculus', link: '/zh/stdlib/calculus' },
+              ]
+            },
+            {
+              text: '数据结构',
+              items: [
+                { text: 'list', link: '/zh/stdlib/list' },
+                { text: 'sets', link: '/zh/stdlib/sets' },
+                { text: 'matrix', link: '/zh/stdlib/matrix' },
+                { text: 'vec', link: '/zh/stdlib/vec' },
+                { text: 'quaternion', link: '/zh/stdlib/quaternion' },
+              ]
+            },
+            {
+              text: '随机与统计',
+              items: [
+                { text: 'random', link: '/zh/stdlib/random' },
+                { text: 'noise', link: '/zh/stdlib/noise' },
+              ]
+            },
+            {
+              text: '信号处理',
+              items: [
+                { text: 'signal', link: '/zh/stdlib/signal' },
+                { text: 'expr', link: '/zh/stdlib/expr' },
+              ]
+            },
+            {
+              text: '几何与图形',
+              items: [
+                { text: 'geometry', link: '/zh/stdlib/geometry' },
+                { text: 'advanced', link: '/zh/stdlib/advanced' },
+                { text: 'parabola', link: '/zh/stdlib/parabola' },
+                { text: 'easing', link: '/zh/stdlib/easing' },
+                { text: 'particles', link: '/zh/stdlib/particles' },
+                { text: 'color', link: '/zh/stdlib/color' },
+              ]
+            },
+            {
+              text: '物理',
+              items: [
+                { text: 'physics', link: '/zh/stdlib/physics' },
+              ]
+            },
+            {
+              text: 'Minecraft 游戏机制',
+              items: [
+                { text: 'player', link: '/zh/stdlib/player' },
+                { text: 'mobs', link: '/zh/stdlib/mobs' },
+                { text: 'combat', link: '/zh/stdlib/combat' },
+                { text: 'effects', link: '/zh/stdlib/effects' },
+                { text: 'spawn', link: '/zh/stdlib/spawn' },
+                { text: 'interactions', link: '/zh/stdlib/interactions' },
+                { text: 'inventory', link: '/zh/stdlib/inventory' },
+                { text: 'bossbar', link: '/zh/stdlib/bossbar' },
+                { text: 'cooldown', link: '/zh/stdlib/cooldown' },
+                { text: 'timer', link: '/zh/stdlib/timer' },
+                { text: 'tags', link: '/zh/stdlib/tags' },
+                { text: 'teams', link: '/zh/stdlib/teams' },
+                { text: 'strings', link: '/zh/stdlib/strings' },
+                { text: 'world', link: '/zh/stdlib/world' },
+              ]
+            },
           ],
           '/zh/tutorials/': [
             {
