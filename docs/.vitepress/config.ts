@@ -262,9 +262,16 @@ export default defineConfig({
               text: '教程',
               items: [
                 { text: '概览', link: '/zh/tutorials/' },
-                { text: '僵尸生存', link: '/zh/tutorials/zombie-survival' },
-                { text: '夺旗战', link: '/zh/tutorials/capture-the-flag' },
-                { text: '跑酷竞速', link: '/zh/tutorials/parkour-race' },
+                { text: '01 — Hello 数据包', link: '/zh/tutorials/01-hello-datapack' },
+                { text: '02 — 变量与控制流', link: '/zh/tutorials/02-variables' },
+                { text: '03 — 函数与结构体', link: '/zh/tutorials/03-functions-structs' },
+                { text: '04 — 选择器与上下文', link: '/zh/tutorials/04-selectors-context' },
+                { text: '05 — 装饰器与调度', link: '/zh/tutorials/05-decorators' },
+                { text: '06 — 数学与粒子', link: '/zh/tutorials/06-stdlib-math' },
+                { text: '07 — 随机数与噪声', link: '/zh/tutorials/07-stdlib-random' },
+                { text: '08 — 协程', link: '/zh/tutorials/08-coroutines' },
+                { text: '09 — 精确算术', link: '/zh/tutorials/09-precision-arithmetic' },
+                { text: '10 — 完整游戏：击杀竞赛', link: '/zh/tutorials/10-full-game' },
               ]
             }
           ],
