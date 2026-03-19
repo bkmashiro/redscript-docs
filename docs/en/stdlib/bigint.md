@@ -283,3 +283,126 @@ Long division quotient for one chunk: `(rem * 10000 + chunk) / divisor`.
 ### `bigint3_rem_chunk(chunk: int, rem: int, divisor: int): int`
 
 Long division remainder for one chunk: `(rem * 10000 + chunk) % divisor`.
+
+---
+
+### `bigint_shl1(a: int[], len: int)`
+
+Shift bigint `a` left by one chunk (equivalent to multiplying by the base 10000). Modifies `a` in-place: each element shifts down one index, and `a[len-1]` is set to 0. The most-significant chunk is dropped. Used internally by `bigint_div`.
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs";
+// [1, 2345] shifted left → [2345, 0]  (×10000)
+let a: int[] = [1, 2345];
+bigint_shl1(a, 2);
+// a is now [2345, 0]
+```
+
+---
+
+### `bigint_cmp_window(a: int[], aoff: int, b: int[], len: int): int`
+
+Compare the window `a[aoff..aoff+len-1]` against `b[0..len-1]`. Returns `1` if the window is greater, `-1` if less, `0` if equal. Used by `bigint_div` during trial subtraction.
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs";
+let a: int[] = [0, 1, 500];
+let b: int[] = [1, 400];
+let cmp: int = bigint_cmp_window(a, 1, b, 2);  // 1  (a[1..2] = [1,500] > [1,400])
+```
+
+---
+
+### `bigint_sub_window(a: int[], aoff: int, b: int[], len: int)`
+
+Subtract `b[0..len-1]` from the window `a[aoff..aoff+len-1]` in-place, with borrow propagation. Equivalent to `a[aoff..] -= b`. Used by `bigint_div` to subtract the trial product.
+
+> **Precondition:** window must be ≥ `b` (no underflow).
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs";
+let a: int[] = [0, 5000, 0];
+let b: int[] = [1, 200];
+bigint_sub_window(a, 1, b, 2);
+// a[1..2] = [5000,0] - [1,200] = [4998, 9800]
+```
+
+---
+
+### `bigint_mul_small_into(b: int[], factor: int, out: int[], len: int)`
+
+Multiply bigint `b[0..len-1]` by small integer `factor`, writing the result into `out[0..len-1]`. Carry propagates right-to-left. Overflow beyond `out[0]` is silently dropped (ensure `factor` fits within a single chunk multiply).
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs";
+let b: int[] = [1, 5000];
+let out: int[] = [0, 0];
+bigint_mul_small_into(b, 3, out, 2);
+// out = [4, 5000]  (15000 in base-10000: chunk 0 = 1*3=3 + carry 1 = 4, chunk 1 = 5000*3 % 10000 = 5000, carry = 1)
+```
+
+---
+
+### `bigint_div(a: int[], b: int[], quotient: int[], remainder: int[], la: int, lb: int)`
+
+Full arbitrary-precision integer division using binary-search trial subtraction. Computes `a / b → quotient` and `a % b → remainder`. `a` has `la` chunks; `b` has `lb` chunks; all arrays are most-significant first in base 10000 (each chunk: 0–9999).
+
+> **Precondition:** `la ≥ lb`. `quotient` must be pre-allocated with `la` elements; `remainder` with `lb` elements. `a` and `b` must not alias `quotient` or `remainder`.
+
+Uses `bigint_cmp_window`, `bigint_sub_window`, and `bigint_mul_small_into` internally.
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs";
+// Divide 100000 (= [1, 0] in base-10000) by 3 (= [3])
+// quotient = 33333, remainder = 1
+let a: int[] = [1, 0];
+let b: int[] = [3];
+let q: int[] = [0, 0];
+let r: int[] = [0];
+bigint_div(a, b, q, r, 2, 1);
+// q = [3, 3333]  (33333 in base-10000: [3, 3333])
+// r = [1]
+```
+
+## Full bigint ÷ bigint Division
+
+### `bigint_div(a: int[], b: int[], quotient: int[], remainder: int[], la: int, lb: int): void`
+
+Full arbitrary-precision integer division using long division. Computes both `a / b` (into `quotient`) and `a % b` (into `remainder`).
+
+- `a`: dividend, `la` chunks, most-significant first, base 10000
+- `b`: divisor, `lb` chunks
+- `quotient`: output array, must have `la` pre-zeroed chunks
+- `remainder`: output array, must have `lb` pre-zeroed chunks
+- `la >= lb` is required
+
+Algorithm: binary-search trial subtraction per digit position — O(n² log b).
+
+**Example:**
+```rs
+import "stdlib/bigint.mcrs"
+
+// Compute 123456789 / 1000 = 123456 remainder 789
+// In base 10000: a = [1, 2345, 6789], b = [0, 1000]
+let a: int[] = [1, 2345, 6789]
+let b: int[] = [0, 1000]
+let q: int[] = [0, 0, 0]
+let r: int[] = [0, 0]
+bigint_div(a, b, q, r, 3, 2)
+// q ≈ [0, 1, 2345]  (123456 / 1 = 123456 in base-10000)
+// r ≈ [0, 789]
+```
+
+### Internal helpers (used by `bigint_div`)
+
+| Function | Description |
+|----------|-------------|
+| `bigint_shl1(a, len)` | Shift bigint left by 1 chunk in-place (multiply by 10000, drops MSB) |
+| `bigint_cmp_window(a, aoff, b, len)` | Compare window `a[aoff..aoff+len]` with `b[0..len]`; returns 1/0/-1 |
+| `bigint_sub_window(a, aoff, b, len)` | Subtract `b` from window `a[aoff..aoff+len]` in-place |
+| `bigint_mul_small_into(b, factor, out, len)` | `out = b * factor` (small int), does not modify `b` |

@@ -121,3 +121,89 @@ Lerp between two angles ×10000, taking the shortest angular path (normalises di
 import matrix;
 let a: int = lerp_angle(0, 1800000, 5000);  // 900000
 ```
+
+---
+
+### `mat3_mul_elem(a00…a22: int, b00…b22: int, row: int, col: int): int`
+
+Compute one element `C[row][col]` of the product of two 3×3 matrices **A** and **B**. All 18 matrix components are passed individually, all ×10000. Returns `C[row][col]` ×10000.
+
+Each term of the dot product is divided by 10000 to maintain the ×10000 fixed-point scale: `C[r][c] = Σ A[r][k] × B[k][c] / 10000`.
+
+**Example:**
+```rs
+import "stdlib/matrix.mcrs";
+// Identity × Identity → element (0,0) should be 10000 (= 1.0)
+let v: int = mat3_mul_elem(
+    10000, 0, 0,
+    0, 10000, 0,
+    0, 0, 10000,
+    10000, 0, 0,
+    0, 10000, 0,
+    0, 0, 10000,
+    0, 0
+);  // 10000
+```
+
+---
+
+### `mat3_mul_vec3_elem(a00…a22: int, vx: int, vy: int, vz: int, comp: int): int`
+
+Multiply a 3×3 matrix by column vector `(vx, vy, vz)` ×10000, returning one component of the result. `comp`: 0 = x, 1 = y, 2 = z. All values ×10000.
+
+**Example:**
+```rs
+import "stdlib/matrix.mcrs";
+// Scale matrix 2× applied to vector (10000, 0, 0) → x component = 20000
+let x: int = mat3_mul_vec3_elem(
+    20000, 0, 0,
+    0, 20000, 0,
+    0, 0, 20000,
+    10000, 0, 0,
+    0
+);  // 20000
+```
+
+---
+
+### `mat4_mul_elem(a00…a33: int, b00…b33: int, row: int, col: int): int`
+
+Compute one element `C[row][col]` of the product of two 4×4 matrices **A** and **B**. All 32 components passed individually, all ×10000. Returns `C[row][col]` ×10000. Useful for composing MC Display Entity TRS transforms.
+
+**Example:**
+```rs
+import "stdlib/matrix.mcrs";
+// Identity × Identity → element (1,1) = 10000
+let v: int = mat4_mul_elem(
+    10000, 0, 0, 0,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    10000, 0, 0, 0,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    1, 1
+);  // 10000
+```
+
+---
+
+### `mat4_mul_vec4_elem(a00…a33: int, vx: int, vy: int, vz: int, vw: int, comp: int): int`
+
+Multiply a 4×4 matrix by a homogeneous column vector `(vx, vy, vz, vw)` ×10000, returning one component of the result. `comp`: 0 = x, 1 = y, 2 = z, 3 = w. All values ×10000.
+
+**Example:**
+```rs
+import "stdlib/matrix.mcrs";
+// Translation matrix: translate by (5.0, 0, 0). Apply to point (1.0, 0, 0, 1.0).
+// Result x = 1.0 + 5.0 = 6.0 → 60000
+let x: int = mat4_mul_vec4_elem(
+    10000, 0, 0, 50000,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    10000, 0, 0, 10000,
+    0
+);  // 60000
+```
