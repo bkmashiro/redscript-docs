@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 35 stdlib modules. Import any module with `import <name>;`.
+RedScript ships with 37 stdlib modules. Import any module with `import <name>;`.
 
 ## Categories
 
@@ -24,6 +24,7 @@ RedScript ships with 35 stdlib modules. Import any module with `import <name>;`.
 
 ### Signal Processing
 - [signal](/en/stdlib/signal) — DFT (up to 8 samples), Gaussian/exponential/Poisson/geometric distributions
+- [fft](/en/stdlib/fft) — Discrete Fourier Transform (O(n²) DFT for n ≤ 16; magnitude, power, coroutine variant)
 - [expr](/en/stdlib/expr) — RPN expression evaluator (dynamic formula evaluation at runtime)
 
 ### Geometry & Graphics
@@ -37,6 +38,9 @@ RedScript ships with 35 stdlib modules. Import any module with `import <name>;`.
 ### Physics
 - [physics](/en/stdlib/physics) — velocity, gravity, collision (projectile motion, drag, spring, friction)
 - [strings](/en/stdlib/strings) — string utilities (`str_len`)
+
+### Entity & Game Systems
+- [ecs](/en/stdlib/ecs) — Entity Component System (health, velocity, damage components; registry; tag convention)
 
 ### Minecraft Game Mechanics
 - [player](/en/stdlib/player) — player utilities (`heal`, `damage`, `is_op`)
