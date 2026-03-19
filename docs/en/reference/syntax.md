@@ -263,6 +263,45 @@ let s: string = "hello";
 let interpolated: string = "Hello, ${name}!";
 ```
 
+### F-Strings (Interpolated Strings)
+
+RedScript supports f-string interpolation using `${expr}` inside any string literal. Any expression can appear inside the braces.
+
+```rs
+let player: string = "Steve";
+let score: int = 42;
+
+// Simple variable interpolation
+let msg: string = "Hello, ${player}!";
+
+// Expression interpolation
+let info: string = "Score: ${score * 2} points";
+
+// Nested computation
+let desc: string = "Lives: ${max_lives - used_lives}";
+```
+
+> **v2.6.0:** Using `"string" + var` for concatenation is now a **compile error**. Use f-strings instead:
+> ```rs
+> // ❌ compile error
+> let bad: string = "Hello " + name;
+>
+> // ✅ correct
+> let good: string = "Hello ${name}";
+> ```
+
+#### F-Strings in Chat Commands
+
+When f-strings are used inside `tell`, `title`, `subtitle`, `actionbar`, or `announce`, the compiler emits proper Minecraft JSON text components so dynamic values render correctly in-game:
+
+```rs
+tell(@a, "Your score is ${score(@s, #points)}!");
+title(@s, "Round ${round} of ${max_rounds}");
+actionbar(@a, "HP: ${score(@s, #hp)} / ${score(@s, #max_hp)}");
+```
+
+These compile to MC JSON text like `["", "Your score is ", {"score": {"name": "@s", "objective": "points"}}, "!"]`.
+
 ## Arrays
 
 ```rs
@@ -296,6 +335,84 @@ enum Name {
 }
 
 let val: Name = Name::Variant1;
+```
+
+## Impl Blocks
+
+`impl` blocks attach methods to a struct. Methods receive an implicit `self` parameter and are called with dot notation.
+
+```rs
+struct Vec2 {
+    x: int,
+    y: int,
+}
+
+impl Vec2 {
+    fn length_sq(self) -> int {
+        return self.x * self.x + self.y * self.y;
+    }
+
+    fn scale(self, factor: int) -> Vec2 {
+        return Vec2 { x: self.x * factor, y: self.y * factor };
+    }
+
+    fn add(self, other: Vec2) -> Vec2 {
+        return Vec2 { x: self.x + other.x, y: self.y + other.y };
+    }
+}
+
+let v = Vec2 { x: 3, y: 4 };
+let len_sq: int = v.length_sq();   // 25
+let scaled: Vec2 = v.scale(2);     // Vec2 { x: 6, y: 8 }
+```
+
+Methods defined in `impl` blocks follow the same visibility rules as top-level functions: names starting with `_` are private and subject to dead-code elimination.
+
+## Option\<T\>
+
+`Option<T>` represents a value that may or may not be present. It has two variants: `Some(value)` and `None`.
+
+```rs
+// Declare an optional value
+let maybe: Option<int> = Some(42);
+let empty: Option<int> = None;
+
+// Unwrap with match
+match maybe {
+    Some(v) => { say("Got ${v}"); },
+    None    => { say("Nothing here"); },
+}
+```
+
+### Returning Option from functions
+
+```rs
+fn find_score(target: selector) -> Option<int> {
+    let s: int = score(target, #points);
+    if (s < 0) {
+        return None;
+    }
+    return Some(s);
+}
+
+let result: Option<int> = find_score(@p);
+match result {
+    Some(pts) => { tell(@s, "Points: ${pts}"); },
+    None      => { tell(@s, "Player not found"); },
+}
+```
+
+### Helpers
+
+| Expression | Description |
+|------------|-------------|
+| `opt.is_some()` | Returns `true` if the option holds a value |
+| `opt.is_none()` | Returns `true` if the option is `None` |
+| `opt.unwrap()` | Returns the inner value; **panics** (compile error) if called on `None` at compile time |
+| `opt.unwrap_or(default)` | Returns the inner value, or `default` if `None` |
+
+```rs
+let val: int = maybe.unwrap_or(0);  // safe fallback
 ```
 
 ## Lambdas
