@@ -1,79 +1,155 @@
-# `pathfind` — BFS grid pathfinding
+# `pathfind` — BFS Grid Pathfinding
 
 Import: `import "stdlib/pathfind.mcrs"`
 
-Breadth-first search pathfinding on a 16×16 grid (x: 0–15, z: 0–15). Provides synchronous BFS and a coroutine-based variant that spreads computation across ticks (16 nodes/tick) for use in lag-sensitive datapacks.
+Breadth-first search (BFS) pathfinding on a 16×16 grid. Finds the shortest path between two cells while avoiding obstacles. Includes a coroutine variant that spreads computation across multiple ticks, suitable for large maps without causing tick-rate lag.
 
-Coordinate packing: cells are encoded as `x * 16 + z` (a single `int` per cell). The obstacle map is a 256-element `int[]` where 0 = passable, 1 = blocked.
+**Grid:** x ∈ [0, 15], z ∈ [0, 15] (256 cells total).  
+**Coordinate encoding:** `packed = x * 16 + z`
 
 ## Functions
 
 ### `pf_pack(x: int, z: int): int`
-Encode grid coordinates into a packed int.
+
+Encode a (x, z) coordinate pair into a single packed integer.
+
+```rs
+let p: int = pf_pack(3, 7)  // → 55  (3*16 + 7)
+```
 
 ### `pf_unpack_x(packed: int): int`
+
 Recover the x component from a packed coordinate.
 
+```rs
+let x: int = pf_unpack_x(55)  // → 3
+```
+
 ### `pf_unpack_z(packed: int): int`
+
 Recover the z component from a packed coordinate.
 
+```rs
+let z: int = pf_unpack_z(55)  // → 7
+```
+
 ### `pf_new_map(): int[]`
-Allocate a fresh 256-element obstacle map with all cells passable.
+
+Allocate a 256-element obstacle map with all cells passable (value 0).
+
+```rs
+let map: int[] = pf_new_map()
+```
 
 ### `pf_set_blocked(map: int[], x: int, z: int): void`
-Mark cell `(x, z)` as impassable.
+
+Mark cell (x, z) as impassable (obstacle).
+
+```rs
+pf_set_blocked(map, 3, 5)  // block (3, 5)
+```
 
 ### `pf_set_open(map: int[], x: int, z: int): void`
-Mark cell `(x, z)` as passable again.
+
+Mark cell (x, z) as passable (clear an obstacle).
+
+```rs
+pf_set_open(map, 3, 5)
+```
 
 ### `pf_is_blocked(map: int[], x: int, z: int): int`
-Returns `1` if `(x, z)` is out-of-bounds or blocked, `0` otherwise.
+
+Returns `1` if the cell is impassable or out of bounds, `0` if passable.
+
+```rs
+let blocked: int = pf_is_blocked(map, 3, 5)
+```
+
+### `pf_heuristic(x1: int, z1: int, x2: int, z2: int): int`
+
+Manhattan distance heuristic between two cells. Used internally by the pathfinder.
+
+```rs
+let h: int = pf_heuristic(0, 0, 7, 7)  // → 14
+```
 
 ### `pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]`
-Run BFS from `(sx, sz)` to `(gx, gz)`. Returns an `int[]` of packed coordinates from start to goal (inclusive), or an empty array if no path exists. Runs synchronously — suitable for short paths (≤ ~50 steps).
 
-**Example:**
+Find the shortest path from (sx, sz) to (gx, gz) using BFS. Returns an `int[]` of packed coordinates from start to goal (inclusive). Returns an empty array if no path exists.
+
+Runs synchronously — completes in a single tick. Suitable for small searches (≤ ~100 nodes).
+
 ```rs
 import "stdlib/pathfind.mcrs"
 
-@keep fn find_path() {
-    let map = pf_new_map()
-    pf_set_blocked(map, 3, 0)
-    pf_set_blocked(map, 3, 1)
-    pf_set_blocked(map, 3, 2)
+@keep fn navigate() {
+    let map: int[] = pf_new_map()
+    pf_set_blocked(map, 1, 0)
+    pf_set_blocked(map, 1, 1)
+    pf_set_blocked(map, 1, 2)
 
-    let path = pathfind_bfs(map, 0, 0, 6, 0)
-    // path[0] is packed start, path[len-1] is goal
-    let step_x = pf_unpack_x(path[1])
-    let step_z = pf_unpack_z(path[1])
-    tell(@a, f"Next step: {step_x}, {step_z}")
+    let path: int[] = pathfind_bfs(map, 0, 0, 3, 0)
+
+    // Walk the path
+    let i: int = 0
+    while (i < path.len()) {
+        let step_x: int = pf_unpack_x(path[i])
+        let step_z: int = pf_unpack_z(path[i])
+        tell(@a, f"Step {i}: ({step_x}, {step_z})")
+        i = i + 1
+    }
 }
 ```
 
 ### `pathfind_bfs_coro(map: int[], sx: int, sz: int, gx: int, gz: int, out: int[]): void`
-Coroutine-based BFS — same algorithm as `pathfind_bfs` but decorated with `@coroutine(batch=16)`, processing 16 frontier nodes per tick. Results are pushed into the caller-supplied `out[]` array. Use `onDone` to receive a callback when the path is complete.
 
-**Example:**
+Coroutine variant of BFS — spreads computation across ticks (`batch=16` nodes per tick). Writes results into the caller-supplied `out[]` array. Use `onDone` to get notified when pathfinding completes.
+
+This variant is recommended for large maps or when called every tick, to avoid lag spikes.
+
 ```rs
 import "stdlib/pathfind.mcrs"
 
-let path_result: int[] = []
+let g_map: int[] = []
+let g_path: int[] = []
 
-@keep fn start_pathfind() {
-    let map = pf_new_map()
-    pathfind_bfs_coro(map, 0, 0, 15, 15, path_result)
+@keep fn start_search() {
+    g_map = pf_new_map()
+    pf_set_blocked(g_map, 5, 5)
+    g_path = []
+    pathfind_bfs_coro(g_map, 0, 0, 10, 10, g_path)
 }
 
 @keep fn on_path_done() {
-    // path_result is now populated
-    let steps = path_result[0]  // first packed coord
-    tell(@a, f"Path found with first step x={pf_unpack_x(steps)}")
+    tell(@a, f"Path found! Length: {g_path.len()}")
 }
 ```
 
-## Notes
+## Complete Example
 
-- Grid size is fixed at 16×16 (256 cells). For larger maps, tile the grid or use multiple maps.
-- BFS finds the **shortest** path in terms of step count (4-directional: N/S/E/W).
-- No diagonal movement.
-- The coroutine variant avoids tick-timeout on large open grids where BFS may explore many cells.
+```rs
+import "stdlib/pathfind.mcrs"
+
+@keep fn demo_pathfind() {
+    let map: int[] = pf_new_map()
+
+    // Build a wall at x=4, blocking z=0..4
+    pf_set_blocked(map, 4, 0)
+    pf_set_blocked(map, 4, 1)
+    pf_set_blocked(map, 4, 2)
+    pf_set_blocked(map, 4, 3)
+    pf_set_blocked(map, 4, 4)
+    // Gap at (4, 5) allows passage
+
+    let path: int[] = pathfind_bfs(map, 0, 0, 8, 0)
+
+    if (path.len() == 0) {
+        tell(@a, "No path found!")
+    } else {
+        tell(@a, f"Path length: {path.len()} steps")
+        let gx: int = pf_unpack_x(path[path.len() - 1])
+        let gz: int = pf_unpack_z(path[path.len() - 1])
+        tell(@a, f"Goal reached: ({gx}, {gz})")
+    }
+}
+```
