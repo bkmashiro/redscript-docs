@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 37 stdlib modules. Import any module with `import <name>;`.
+RedScript ships with 40 stdlib modules. Import any module with `import <name>;`.
 
 ## Categories
 
@@ -10,10 +10,13 @@ RedScript ships with 37 stdlib modules. Import any module with `import <name>;`.
 - [bits](/en/stdlib/bits) — bitwise operations (`bit_and`, `bit_or`, `bit_xor`, `bit_shl`, `popcount`, ...)
 - [bigint](/en/stdlib/bigint) — multi-word integers (base-10000 bigint add/sub/mul/div, arbitrary length)
 - [calculus](/en/stdlib/calculus) — numerical integration/differentiation (trapezoid, Simpson, Welford statistics)
+- [ode](/en/stdlib/ode) — RK4 ODE solver (exponential decay/growth, harmonic oscillator; fixed-point ×10000)
+- [linalg](/en/stdlib/linalg) — double-precision linear algebra (2D/3D vectors, 2×2 matrix multiply, Cramer's rule solver)
 
 ### Data Structures
 - [list](/en/stdlib/list) — array aggregates (`sum`, `avg`, `min`, `max`, `sort3`–`sort5`, `shuffle`, ...)
 - [sets](/en/stdlib/sets) — set operations (`set_new`, `set_add`, `set_contains`, `set_remove`)
+- [graph](/en/stdlib/graph) — weighted directed/undirected graphs (BFS, DFS, reachability, Dijkstra; up to 64 nodes, 256 edges)
 - [matrix](/en/stdlib/matrix) — matrix math for Display Entities (2D/3D rotation, scale, quaternion helpers)
 - [vec](/en/stdlib/vec) — 2D/3D vectors (`dot2d`, `cross3d`, `length2d_fixed`, `atan2_fixed`, `normalize2d_x`, ...)
 - [quaternion](/en/stdlib/quaternion) — 3D rotations (`quat_mul`, `quat_slerp`, `quat_euler`, axis-angle constructors)
