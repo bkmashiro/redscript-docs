@@ -7,18 +7,30 @@ Complete list of all built-in functions available in RedScript.
 | Function | Description |
 |----------|-------------|
 | `say(message)` | Broadcast message to all players |
+| `tell(target, message)` | Send a plain-text private message to target (whisper) |
 | `tellraw(target, message)` | Send formatted message to target |
+| `raw(command)` | Emit a raw Minecraft command string verbatim |
 | `title(target, text)` | Show title on screen |
 | `subtitle(target, text)` | Show subtitle on screen |
 | `actionbar(target, text)` | Show text in action bar |
 
 ```rs
 say("Hello everyone!");
+tell(@s, "Only you can see this.");
+tell(@a[tag=vip], "Welcome back, VIP!");
 tellraw(@a, "Welcome to the server!");
 title(@p, "You Win!");
 subtitle(@p, "Congratulations!");
 actionbar(@a, "Score: ${score}");
+
+// Emit a raw command when no typed builtin exists
+raw("weather thunder 600");
+raw("difficulty peaceful");
 ```
+
+> **`tell` vs `say`:** `say` broadcasts to every player with a `[ServerName]` prefix; `tell` sends a private whisper to the specified selector only.
+
+> **`raw`:** Escape hatch for commands not yet wrapped as builtins. The string is emitted as-is into the compiled `.mcfunction` file. Use sparingly — prefer typed builtins when available.
 
 Chat and display builtins accept runtime f-strings in v1.2:
 
