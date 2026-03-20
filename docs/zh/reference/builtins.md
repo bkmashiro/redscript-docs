@@ -7,18 +7,30 @@ RedScript 所有内置函数的完整列表。
 | 函数 | 描述 |
 |------|------|
 | `say(message)` | 向所有玩家广播消息 |
+| `tell(target, message)` | 向目标发送纯文本私信（悄悄话） |
 | `tellraw(target, message)` | 向目标发送格式化消息 |
+| `raw(command)` | 原样输出原始 Minecraft 命令字符串 |
 | `title(target, text)` | 在屏幕上显示标题 |
 | `subtitle(target, text)` | 在屏幕上显示副标题 |
 | `actionbar(target, text)` | 在动作栏显示文本 |
 
 ```rs
 say("Hello everyone!");
+tell(@s, "Only you can see this.");
+tell(@a[tag=vip], "Welcome back, VIP!");
 tellraw(@a, "Welcome to the server!");
 title(@p, "You Win!");
 subtitle(@p, "Congratulations!");
 actionbar(@a, "Score: ${score}");
+
+// 当没有对应内置函数时，输出原始命令
+raw("weather thunder 600");
+raw("difficulty peaceful");
 ```
+
+> **`tell` vs `say`：** `say` 会带 `[ServerName]` 前缀向所有玩家广播；`tell` 只向指定选择器发送私信。
+
+> **`raw`：** 当没有对应的类型化内置函数时的逃生舱口。字符串会原样写入编译后的 `.mcfunction` 文件。尽量少用——优先使用类型化的内置函数。
 
 在 v1.2 中，聊天和显示类内置函数也支持运行时 f-string：
 
@@ -215,6 +227,33 @@ xp_set(@a, 0);
 data_merge(@s, {Invisible: 1b});
 data_remove(@s, "CustomName");
 ```
+
+## 堆 / 动态分配
+
+`heap_new` 在运行时分配一个命名的 NBT 存储槽并返回一个句柄（`int` 类型的 ID），可传递并在之后解引用。这是 RedScript 中动态数据结构的基础。
+
+| 函数 | 描述 |
+|------|------|
+| `heap_new(nbt)` | 分配一个新的堆槽，设置初始 NBT 值；返回 `int` 句柄 |
+| `heap_get(handle, path)` | 从 `handle` 标识的堆槽中读取路径 |
+| `heap_set(handle, path, value)` | 向堆槽中的路径写入值 |
+| `heap_free(handle)` | 释放堆槽（标记为可重用） |
+
+```rs
+// 在堆上分配一个复合值
+let h: int = heap_new({hp: 20, name: "boss"});
+
+// 从槽中读取
+let hp: int = heap_get(h, "hp");      // 20
+
+// 写入新值
+heap_set(h, "hp", 15);
+
+// 完成后释放
+heap_free(h);
+```
+
+> **实现说明：** `heap_new` 将数据存储在 Minecraft 的 `storage` NBT 中，位于数据包命名空间下。每个句柄是记分板追踪的数字 ID。调用 `heap_free` 后不要再使用该句柄——行为未定义。
 
 ## 进度
 
