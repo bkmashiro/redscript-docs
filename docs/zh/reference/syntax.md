@@ -263,6 +263,45 @@ let s: string = "hello";
 let interpolated: string = "Hello, ${name}!";
 ```
 
+### F-Strings（插值字符串）
+
+RedScript 支持在字符串字面量中使用 `${expr}` 进行 f-string 插值，花括号内可以写任意表达式。
+
+```rs
+let player: string = "Steve";
+let score: int = 42;
+
+// 简单变量插值
+let msg: string = "Hello, ${player}!";
+
+// 表达式插值
+let info: string = "Score: ${score * 2} points";
+
+// 嵌套计算
+let desc: string = "Lives: ${max_lives - used_lives}";
+```
+
+> **v2.6.0：** 使用 `"string" + var` 进行字符串拼接现在是**编译错误**，请改用 f-string：
+> ```rs
+> // ❌ 编译错误
+> let bad: string = "Hello " + name;
+>
+> // ✅ 正确写法
+> let good: string = "Hello ${name}";
+> ```
+
+#### F-Strings 在聊天命令中的用法
+
+当 f-string 用于 `tell`、`title`、`subtitle`、`actionbar` 或 `announce` 时，编译器会生成正确的 Minecraft JSON 文本组件，使动态值在游戏内正确显示：
+
+```rs
+tell(@a, "Your score is ${score(@s, #points)}!");
+title(@s, "Round ${round} of ${max_rounds}");
+actionbar(@a, "HP: ${score(@s, #hp)} / ${score(@s, #max_hp)}");
+```
+
+这些会编译为 MC JSON 文本格式，如 `["", "Your score is ", {"score": {"name": "@s", "objective": "points"}}, "!"]`。
+
 ## 数组
 
 ```rs
@@ -298,7 +337,114 @@ enum Name {
 let val: Name = Name::Variant1;
 ```
 
-## Lambda
+## Impl 块
+
+`impl` 块为结构体附加方法。方法接受一个隐式的 `self` 参数，通过点符号调用。
+
+```rs
+struct Vec2 {
+    x: int,
+    y: int,
+}
+
+impl Vec2 {
+    fn length_sq(self) -> int {
+        return self.x * self.x + self.y * self.y;
+    }
+
+    fn scale(self, factor: int) -> Vec2 {
+        return Vec2 { x: self.x * factor, y: self.y * factor };
+    }
+
+    fn add(self, other: Vec2) -> Vec2 {
+        return Vec2 { x: self.x + other.x, y: self.y + other.y };
+    }
+}
+
+let v = Vec2 { x: 3, y: 4 };
+let len_sq: int = v.length_sq();   // 25
+let scaled: Vec2 = v.scale(2);     // Vec2 { x: 6, y: 8 }
+```
+
+`impl` 块中定义的方法遵循与顶层函数相同的可见性规则：以 `_` 开头的名称为私有，受死代码消除影响。
+
+## Option\<T\>
+
+`Option<T>` 表示一个可能存在也可能不存在的值。它有两个变体：`Some(value)` 和 `None`。
+
+```rs
+// 声明可选值
+let maybe: Option<int> = Some(42);
+let empty: Option<int> = None;
+
+// 用 match 解包
+match maybe {
+    Some(v) => { say("Got ${v}"); },
+    None    => { say("Nothing here"); },
+}
+```
+
+### 从函数返回 Option
+
+```rs
+fn find_score(target: selector) -> Option<int> {
+    let s: int = score(target, #points);
+    if (s < 0) {
+        return None;
+    }
+    return Some(s);
+}
+
+let result: Option<int> = find_score(@p);
+match result {
+    Some(pts) => { tell(@s, "Points: ${pts}"); },
+    None      => { tell(@s, "Player not found"); },
+}
+```
+
+### 辅助方法
+
+| 表达式 | 描述 |
+|--------|------|
+| `opt.is_some()` | 如果 option 持有值则返回 `true` |
+| `opt.is_none()` | 如果 option 为 `None` 则返回 `true` |
+| `opt.unwrap()` | 返回内部值；如果在编译时对 `None` 调用则**报错**（编译错误） |
+| `opt.unwrap_or(default)` | 返回内部值，如果为 `None` 则返回 `default` |
+
+```rs
+let val: int = maybe.unwrap_or(0);  // 安全的回退值
+```
+
+## 泛型
+
+函数和结构体可以用一个或多个类型变量参数化。类型变量写在名称后的尖括号中，可在该定义中任何需要类型的地方使用。
+
+```rs
+// 泛型函数——返回任意类型数组的第一个元素
+fn first<T>(arr: T[]): T {
+    return arr[0];
+}
+
+let n: int = first<int>([10, 20, 30]);      // 10
+let s: string = first<string>(["a", "b"]); // "a"
+
+// 多个类型参数
+fn zip<A, B>(a: A, b: B): string {
+    return "${a} / ${b}";
+}
+
+// 泛型结构体
+struct Pair<T> {
+    left: T,
+    right: T,
+}
+
+let p: Pair<int> = Pair { left: 1, right: 2 };
+```
+
+> 当编译器可以从参数推断类型时，函数调用支持类型推断。显式类型参数（`first<int>(...)`）始终被接受。
+
+## Lambdas
 
 ```rs
 let f = (x: int) => x * 2;
