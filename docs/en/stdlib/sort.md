@@ -50,3 +50,63 @@ let b: int[] = [20, 40, 60];
 let merged: int[] = sort_merge(a, 3, b, 3);
 // merged is [10, 20, 30, 40, 50, 60]
 ```
+
+---
+
+### `merge_sort_coro(arr: int[], n: int)` _(coroutine)_
+
+Sort `arr[0..n-1]` ascending in-place using **bottom-up merge sort**, spread across server ticks via `@coroutine`.
+
+> **Complexity:** O(n log n) time, O(n) scratch space.  
+> **Tick cost:** 1 merge pass per tick — array is fully sorted after ⌈log₂(n)⌉ ticks.
+
+This is the server-friendly alternative to `insertion_sort` for large arrays. Each tick performs one full width-doubling pass (merging all adjacent run pairs of the current width). Because the work is spread across ticks, it never causes a lag spike regardless of array size.
+
+**How it works (bottom-up iterative merge sort):**
+
+```
+width = 1
+while width < n:
+    for each adjacent pair [left..mid) and [mid..right) of size width:
+        merge in-place using a scratch array
+    width *= 2
+    ← yield (next tick resumes here)
+```
+
+**Signature:**
+
+```rs
+@coroutine(batch=1, onDone=merge_sort_noop)
+fn merge_sort_coro(arr: int[], n: int)
+```
+
+**Example:**
+
+```rs
+import "stdlib/sort.mcrs";
+
+let data: int[] = [30, 10, 50, 20, 40];
+merge_sort_coro(data, 5);
+// After ~3 ticks, data is [10, 20, 30, 40, 50]
+```
+
+**With a completion callback:**
+
+```rs
+import "stdlib/sort.mcrs";
+
+fn on_sorted() {
+    // data is fully sorted here — safe to use
+}
+
+// Replace onDone by wrapping or copying merge_sort_coro with your own callback
+// (RedScript @coroutine onDone is set at definition time)
+```
+
+**Notes:**
+
+- `arr` is mutated in-place; no new array is returned.
+- `n` must equal `arr.len()` or less (partial sort of first `n` elements).
+- Uses a temporary scratch `int[]` per merge segment — standard RedScript heap allocation.
+- Pair with `insertion_sort` for hybrid strategies: use `insertion_sort` for n ≤ 64, `merge_sort_coro` for larger arrays.
+- `merge_sort_noop` is the built-in no-op `onDone` callback; define your own function and swap the decorator if you need a done signal.
