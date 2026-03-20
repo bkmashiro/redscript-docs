@@ -121,3 +121,89 @@ Lerp between two angles ×10000, taking the shortest angular path (normalises di
 import matrix;
 let a: int = lerp_angle(0, 1800000, 5000);  // 900000
 ```
+
+---
+
+### `mat3_mul_elem(a00…a22: int, b00…b22: int, row: int, col: int): int`
+
+计算两个 3×3 矩阵 **A** 和 **B** 乘积中第 `C[row][col]` 个元素。18 个矩阵分量逐一传入，均为 ×10000 定点数。返回 `C[row][col]` ×10000。
+
+每个点积项除以 10000 以保持 ×10000 的定点精度：`C[r][c] = Σ A[r][k] × B[k][c] / 10000`。
+
+**示例：**
+```rs
+import "stdlib/matrix.mcrs";
+// 单位矩阵 × 单位矩阵 → 元素 (0,0) 应为 10000（= 1.0）
+let v: int = mat3_mul_elem(
+    10000, 0, 0,
+    0, 10000, 0,
+    0, 0, 10000,
+    10000, 0, 0,
+    0, 10000, 0,
+    0, 0, 10000,
+    0, 0
+);  // 10000
+```
+
+---
+
+### `mat3_mul_vec3_elem(a00…a22: int, vx: int, vy: int, vz: int, comp: int): int`
+
+将 3×3 矩阵与列向量 `(vx, vy, vz)` ×10000 相乘，返回结果向量的某个分量。`comp`：0 = x，1 = y，2 = z。所有值均为 ×10000。
+
+**示例：**
+```rs
+import "stdlib/matrix.mcrs";
+// 2× 缩放矩阵应用于向量 (10000, 0, 0) → x 分量 = 20000
+let x: int = mat3_mul_vec3_elem(
+    20000, 0, 0,
+    0, 20000, 0,
+    0, 0, 20000,
+    10000, 0, 0,
+    0
+);  // 20000
+```
+
+---
+
+### `mat4_mul_elem(a00…a33: int, b00…b33: int, row: int, col: int): int`
+
+计算两个 4×4 矩阵 **A** 和 **B** 乘积中第 `C[row][col]` 个元素。32 个分量逐一传入，均为 ×10000。返回 `C[row][col]` ×10000。适用于合成 MC Display Entity TRS 变换。
+
+**示例：**
+```rs
+import "stdlib/matrix.mcrs";
+// 单位矩阵 × 单位矩阵 → 元素 (1,1) = 10000
+let v: int = mat4_mul_elem(
+    10000, 0, 0, 0,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    10000, 0, 0, 0,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    1, 1
+);  // 10000
+```
+
+---
+
+### `mat4_mul_vec4_elem(a00…a33: int, vx: int, vy: int, vz: int, vw: int, comp: int): int`
+
+将 4×4 矩阵与齐次列向量 `(vx, vy, vz, vw)` ×10000 相乘，返回结果的某个分量。`comp`：0 = x，1 = y，2 = z，3 = w。所有值均为 ×10000。
+
+**示例：**
+```rs
+import "stdlib/matrix.mcrs";
+// 平移矩阵（沿 x 平移 5.0）作用于点 (1.0, 0, 0, 1.0)
+// 结果 x = 1.0 + 5.0 = 6.0 → 60000
+let x: int = mat4_mul_vec4_elem(
+    10000, 0, 0, 50000,
+    0, 10000, 0, 0,
+    0, 0, 10000, 0,
+    0, 0, 0, 10000,
+    10000, 0, 0, 10000,
+    0
+);  // 60000
+```
