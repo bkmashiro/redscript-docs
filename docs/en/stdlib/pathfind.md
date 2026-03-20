@@ -153,3 +153,19 @@ import "stdlib/pathfind.mcrs"
     }
 }
 ```
+
+---
+
+### `pf_noop()`
+
+Default `onDone` callback for `pathfind_bfs_coro`. Does nothing; serves as a placeholder. Replace it by defining your own `pf_noop` function (or passing a different callback) if you need to act when the coroutine finishes.
+
+**Example:**
+```rs
+import "stdlib/pathfind.mcrs"
+
+// Override pf_noop to react when pathfinding completes
+fn pf_noop() {
+    tell(@a, "Pathfinding done!")
+}
+```
