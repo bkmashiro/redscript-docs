@@ -283,3 +283,88 @@ Long division quotient for one chunk: `(rem * 10000 + chunk) / divisor`.
 ### `bigint3_rem_chunk(chunk: int, rem: int, divisor: int): int`
 
 Long division remainder for one chunk: `(rem * 10000 + chunk) % divisor`.
+
+---
+
+### `bigint_shl1(a: int[], len: int)`
+
+将大整数 `a` 原地向左移动一个块（相当于乘以 10000 / base）。每个元素向低索引方向移位，`a[len-1]` 被置 0，最高有效块被丢弃。由 `bigint_div` 内部使用。
+
+**示例：**
+```rs
+import "stdlib/bigint.mcrs";
+// [1, 2345] 左移一块 → [2345, 0]（×10000）
+let a: int[] = [1, 2345];
+bigint_shl1(a, 2);
+// a 变为 [2345, 0]
+```
+
+---
+
+### `bigint_cmp_window(a: int[], aoff: int, b: int[], len: int): int`
+
+比较窗口 `a[aoff..aoff+len-1]` 与 `b[0..len-1]`。窗口较大返回 `1`，较小返回 `-1`，相等返回 `0`。由 `bigint_div` 在试验减法中使用。
+
+**示例：**
+```rs
+import "stdlib/bigint.mcrs";
+let a: int[] = [0, 1, 500];
+let b: int[] = [1, 400];
+let cmp: int = bigint_cmp_window(a, 1, b, 2);  // 1  (a[1..2] = [1,500] > [1,400])
+```
+
+---
+
+### `bigint_sub_window(a: int[], aoff: int, b: int[], len: int)`
+
+从窗口 `a[aoff..aoff+len-1]` 中原地减去 `b[0..len-1]`，含借位传播。等价于 `a[aoff..] -= b`。由 `bigint_div` 用于减去试验乘积。
+
+> **前提：** 窗口值必须 ≥ `b`（不能下溢）。
+
+**示例：**
+```rs
+import "stdlib/bigint.mcrs";
+let a: int[] = [0, 5000, 0];
+let b: int[] = [1, 200];
+bigint_sub_window(a, 1, b, 2);
+// a[1..2] = [5000,0] - [1,200] = [4998, 9800]
+```
+
+---
+
+### `bigint_mul_small_into(b: int[], factor: int, out: int[], len: int)`
+
+将大整数 `b[0..len-1]` 乘以小整数 `factor`，结果写入 `out[0..len-1]`。从右到左做进位传播。超出 `out[0]` 的溢出被静默丢弃。
+
+**示例：**
+```rs
+import "stdlib/bigint.mcrs";
+let b: int[] = [1, 5000];
+let out: int[] = [0, 0];
+bigint_mul_small_into(b, 3, out, 2);
+// out = [4, 5000]
+```
+
+---
+
+### `bigint_div(a: int[], b: int[], quotient: int[], remainder: int[], la: int, lb: int)`
+
+全精度大整数除法，使用二分搜索试验减法。计算 `a / b → quotient`，`a % b → remainder`。`a` 有 `la` 块，`b` 有 `lb` 块，所有数组均为最高位在前的 base-10000 表示（每块 0–9999）。
+
+> **前提：** `la ≥ lb`。`quotient` 预分配 `la` 个元素；`remainder` 预分配 `lb` 个元素。`a` 和 `b` 不得与 `quotient` 或 `remainder` 别名。
+
+内部使用 `bigint_cmp_window`、`bigint_sub_window` 和 `bigint_mul_small_into`。
+
+**示例：**
+```rs
+import "stdlib/bigint.mcrs";
+// 计算 100000 / 3 = 33333 余 1
+// base-10000 表示：a = [1, 0]，b = [3]
+let a: int[] = [1, 0];
+let b: int[] = [3];
+let q: int[] = [0, 0];
+let r: int[] = [0];
+bigint_div(a, b, q, r, 2, 1);
+// q = [3, 3333]（33333 的 base-10000 表示）
+// r = [1]
+```
