@@ -222,6 +222,37 @@ fn handle_block_break() {
 
 **Compiles to:** Per-tick tag checking on `@a` using the event's internal tag (e.g., `rs.just_died`).
 
+## @schedule
+
+Schedules a function to run once after a fixed delay (in ticks) from the moment the datapack loads or after the decorated function is otherwise triggered.
+
+**Syntax:** `@schedule(delay=N)`
+
+| Parameter | Description |
+|-----------|-------------|
+| `delay=N` | Number of ticks to wait before executing the function. |
+
+```rs
+@schedule(delay=100)
+fn delayed_start() {
+    // Runs 5 seconds (100 ticks) after datapack load
+    say("Game starting!");
+}
+
+@schedule(delay=1200)
+fn end_game() {
+    // Runs 60 seconds (1200 ticks) after datapack load
+    say("Time's up!");
+    scoreboard_display("sidebar", "kills");
+}
+```
+
+**Compiles to:** `schedule function <ns>:<name> <delay>t` in the `@load` setup function.
+
+::: tip
+For recurring scheduled tasks, use `@tick(rate=N)`. Use `@schedule` only for one-shot startup delays.
+:::
+
 ## @keep
 
 Prevents the dead code elimination (DCE) optimizer from removing a function.
@@ -293,5 +324,6 @@ fn on_done() {
 | `@on_craft("item")` | Player crafts item | Crafting player |
 | `@on_join_team("team")` | Player joins team | Player |
 | `@on(EventType)` | Static event fires | Event player |
+| `@schedule(delay=N)` | Runs function once N ticks after datapack load | Server |
 | `@keep` | (Optimizer hint, no runtime effect) | — |
 | `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |
