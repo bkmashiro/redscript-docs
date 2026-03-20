@@ -374,13 +374,12 @@ Methods defined in `impl` blocks follow the same visibility rules as top-level f
 
 ```rs
 // Declare an optional value
-let maybe: Option<int> = Some(42);
-let empty: Option<int> = None;
+let maybe: Option<int> = Some(42)
+let empty: Option<int> = None
 
-// Unwrap with match
-match maybe {
-    Some(v) => { say("Got ${v}"); },
-    None    => { say("Nothing here"); },
+// Unwrap with if let (the only supported unwrap syntax)
+if let Some(v) = maybe {
+    say("Got ${v}")
 }
 ```
 
@@ -388,31 +387,21 @@ match maybe {
 
 ```rs
 fn find_score(target: selector) -> Option<int> {
-    let s: int = score(target, #points);
+    let s: int = score(target, #points)
     if (s < 0) {
-        return None;
+        return None
     }
-    return Some(s);
+    return Some(s)
 }
 
-let result: Option<int> = find_score(@p);
-match result {
-    Some(pts) => { tell(@s, "Points: ${pts}"); },
-    None      => { tell(@s, "Player not found"); },
+let result: Option<int> = find_score(@p)
+if let Some(pts) = result {
+    tell(@s, "Points: ${pts}")
 }
 ```
 
-### Helpers
-
-| Expression | Description |
-|------------|-------------|
-| `opt.is_some()` | Returns `true` if the option holds a value |
-| `opt.is_none()` | Returns `true` if the option is `None` |
-| `opt.unwrap()` | Returns the inner value; **panics** (compile error) if called on `None` at compile time |
-| `opt.unwrap_or(default)` | Returns the inner value, or `default` if `None` |
-
-```rs
-let val: int = maybe.unwrap_or(0);  // safe fallback
+> **Note:** RedScript currently only supports `if let Some(x) = opt { ... }` for unwrapping Option.
+> `match`, `.unwrap()`, `.is_some()`, `.is_none()`, and `.unwrap_or()` are not yet implemented.
 ```
 
 ## Generics

@@ -374,13 +374,12 @@ let scaled: Vec2 = v.scale(2);     // Vec2 { x: 6, y: 8 }
 
 ```rs
 // 声明可选值
-let maybe: Option<int> = Some(42);
-let empty: Option<int> = None;
+let maybe: Option<int> = Some(42)
+let empty: Option<int> = None
 
-// 用 match 解包
-match maybe {
-    Some(v) => { say("Got ${v}"); },
-    None    => { say("Nothing here"); },
+// 用 if let 解包（唯一支持的解包语法）
+if let Some(v) = maybe {
+    say("Got ${v}")
 }
 ```
 
@@ -388,32 +387,21 @@ match maybe {
 
 ```rs
 fn find_score(target: selector) -> Option<int> {
-    let s: int = score(target, #points);
+    let s: int = score(target, #points)
     if (s < 0) {
-        return None;
+        return None
     }
-    return Some(s);
+    return Some(s)
 }
 
-let result: Option<int> = find_score(@p);
-match result {
-    Some(pts) => { tell(@s, "Points: ${pts}"); },
-    None      => { tell(@s, "Player not found"); },
+let result: Option<int> = find_score(@p)
+if let Some(pts) = result {
+    tell(@s, "Points: ${pts}")
 }
 ```
 
-### 辅助方法
-
-| 表达式 | 描述 |
-|--------|------|
-| `opt.is_some()` | 如果 option 持有值则返回 `true` |
-| `opt.is_none()` | 如果 option 为 `None` 则返回 `true` |
-| `opt.unwrap()` | 返回内部值；如果在编译时对 `None` 调用则**报错**（编译错误） |
-| `opt.unwrap_or(default)` | 返回内部值，如果为 `None` 则返回 `default` |
-
-```rs
-let val: int = maybe.unwrap_or(0);  // 安全的回退值
-```
+> **注意：** RedScript 目前只支持 `if let Some(x) = opt { ... }` 语法解包 Option。
+> `match`、`.unwrap()`、`.is_some()`、`.is_none()`、`.unwrap_or()` 尚未实现。
 
 ## 泛型
 
