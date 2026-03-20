@@ -228,6 +228,33 @@ data_merge(@s, {Invisible: 1b});
 data_remove(@s, "CustomName");
 ```
 
+## Heap / Dynamic Allocation
+
+`heap_new` allocates a named NBT storage slot at runtime and returns a handle (an `int` ID) that can be passed around and dereferenced later. This is the foundation for dynamic data structures in RedScript.
+
+| Function | Description |
+|----------|-------------|
+| `heap_new(nbt)` | Allocate a new heap slot with initial NBT value; returns `int` handle |
+| `heap_get(handle, path)` | Read a path from the heap slot identified by `handle` |
+| `heap_set(handle, path, value)` | Write a value to a path in the heap slot |
+| `heap_free(handle)` | Release a heap slot (mark it reusable) |
+
+```rs
+// Allocate a compound on the heap
+let h: int = heap_new({hp: 20, name: "boss"});
+
+// Read from the slot
+let hp: int = heap_get(h, "hp");      // 20
+
+// Write a new value
+heap_set(h, "hp", 15);
+
+// Free when done
+heap_free(h);
+```
+
+> **Implementation note:** `heap_new` stores data in Minecraft's `storage` NBT under the datapack namespace. Each handle is a numeric ID tracked in a scoreboard. Do not use handles after calling `heap_free` — behaviour is undefined.
+
 ## Advancement
 
 | Function | Description |
