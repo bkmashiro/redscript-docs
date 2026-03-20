@@ -222,6 +222,37 @@ fn handle_block_break() {
 
 **编译为：** 每 tick 使用事件内部标签（如 `rs.just_died`）对 `@a` 进行标签检查。
 
+## @schedule
+
+在数据包加载后经过固定延迟（以 tick 为单位）后，调度函数执行一次。
+
+**语法：** `@schedule(delay=N)`
+
+| 参数 | 描述 |
+|------|------|
+| `delay=N` | 函数执行前等待的 tick 数。 |
+
+```rs
+@schedule(delay=100)
+fn delayed_start() {
+    // 在数据包加载后 5 秒（100 tick）运行
+    say("Game starting!");
+}
+
+@schedule(delay=1200)
+fn end_game() {
+    // 在数据包加载后 60 秒（1200 tick）运行
+    say("Time's up!");
+    scoreboard_display("sidebar", "kills");
+}
+```
+
+**编译为：** 在 `@load` 初始化函数中生成 `schedule function <ns>:<name> <delay>t`。
+
+::: tip
+对于重复性调度任务，请使用 `@tick(rate=N)`。`@schedule` 仅用于一次性的启动延迟。
+:::
+
 ## @keep
 
 阻止死代码消除（DCE）优化器移除函数。
@@ -241,6 +272,44 @@ fn _internal_helper() {
 - 只通过游戏内 `/function` 调用的工具函数
 - 需要在激进 DCE 后仍保留的函数
 
+## @coroutine
+
+将函数标记为协程——一种可在循环回边处将控制权交还给 Minecraft 的长期任务，防止复杂计算导致服务器超时。
+
+**语法：** `@coroutine` 或 `@coroutine(batch=N)` 或 `@coroutine(onDone="fn_name")`
+
+```rs
+@coroutine(batch=10, onDone="on_done")
+fn process_all_players() {
+    foreach (p in @a) {
+        heavy_computation(p);
+        // 每 10 次迭代在循环回边处让出控制权
+    }
+}
+
+fn on_done() {
+    say("Processing complete!");
+}
+```
+
+**参数：**
+
+| 参数 | 描述 |
+|------|------|
+| `batch=N` | 每 tick 执行的循环迭代次数，之后让出控制权。默认值：1（每次迭代都让出）。 |
+| `onDone="fn"` | 协程完成所有迭代后调用的无参函数名。 |
+
+**行为：**
+- 在循环回边处（每次 `foreach` / `for` / `while` 循环体迭代结束时）让出控制权。
+- 使用 `schedule function ... 1t` 在下一个 tick 恢复执行。
+- 状态在 tick 之间通过专用记分板保存。
+- 同一时间只有一个协程实例在运行；在协程运行时再次启动为空操作。
+
+**使用场景：**
+- 处理大量实体列表而不导致 `/tick warp` 超时
+- 将繁重的地图生成分散到多个 tick 中
+- 分块批量操作（物品栏扫描、世界编辑）
+
 ## 装饰器总结
 
 | 装饰器 | 触发条件 | `@s` 上下文 |
@@ -255,4 +324,6 @@ fn _internal_helper() {
 | `@on_craft("item")` | 玩家合成物品 | 合成的玩家 |
 | `@on_join_team("team")` | 玩家加入队伍 | 玩家 |
 | `@on(EventType)` | 静态事件触发 | 事件玩家 |
+| `@schedule(delay=N)` | 数据包加载后 N 个 tick 运行一次函数 | 服务器 |
 | `@keep` | （优化器提示，无运行时效果） | — |
+| `@coroutine` | 将函数标记为协程（在循环回边处让出控制权） | — |
