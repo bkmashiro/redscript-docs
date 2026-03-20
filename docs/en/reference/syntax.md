@@ -415,6 +415,35 @@ match result {
 let val: int = maybe.unwrap_or(0);  // safe fallback
 ```
 
+## Generics
+
+Functions and structs can be parameterized with one or more type variables. The type variable is written in angle brackets after the name and can be used anywhere a type is expected in that definition.
+
+```rs
+// Generic function – returns the first element of any typed array
+fn first<T>(arr: T[]): T {
+    return arr[0];
+}
+
+let n: int = first<int>([10, 20, 30]);      // 10
+let s: string = first<string>(["a", "b"]); // "a"
+
+// Multiple type parameters
+fn zip<A, B>(a: A, b: B): string {
+    return "${a} / ${b}";
+}
+
+// Generic struct
+struct Pair<T> {
+    left: T,
+    right: T,
+}
+
+let p: Pair<int> = Pair { left: 1, right: 2 };
+```
+
+> Type inference is supported for function calls when the compiler can determine the type from the arguments. Explicit type parameters (`first<int>(...)`) are always accepted.
+
 ## Lambdas
 
 ```rs
