@@ -80,6 +80,8 @@ export default defineConfig({
               text: 'Reference',
               items: [
                 { text: 'Syntax', link: '/en/reference/syntax' },
+                { text: 'Type System Guide', link: '/en/reference/types' },
+                { text: 'Error Messages Guide', link: '/en/reference/errors' },
                 { text: 'Built-in Functions', link: '/en/reference/builtins' },
                 { text: 'Standard Library', link: '/en/reference/stdlib' },
                 { text: 'Decorators', link: '/en/reference/decorators' },
@@ -182,6 +184,7 @@ export default defineConfig({
               { text: 'inventory', link: '/en/stdlib/inventory' },
               { text: 'bossbar', link: '/en/stdlib/bossbar' },
               { text: 'cooldown', link: '/en/stdlib/cooldown' },
+              { text: 'state', link: '/en/stdlib/state' },
               { text: 'timer', link: '/en/stdlib/timer' },
               { text: 'tags', link: '/en/stdlib/tags' },
               { text: 'teams', link: '/en/stdlib/teams' },
@@ -250,6 +253,8 @@ export default defineConfig({
               text: '参考',
               items: [
                 { text: '语法', link: '/zh/reference/syntax' },
+                { text: '类型系统指南', link: '/zh/reference/types' },
+                { text: '错误信息指南', link: '/zh/reference/errors' },
                 { text: '内置函数', link: '/zh/reference/builtins' },
                 { text: '标准库', link: '/zh/reference/stdlib' },
                 { text: '装饰器', link: '/zh/reference/decorators' },
@@ -329,6 +334,7 @@ export default defineConfig({
               { text: 'inventory', link: '/zh/stdlib/inventory' },
               { text: 'bossbar', link: '/zh/stdlib/bossbar' },
               { text: 'cooldown', link: '/zh/stdlib/cooldown' },
+              { text: 'state', link: '/zh/stdlib/state' },
               { text: 'timer', link: '/zh/stdlib/timer' },
               { text: 'tags', link: '/zh/stdlib/tags' },
               { text: 'teams', link: '/zh/stdlib/teams' },
