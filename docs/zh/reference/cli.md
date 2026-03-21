@@ -32,6 +32,10 @@ redscript compile <file> [options]
 | `--namespace <ns>` | 数据包命名空间 | 文件名 |
 | `--target <target>` | 输出目标：`datapack`、`cmdblock`、`structure` | `datapack` |
 | `--output-nbt <file>` | 输出 .nbt 文件路径（structure 目标用） | — |
+| `--no-dce` | 禁用死代码消除 | `false` |
+| `-O0` | 关闭优化 | `off` |
+| `-O1` | 开启标准优化 | `on` |
+| `-O2` | 开启激进优化 | `off` |
 | `--stats` | 打印优化器统计信息 | `false` |
 
 **示例：**
@@ -48,6 +52,15 @@ redscript compile game.mcrs --namespace minigame
 
 # 生成命令方块结构
 redscript compile game.mcrs --target structure --output-nbt game.nbt
+
+# 调试生成结果时关闭优化
+redscript compile game.mcrs -O0
+
+# 使用标准优化并打印统计信息
+redscript compile game.mcrs -O1 --stats
+
+# 保留其他优化，但关闭 DCE
+redscript compile game.mcrs -O2 --no-dce
 ```
 
 ### watch

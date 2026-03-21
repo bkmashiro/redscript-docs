@@ -32,6 +32,10 @@ redscript compile <file> [options]
 | `--namespace <ns>` | Datapack namespace | File name |
 | `--target <target>` | Output target: `datapack`, `cmdblock`, `structure` | `datapack` |
 | `--output-nbt <file>` | Output .nbt file path (for structure target) | — |
+| `--no-dce` | Disable dead code elimination | `false` |
+| `-O0` | Disable optimization passes | `off` |
+| `-O1` | Enable standard optimizations | `on` |
+| `-O2` | Enable aggressive optimizations | `off` |
 | `--stats` | Print optimizer statistics | `false` |
 
 **Examples:**
@@ -48,6 +52,15 @@ redscript compile game.mcrs --namespace minigame
 
 # Generate command block structure
 redscript compile game.mcrs --target structure --output-nbt game.nbt
+
+# Disable optimizations for debugging
+redscript compile game.mcrs -O0
+
+# Compile with standard optimizations and stats
+redscript compile game.mcrs -O1 --stats
+
+# Keep other optimizations, but disable DCE
+redscript compile game.mcrs -O2 --no-dce
 ```
 
 ### watch

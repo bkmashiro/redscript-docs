@@ -31,6 +31,7 @@ export default defineConfig({
           { text: 'Guide', link: '/en/guide/getting-started' },
           { text: 'Tutorials', link: '/en/tutorials/' },
           { text: 'Reference', link: '/en/reference/syntax' },
+          { text: 'Advanced', link: '/en/advanced/optimization' },
           { text: 'Standard Library', link: '/en/stdlib/' },
           { text: 'Dev Log', link: '/en/blog/' },
           { text: 'Online IDE', link: 'https://redscript-ide.pages.dev' },
@@ -86,6 +87,16 @@ export default defineConfig({
                 { text: 'Standard Library', link: '/en/reference/stdlib' },
                 { text: 'Decorators', link: '/en/reference/decorators' },
                 { text: 'CLI', link: '/en/reference/cli' },
+              ]
+            }
+          ],
+          '/en/advanced/': [
+            {
+              text: 'Advanced',
+              items: [
+                { text: 'Optimization', link: '/en/advanced/optimization' },
+                { text: 'Module System', link: '/en/advanced/module-system' },
+                { text: 'Decorators', link: '/en/advanced/decorators' },
               ]
             }
           ],
@@ -207,6 +218,7 @@ export default defineConfig({
           { text: '指南', link: '/zh/guide/getting-started' },
           { text: '教程', link: '/zh/tutorials/' },
           { text: '参考', link: '/zh/reference/syntax' },
+          { text: '进阶', link: '/zh/advanced/optimization' },
           { text: '标准库', link: '/zh/stdlib/' },
           { text: '开发日志', link: '/zh/blog/' },
           { text: '在线 IDE', link: 'https://redscript-ide.pages.dev' },
@@ -262,6 +274,16 @@ export default defineConfig({
                 { text: '标准库', link: '/zh/reference/stdlib' },
                 { text: '装饰器', link: '/zh/reference/decorators' },
                 { text: '命令行', link: '/zh/reference/cli' },
+              ]
+            }
+          ],
+          '/zh/advanced/': [
+            {
+              text: '进阶',
+              items: [
+                { text: '优化器', link: '/zh/advanced/optimization' },
+                { text: '模块系统', link: '/zh/advanced/module-system' },
+                { text: '装饰器', link: '/zh/advanced/decorators' },
               ]
             }
           ],
