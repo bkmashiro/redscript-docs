@@ -4,4 +4,4 @@ The standard library reference has moved.
 
 → **[Browse the Standard Library](/en/stdlib/)**
 
-RedScript ships with 35 modules covering math, geometry, randomness, signal processing, physics, and Minecraft game mechanics. Each module has full documentation with function signatures, precision notes, and examples.
+RedScript ships with 48 modules covering math, geometry, data structures, randomness, signal processing, physics, game systems, and Minecraft mechanics. Each module has function signatures, usage notes, and examples.

@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 40 stdlib modules. Import any module with `import <name>;`.
+RedScript ships with 48 stdlib modules. Import any module with `import <name>;`.
 
 ## Categories
 
@@ -20,6 +20,7 @@ RedScript ships with 40 stdlib modules. Import any module with `import <name>;`.
 - [matrix](/en/stdlib/matrix) — matrix math for Display Entities (2D/3D rotation, scale, quaternion helpers)
 - [vec](/en/stdlib/vec) — 2D/3D vectors (`dot2d`, `cross3d`, `length2d_fixed`, `atan2_fixed`, `normalize2d_x`, ...)
 - [quaternion](/en/stdlib/quaternion) — 3D rotations (`quat_mul`, `quat_slerp`, `quat_euler`, axis-angle constructors)
+- [heap](/en/stdlib/heap) — min/max binary heap priority queues (up to 64 elements)
 
 ### Randomness & Statistics
 - [random](/en/stdlib/random) — LCG/PCG RNG, binomial and hypergeometric sampling
@@ -44,6 +45,9 @@ RedScript ships with 40 stdlib modules. Import any module with `import <name>;`.
 
 ### Entity & Game Systems
 - [ecs](/en/stdlib/ecs) — Entity Component System (health, velocity, damage components; registry; tag convention)
+- [state](/en/stdlib/state) — scoreboard-backed state machine (`get_state`, `set_state`, `transition`)
+- [scheduler](/en/stdlib/scheduler) — per-entity/global delayed tasks (`task_schedule`, `gtask_ready`)
+- [result](/en/stdlib/result) — tagged success/error return values (`Result::Ok`, `Result::Err`)
 
 ### Minecraft Game Mechanics
 - [player](/en/stdlib/player) — player utilities (`heal`, `damage`, `is_op`)
@@ -56,6 +60,8 @@ RedScript ships with 40 stdlib modules. Import any module with `import <name>;`.
 - [bossbar](/en/stdlib/bossbar) — boss bar UI (`create_timer_bar`, `create_health_bar`, `update_bar_color`)
 - [cooldown](/en/stdlib/cooldown) — ability cooldowns (`cooldown_start`, `cooldown_ready`, `cooldown_tick`)
 - [timer](/en/stdlib/timer) — countdown timers (`Timer` struct with `start`, `done`, `remaining`)
+- [sort](/en/stdlib/sort) — insertion sort, merge helper, coroutine merge sort
 - [tags](/en/stdlib/tags) — Minecraft block/entity/item/damage type tag string constants
 - [teams](/en/stdlib/teams) — team management (`setup_two_teams`, `setup_four_teams`, `add_to_team`)
 - [world](/en/stdlib/world) — world queries (`set_day`, `weather_clear`, `sun_altitude`, `glass_box`, ...)
+- [events](/en/stdlib/events) — event dispatcher for join/death/kill/item-use function tags

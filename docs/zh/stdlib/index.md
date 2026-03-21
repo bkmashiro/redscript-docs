@@ -1,6 +1,6 @@
 # 标准库
 
-RedScript 内置 35 个标准库模块。使用 `import <name>;` 导入任意模块。
+RedScript 内置 48 个标准库模块。使用 `import <name>;` 导入任意模块。
 
 ## 分类
 
@@ -10,13 +10,17 @@ RedScript 内置 35 个标准库模块。使用 `import <name>;` 导入任意模
 - [bits](/zh/stdlib/bits) — 位运算（`bit_and`, `bit_or`, `bit_xor`, `bit_shl`, `popcount`, ...）
 - [bigint](/zh/stdlib/bigint) — 多字整数（base-10000 大整数加减乘除，任意长度）
 - [calculus](/zh/stdlib/calculus) — 数值积分/微分（梯形法、Simpson 法、Welford 统计）
+- [ode](/zh/stdlib/ode) — RK4 常微分方程求解（指数衰减/增长、简谐振子；定点 ×10000）
+- [linalg](/zh/stdlib/linalg) — 双精度线性代数（2D/3D 向量、2×2 矩阵乘法、Cramer 解线性方程）
 
 ### 数据结构
 - [list](/zh/stdlib/list) — 数组聚合（`sum`, `avg`, `min`, `max`, `sort3`–`sort5`, `shuffle`, ...）
 - [sets](/zh/stdlib/sets) — 集合操作（`set_new`, `set_add`, `set_contains`, `set_remove`）
+- [graph](/zh/stdlib/graph) — 带权有向/无向图（BFS、DFS、可达性、Dijkstra；最多 64 点、256 边）
 - [matrix](/zh/stdlib/matrix) — Display Entity 矩阵数学（2D/3D 旋转、缩放、四元数辅助）
 - [vec](/zh/stdlib/vec) — 2D/3D 向量（`dot2d`, `cross3d`, `length2d_fixed`, `atan2_fixed`, `normalize2d_x`, ...）
 - [quaternion](/zh/stdlib/quaternion) — 3D 旋转（`quat_mul`, `quat_slerp`, `quat_euler`，轴角构造器）
+- [heap](/zh/stdlib/heap) — 最小堆/最大堆优先队列（最多 64 个元素）
 
 ### 随机与统计
 - [random](/zh/stdlib/random) — LCG/PCG 随机数生成器，二项分布和超几何采样
@@ -24,6 +28,7 @@ RedScript 内置 35 个标准库模块。使用 `import <name>;` 导入任意模
 
 ### 信号处理
 - [signal](/zh/stdlib/signal) — DFT（最多 8 个样本），高斯/指数/泊松/几何分布
+- [fft](/zh/stdlib/fft) — 离散傅里叶变换（O(n²) DFT，适合 n ≤ 16）
 - [expr](/zh/stdlib/expr) — RPN 表达式求值器（运行时动态公式求值）
 
 ### 几何与图形
@@ -38,6 +43,12 @@ RedScript 内置 35 个标准库模块。使用 `import <name>;` 导入任意模
 - [physics](/zh/stdlib/physics) — 速度、重力、碰撞（抛体运动、阻力、弹簧、摩擦力）
 - [strings](/zh/stdlib/strings) — 字符串工具（`str_len`）
 
+### 实体与游戏系统
+- [ecs](/zh/stdlib/ecs) — 实体组件系统（生命、速度、伤害组件；注册表；标签约定）
+- [state](/zh/stdlib/state) — 基于 scoreboard 的状态机（`get_state`, `set_state`, `transition`）
+- [scheduler](/zh/stdlib/scheduler) — 实体/全局延迟任务调度（`task_schedule`, `gtask_ready`）
+- [result](/zh/stdlib/result) — 成功/失败返回值封装（`Result::Ok`, `Result::Err`）
+
 ### Minecraft 游戏机制
 - [player](/zh/stdlib/player) — 玩家工具（`heal`, `damage`, `is_op`）
 - [mobs](/zh/stdlib/mobs) — 生物类型字符串常量（所有原版实体 ID）
@@ -49,6 +60,9 @@ RedScript 内置 35 个标准库模块。使用 `import <name>;` 导入任意模
 - [bossbar](/zh/stdlib/bossbar) — Boss 栏 UI（`create_timer_bar`, `create_health_bar`, `update_bar_color`）
 - [cooldown](/zh/stdlib/cooldown) — 技能冷却（`cooldown_start`, `cooldown_ready`, `cooldown_tick`）
 - [timer](/zh/stdlib/timer) — 倒计时器（`Timer` 结构体，包含 `start`, `done`, `remaining`）
+- [sort](/zh/stdlib/sort) — 插入排序、归并辅助、协程归并排序
 - [tags](/zh/stdlib/tags) — Minecraft 方块/实体/物品/伤害类型标签字符串常量
 - [teams](/zh/stdlib/teams) — 队伍管理（`setup_two_teams`, `setup_four_teams`, `add_to_team`）
 - [world](/zh/stdlib/world) — 世界查询（`set_day`, `weather_clear`, `sun_altitude`, `glass_box`, ...）
+- [pathfind](/zh/stdlib/pathfind) — 16×16 网格 BFS 寻路
+- [events](/zh/stdlib/events) — 玩家加入/死亡/击杀/物品使用事件分发
