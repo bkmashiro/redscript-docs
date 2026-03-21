@@ -171,3 +171,148 @@ fn show_speed(vx: fixed, vy: fixed) {
     tell(@s, f"Speed X: {speed_int}");
 }
 ```
+
+---
+
+## enum 类型
+
+### 简单 enum
+
+变体被映射为整数常量（0、1、2……）并编译到计分板上。
+
+```rs
+enum Phase { Idle, Moving, Attacking }
+
+let phase: Phase = Phase::Moving;
+
+match phase {
+    Phase::Idle      => { say("闲置"); },
+    Phase::Moving    => { say("移动"); },
+    Phase::Attacking => { say("攻击！"); },
+    _                => { },
+}
+```
+
+### 带载荷字段的 enum
+
+变体可以携带命名的载荷字段，每个字段占用独立的计分板槽位。
+
+```rs
+enum Color {
+    Red,
+    RGB(r: int, g: int, b: int),
+}
+
+// 构造
+let c: Color = Color::RGB(r: 255, g: 128, b: 0);
+
+// 在 match 中解构
+match c {
+    Color::RGB(r, g, b) => { tell(@s, "r=${r} g=${g} b=${b}"); },
+    Color::Red           => { say("纯红"); },
+    _                    => { },
+}
+```
+
+载荷字段必须**命名**——构造时以 `field: value` 对传入，match 模式中绑定同名变量。
+
+---
+
+## Option\<T\>
+
+`Option<T>` 表示可能存在也可能不存在的值。
+
+```rs
+let a: Option<int> = Some(42);
+let b: Option<int> = None;
+```
+
+### 检查与解包
+
+**`if let`：**
+
+```rs
+if let Some(v) = a {
+    tell(@s, "Got ${v}");
+}
+```
+
+**`while let`：**
+
+```rs
+while let Some(item) = next_item() {
+    process(item);
+}
+```
+
+**`match`：**
+
+```rs
+match a {
+    Some(v) => { tell(@s, "值：${v}"); },
+    None    => { say("空"); },
+}
+```
+
+**`unwrap_or`：**
+
+```rs
+let score: int = a.unwrap_or(0);   // 为 None 时返回 0
+```
+
+### 从函数返回 Option
+
+```rs
+fn find_score(target: selector) -> Option<int> {
+    let s: int = score(target, #points);
+    if (s < 0) { return None; }
+    return Some(s);
+}
+```
+
+---
+
+## 方法链
+
+当 `impl` 方法返回 `self` 或相同类型的新值时，可以链式调用：
+
+```rs
+struct Vec2 { x: int, y: int }
+
+impl Vec2 {
+    fn scale(self, factor: int) -> Vec2 {
+        return Vec2 { x: self.x * factor, y: self.y * factor };
+    }
+    fn add(self, other: Vec2) -> Vec2 {
+        return Vec2 { x: self.x + other.x, y: self.y + other.y };
+    }
+}
+
+let v: Vec2 = Vec2 { x: 1, y: 2 };
+let result: Vec2 = v.scale(3).add(Vec2 { x: 10, y: 0 });
+// result = Vec2 { x: 13, y: 6 }
+```
+
+方法调用从左到右依次求值，前一个调用的返回值成为下一个调用的接收者。
+
+---
+
+## 泛型
+
+函数和结构体可以用一个或多个类型变量进行参数化：
+
+```rs
+fn first<T>(arr: T[]) -> T {
+    return arr[0];
+}
+
+struct Pair<T> {
+    left: T,
+    right: T,
+}
+
+let n: int = first<int>([10, 20, 30]);
+let p: Pair<int> = Pair { left: 1, right: 2 };
+```
+
+当编译器能从参数推断类型时，函数调用支持类型推断。

@@ -172,3 +172,148 @@ fn show_speed(vx: fixed, vy: fixed) {
     tell(@s, f"Speed X: {speed_int}");
 }
 ```
+
+---
+
+## Enum Types
+
+### Simple enums
+
+Variants are mapped to integer constants (0, 1, 2, …) compiled onto scoreboards.
+
+```rs
+enum Phase { Idle, Moving, Attacking }
+
+let phase: Phase = Phase::Moving;
+
+match phase {
+    Phase::Idle      => { say("idle"); },
+    Phase::Moving    => { say("moving"); },
+    Phase::Attacking => { say("attack!"); },
+    _                => { },
+}
+```
+
+### Enums with payload fields
+
+Variants can carry named payload fields. Each field is stored in its own scoreboard slot.
+
+```rs
+enum Color {
+    Red,
+    RGB(r: int, g: int, b: int),
+}
+
+// Construct
+let c: Color = Color::RGB(r: 255, g: 128, b: 0);
+
+// Destructure in match
+match c {
+    Color::RGB(r, g, b) => { tell(@s, "r=${r} g=${g} b=${b}"); },
+    Color::Red           => { say("red"); },
+    _                    => { },
+}
+```
+
+Payload fields are **named** — supply them as `field: value` pairs when constructing, and the same field names are bound in match patterns.
+
+---
+
+## Option\<T\>
+
+`Option<T>` represents a value that may or may not be present.
+
+```rs
+let a: Option<int> = Some(42);
+let b: Option<int> = None;
+```
+
+### Checking and unwrapping
+
+**`if let`:**
+
+```rs
+if let Some(v) = a {
+    tell(@s, "Got ${v}");
+}
+```
+
+**`while let`:**
+
+```rs
+while let Some(item) = next_item() {
+    process(item);
+}
+```
+
+**`match`:**
+
+```rs
+match a {
+    Some(v) => { tell(@s, "Value: ${v}"); },
+    None    => { say("nothing"); },
+}
+```
+
+**`unwrap_or`:**
+
+```rs
+let score: int = a.unwrap_or(0);   // 0 if None
+```
+
+### Returning Option from a function
+
+```rs
+fn find_score(target: selector) -> Option<int> {
+    let s: int = score(target, #points);
+    if (s < 0) { return None; }
+    return Some(s);
+}
+```
+
+---
+
+## Method Chaining
+
+When `impl` methods return `self` or a new value of the same type, calls can be chained:
+
+```rs
+struct Vec2 { x: int, y: int }
+
+impl Vec2 {
+    fn scale(self, factor: int) -> Vec2 {
+        return Vec2 { x: self.x * factor, y: self.y * factor };
+    }
+    fn add(self, other: Vec2) -> Vec2 {
+        return Vec2 { x: self.x + other.x, y: self.y + other.y };
+    }
+}
+
+let v: Vec2 = Vec2 { x: 1, y: 2 };
+let result: Vec2 = v.scale(3).add(Vec2 { x: 10, y: 0 });
+// result = Vec2 { x: 13, y: 6 }
+```
+
+Each method call is evaluated left to right. The return value of the previous call becomes the receiver of the next.
+
+---
+
+## Generics
+
+Functions and structs can be parameterized by one or more type variables:
+
+```rs
+fn first<T>(arr: T[]) -> T {
+    return arr[0];
+}
+
+struct Pair<T> {
+    left: T,
+    right: T,
+}
+
+let n: int = first<int>([10, 20, 30]);
+let p: Pair<int> = Pair { left: 1, right: 2 };
+```
+
+Type inference is supported for function calls when the type can be determined from the arguments.
