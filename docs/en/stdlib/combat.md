@@ -30,12 +30,49 @@ let hp: int = enemy_health("boss");
 
 ---
 
-### `apply_damage(name: string, amount: int)`
+### `take_damage(health: int, amount: int): int`
 
-Subtract `amount` from the named entity's `#health` scoreboard value, clamping at 0.
+Subtract `amount` from `health` and return the new health value, clamped to a minimum of 0.
 
 **Example:**
 ```rs
 import combat;
-apply_damage("boss", 20);
+let hp: int = 100;
+hp = take_damage(hp, 25);  // 75
+hp = take_damage(hp, 80);  // 0 (clamped)
+```
+
+---
+
+### `is_dead(health: int): int`
+
+Returns `1` if `health` is 0 or below, `0` otherwise.
+
+**Example:**
+```rs
+import combat;
+let hp: int = take_damage(10, 15);  // 0
+if (is_dead(hp) == 1) {
+    say("entity is dead");
+}
+```
+
+---
+
+## Full example
+
+```rs
+import combat;
+
+let STATE_ALIVE: int = 0;
+let STATE_DEAD:  int = 1;
+
+fn on_hit(amount: int) {
+    let hp: int = enemy_health("boss");
+    hp = take_damage(hp, amount);
+
+    if (is_dead(hp) == 1) {
+        say("Boss defeated!");
+    }
+}
 ```
