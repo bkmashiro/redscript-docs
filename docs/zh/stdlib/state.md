@@ -26,15 +26,17 @@ let STATE_DEAD:   int = 2
 
 ## 函数
 
-### `get_state(entity: selector): int`
+### `get_state(entity: selector): Option<int>`
 
-读取 `entity` 在 `rs.state` 中存储的当前状态值。若实体尚未通过 `init_state` 初始化，返回 `-1`。
+读取 `entity` 在 `rs.state` 中存储的当前状态值，以 `Some(state)` 形式返回。若实体尚未通过 `init_state` 初始化，返回 `None`。
 
 **示例：**
 ```rs
 import "stdlib/state.mcrs"
 
-let s: int = get_state(@s)
+if let Some(s) = get_state(@s) {
+    // 实体已初始化；s 为当前状态值
+}
 ```
 
 ---
@@ -79,6 +81,20 @@ import "stdlib/state.mcrs"
 
 // 每 tick 调用 — 只会在首次时设置 STATE_IDLE。
 init_state(@s, STATE_IDLE)
+```
+
+---
+
+### `clear_state(entity: selector)`
+
+从 `rs.state` 中删除 `entity` 的状态值，将其重置为未初始化哨兵值（`-1`）。在实体移除或需要完全重置状态机时使用。
+
+**示例：**
+```rs
+import "stdlib/state.mcrs"
+
+// 实体消失 — 清除其状态，以便再次生成时重新初始化。
+clear_state(@s)
 ```
 
 ---

@@ -26,15 +26,17 @@ Use `-1` as the sentinel for "not yet initialised" (see [`init_state`](#init_sta
 
 ## Functions
 
-### `get_state(entity: selector): int`
+### `get_state(entity: selector): Option<int>`
 
-Return the current state of `entity` as stored in `rs.state`. Returns `-1` when the entity has not been initialised via `init_state`.
+Return the current state of `entity` as stored in `rs.state` wrapped in `Some(state)`. Returns `None` when the entity has not been initialised via `init_state`.
 
 **Example:**
 ```rs
 import "stdlib/state.mcrs"
 
-let s: int = get_state(@s)
+if let Some(s) = get_state(@s) {
+    // entity is initialised; s is the current state
+}
 ```
 
 ---
@@ -79,6 +81,20 @@ import "stdlib/state.mcrs"
 
 // Call on every tick — will only set STATE_IDLE once.
 init_state(@s, STATE_IDLE)
+```
+
+---
+
+### `clear_state(entity: selector)`
+
+Remove the state value for `entity` from `rs.state`, resetting it to the uninitialised sentinel (`-1`). Use this when an entity is removed or you want to fully reset its state machine.
+
+**Example:**
+```rs
+import "stdlib/state.mcrs"
+
+// Entity despawned — wipe its state so a fresh spawn can re-initialise.
+clear_state(@s)
 ```
 
 ---
