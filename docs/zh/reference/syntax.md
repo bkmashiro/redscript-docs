@@ -158,6 +158,24 @@ for i in 0..count {
 
 范围是左闭右开的（`0..n` → 0、1、…、n-1）。
 
+### for x in 数组
+
+遍历数组的每个元素。循环变量依次取各元素的值：
+
+```rs
+let names: string[] = ["Alice", "Bob", "Carol"];
+for name in names {
+    tell(@a, "你好，${name}！");
+}
+
+let scores: int[] = [10, 20, 30];
+for s in scores {
+    // s 依次为 10、20、30
+}
+```
+
+支持任意元素类型（`int[]`、`string[]`、结构体数组等）。若同时需要索引，使用 `for i in 0..arr.len`。
+
 ### break / continue
 
 `break` 提前退出最内层循环，`continue` 跳到下一次迭代：

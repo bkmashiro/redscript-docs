@@ -158,6 +158,24 @@ for i in 0..count {
 
 The range is exclusive on the upper end (`0..n` → 0, 1, …, n-1).
 
+### for x in array
+
+Iterate over every element of an array. The loop variable takes the value of each element in order:
+
+```rs
+let names: string[] = ["Alice", "Bob", "Carol"];
+for name in names {
+    tell(@a, "Hello, ${name}!");
+}
+
+let scores: int[] = [10, 20, 30];
+for s in scores {
+    // s is 10, then 20, then 30
+}
+```
+
+Works with any element type (`int[]`, `string[]`, struct arrays, etc.). Use `for i in 0..arr.len` when you also need the index.
+
 ### break / continue
 
 `break` exits the innermost loop early. `continue` skips to the next iteration:
