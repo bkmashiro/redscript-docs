@@ -1,171 +1,104 @@
-# `pathfind` — BFS Grid Pathfinding
+# `pathfind` — 16×16 Grid BFS Pathfinding
 
 Import: `import "stdlib/pathfind.mcrs"`
 
-Breadth-first search (BFS) pathfinding on a 16×16 grid. Finds the shortest path between two cells while avoiding obstacles. Includes a coroutine variant that spreads computation across multiple ticks, suitable for large maps without causing tick-rate lag.
+Breadth-first pathfinding on a fixed **16×16** XZ grid. Obstacles are stored in a 256-element `int[]`, and paths are returned as packed grid coordinates.
 
-**Grid:** x ∈ [0, 15], z ∈ [0, 15] (256 cells total).  
-**Coordinate encoding:** `packed = x * 16 + z`
+## Coordinate Packing
 
-## Functions
+Cells are encoded as:
+
+```text
+packed = x * 16 + z
+```
+
+Helpers:
+
+- `pf_unpack_x(packed) = packed / 16`
+- `pf_unpack_z(packed) = packed % 16`
+
+## Quick Example
+
+```rs
+import "stdlib/pathfind.mcrs";
+
+let map: int[] = pf_new_map();
+pf_set_blocked(map, 3, 5);
+pf_set_blocked(map, 3, 6);
+
+let path: int[] = pathfind_bfs(map, 0, 0, 7, 7);
+let first_x: int = pf_unpack_x(path[0]);
+let first_z: int = pf_unpack_z(path[0]);
+```
+
+## Map Helpers
 
 ### `pf_pack(x: int, z: int): int`
 
-Encode a (x, z) coordinate pair into a single packed integer.
-
-```rs
-let p: int = pf_pack(3, 7)  // → 55  (3*16 + 7)
-```
+Pack a grid coordinate into one integer.
 
 ### `pf_unpack_x(packed: int): int`
 
-Recover the x component from a packed coordinate.
-
-```rs
-let x: int = pf_unpack_x(55)  // → 3
-```
+Recover the X coordinate from a packed cell id.
 
 ### `pf_unpack_z(packed: int): int`
 
-Recover the z component from a packed coordinate.
-
-```rs
-let z: int = pf_unpack_z(55)  // → 7
-```
+Recover the Z coordinate from a packed cell id.
 
 ### `pf_new_map(): int[]`
 
-Allocate a 256-element obstacle map with all cells passable (value 0).
+Allocate a 256-element obstacle map with all cells open.
 
-```rs
-let map: int[] = pf_new_map()
-```
+### `pf_set_blocked(map: int[], x: int, z: int)`
 
-### `pf_set_blocked(map: int[], x: int, z: int): void`
+Mark `(x, z)` as blocked by writing `1`.
 
-Mark cell (x, z) as impassable (obstacle).
+### `pf_set_open(map: int[], x: int, z: int)`
 
-```rs
-pf_set_blocked(map, 3, 5)  // block (3, 5)
-```
-
-### `pf_set_open(map: int[], x: int, z: int): void`
-
-Mark cell (x, z) as passable (clear an obstacle).
-
-```rs
-pf_set_open(map, 3, 5)
-```
+Mark `(x, z)` as open by writing `0`.
 
 ### `pf_is_blocked(map: int[], x: int, z: int): int`
 
-Returns `1` if the cell is impassable or out of bounds, `0` if passable.
+Return `1` if the cell is blocked or out of bounds, otherwise `0`.
 
-```rs
-let blocked: int = pf_is_blocked(map, 3, 5)
-```
+## Heuristic Helper
 
 ### `pf_heuristic(x1: int, z1: int, x2: int, z2: int): int`
 
-Manhattan distance heuristic between two cells. Used internally by the pathfinder.
+Return Manhattan distance in ×10000 fixed-point form.
 
-```rs
-let h: int = pf_heuristic(0, 0, 7, 7)  // → 14
-```
+This function is informational in the current module. `pathfind_bfs()` does not use it, but it is useful if you build A* on top of the same map representation.
+
+## Synchronous Pathfinding
 
 ### `pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]`
 
-Find the shortest path from (sx, sz) to (gx, gz) using BFS. Returns an `int[]` of packed coordinates from start to goal (inclusive). Returns an empty array if no path exists.
+Find the shortest 4-direction path from start to goal.
 
-Runs synchronously — completes in a single tick. Suitable for small searches (≤ ~100 nodes).
+- Returns packed coordinates from start to goal, inclusive.
+- Returns `[]` when no path exists.
+- Expansion order is North, South, West, East.
 
-```rs
-import "stdlib/pathfind.mcrs"
+Because this is BFS on a uniform-cost grid, the returned path is shortest in number of steps.
 
-@keep fn navigate() {
-    let map: int[] = pf_new_map()
-    pf_set_blocked(map, 1, 0)
-    pf_set_blocked(map, 1, 1)
-    pf_set_blocked(map, 1, 2)
+## Coroutine Pathfinding
 
-    let path: int[] = pathfind_bfs(map, 0, 0, 3, 0)
+### `pathfind_bfs_coro(map: int[], sx: int, sz: int, gx: int, gz: int, out: int[])`
 
-    // Walk the path
-    let i: int = 0
-    while (i < path.len()) {
-        let step_x: int = pf_unpack_x(path[i])
-        let step_z: int = pf_unpack_z(path[i])
-        tell(@a, f"Step {i}: ({step_x}, {step_z})")
-        i = i + 1
-    }
-}
-```
+Coroutine version of BFS:
 
-### `pathfind_bfs_coro(map: int[], sx: int, sz: int, gx: int, gz: int, out: int[]): void`
+- Decorated with `@coroutine(batch=16, onDone=pf_noop)`.
+- Processes up to 16 BFS iterations per tick.
+- Cannot return a value directly, so it pushes the finished path into `out`.
 
-Coroutine variant of BFS — spreads computation across ticks (`batch=16` nodes per tick). Writes results into the caller-supplied `out[]` array. Use `onDone` to get notified when pathfinding completes.
-
-This variant is recommended for large maps or when called every tick, to avoid lag spikes.
-
-```rs
-import "stdlib/pathfind.mcrs"
-
-let g_map: int[] = []
-let g_path: int[] = []
-
-@keep fn start_search() {
-    g_map = pf_new_map()
-    pf_set_blocked(g_map, 5, 5)
-    g_path = []
-    pathfind_bfs_coro(g_map, 0, 0, 10, 10, g_path)
-}
-
-@keep fn on_path_done() {
-    tell(@a, f"Path found! Length: {g_path.len()}")
-}
-```
-
-## Complete Example
-
-```rs
-import "stdlib/pathfind.mcrs"
-
-@keep fn demo_pathfind() {
-    let map: int[] = pf_new_map()
-
-    // Build a wall at x=4, blocking z=0..4
-    pf_set_blocked(map, 4, 0)
-    pf_set_blocked(map, 4, 1)
-    pf_set_blocked(map, 4, 2)
-    pf_set_blocked(map, 4, 3)
-    pf_set_blocked(map, 4, 4)
-    // Gap at (4, 5) allows passage
-
-    let path: int[] = pathfind_bfs(map, 0, 0, 8, 0)
-
-    if (path.len() == 0) {
-        tell(@a, "No path found!")
-    } else {
-        tell(@a, f"Path length: {path.len()} steps")
-        let gx: int = pf_unpack_x(path[path.len() - 1])
-        let gz: int = pf_unpack_z(path[path.len() - 1])
-        tell(@a, f"Goal reached: ({gx}, {gz})")
-    }
-}
-```
-
----
+Use this when a synchronous search would be too expensive in one tick.
 
 ### `pf_noop()`
 
-Default `onDone` callback for `pathfind_bfs_coro`. Does nothing; serves as a placeholder. Replace it by defining your own `pf_noop` function (or passing a different callback) if you need to act when the coroutine finishes.
+Default empty `onDone` callback for the coroutine variant.
 
-**Example:**
-```rs
-import "stdlib/pathfind.mcrs"
+## Notes
 
-// Override pf_noop to react when pathfinding completes
-fn pf_noop() {
-    tell(@a, "Pathfinding done!")
-}
-```
+- The grid is hard-coded to `0..15` on both axes.
+- Start and goal cells are not validated explicitly before indexing, so callers should pass valid coordinates.
+- `pf_is_blocked()` treats out-of-bounds cells as blocked, which keeps BFS inside the grid.

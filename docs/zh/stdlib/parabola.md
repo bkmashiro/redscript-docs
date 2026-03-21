@@ -1,119 +1,113 @@
-# `parabola` — Projectile trajectories
+# `parabola` — 抛射瞄准与轨迹辅助
 
-Import: `import parabola;`
+导入：`import "stdlib/parabola.mcrs"`
 
-Projectile motion helpers using Minecraft's native physics model. All positions/velocities ×10000 (blocks × 10000), time in ticks, gravity ≈ 0.08 blocks/tick² (800 in ×10000). Provides ballistic aiming (compute initial velocity to hit a target in N ticks), position at time t, flight time estimation, and per-tick drag physics. Requires `math` for `mulfix`, `isqrt`.
+用于 Minecraft 风格抛射运动的辅助函数。这个模块主要服务于发射参数求解与简单逐 tick 模拟，速度使用 **×10000 定点**，重力常量也按 Minecraft 抛射物运动进行调整。
 
-## Functions
+## 单位约定
+
+- 位置偏移：方块
+- 速度：方块/刻 ×10000
+- 时间：tick
+- 重力：`800` 表示 `0.08 方块/tick^2`
+- 阻力：×10000
+
+依赖 `stdlib/math` 提供的 `mulfix()` 与 `isqrt()`。
+
+## 快速示例
+
+```rs
+import "stdlib/parabola.mcrs";
+
+let ticks: int = 20;
+let vx: int = parabola_vx(16, ticks);
+let vy: int = parabola_vy(4, ticks);
+let vz: int = parabola_vz(0, ticks);
+
+let y_at_10: int = parabola_y(vy, 10);
+let flight: int = parabola_flight_time(vy);
+```
+
+## 常量
 
 ### `parabola_gravity(): int`
 
-MC gravity constant per tick ×10000: returns 800 (= 0.08 × 10000).
-
----
+返回 `800`，表示 ×10000 缩放下每 tick 的重力常量。
 
 ### `parabola_gravity_half(): int`
 
-Half-gravity constant: returns 400.
+返回 `400`，用于位移公式中的 `g / 2` 项。
 
----
+## 初速度求解
 
 ### `parabola_vx(dx: int, ticks: int): int`
 
-Initial X velocity ×10000 to reach horizontal offset `dx` blocks in `ticks` ticks (no drag).
-
-**Example:**
-```rs
-import parabola;
-let vx: int = parabola_vx(10, 20);  // 5000 (0.5 blocks/tick)
-```
-
----
+计算在 `ticks` tick 内移动 `dx` 方块所需的初始 X 速度。若 `ticks <= 0` 返回 `0`。
 
 ### `parabola_vy(dy: int, ticks: int): int`
 
-Initial Y velocity ×10000 to reach vertical offset `dy` blocks in `ticks` ticks (compensates for gravity).
-
-**Example:**
-```rs
-import parabola;
-let vy: int = parabola_vy(5, 20);  // upward velocity to reach +5 blocks in 20 ticks
-```
-
----
+计算在恒定重力下，于 `ticks` tick 后达到垂直偏移 `dy` 所需的初始 Y 速度。若 `ticks <= 0` 返回 `0`。
 
 ### `parabola_vz(dz: int, ticks: int): int`
 
-Initial Z velocity ×10000 to reach `dz` blocks in `ticks` ticks.
-
----
+计算在 `ticks` tick 内移动 `dz` 方块所需的初始 Z 速度。若 `ticks <= 0` 返回 `0`。
 
 ### `parabola_speed_xz(dx: int, dz: int, ticks: int): int`
 
-Horizontal speed ×10000: `√(vx² + vz²)`. Uses `isqrt`.
+根据求得的 `vx` 和 `vz` 计算水平速度模长，返回值为 ×10000 缩放。
 
----
+## 第 `t` Tick 的位置
 
 ### `parabola_x(vx0: int, t: int): int`
 
-X position at tick `t` in blocks given initial velocity `vx0 ×10000`.
-
----
+返回经过 `t` tick 后的 X 方向位移。
 
 ### `parabola_y(vy0: int, t: int): int`
 
-Y position at tick `t` in blocks given initial velocity `vy0 ×10000`. Applies gravity: `vy0×t/10000 - 400×t²/10000`.
-
----
+返回在恒定重力下经过 `t` tick 后的 Y 方向位移。
 
 ### `parabola_z(vz0: int, t: int): int`
 
-Z position at tick `t` in blocks given initial velocity `vz0 ×10000`.
+返回经过 `t` tick 后的 Z 方向位移。
 
----
+## 飞行估算
 
 ### `parabola_flight_time(vy0: int): int`
 
-Ticks until the projectile returns to launch height (y=0): `2 × vy0 / 800`. Returns 0 if `vy0 ≤ 0`.
-
-**Example:**
-```rs
-import parabola;
-let t: int = parabola_flight_time(8000);  // 20 ticks
-```
-
----
+近似返回抛射物回到发射高度所需的 tick 数。若 `vy0 <= 0` 返回 `0`。
 
 ### `parabola_max_height(vy0: int): int`
 
-Maximum height above launch point in blocks at the apex.
+近似返回相对发射点的最高高度，单位为方块。
 
----
+## 逐 Tick 阻力辅助
+
+这些函数用于逐 tick 模拟，而不是封闭形式的瞄准求解。
 
 ### `parabola_step_vx(vx: int, drag: int): int`
 
-Apply drag to X velocity for one tick: `mulfix(vx, drag)`. `drag` ×10000 (e.g. 9900 for arrows).
-
----
+对 X 速度应用一次阻力。
 
 ### `parabola_step_vy(vy: int, drag: int): int`
 
-Apply gravity then drag to Y velocity for one tick: `mulfix(vy - gravity, drag)`.
-
----
+先施加重力，再对 Y 速度应用阻力。
 
 ### `parabola_step_vz(vz: int, drag: int): int`
 
-Apply drag to Z velocity for one tick.
+对 Z 速度应用一次阻力。
 
----
+## 目标辅助
 
 ### `parabola_ticks_for_range(range: int): int`
 
-Estimate ticks to reach a horizontal range. Uses average-speed heuristic: `t ≈ range × 10000 / 8000` (assumes ~0.8 blocks/tick horizontal for arrows). For precise aiming, use `parabola_vx/vy/vz` with desired ticks instead.
-
----
+根据一个简单的平均速度启发式，为水平射程估算一个实用的飞行 tick 数。返回值至少为 `1`。
 
 ### `parabola_in_range(dx: int, dz: int, max_range: int): int`
 
-Returns 1 if target is within horizontal range (squared distance check, no sqrt).
+若目标在水平最大范围 `max_range` 内则返回 `1`，否则返回 `0`。
+
+## 说明
+
+- 这里的封闭形式位置函数默认不考虑阻力。
+- 考虑阻力时，只提供逐 tick 的速度推进辅助。
+- `parabola_y()` 与 `parabola_max_height()` 返回整数方块值，因此会有截断误差。

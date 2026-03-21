@@ -1,159 +1,135 @@
-# `quaternion` — 3D rotations for Display Entities
+# `quaternion` — 定点四元数数学
 
-Import: `import quaternion;`
+导入：`import "stdlib/quaternion.mcrs"`
 
-Quaternion math for MC Display Entity rotations. Quaternions are stored as `[x, y, z, w]` with all components ×10000 (e.g. `qw=10000` = 1.0). A unit quaternion satisfies `qx²+qy²+qz²+qw² = 100,000,000` (= 10000²). Provides constructors from axis-angle, quaternion multiplication, conjugate, magnitude, dot, SLERP (via LERP+normalize for MC game quality), and Euler angles to quaternion conversion (YXZ order). Requires `math` for `sin_fixed`, `cos_fixed`, `mulfix`, `abs`, `isqrt`.
+用于 Minecraft Display Entity 旋转的四元数辅助函数。各分量分开存储，并统一使用 **×10000** 缩放，符合显示实体旋转字段采用的 `[x, y, z, w]` 约定。
 
-## Functions
+依赖 `stdlib/math` 提供的 `sin_fixed()`、`cos_fixed()`、`mulfix()` 与 `isqrt()`。
+
+## 缩放与约定
+
+- `10000` 表示 `1.0`
+- 单位四元数为 `(0, 0, 0, 10000)`
+- 单位四元数满足 `qx^2 + qy^2 + qz^2 + qw^2 ≈ 10000^2`
+- 欧拉角转换采用 **YXZ** 顺序：yaw，再 pitch，再 roll
+
+## 快速示例
+
+```rs
+import "stdlib/quaternion.mcrs";
+
+let qx: int = quat_axis_y_x(90);
+let qy: int = quat_axis_y_y(90);
+let qz: int = quat_axis_y_z(90);
+let qw: int = quat_axis_y_w(90);
+
+let mid_y: int = quat_slerp_y(0, 0, 0, 10000, qx, qy, qz, qw, 500);
+```
+
+## 单位四元数
 
 ### `quat_identity_w(): int`
 
-Returns W component of identity quaternion: 10000.
+返回 `10000`。
 
-### `quat_identity_x(): int` / `quat_identity_y(): int` / `quat_identity_z(): int`
+### `quat_identity_x(): int`
 
-Returns 0 (X, Y, Z components of identity).
+返回 `0`。
 
----
+### `quat_identity_y(): int`
 
-### `quat_axis_x_x(angle_deg: int): int`
+返回 `0`。
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+### `quat_identity_z(): int`
 
-X component of quaternion for rotation `angle_deg°` around X axis. Uses `sin(angle/2) × 10`.
+返回 `0`。
 
-### `quat_axis_x_y(angle_deg: int): int` / `quat_axis_x_z(angle_deg: int): int`
+## 轴角构造
 
-Return 0 (for X-axis rotation, Y and Z components are 0).
+每种轴角构造都拆成逐分量函数。角度使用普通整数度数，内部采用 `sin(angle / 2)` 与 `cos(angle / 2)`。
 
-### `quat_axis_x_w(angle_deg: int): int`
+### 绕 X 轴旋转
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+- `quat_axis_x_x(angle_deg: int): int`
+- `quat_axis_x_y(angle_deg: int): int`
+- `quat_axis_x_z(angle_deg: int): int`
+- `quat_axis_x_w(angle_deg: int): int`
 
-W component: `cos(angle/2) × 10`.
+### 绕 Y 轴旋转
 
----
+- `quat_axis_y_x(angle_deg: int): int`
+- `quat_axis_y_y(angle_deg: int): int`
+- `quat_axis_y_z(angle_deg: int): int`
+- `quat_axis_y_w(angle_deg: int): int`
 
-### `quat_axis_y_x(angle_deg: int): int` / `quat_axis_y_z(angle_deg: int): int`
+### 绕 Z 轴旋转
 
-Return 0 (for Y-axis rotation).
+- `quat_axis_z_x(angle_deg: int): int`
+- `quat_axis_z_y(angle_deg: int): int`
+- `quat_axis_z_z(angle_deg: int): int`
+- `quat_axis_z_w(angle_deg: int): int`
 
-### `quat_axis_y_y(angle_deg: int): int`
+## 四元数乘法
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+下面这些函数会分别计算 `a * b` 的各个分量：
 
-Y component for rotation around Y axis: `sin(angle/2) × 10`.
+- `quat_mul_x(ax, ay, az, aw, bx, by, bz, bw): int`
+- `quat_mul_y(ax, ay, az, aw, bx, by, bz, bw): int`
+- `quat_mul_z(ax, ay, az, aw, bx, by, bz, bw): int`
+- `quat_mul_w(ax, ay, az, aw, bx, by, bz, bw): int`
 
-### `quat_axis_y_w(angle_deg: int): int`
+组合旋转时需要一起使用。
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+## 共轭
 
-W component: `cos(angle/2) × 10`.
+对于单位四元数，共轭同时也是逆。
 
----
+- `quat_conj_x(qx, qy, qz, qw): int`
+- `quat_conj_y(qx, qy, qz, qw): int`
+- `quat_conj_z(qx, qy, qz, qw): int`
+- `quat_conj_w(qx, qy, qz, qw): int`
 
-### `quat_axis_z_x(angle_deg: int): int` / `quat_axis_z_y(angle_deg: int): int`
-
-Return 0 (for Z-axis rotation).
-
-### `quat_axis_z_z(angle_deg: int): int`
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
-Z component for rotation around Z axis: `sin(angle/2) × 10`.
-
-### `quat_axis_z_w(angle_deg: int): int`
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
-W component: `cos(angle/2) × 10`.
-
----
-
-### `quat_mul_x(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int): int`
-
-X component of quaternion product `a × b`. Uses `mulfix` for fixed-point arithmetic.
-
-**Example:**
-```rs
-import quaternion;
-// Compose two 90° Y-axis rotations
-let ax: int = quat_axis_y_x(90); let ay: int = quat_axis_y_y(90);
-let az: int = quat_axis_y_z(90); let aw: int = quat_axis_y_w(90);
-let rx: int = quat_mul_x(ax, ay, az, aw, ax, ay, az, aw);  // 180° rotation
-```
-
-### `quat_mul_y(...)`, `quat_mul_z(...)`, `quat_mul_w(...)`
-
-Y, Z, W components of quaternion product.
-
----
-
-### `quat_conj_x(qx: int, qy: int, qz: int, qw: int): int`
-
-X component of conjugate (= inverse for unit quaternion): `-qx`.
-
-### `quat_conj_y(...)`, `quat_conj_z(...)`, `quat_conj_w(...)`
-
-Y, Z components: negated. W component: unchanged.
-
----
+## 模长与点积
 
 ### `quat_mag_sq(qx: int, qy: int, qz: int, qw: int): int`
 
-Magnitude squared ×10000 using `mulfix`. For unit quaternion this should equal 10000.
-
----
+返回 ×10000 缩放下的模长平方。归一化四元数的结果应接近 `10000`。
 
 ### `quat_dot(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int): int`
 
-Dot product of two quaternions ×10000.
+返回 ×10000 缩放下的点积。
 
----
+## 插值
 
 ### `quat_slerp_x(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int, t: int): int`
 
-X component of SLERP interpolation. `t ∈ [0, 1000]`. Uses LERP + normalize approximation (cheaper than true SLERP; sufficient for MC game use).
+### `quat_slerp_y(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int, t: int): int`
 
-### `quat_slerp_y(...)`, `quat_slerp_z(...)`, `quat_slerp_w(...)`
+### `quat_slerp_z(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int, t: int): int`
 
-Y, Z, W components of SLERP interpolation.
+### `quat_slerp_w(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: int, t: int): int`
 
-**Example:**
-```rs
-import quaternion;
-// Interpolate halfway between identity and 90° Y rotation
-let bx: int = quat_axis_y_x(90); let by_: int = quat_axis_y_y(90);
-let bz: int = quat_axis_y_z(90); let bw: int = quat_axis_y_w(90);
-let rx: int = quat_slerp_x(0, 0, 0, 10000, bx, by_, bz, bw, 500);  // 45° at t=500
-```
+在四元数 `a` 与 `b` 之间做近似球面插值。
 
----
+- `t` 范围为 `[0, 1000]`
+- `0` 返回 `a`
+- `1000` 返回 `b`
+
+实现细节上，这里使用的是 “线性插值 + 归一化” 的近似方案，而不是真正基于三角函数的 SLERP。它更便宜，也足够用于 Minecraft 动画。
+
+## 欧拉角转四元数
 
 ### `quat_euler_x(yaw: int, pitch: int, roll: int): int`
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
-X component of quaternion from Euler angles (YXZ order, MC convention). `yaw`, `pitch`, `roll` in degrees (plain integers).
-
 ### `quat_euler_y(yaw: int, pitch: int, roll: int): int`
-
-Y component from Euler angles.
 
 ### `quat_euler_z(yaw: int, pitch: int, roll: int): int`
 
-Z component from Euler angles.
-
 ### `quat_euler_w(yaw: int, pitch: int, roll: int): int`
 
-W component from Euler angles.
+把角度制的 yaw、pitch、roll 按 YXZ 顺序转换为四元数。
 
-**Example:**
-```rs
-import quaternion;
-// Build quaternion from player yaw=45°, pitch=30°, roll=0°
-let qx: int = quat_euler_x(45, 30, 0);
-let qy: int = quat_euler_y(45, 30, 0);
-let qz: int = quat_euler_z(45, 30, 0);
-let qw: int = quat_euler_w(45, 30, 0);
-```
+## 说明
+
+- 这些辅助函数分开返回各个分量，而不是返回单个数组，这更贴近 RedScript 用户写 NBT 字段时的常见方式。
+- 轴角构造与欧拉角转换都依赖数学模块中的三角查表已经可用。

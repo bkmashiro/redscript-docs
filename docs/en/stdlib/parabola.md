@@ -1,119 +1,113 @@
-# `parabola` — Projectile trajectories
+# `parabola` — Projectile Aiming and Trajectory Helpers
 
-Import: `import parabola;`
+Import: `import "stdlib/parabola.mcrs"`
 
-Projectile motion helpers using Minecraft's native physics model. All positions/velocities ×10000 (blocks × 10000), time in ticks, gravity ≈ 0.08 blocks/tick² (800 in ×10000). Provides ballistic aiming (compute initial velocity to hit a target in N ticks), position at time t, flight time estimation, and per-tick drag physics. Requires `math` for `mulfix`, `isqrt`.
+Projectile helpers for Minecraft-style trajectories. This module is aimed at launch planning and simple tick-by-tick simulation. It uses **×10000 fixed-point velocities** and a gravity constant tuned to Minecraft projectile motion.
 
-## Functions
+## Units
+
+- Position offsets: blocks
+- Velocity: blocks/tick ×10000
+- Time: ticks
+- Gravity: `800` means `0.08 blocks/tick^2`
+- Drag: ×10000
+
+Requires `stdlib/math` for `mulfix()` and `isqrt()`.
+
+## Quick Example
+
+```rs
+import "stdlib/parabola.mcrs";
+
+let ticks: int = 20;
+let vx: int = parabola_vx(16, ticks);
+let vy: int = parabola_vy(4, ticks);
+let vz: int = parabola_vz(0, ticks);
+
+let y_at_10: int = parabola_y(vy, 10);
+let flight: int = parabola_flight_time(vy);
+```
+
+## Constants
 
 ### `parabola_gravity(): int`
 
-MC gravity constant per tick ×10000: returns 800 (= 0.08 × 10000).
-
----
+Returns `800`, the per-tick gravity constant in ×10000 scale.
 
 ### `parabola_gravity_half(): int`
 
-Half-gravity constant: returns 400.
+Returns `400`, used by the displacement formulas.
 
----
+## Velocity Solvers
 
 ### `parabola_vx(dx: int, ticks: int): int`
 
-Initial X velocity ×10000 to reach horizontal offset `dx` blocks in `ticks` ticks (no drag).
-
-**Example:**
-```rs
-import parabola;
-let vx: int = parabola_vx(10, 20);  // 5000 (0.5 blocks/tick)
-```
-
----
+Initial X velocity needed to travel `dx` blocks in `ticks` ticks. Returns `0` if `ticks <= 0`.
 
 ### `parabola_vy(dy: int, ticks: int): int`
 
-Initial Y velocity ×10000 to reach vertical offset `dy` blocks in `ticks` ticks (compensates for gravity).
-
-**Example:**
-```rs
-import parabola;
-let vy: int = parabola_vy(5, 20);  // upward velocity to reach +5 blocks in 20 ticks
-```
-
----
+Initial Y velocity needed to reach vertical offset `dy` in `ticks` ticks under constant gravity. Returns `0` if `ticks <= 0`.
 
 ### `parabola_vz(dz: int, ticks: int): int`
 
-Initial Z velocity ×10000 to reach `dz` blocks in `ticks` ticks.
-
----
+Initial Z velocity needed to travel `dz` blocks in `ticks` ticks. Returns `0` if `ticks <= 0`.
 
 ### `parabola_speed_xz(dx: int, dz: int, ticks: int): int`
 
-Horizontal speed ×10000: `√(vx² + vz²)`. Uses `isqrt`.
+Horizontal speed magnitude from the solved `vx` and `vz`, returned in ×10000 scale.
 
----
+## Position at Tick `t`
 
 ### `parabola_x(vx0: int, t: int): int`
 
-X position at tick `t` in blocks given initial velocity `vx0 ×10000`.
-
----
+Horizontal X displacement after `t` ticks.
 
 ### `parabola_y(vy0: int, t: int): int`
 
-Y position at tick `t` in blocks given initial velocity `vy0 ×10000`. Applies gravity: `vy0×t/10000 - 400×t²/10000`.
-
----
+Vertical displacement after `t` ticks under constant gravity.
 
 ### `parabola_z(vz0: int, t: int): int`
 
-Z position at tick `t` in blocks given initial velocity `vz0 ×10000`.
+Horizontal Z displacement after `t` ticks.
 
----
+## Flight Estimates
 
 ### `parabola_flight_time(vy0: int): int`
 
-Ticks until the projectile returns to launch height (y=0): `2 × vy0 / 800`. Returns 0 if `vy0 ≤ 0`.
-
-**Example:**
-```rs
-import parabola;
-let t: int = parabola_flight_time(8000);  // 20 ticks
-```
-
----
+Approximate number of ticks until a projectile returns to launch height. Returns `0` if `vy0 <= 0`.
 
 ### `parabola_max_height(vy0: int): int`
 
-Maximum height above launch point in blocks at the apex.
+Approximate maximum height above launch point, in blocks.
 
----
+## Tick-Step Drag Helpers
+
+These functions are for per-tick simulation, not closed-form aiming.
 
 ### `parabola_step_vx(vx: int, drag: int): int`
 
-Apply drag to X velocity for one tick: `mulfix(vx, drag)`. `drag` ×10000 (e.g. 9900 for arrows).
-
----
+Apply drag to X velocity.
 
 ### `parabola_step_vy(vy: int, drag: int): int`
 
-Apply gravity then drag to Y velocity for one tick: `mulfix(vy - gravity, drag)`.
-
----
+Apply gravity first, then drag, to Y velocity.
 
 ### `parabola_step_vz(vz: int, drag: int): int`
 
-Apply drag to Z velocity for one tick.
+Apply drag to Z velocity.
 
----
+## Targeting Helpers
 
 ### `parabola_ticks_for_range(range: int): int`
 
-Estimate ticks to reach a horizontal range. Uses average-speed heuristic: `t ≈ range × 10000 / 8000` (assumes ~0.8 blocks/tick horizontal for arrows). For precise aiming, use `parabola_vx/vy/vz` with desired ticks instead.
-
----
+Estimate a practical flight time for a horizontal range, using a simple average-speed heuristic. Returns at least `1`.
 
 ### `parabola_in_range(dx: int, dz: int, max_range: int): int`
 
-Returns 1 if target is within horizontal range (squared distance check, no sqrt).
+Return `1` if the horizontal target lies within `max_range`, otherwise `0`.
+
+## Notes
+
+- Closed-form position helpers here assume no drag.
+- Drag-aware helpers only advance velocity one tick at a time.
+- `parabola_y()` and `parabola_max_height()` return integer block values, so truncation is expected.
