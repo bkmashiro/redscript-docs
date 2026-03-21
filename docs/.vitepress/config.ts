@@ -97,25 +97,28 @@ export default defineConfig({
               ]
             },
             {
-              text: 'Beginner',
+              text: 'Beginner Series',
+              items: [
+                { text: '01 — Getting Started', link: '/en/tutorials/01-getting-started' },
+                { text: '02 — Variables and Types', link: '/en/tutorials/02-variables-and-types' },
+                { text: '03 — Control Flow', link: '/en/tutorials/03-control-flow' },
+                { text: '04 — Functions', link: '/en/tutorials/04-functions' },
+                { text: '05 — Structs and Enums', link: '/en/tutorials/05-structs-and-enums' },
+                { text: '06 — Stdlib Tour', link: '/en/tutorials/06-stdlib-tour' },
+                { text: '07 — Events and Ticks', link: '/en/tutorials/07-events-and-ticks' },
+                { text: '08 — Advanced', link: '/en/tutorials/08-advanced' },
+              ]
+            },
+            {
+              text: 'Project Tutorials',
               items: [
                 { text: '01 — Hello Datapack', link: '/en/tutorials/01-hello-datapack' },
                 { text: '02 — Variables & Control Flow', link: '/en/tutorials/02-variables' },
                 { text: '03 — Functions & Structs', link: '/en/tutorials/03-functions-structs' },
                 { text: '04 — Selectors & Execute Context', link: '/en/tutorials/04-selectors-context' },
-              ]
-            },
-            {
-              text: 'Intermediate',
-              items: [
                 { text: '05 — Decorators & Scheduling', link: '/en/tutorials/05-decorators' },
                 { text: '06 — Math & Particles', link: '/en/tutorials/06-stdlib-math' },
                 { text: '07 — Random & Noise', link: '/en/tutorials/07-stdlib-random' },
-              ]
-            },
-            {
-              text: 'Advanced',
-              items: [
                 { text: '08 — Coroutines', link: '/en/tutorials/08-coroutines' },
                 { text: '09 — Precision Arithmetic', link: '/en/tutorials/09-precision-arithmetic' },
                 { text: '10 — Full Game: Kill Race', link: '/en/tutorials/10-full-game' },
@@ -264,9 +267,22 @@ export default defineConfig({
           ],
           '/zh/tutorials/': [
             {
-              text: '教程',
+              text: '入门系列',
               items: [
                 { text: '概览', link: '/zh/tutorials/' },
+                { text: '01 — 快速开始', link: '/zh/tutorials/01-getting-started' },
+                { text: '02 — 变量与类型', link: '/zh/tutorials/02-variables-and-types' },
+                { text: '03 — 控制流', link: '/zh/tutorials/03-control-flow' },
+                { text: '04 — 函数', link: '/zh/tutorials/04-functions' },
+                { text: '05 — 结构体与枚举', link: '/zh/tutorials/05-structs-and-enums' },
+                { text: '06 — 标准库速览', link: '/zh/tutorials/06-stdlib-tour' },
+                { text: '07 — 事件与 Tick', link: '/zh/tutorials/07-events-and-ticks' },
+                { text: '08 — 进阶主题', link: '/zh/tutorials/08-advanced' },
+              ]
+            },
+            {
+              text: '项目型教程',
+              items: [
                 { text: '01 — Hello 数据包', link: '/zh/tutorials/01-hello-datapack' },
                 { text: '02 — 变量与控制流', link: '/zh/tutorials/02-variables' },
                 { text: '03 — 函数与结构体', link: '/zh/tutorials/03-functions-structs' },

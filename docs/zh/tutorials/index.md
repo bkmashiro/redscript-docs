@@ -1,39 +1,50 @@
 # 教程
 
-通过构建实际项目来学习 RedScript 的完整游戏教程。
+这一节现在分成两条学习路线：
 
-## 小游戏
+- 一条全新的 8 篇入门系列，从安装开始，一直讲到协程与优化器相关工作流。
+- 一条项目型教程路线，适合已经会基础语法、想直接拆完整小游戏的人。
 
-| 教程 | 描述 | 核心概念 |
-|-----|------|---------|
-| [僵尸生存](./zombie-survival) | 带商店的波次生存 | 状态机、经济系统、Bossbar |
-| [夺旗战](./capture-the-flag) | 两队 CTF | 队伍、旗帜机制、计分 |
-| [跑酷竞速](./parkour-race) | 计时赛道带检查点 | 计时器、检查点、记录 |
+## 入门系列
 
-## 你将学到
+| # | 教程 | 主题 |
+|---|------|------|
+| 1 | [快速开始](./01-getting-started) | 安装 CLI、编译文件、做出第一个数据包 |
+| 2 | [变量与类型](./02-variables-and-types) | `let`、`const`、`int`、`double`、`string`、`bool` |
+| 3 | [控制流](./03-control-flow) | `if`、`while`、`for`、`match`、`break`、`continue` |
+| 4 | [函数](./04-functions) | `fn`、参数、返回值、递归 |
+| 5 | [结构体与枚举](./05-structs-and-enums) | `struct`、`enum`、`match`、`impl` 方法 |
+| 6 | [标准库速览](./06-stdlib-tour) | 常用标准库模块与导入方式 |
+| 7 | [事件与 Tick](./07-events-and-ticks) | `@load`、`@tick`、`@on_trigger`、`@on(...)` |
+| 8 | [进阶主题](./08-advanced) | `@coroutine`、`@inline`、优化器、模块导入 |
 
-每个教程涵盖实用的游戏开发模式：
+## 建议学习顺序
 
-- **游戏状态** — 用 struct 组织复杂状态
-- **阶段管理** — 大厅 → 倒计时 → 游戏中 → 结束
-- **计分系统** — 记分板追踪分数、击杀、时间
-- **队伍管理** — 创建和管理玩家队伍
-- **用户界面** — Bossbar、动作栏、标题
-- **事件检测** — 检测玩家行为（进入区域、死亡等）
+1. 先按顺序读完 1 到 5。
+2. 需要查精确语法时，搭配 [参考文档](/zh/reference/syntax) 使用。
+3. 第 6 篇更像地图，不需要一开始把所有 stdlib API 背下来。
+4. 读完 8 篇之后，再进入下面的项目型教程会更顺。
 
-## 前置知识
+## 项目型教程
 
-开始教程前，请先完成：
+| 教程 | 难度 | 主线内容 |
+|------|------|----------|
+| [Hello 数据包](./01-hello-datapack) | 初级 | 加载钩子、触发器、起始物资 |
+| [变量与控制流](./02-variables) | 初级 | 可变状态、循环、简单玩法逻辑 |
+| [函数与结构体](./03-functions-structs) | 初级 | 逻辑复用与数据建模 |
+| [选择器与上下文](./04-selectors-context) | 中级 | `foreach`、`execute`、选择器驱动逻辑 |
+| [装饰器与调度](./05-decorators) | 中级 | 定时系统与玩法钩子 |
+| [数学与粒子](./06-stdlib-math) | 中级 | 用 stdlib 做可视化效果 |
+| [随机数与噪声](./07-stdlib-random) | 中级 | 程序化变化 |
+| [协程](./08-coroutines) | 高级 | 把重计算摊到多个 tick |
+| [精确算术](./09-precision-arithmetic) | 高级 | `double`、`math_hp` |
+| [完整游戏：击杀竞赛](./10-full-game) | 高级 | 综合实战 |
 
-1. [快速开始](../guide/getting-started)
-2. [变量与类型](../guide/variables)
-3. [函数](../guide/functions) 和 [装饰器](../guide/decorators)
+## 相关指南
 
-## 完整示例
-
-所有教程代码可在仓库中找到：
-
-- [zombie_survival.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/zombie_survival.mcrs)
-- [capture_the_flag.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/capture_the_flag.mcrs)
-- [parkour_race.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/parkour_race.mcrs)
-- [hunger_games.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/hunger_games.mcrs)
+- [快速开始](/zh/guide/getting-started)
+- [第一个数据包](/zh/guide/first-datapack)
+- [变量与类型](/zh/guide/variables)
+- [函数](/zh/guide/functions)
+- [结构体与枚举](/zh/guide/structs-enums)
+- [静态事件](/zh/guide/events)
