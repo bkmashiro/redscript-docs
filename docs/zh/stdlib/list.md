@@ -1,189 +1,561 @@
-# `list` — 数组聚合与排序
+# List
 
-Import: `import list;`
+> 本文档由 `src/stdlib/list.mcrs` 自动生成，请勿手动编辑。
 
-数组工具库，包含最多 5 个值的静态 min/max/avg/sum 辅助函数、2–5 个值的最优排序网络、加权随机选择、动态排序（冒泡排序升序/降序）以及任意长度数组的聚合操作（sum、avg、min、max、contains、index_of、shuffle、dedup 计数）。
+## API 列表
 
-> **Note:** Dynamic array functions (those taking `arr: int[]`) require RedScript ≥ 2.4.0 (array parameter by reference).
-
-## Functions
-
-### `sort2_min(a: int, b: int): int`
-
-两值中的最小值。
-
-### `sort2_max(a: int, b: int): int`
-
-两值中的最大值。
-
-### `list_min3(a: int, b: int, c: int): int`
-
-三值中的最小值。
-
-### `list_max3(a: int, b: int, c: int): int`
-
-三值中的最大值。
-
-### `list_min5(a: int, b: int, c: int, d: int, e: int): int`
-
-五值中的最小值。
-
-### `list_max5(a: int, b: int, c: int, d: int, e: int): int`
-
-五值中的最大值。
-
-### `list_sum3(a: int, b: int, c: int): int`
-
-三值之和。
-
-### `list_sum4(a: int, b: int, c: int, d: int): int`
-
-四值之和。
-
-### `list_sum5(a: int, b: int, c: int, d: int, e: int): int`
-
-五值之和。
-
-### `avg3(a: int, b: int, c: int): int`
-
-三值整数均值。
-
-### `avg5(a: int, b: int, c: int, d: int, e: int): int`
-
-五值整数均值。
+- [sort2_min](#sort2-min)
+- [sort2_max](#sort2-max)
+- [list_min3](#list-min3)
+- [list_max3](#list-max3)
+- [list_min5](#list-min5)
+- [list_max5](#list-max5)
+- [list_sum5](#list-sum5)
+- [list_sum4](#list-sum4)
+- [list_sum3](#list-sum3)
+- [avg3](#avg3)
+- [avg5](#avg5)
+- [sort3](#sort3)
+- [weighted2](#weighted2)
+- [weighted3](#weighted3)
+- [sort4](#sort4)
+- [sort5](#sort5)
+- [list_sort_asc](#list-sort-asc)
+- [list_sort_desc](#list-sort-desc)
+- [list_sum](#list-sum)
+- [list_avg](#list-avg)
+- [list_min](#list-min)
+- [list_max](#list-max)
+- [list_contains](#list-contains)
+- [list_index_of](#list-index-of)
+- [list_shuffle](#list-shuffle)
+- [list_dedup_count](#list-dedup-count)
 
 ---
 
-### `sort3(a: int, b: int, c: int, pos: int): int`
+## `sort2_min` <Badge type="info" text="v1.0.0" />
 
-对三个值排序，返回排序后位置 `pos` 处的值（0=最小，1=中间，2=最大）。使用 3 次比较排序网络。
+返回两个整数中较小的一个。
 
-**Example:**
-```rs
-import list;
-let median: int = sort3(30, 10, 20, 1);  // 20
+```redscript
+fn sort2_min(a: int, b: int): int
 ```
 
----
+**参数**
 
-### `sort4(a: int, b: int, c: int, d: int, pos: int): int`
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个值 |
+| `b` | 第二个值 |
 
-对四个值排序，返回排序后位置 `pos` 处的值（0=最小，3=最大）。使用 5 次比较最优排序网络。
-
----
-
-### `sort5(a: int, b: int, c: int, d: int, e: int, pos: int): int`
-
-对五个值排序，返回排序后位置 `pos` 处的值。使用 9 次比较排序网络（Batcher 奇偶归并）。
+**返回：** a ≤ b 则返回 a，否则返回 b
 
 ---
 
-### `weighted2(seed: int, w0: int, w1: int): int`
+## `sort2_max` <Badge type="info" text="v1.0.0" />
 
-按权重 `w0`、`w1` 选择 0 或 1，返回所选索引。使用来自 `seed` 的 LCG。
+返回两个整数中较大的一个。
 
-**Example:**
-```rs
-import list;
-let choice: int = weighted2(12345, 70, 30);  // 70% 概率选 0，30% 概率选 1
+```redscript
+fn sort2_max(a: int, b: int): int
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个值 |
+| `b` | 第二个值 |
+
+**返回：** a ≥ b 则返回 a，否则返回 b
+
 ---
 
-### `weighted3(seed: int, w0: int, w1: int, w2: int): int`
+## `list_min3` <Badge type="info" text="v1.0.0" />
 
-按给定权重选择 0、1 或 2，返回所选索引。
+三个整数中的最小值。
 
----
-
-### `list_sort_asc(arr: int[], len: int)`
-
-> **Cost:** O(n²) — bubble sort
-
-对 `len` 个元素原地升序冒泡排序。
-
-**Example:**
-```rs
-import list;
-let nums: int[] = [30, 10, 20];
-list_sort_asc(nums, 3);  // [10, 20, 30]
+```redscript
+fn list_min3(a: int, b: int, c: int): int
 ```
 
----
+**参数**
 
-### `list_sort_desc(arr: int[], len: int)`
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
 
-> **Cost:** O(n²) — bubble sort
-
-对 `len` 个元素原地降序冒泡排序。
-
----
-
-### `list_sum(arr: int[], len: int): int`
-
-> **Cost:** O(n)
-
-`arr` 中所有 `len` 个元素之和。
+**返回：** a、b、c 中的最小值
 
 ---
 
-### `list_avg(arr: int[], len: int): int`
+## `list_max3` <Badge type="info" text="v1.0.0" />
 
-> **Cost:** O(n)
+三个整数中的最大值。
 
-算术均值 ×10000（定点数）。返回 `(sum × 10000) / len`。空数组返回 0。
-
----
-
-### `list_min(arr: int[], len: int): int`
-
-> **Cost:** O(n)
-
-`arr` 中的最小元素。
-
----
-
-### `list_max(arr: int[], len: int): int`
-
-> **Cost:** O(n)
-
-`arr` 中的最大元素。
-
----
-
-### `list_contains(arr: int[], len: int, val: int): int`
-
-> **Cost:** O(n)
-
-若 `val` 在 `arr` 中则返回 1，否则返回 0。
-
----
-
-### `list_index_of(arr: int[], len: int, val: int): int`
-
-> **Cost:** O(n)
-
-`val` 在 `arr` 中第一次出现的索引，未找到返回 -1。
-
----
-
-### `list_shuffle(arr: int[], len: int, seed: int): int[]`
-
-> **Cost:** O(n)
-
-使用 LCG 随机数原地 Fisher-Yates 洗牌。返回 `arr`。使用 `random` 中的 `next_lcg`。
-
-**Example:**
-```rs
-import list;
-let deck: int[] = [1, 2, 3, 4, 5];
-list_shuffle(deck, 5, 99999);
+```redscript
+fn list_max3(a: int, b: int, c: int): int
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+
+**返回：** a、b、c 中的最大值
+
 ---
 
-### `list_dedup_count(arr: int[], len: int): int`
+## `list_min5` <Badge type="info" text="v1.0.0" />
 
-> **Cost:** O(n²) — suitable for small arrays
+五个整数中的最小值。
 
-统计 `arr` 中唯一值的数量。
+```redscript
+fn list_min5(a: int, b: int, c: int, d: int, e: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `e` | 值 5 |
+
+**返回：** 五个输入中的最小值
+
+---
+
+## `list_max5` <Badge type="info" text="v1.0.0" />
+
+五个整数中的最大值。
+
+```redscript
+fn list_max5(a: int, b: int, c: int, d: int, e: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `e` | 值 5 |
+
+**返回：** 五个输入中的最大值
+
+---
+
+## `list_sum5` <Badge type="info" text="v1.0.0" />
+
+五个整数之和。
+
+```redscript
+fn list_sum5(a: int, b: int, c: int, d: int, e: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `e` | 值 5 |
+
+**返回：** a + b + c + d + e
+
+---
+
+## `list_sum4` <Badge type="info" text="v1.0.0" />
+
+四个整数之和。
+
+```redscript
+fn list_sum4(a: int, b: int, c: int, d: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+
+**返回：** a + b + c + d
+
+---
+
+## `list_sum3` <Badge type="info" text="v1.0.0" />
+
+三个整数之和。
+
+```redscript
+fn list_sum3(a: int, b: int, c: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+
+**返回：** a + b + c
+
+---
+
+## `avg3` <Badge type="info" text="v1.0.0" />
+
+三个值的整数均值（向零截断）。
+
+```redscript
+fn avg3(a: int, b: int, c: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+
+**返回：** (a + b + c) / 3
+
+---
+
+## `avg5` <Badge type="info" text="v1.0.0" />
+
+五个值的整数均值（向零截断）。
+
+```redscript
+fn avg5(a: int, b: int, c: int, d: int, e: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `e` | 值 5 |
+
+**返回：** (a + b + c + d + e) / 5
+
+---
+
+## `sort3` <Badge type="info" text="v1.0.0" />
+
+对三个值排序，返回指定位置的值（0 = 最小，1 = 中间，2 = 最大）。
+
+```redscript
+fn sort3(a: int, b: int, c: int, pos: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `pos` | 排序后的位置（0、1 或 2） |
+
+**返回：** 指定排序位置的值
+
+---
+
+## `weighted2` <Badge type="info" text="v1.0.0" />
+
+利用 LCG 种子在两个选项（0 或 1）间做加权随机选择。
+
+```redscript
+fn weighted2(seed: int, w0: int, w1: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | LCG 种子（任意整数） |
+| `w0` | 选项 0 的权重 |
+| `w1` | 选项 1 的权重 |
+
+**返回：** 以概率 w0/(w0+w1) 返回 0，否则返回 1
+
+---
+
+## `weighted3` <Badge type="info" text="v1.0.0" />
+
+利用 LCG 种子在三个选项（0、1 或 2）间做加权随机选择。
+
+```redscript
+fn weighted3(seed: int, w0: int, w1: int, w2: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | LCG 种子 |
+| `w0` | 选项 0 的权重 |
+| `w1` | 选项 1 的权重 |
+| `w2` | 选项 2 的权重 |
+
+**返回：** 按权重比例返回 0、1 或 2
+
+---
+
+## `sort4` <Badge type="info" text="v1.0.0" />
+
+使用 5 次比较的最优排序网络对四个值排序，返回指定位置的值。
+
+```redscript
+fn sort4(a: int, b: int, c: int, d: int, pos: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `pos` | 排序后的位置（0 = 最小，3 = 最大） |
+
+**返回：** 指定排序位置的值
+
+---
+
+## `sort5` <Badge type="info" text="v1.0.0" />
+
+使用 9 次比较的 Batcher 奇偶归并排序网络对五个值排序，返回指定位置的值。
+
+```redscript
+fn sort5(a: int, b: int, c: int, d: int, e: int, pos: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 值 1 |
+| `b` | 值 2 |
+| `c` | 值 3 |
+| `d` | 值 4 |
+| `e` | 值 5 |
+| `pos` | 排序后的位置（0 = 最小，4 = 最大） |
+
+**返回：** 指定排序位置的值
+
+---
+
+## `list_sort_asc` <Badge type="info" text="v1.0.0" />
+
+原地升序冒泡排序（任意长度）。需要 RedScript ≥ 2.4.0（数组引用传参）。
+
+```redscript
+fn list_sort_asc(arr: int[], len: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 待排序数组（原地修改） |
+| `len` | 要排序的元素数量 |
+
+**返回：** 无返回值
+
+---
+
+## `list_sort_desc` <Badge type="info" text="v1.0.0" />
+
+原地降序冒泡排序（任意长度）。需要 RedScript ≥ 2.4.0。
+
+```redscript
+fn list_sort_desc(arr: int[], len: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 待排序数组（原地修改） |
+| `len` | 要排序的元素数量 |
+
+**返回：** 无返回值
+
+---
+
+## `list_sum` <Badge type="info" text="v1.0.0" />
+
+数组所有元素之和。
+
+```redscript
+fn list_sum(arr: int[], len: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+
+**返回：** arr[0..len) 的总和
+
+---
+
+## `list_avg` <Badge type="info" text="v1.0.0" />
+
+数组算术均值，返回定点数 ×10000。
+
+```redscript
+fn list_avg(arr: int[], len: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量（须 > 0） |
+
+**返回：** (sum ×10000) / len；空数组返回 0
+
+---
+
+## `list_min` <Badge type="info" text="v1.0.0" />
+
+数组中的最小元素（数组至少有一个元素）。
+
+```redscript
+fn list_min(arr: int[], len: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+
+**返回：** arr[0..len) 中的最小值
+
+---
+
+## `list_max` <Badge type="info" text="v1.0.0" />
+
+数组中的最大元素（数组至少有一个元素）。
+
+```redscript
+fn list_max(arr: int[], len: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+
+**返回：** arr[0..len) 中的最大值
+
+---
+
+## `list_contains` <Badge type="info" text="v1.0.0" />
+
+检查数组中是否存在某个值。
+
+```redscript
+fn list_contains(arr: int[], len: int, val: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+| `val` | 要搜索的值 |
+
+**返回：** 找到返回 1，否则返回 0
+
+---
+
+## `list_index_of` <Badge type="info" text="v1.0.0" />
+
+查找值在数组中第一次出现的索引。
+
+```redscript
+fn list_index_of(arr: int[], len: int, val: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+| `val` | 要搜索的值 |
+
+**返回：** 第一个索引，未找到返回 -1
+
+---
+
+## `list_shuffle` <Badge type="info" text="v1.0.0" />
+
+Fisher-Yates 原地随机打乱，使用线性同余生成器。
+
+```redscript
+fn list_shuffle(arr: int[], len: int, seed: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 待打乱数组（原地修改） |
+| `len` | 元素数量 |
+| `seed` | 初始 LCG 种子（任意整数） |
+
+**返回：** 打乱后的数组（与 arr 相同引用）
+
+---
+
+## `list_dedup_count` <Badge type="info" text="v1.0.0" />
+
+统计数组中唯一值的数量（O(n²)，适合小数组）。
+
+```redscript
+fn list_dedup_count(arr: int[], len: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `arr` | 输入数组 |
+| `len` | 元素数量 |
+
+**返回：** arr[0..len) 中不同值的个数
+
+---

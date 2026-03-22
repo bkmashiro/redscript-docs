@@ -1,68 +1,101 @@
-# `sets` — Set operations
+# Sets
 
-Import: `import sets;`
+> Auto-generated from `src/stdlib/sets.mcrs` — do not edit manually.
 
-Runtime set implementation using NBT storage arrays with uniqueness enforced on add. The actual implementation is handled by the compiler; this module documents the interface.
+## API
 
-## Functions
-
-### `set_new(): string`
-
-Create a new empty set. Returns a unique set ID string.
-
-**Example:**
-```rs
-import sets;
-let my_set: string = set_new();
-```
+- [set_new](#set-new)
+- [set_add](#set-add)
+- [set_contains](#set-contains)
+- [set_remove](#set-remove)
+- [set_clear](#set-clear)
 
 ---
 
-### `set_add(set: string, value: string)`
+## `set_new` <Badge type="info" text="v1.1.0" />
 
-Add `value` to the set if not already present (enforces uniqueness).
+Create a new empty set and return its unique set ID (string handle).
 
-**Example:**
-```rs
-import sets;
+```redscript
+fn set_new(): string
+```
+
+**Returns:** A unique set ID used by all other set operations
+
+**Example**
+
+```redscript
 let s: string = set_new();
-set_add(s, "player_alice");
-set_add(s, "player_bob");
-set_add(s, "player_alice");  // no-op, already in set
+set_add(s, "apple");
 ```
 
 ---
 
-### `set_contains(set: string, value: string): int`
+## `set_add` <Badge type="info" text="v1.1.0" />
 
-Returns 1 if `value` exists in the set, 0 otherwise.
+Add a value to the set if it is not already present (no-op if already contained).
 
-**Example:**
-```rs
-import sets;
-let has_alice: int = set_contains(my_set, "player_alice");  // 1
+```redscript
+fn set_add(set: string, value: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `set` | Set ID returned by `set_new` |
+| `value` | Value to add |
 
 ---
 
-### `set_remove(set: string, value: string)`
+## `set_contains` <Badge type="info" text="v1.1.0" />
 
-Remove `value` from the set.
+Test whether a value exists in the set.
 
-**Example:**
-```rs
-import sets;
-set_remove(my_set, "player_bob");
+```redscript
+fn set_contains(set: string, value: string): int
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `set` | Set ID returned by `set_new` |
+| `value` | Value to look up |
+
+**Returns:** 1 if the value is in the set, 0 otherwise
 
 ---
 
-### `set_clear(set: string)`
+## `set_remove` <Badge type="info" text="v1.1.0" />
 
-Remove all values from the set.
+Remove a value from the set (no-op if not present).
 
-**Example:**
-```rs
-import sets;
-set_clear(my_set);
+```redscript
+fn set_remove(set: string, value: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `set` | Set ID returned by `set_new` |
+| `value` | Value to remove |
+
+---
+
+## `set_clear` <Badge type="info" text="v1.1.0" />
+
+Remove all values from the set, leaving it empty.
+
+```redscript
+fn set_clear(set: string)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `set` | Set ID returned by `set_new` |
+
+---

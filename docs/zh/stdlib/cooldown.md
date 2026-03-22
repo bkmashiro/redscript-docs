@@ -1,48 +1,84 @@
-# `cooldown` — Ability cooldown helpers
+# Cooldown
 
-Import: `import cooldown;`
+> 本文档由 `src/stdlib/cooldown.mcrs` 自动生成，请勿手动编辑。
 
-Manages a single cooldown slot using `cooldown_ticks` and `cooldown_active` scoreboard values on the `rs` objective. The `name` parameter is reserved for future multi-slot routing.
+## API 列表
 
-## Functions
+- [cooldown_start](#cooldown-start)
+- [cooldown_ready](#cooldown-ready)
+- [cooldown_tick](#cooldown-tick)
 
-### `cooldown_start(name: string, ticks: int)`
+---
 
-Start a cooldown for `ticks` duration. Sets the active flag and tick counter.
+## `cooldown_start` <Badge type="info" text="v1.2.0" />
 
-**Example:**
-```rs
-import cooldown;
-cooldown_start("dash", 40);  // 2-second cooldown
+启动（或重启）指定槽位的冷却计时，持续 ticks 游戏刻。
+
+```redscript
+fn cooldown_start(name: string, ticks: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `name` | 冷却槽位标识符（保留，供未来多槽位使用） |
+| `ticks` | 冷却持续时间（游戏刻，20 刻 = 1 秒） |
+
+**返回：** 无返回值
+
+**示例**
+
+```redscript
+cooldown_start("sword", 40); // 2-second cooldown
 ```
 
 ---
 
-### `cooldown_ready(name: string): int`
+## `cooldown_ready` <Badge type="info" text="v1.2.0" />
 
-Returns 1 if the cooldown is inactive or has expired, 0 if still active.
+检查冷却是否已到期（可再次触发）。
 
-**Example:**
-```rs
-import cooldown;
-if (cooldown_ready("dash") == 1) {
-    // perform ability
-    cooldown_start("dash", 40);
-}
+```redscript
+fn cooldown_ready(name: string) -> int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `name` | 冷却槽位标识符 |
+
+**返回：** 1 表示已就绪（非活跃或剩余刻数 ≤ 0），0 表示仍在冷却
+
+**示例**
+
+```redscript
+if (cooldown_ready("sword") == 1) { attack(); cooldown_start("sword", 40); }
 ```
 
 ---
 
-### `cooldown_tick(name: string)`
+## `cooldown_tick` <Badge type="info" text="v1.2.0" />
 
-Advance the cooldown by one tick. Call this every tick (e.g. from a `@tick` function). Automatically clears the active flag when the timer reaches zero.
+冷却计时推进一刻，须在 @tick 函数中每刻调用。剩余刻数归零时自动标记为非活跃。
 
-**Example:**
-```rs
-import cooldown;
-
-@tick
-fn update() {
-    cooldown_tick("dash");
-}
+```redscript
+fn cooldown_tick(name: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `name` | 冷却槽位标识符 |
+
+**返回：** 无返回值
+
+**示例**
+
+```redscript
+@tick fn game_tick() { cooldown_tick("sword"); }
+```
+
+---

@@ -1,68 +1,107 @@
-# `sets` — Set operations
+# Sets
 
-Import: `import sets;`
+> 本文档由 `src/stdlib/sets.mcrs` 自动生成，请勿手动编辑。
 
-Runtime set implementation using NBT storage arrays with uniqueness enforced on add. The actual implementation is handled by the compiler; this module documents the interface.
+## API 列表
 
-## Functions
-
-### `set_new(): string`
-
-Create a new empty set. Returns a unique set ID string.
-
-**Example:**
-```rs
-import sets;
-let my_set: string = set_new();
-```
+- [set_new](#set-new)
+- [set_add](#set-add)
+- [set_contains](#set-contains)
+- [set_remove](#set-remove)
+- [set_clear](#set-clear)
 
 ---
 
-### `set_add(set: string, value: string)`
+## `set_new` <Badge type="info" text="v1.1.0" />
 
-Add `value` to the set if not already present (enforces uniqueness).
+创建一个新的空集合并返回唯一集合 ID（字符串句柄）。
 
-**Example:**
-```rs
-import sets;
+```redscript
+fn set_new(): string
+```
+
+**返回：** 集合 ID（字符串句柄）
+
+**示例**
+
+```redscript
 let s: string = set_new();
-set_add(s, "player_alice");
-set_add(s, "player_bob");
-set_add(s, "player_alice");  // no-op, already in set
+set_add(s, "apple");
 ```
 
 ---
 
-### `set_contains(set: string, value: string): int`
+## `set_add` <Badge type="info" text="v1.1.0" />
 
-Returns 1 if `value` exists in the set, 0 otherwise.
+若值不存在则将其加入集合（已存在则无操作）。
 
-**Example:**
-```rs
-import sets;
-let has_alice: int = set_contains(my_set, "player_alice");  // 1
+```redscript
+fn set_add(set: string, value: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `set` | set_new 返回的集合 ID |
+| `value` | 要添加的值 |
+
+**返回：** 无返回值
 
 ---
 
-### `set_remove(set: string, value: string)`
+## `set_contains` <Badge type="info" text="v1.1.0" />
 
-Remove `value` from the set.
+检查集合中是否存在某个值。
 
-**Example:**
-```rs
-import sets;
-set_remove(my_set, "player_bob");
+```redscript
+fn set_contains(set: string, value: string): int
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `set` | 集合 ID |
+| `value` | 要查找的值 |
+
+**返回：** 存在返回 1，否则返回 0
 
 ---
 
-### `set_clear(set: string)`
+## `set_remove` <Badge type="info" text="v1.1.0" />
 
-Remove all values from the set.
+从集合中移除某个值（不存在则无操作）。
 
-**Example:**
-```rs
-import sets;
-set_clear(my_set);
+```redscript
+fn set_remove(set: string, value: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `set` | 集合 ID |
+| `value` | 要移除的值 |
+
+**返回：** 无返回值
+
+---
+
+## `set_clear` <Badge type="info" text="v1.1.0" />
+
+清空集合中的所有值。
+
+```redscript
+fn set_clear(set: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `set` | 集合 ID |
+
+**返回：** 无返回值
+
+---

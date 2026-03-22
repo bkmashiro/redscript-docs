@@ -1,0 +1,404 @@
+{
+  "name": "RedScript",
+  "scopeName": "source.redscript",
+  "fileTypes": ["rs"],
+  "patterns": [{ "include": "#root" }],
+  "repository": {
+    "root": {
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#decorators" },
+        { "include": "#fstring" },
+        { "include": "#string-interpolation" },
+        { "include": "#strings" },
+        { "include": "#keywords" },
+        { "include": "#selectors" },
+        { "include": "#const-definition" },
+        { "include": "#constants-upper" },
+        { "include": "#fn-definition" },
+        { "include": "#struct-definition" },
+        { "include": "#enum-definition" },
+        { "include": "#fn-call" },
+        { "include": "#types" },
+        { "include": "#numbers" },
+        { "include": "#blockpos" },
+        { "include": "#mc-name" },
+        { "include": "#operators" },
+        { "include": "#punctuation" }
+      ]
+    },
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.redscript",
+          "match": "//.*$"
+        },
+        {
+          "comment": "JSDoc block comment /** ... */",
+          "name": "comment.block.documentation.redscript",
+          "begin": "/\\*\\*",
+          "end": "\\*/",
+          "patterns": [
+            {
+              "name": "storage.type.class.jsdoc",
+              "match": "@(?:param|returns?|type|throws?|example|deprecated|since|see|todo)\\b"
+            },
+            {
+              "name": "variable.other.jsdoc",
+              "match": "\\{[^}]+\\}"
+            }
+          ]
+        },
+        {
+          "name": "comment.block.redscript",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+
+    "decorators": {
+      "patterns": [
+        {
+          "comment": "Decorator with arguments: @tick(rate=20)",
+          "begin": "(@(?:tick|load|keep|on|on_advancement|on_craft|on_death|on_trigger|on_join_team|on_login))\\s*(\\()",
+          "beginCaptures": {
+            "1": { "name": "entity.name.function.decorator.redscript" },
+            "2": { "name": "punctuation.definition.parameters.redscript" }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.parameters.redscript" }
+          },
+          "patterns": [
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            {
+              "name": "variable.parameter.decorator.redscript",
+              "match": "\\b[a-z_][a-zA-Z0-9_]*\\b"
+            },
+            {
+              "name": "keyword.operator.assignment.redscript",
+              "match": "="
+            }
+          ]
+        },
+        {
+          "comment": "Bare decorator: @on_death",
+          "name": "entity.name.function.decorator.redscript",
+          "match": "@(?:tick|load|keep|on|on_advancement|on_craft|on_death|on_trigger|on_join_team|on_login)\\b"
+        }
+      ]
+    },
+
+    "fstring": {
+      "comment": "f-string: f\"Hello {name}\" — f prefix gets special color, {expr} highlighted",
+      "begin": "(f)(\")",
+      "beginCaptures": {
+        "1": { "name": "storage.type.string.redscript" },
+        "2": { "name": "punctuation.definition.string.begin.redscript" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.redscript" }
+      },
+      "name": "string.interpolated.redscript",
+      "patterns": [
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": { "0": { "name": "punctuation.definition.interpolation.begin.redscript" } },
+          "endCaptures":   { "0": { "name": "punctuation.definition.interpolation.end.redscript" } },
+          "contentName": "meta.interpolation.redscript",
+          "patterns": [
+            { "include": "#selectors" },
+            { "include": "#numbers" },
+            { "include": "#fn-call" },
+            {
+              "name": "variable.other.redscript",
+              "match": "[a-zA-Z_][a-zA-Z0-9_]*"
+            }
+          ]
+        },
+        { "name": "constant.character.escape.redscript", "match": "\\\\." }
+      ]
+    },
+
+    "string-interpolation": {
+      "comment": "Interpolated string with ${expr} — highlight the expression inside",
+      "begin": "\"(?=[^\"]*\\$\\{)",
+      "end": "\"",
+      "name": "string.quoted.double.redscript",
+      "patterns": [
+        {
+          "begin": "\\$\\{",
+          "end": "\\}",
+          "beginCaptures": { "0": { "name": "punctuation.definition.template-expression.begin.redscript" } },
+          "endCaptures":   { "0": { "name": "punctuation.definition.template-expression.end.redscript" } },
+          "contentName": "meta.embedded.expression.redscript",
+          "patterns": [
+            { "include": "#selectors" },
+            { "include": "#numbers" },
+            {
+              "name": "variable.other.redscript",
+              "match": "[a-zA-Z_][a-zA-Z0-9_]*"
+            }
+          ]
+        },
+        { "name": "constant.character.escape.redscript", "match": "\\\\." }
+      ]
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.redscript",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.redscript", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.redscript",
+          "match": "\\b(if|else|while|for|foreach|return|match|in|execute|as|at|unless|run|is|positioned|rotated|facing|anchored|align)\\b"
+        },
+        {
+          "name": "keyword.declaration.redscript",
+          "match": "\\b(fn|let|struct|enum|impl|import|namespace|trigger|declare)\\b"
+        },
+        {
+          "name": "keyword.declaration.const.redscript",
+          "match": "\\bconst\\b"
+        },
+        {
+          "name": "constant.language.boolean.redscript",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "variable.language.self.redscript",
+          "match": "\\bself\\b"
+        }
+      ]
+    },
+
+    "types": {
+      "patterns": [
+        {
+          "comment": "Primitive types",
+          "name": "support.type.primitive.redscript",
+          "match": "\\b(int|float|bool|string|void|BlockPos|selector)\\b"
+        },
+        {
+          "comment": "Array type T[]",
+          "match": "\\b([A-Za-z][A-Za-z0-9_]*)\\s*(\\[\\])",
+          "captures": {
+            "1": { "name": "support.type.redscript" },
+            "2": { "name": "punctuation.definition.type.redscript" }
+          }
+        },
+        {
+          "comment": "User-defined types (PascalCase: starts uppercase, second char lowercase)",
+          "name": "entity.name.type.redscript",
+          "match": "\\b[A-Z][a-z][A-Za-z0-9]*\\b"
+        }
+      ]
+    },
+
+    "selectors": {
+      "patterns": [
+        {
+          "comment": "Selector WITH arguments: @e[type=minecraft:zombie,distance=..8]",
+          "begin": "(@[aesprnAESPRN])(\\[)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.selector.redscript" },
+            "2": { "name": "punctuation.section.selector.begin.redscript" }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.selector.end.redscript" }
+          },
+          "patterns": [
+            {
+              "comment": "Selector argument keys",
+              "name": "support.type.property-name.redscript",
+              "match": "\\b(type|name|tag|team|scores|nbt|predicate|gamemode|distance|level|x_rotation|y_rotation|x|y|z|dx|dy|dz|limit|sort|advancements|selector)\\b"
+            },
+            {
+              "comment": "Range operator: ..8, 1.., 1..10",
+              "name": "keyword.operator.range.selector.redscript",
+              "match": "\\.\\."
+            },
+            {
+              "comment": "Namespaced value e.g. minecraft:zombie",
+              "match": "\\b([a-z0-9_]+):([a-z0-9_./]+)",
+              "captures": {
+                "1": { "name": "entity.name.namespace.redscript" },
+                "2": { "name": "entity.name.type.entity.redscript" }
+              }
+            },
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            {
+              "name": "keyword.operator.assignment.redscript",
+              "match": "="
+            },
+            {
+              "name": "keyword.operator.logical.redscript",
+              "match": "!"
+            }
+          ]
+        },
+        {
+          "comment": "Bare selector: @s @a @e @p @r @n (no arguments)",
+          "name": "keyword.other.selector.redscript",
+          "match": "@[aesprnAESPRN]\\b"
+        }
+      ]
+    },
+
+    "fn-definition": {
+      "comment": "fn name(...) — highlight function name",
+      "match": "\\b(fn)\\s+([a-z_][a-zA-Z0-9_]*)",
+      "captures": {
+        "1": { "name": "keyword.declaration.redscript" },
+        "2": { "name": "entity.name.function.redscript" }
+      }
+    },
+
+    "struct-definition": {
+      "comment": "struct Name { ... }",
+      "match": "\\b(struct)\\s+([A-Z][A-Za-z0-9_]*)",
+      "captures": {
+        "1": { "name": "keyword.declaration.redscript" },
+        "2": { "name": "entity.name.type.redscript" }
+      }
+    },
+
+    "enum-definition": {
+      "comment": "enum Name { ... }",
+      "match": "\\b(enum)\\s+([A-Z][A-Za-z0-9_]*)",
+      "captures": {
+        "1": { "name": "keyword.declaration.redscript" },
+        "2": { "name": "entity.name.type.redscript" }
+      }
+    },
+
+    "const-definition": {
+      "comment": "const NAME: type = value — highlight const name",
+      "match": "\\b(const)\\s+([A-Z_][A-Z0-9_]*)",
+      "captures": {
+        "1": { "name": "keyword.declaration.const.redscript" },
+        "2": { "name": "variable.other.constant.redscript" }
+      }
+    },
+
+    "fn-call": {
+      "comment": "Function call: name(...) — highlight callee",
+      "patterns": [
+        {
+          "comment": "Builtin functions",
+          "name": "support.function.builtin.redscript",
+          "match": "\\b(say|tell|tellraw|announce|title|subtitle|actionbar|title_times|give|kill|effect|effect_clear|clear|kick|xp_add|xp_set|tp|tp_to|setblock|fill|clone|summon|particle|playsound|weather|time_set|time_add|gamerule|difficulty|tag_add|tag_remove|scoreboard_get|score|scoreboard_set|scoreboard_add|scoreboard_display|scoreboard_hide|scoreboard_add_objective|scoreboard_remove_objective|random|random_native|random_sequence|data_get|data_merge|str_len|push|pop|bossbar_add|bossbar_set_value|bossbar_set_max|bossbar_set_color|bossbar_set_style|bossbar_set_visible|bossbar_set_players|bossbar_remove|bossbar_get_value|team_add|team_remove|team_join|team_leave|team_option|set_new|set_add|set_contains|set_remove|set_clear|setTimeout|setInterval|clearInterval|spawn_object|if_entity|unless_entity)(?=\\s*\\()"
+        },
+        {
+          "comment": "User-defined function calls",
+          "name": "entity.name.function.redscript",
+          "match": "\\b([a-z_][a-zA-Z0-9_]*)(?=\\s*\\()"
+        }
+      ]
+    },
+
+    "constants-upper": {
+      "comment": "SCREAMING_SNAKE_CASE constants and 2+ char ALL_CAPS (e.g. GAME_TIME, MAX, PI)",
+      "name": "variable.other.constant.redscript",
+      "match": "\\b(?:[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+|[A-Z]{2,})\\b"
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.redscript",
+          "match": "-?\\b\\d+\\.\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.redscript",
+          "match": "-?\\b\\d+\\b"
+        }
+      ]
+    },
+
+    "blockpos": {
+      "comment": "BlockPos coordinates: ~5, ^3, ~-1",
+      "name": "constant.numeric.blockpos.redscript",
+      "match": "[~^]-?\\d*(?:\\.\\d+)?"
+    },
+
+    "mc-name": {
+      "comment": "#objective, #tag, #team — unquoted MC identifier literal. #rs is the special RS-internal scoreboard objective token.",
+      "patterns": [
+        {
+          "comment": "#rs — special compiler token: resolves to the current datapack's internal scoreboard objective (__<namespace>)",
+          "name": "support.constant.rs-objective.redscript",
+          "match": "#rs\\b"
+        },
+        {
+          "name": "variable.other.mc-name.redscript",
+          "match": "#[a-zA-Z_][a-zA-Z0-9_]*"
+        }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.redscript",
+          "match": "(==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.redscript",
+          "match": "(&&|\\|\\||!(?!=))"
+        },
+        {
+          "name": "keyword.operator.assignment.redscript",
+          "match": "(\\+=|-=|\\*=|/=|%=|=(?!=))"
+        },
+        {
+          "name": "keyword.operator.arithmetic.redscript",
+          "match": "(\\+|-(?!>)|\\*|/|%)"
+        },
+        {
+          "name": "keyword.operator.arrow.redscript",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.scope.redscript",
+          "match": "::"
+        },
+        {
+          "name": "keyword.operator.range.redscript",
+          "match": "\\.\\."
+        }
+      ]
+    },
+
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.terminator.statement.redscript", "match": ";" },
+        { "name": "punctuation.separator.comma.redscript", "match": "," },
+        { "name": "punctuation.separator.colon.redscript", "match": ":" },
+        { "name": "punctuation.accessor.dot.redscript", "match": "\\." },
+        { "name": "punctuation.definition.block.begin.redscript", "match": "\\{" },
+        { "name": "punctuation.definition.block.end.redscript", "match": "\\}" },
+        { "name": "punctuation.definition.parameters.begin.redscript", "match": "\\(" },
+        { "name": "punctuation.definition.parameters.end.redscript", "match": "\\)" }
+      ]
+    }
+  }
+}

@@ -1,185 +1,143 @@
-# `math_hp` — 高精度数学
+# Math_hp
 
-Import: `import math_hp;`
+> 本文档由 `src/stdlib/math_hp.mcrs` 自动生成，请勿手动编辑。
 
-利用 Minecraft 内部 IEEE 754 双精度存储实现的高精度算术。通过 Marker 实体旋转技巧提供双精度 sin/cos，通过 Display Entity SVD 实现高精度除法，以及双精度算术（加、减、乘、除）、高精度 ln（Newton 精炼）、双精度 sqrt 和实数幂运算。需要设置：在 `@load` 函数中调用 `init_trig()`（以及可选的 `init_div()`、`init_double_add()`）。
+## API 列表
 
-> **需要设置：** 在 `@load` 函数中调用 `init_trig()`。这些函数通过 `@require_on_load` 自动注册，但实体必须在运行时存在。
-
-## Functions
-
-### `init_trig()`
-
-创建 `sin_hp`/`cos_hp`/`norm3_hp` 所需的 `rs_trig` Marker 实体。可多次调用（不存在时才生成）。通过 `@require_on_load` 自动调用。
+- [double_mul_fixed](#double-mul-fixed)
+- [double_mul](#double-mul)
+- [ln_hp](#ln-hp)
+- [ln_5term](#ln-5term)
+- [double_sqrt](#double-sqrt)
+- [pow_fast](#pow-fast)
 
 ---
 
-### `sin_hp(angle: int): int`
+## `double_mul_fixed` <Badge type="info" text="v1.3.0" />
 
-> **Precision:** ~15 significant figures (Java `Math.sin` double precision)  
-> **Cost:** ~8 commands + entity NBT read/write  
-> **Requires:** `rs_trig` Marker entity must exist (call `init_trig()` in `@load`)
+使用宏技巧将双精度值 d 乘以定点整数 f（×10000），全程保持 IEEE 754 双精度精度。
 
-高精度正弦。`angle` 为角度 ×10000（如 450000 = 45°）。返回 `sin(angle/10000°) × 10000`。
+```redscript
+fn double_mul_fixed(d: double, f: int): double
+```
 
-**Example:**
-```rs
-import math_hp;
+**参数**
 
-@load fn setup() { init_trig(); }
+| 参数 | 说明 |
+|------|------|
+| `d` | 双精度操作数（NBT 存储） |
+| `f` | 定点乘数 ×10000（如 15000 = 1.5） |
 
-fn my_fn() {
-    let s: int = sin_hp(900000);  // 10000  (sin 90° = 1.0)
-}
+**返回：** d × (f/10000) 的双精度结果
+
+**示例**
+
+```redscript
+let r: double = double_mul_fixed(3.14d, 20000); // 6.28  (3.14 × 2.0)
 ```
 
 ---
 
-### `cos_hp(angle: int): int`
+## `double_mul` <Badge type="info" text="v1.3.0" />
 
-> **Precision:** ~15 significant figures  
-> **Cost:** ~8 commands + entity NBT read/write  
-> **Requires:** `rs_trig` Marker entity
+通过计分板整数近似实现双精度乘法（约 4 位有效小数）。|a|×|b| > ~21474 时会溢出。
 
-高精度余弦。`angle` 为角度 ×10000。返回 `cos(angle/10000°) × 10000`。
+```redscript
+fn double_mul(a: double, b: double): double
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个因数（双精度） |
+| `b` | 第二个因数（双精度） |
+
+**返回：** a × b（近似，约 4 位精度）
 
 ---
 
-### `init_div()`
+## `ln_hp` <Badge type="info" text="v1.3.0" />
 
-创建 `div_hp`、`div3_hp`、`double_div` 所需的 `rs_div` block_display 实体。通过 `@require_on_load` 自动调用。
+高精度自然对数，通过对 5 项 atanh 级数结果进行一次 Newton 修正（~8–9 位精度）。有效范围 x ∈ [100, 1000000]。
 
----
+```redscript
+fn ln_hp(x: int): int
+```
 
-### `div_hp(a: int, b: int): int`
+**参数**
 
-> **Precision:** ~15 significant figures (Display Entity SVD, Java double)  
-> **Cost:** ~10 commands + entity transformation write/read  
-> **Requires:** `rs_div` block_display entity (call `init_div()` in `@load`)
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入值 ×10000（如 10000 = 1.0，27183 ≈ e） |
 
-高精度整数除法 `a/b`，返回 `(a/b) × 10000`。示例：`div_hp(10000, 3000)` ≈ 33333。
+**返回：** ln(x/10000) ×10000
 
-**Example:**
-```rs
-import math_hp;
-let result: int = div_hp(10000, 3000);  // ~33333
+**示例**
+
+```redscript
+let r: int = ln_hp(27183); // ≈ 10000  (ln(e) ≈ 1.0)
 ```
 
 ---
 
-### `div3_hp(a: int, b: int, c: int, d: int): int`
+## `ln_5term` <Badge type="info" text="v1.3.0" />
 
-> **Precision:** ~15 significant figures  
-> **Requires:** `rs_div` entity
+使用 5 项 atanh 级数计算自然对数（比 3 项 ln() 精度高 2 倍，最大误差 ≈ 0.000002）。
 
-通过对角矩阵分解同时将三个值除以 `d`。返回 `a/d × 10000`。`b/d` 和 `c/d` 的结果分别存在记分板 `$div3_y` 和 `$div3_z __rs_math_hp` 中。
+```redscript
+fn ln_5term(x: int): int
+```
 
----
+**参数**
 
-### `sqrt_hp(x: int): int`
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入值 ×10000 |
 
-> **Precision:** ~8 significant figures (two Newton refinement steps using `div_hp`)  
-> **Requires:** `rs_div` entity
-
-高精度平方根。输入 `x ×10000`。返回 `√(x/10000) × 10000`。
-
----
-
-### `norm3_hp(x: int, y: int, z: int): int`
-
-> **Requires:** `rs_trig` entity
-
-高精度三维向量模长 `√(x²+y²+z²)`。所有输入 ×10000，返回 ×10000。
+**返回：** ln(x/10000) ×10000
 
 ---
 
-### `double_mul_fixed(d: double, f: int): double`
+## `double_sqrt` <Badge type="info" text="v1.3.0" />
 
-> **Precision:** Full IEEE 754 double (no integer intermediate for the multiplication)  
-> **Cost:** ~5 commands + macro function call
+双精度平方根，内部转换为定点数后用 isqrt 计算，再转回双精度。
 
-将双精度值 `d` 乘以定点整数 `f`（×10000 缩放）。使用函数宏技巧在 IEEE 754 双精度算术中计算 `d × (f / 10000)`。
+```redscript
+fn double_sqrt(x: double): double
+```
 
----
+**参数**
 
-### `init_double_add()`
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入双精度值（必须 ≥ 0） |
 
-生成 `double_add`/`double_sub` 所需的 AEC Marker 实体。通过 `@require_on_load` 自动调用。
-
----
-
-### `double_add(a: double, b: double): double`
-
-> **Precision:** Full IEEE 754 double (~15 significant figures)  
-> **Cost:** ~6 commands + entity teleport
-
-`a + b`，通过实体坐标技巧实现真正双精度（Marker 传送到 `x=a`，再相对 TP `+b`）。
+**返回：** √x（双精度）
 
 ---
 
-### `double_sub(a: double, b: double): double`
+## `pow_fast` <Badge type="info" text="v1.3.0" />
 
-> **Precision:** Full IEEE 754 double. Note: catastrophic cancellation applies when a ≈ b  
-> **Cost:** ~7 commands
+双精度底数的整数次方，使用二进制快速幂（O(log n)），支持负指数。
 
-双精度 `a - b`。通过 execute-store scale=-1 对 `b` 取反，然后调用 `double_add`。
+```redscript
+fn pow_fast(base: double, exp_val: int): double
+```
 
----
+**参数**
 
-### `double_mul(a: double, b: double): double`
+| 参数 | 说明 |
+|------|------|
+| `base` | 底数（双精度） |
+| `exp_val` | 整数指数（可以为负） |
 
-> **Precision:** ~4 decimal digits (10000× scale integer intermediary; NOT full double precision)  
-> **Cost:** ~5 commands  
-> **Note:** Overflow for |a|×|b| > ~21474; safe for small values only
+**返回：** base^exp_val（双精度）
 
-通过记分板整数近似计算 `a × b`。较大值请使用 ln/exp 分解。
+**示例**
 
----
-
-### `double_div(a: double, b: double): double`
-
-> **Precision:** Full IEEE 754 double  
-> **Cost:** ~6 commands + entity transformation  
-> **Requires:** `rs_div` entity  
-> **Warning:** Division by zero produces Java Infinity/NaN which corrupts NBT
-
-通过 Display Entity SVD 技巧实现真正双精度 `a / b`。
+```redscript
+let r: double = pow_fast(2.0d, 10); // 1024.0
+```
 
 ---
-
-### `ln_hp(x: int): int`
-
-> **Precision:** ~8–9 significant digits (one Newton step on top of `ln_5term`)  
-> **Cost:** ~35 commands (ln_5term + exp_fx + correction)
-
-高精度自然对数。输入/输出均 ×10000。有效范围：x ∈ [100, 1000000]。算法：通过 5 项 atanh 级数得到初始估算，再进行一步 Newton 精炼。
-
----
-
-### `ln_5term(x: int): int`
-
-> **Precision:** max_error ≈ 0.000002 (2× better than 3-term `ln()`)  
-> **Cost:** ~30 commands
-
-使用 5 项 atanh 级数加范围规约的自然对数。输入/输出均 ×10000。有效范围：x ∈ [100, 1000000]。
-
----
-
-### `double_sqrt(x: double): double`
-
-双精度值的平方根。策略：转换为 ×10000 整数，应用 `isqrt`，再缩放回 double。
-
----
-
-### `pow_real(base: double, exp_val: double): double`
-
-> **Requires:** `rs_trig` entity  
-> **Precision:** ~6–8 significant digits (limited by exp_fx precision)
-
-双精度输入的 `base^exp_val`，使用 `e^(exp_val × ln(base))` 通过定点数辅助函数计算。
-
----
-
-### `pow_fast(base: double, exp_val: int): double`
-
-双精度底数、整数指数的 `base^exp_val`。使用二进制幂运算。支持负指数（通过 `double_div`）。递归实现。
