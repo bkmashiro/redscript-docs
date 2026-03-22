@@ -21,7 +21,7 @@
 
 ---
 
-## `uniform_int` <Badge type="info" text="Since v2.0.0" />
+## `uniform_int` <Badge type="info" text="v2.0.0" />
 
 返回 [lo, hi] 内的均匀随机整数（使用 LCG 随机数生成器）
 
@@ -47,7 +47,7 @@ let dmg: int = uniform_int(seed, 5, 15)
 
 ---
 
-## `uniform_frac` <Badge type="info" text="Since v2.0.0" />
+## `uniform_frac` <Badge type="info" text="v2.0.0" />
 
 返回 [0, 10000] 内的均匀随机分数（×10000 精度）
 
@@ -71,7 +71,7 @@ let frac: int = uniform_frac(seed)
 
 ---
 
-## `normal_approx12` <Badge type="info" text="Since v2.0.0" />
+## `normal_approx12` <Badge type="info" text="v2.0.0" />
 
 使用 Irwin-Hall 方法（12 个均匀采样之和）近似 N(0,1) 变量
 
@@ -95,7 +95,7 @@ let z: int = normal_approx12(seed)
 
 ---
 
-## `exp_dist_approx` <Badge type="info" text="Since v2.0.0" />
+## `exp_dist_approx` <Badge type="info" text="v2.0.0" />
 
 从速率为 lambda_fx 的指数分布中采样（结果上限为 100000）
 
@@ -120,7 +120,7 @@ let wait: int = exp_dist_approx(seed, 10000)
 
 ---
 
-## `bernoulli` <Badge type="info" text="Since v2.0.0" />
+## `bernoulli` <Badge type="info" text="v2.0.0" />
 
 以 p_fx/10000 的概率返回 1，否则返回 0
 
@@ -145,7 +145,7 @@ if (bernoulli(seed, 3000) == 1) { /* 30% chance */ }
 
 ---
 
-## `weighted2` <Badge type="info" text="Since v2.0.0" />
+## `weighted2` <Badge type="info" text="v2.0.0" />
 
 按权重 w0、w1 随机选择 0 或 1
 
@@ -171,7 +171,7 @@ let side: int = weighted2(seed, 3, 7)
 
 ---
 
-## `weighted3` <Badge type="info" text="Since v2.0.0" />
+## `weighted3` <Badge type="info" text="v2.0.0" />
 
 按权重 w0、w1、w2 随机选择 0、1 或 2
 
@@ -198,7 +198,7 @@ let tier: int = weighted3(seed, 50, 30, 20)
 
 ---
 
-## `gamma_sample` <Badge type="info" text="Since v2.0.0" />
+## `gamma_sample` <Badge type="info" text="v2.0.0" />
 
 从 Gamma(k, θ) 分布中采样（支持整数 k = 1..5）
 
@@ -224,7 +224,7 @@ let g: int = gamma_sample(20000, 10000, seed)
 
 ---
 
-## `poisson_sample` <Badge type="info" text="Since v2.0.0" />
+## `poisson_sample` <Badge type="info" text="v2.0.0" />
 
 使用 Knuth 算法从 Poisson(λ) 分布中采样（λ ≤ 20 时效果最佳）
 
@@ -249,7 +249,7 @@ let n: int = poisson_sample(30000, seed)
 
 ---
 
-## `geometric_sample` <Badge type="info" text="Since v2.0.0" />
+## `geometric_sample` <Badge type="info" text="v2.0.0" />
 
 从几何分布 Geometric(p) 中采样（首次成功前失败次数）
 
@@ -274,7 +274,7 @@ let fails: int = geometric_sample(5000, seed)
 
 ---
 
-## `negative_binomial_sample` <Badge type="info" text="Since v2.0.0" />
+## `negative_binomial_sample` <Badge type="info" text="v2.0.0" />
 
 从负二项分布 NegBin(r, p) 中采样（r 次成功前的总失败次数）
 
@@ -300,7 +300,7 @@ let n: int = negative_binomial_sample(3, 5000, seed)
 
 ---
 
-## `dft_real` <Badge type="info" text="Since v2.0.0" />
+## `dft_real` <Badge type="info" text="v2.0.0" />
 
 计算最多 8 个样本的实值信号第 k 个 DFT 频段实部
 
@@ -326,7 +326,7 @@ let re0: int = dft_real(10000, 0, -10000, 0, 0, 0, 0, 0, 4, 0)
 
 ---
 
-## `dft_imag` <Badge type="info" text="Since v2.0.0" />
+## `dft_imag` <Badge type="info" text="v2.0.0" />
 
 计算最多 8 个样本的实值信号第 k 个 DFT 频段虚部
 
@@ -346,7 +346,7 @@ fn dft_imag(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: i
 
 ---
 
-## `dft_magnitude` <Badge type="info" text="Since v2.0.0" />
+## `dft_magnitude` <Badge type="info" text="v2.0.0" />
 
 计算 DFT 第 k 频段的幅度 sqrt(re² + im²)，×10000
 

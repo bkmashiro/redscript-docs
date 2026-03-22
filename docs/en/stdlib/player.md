@@ -10,7 +10,7 @@
 
 ---
 
-## `heal` <Badge type="info" text="Since v1.0.0" />
+## `heal` <Badge type="info" text="v1.0.0" />
 
 Heal the nearest player by adding `amount` to their #health scoreboard.
 
@@ -34,7 +34,7 @@ heal(10)  // restore 10 HP to nearest player
 
 ---
 
-## `damage` <Badge type="info" text="Since v1.0.0" />
+## `damage` <Badge type="info" text="v1.0.0" />
 
 Deal damage to the nearest player, clamping health to a minimum of 0.
 
@@ -58,7 +58,7 @@ damage(5)  // deal 5 damage to nearest player
 
 ---
 
-## `is_op` <Badge type="info" text="Since v1.0.0" />
+## `is_op` <Badge type="info" text="v1.0.0" />
 
 Check whether the nearest player has the `op` tag (operator status).
 

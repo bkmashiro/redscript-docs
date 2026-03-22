@@ -19,7 +19,7 @@
 
 ---
 
-## `bigint_base` <Badge type="info" text="Since v1.0.0" />
+## `bigint_base` <Badge type="info" text="v1.0.0" />
 
 Return the bigint base (10000 = base-10000, each chunk holds 4 decimal digits).
 
@@ -31,7 +31,7 @@ fn bigint_base(): int
 
 ---
 
-## `bigint_zero` <Badge type="info" text="Since v1.0.0" />
+## `bigint_zero` <Badge type="info" text="v1.0.0" />
 
 Set all chunks of a bigint array to zero.
 
@@ -56,7 +56,7 @@ bigint_zero(result, 4)  // zero out a 4-chunk bigint
 
 ---
 
-## `bigint_copy` <Badge type="info" text="Since v1.0.0" />
+## `bigint_copy` <Badge type="info" text="v1.0.0" />
 
 Copy a bigint from src into dst.
 
@@ -76,7 +76,7 @@ fn bigint_copy(src: int[], dst: int[], len: int)
 
 ---
 
-## `bigint_cmp` <Badge type="info" text="Since v1.0.0" />
+## `bigint_cmp` <Badge type="info" text="v1.0.0" />
 
 Compare two bigints of equal length.
 
@@ -102,7 +102,7 @@ let cmp: int = bigint_cmp(a, b, 4)
 
 ---
 
-## `bigint_add` <Badge type="info" text="Since v1.0.0" />
+## `bigint_add` <Badge type="info" text="v1.0.0" />
 
 Add two bigints of equal length, writing result into a pre-allocated array.
 
@@ -129,7 +129,7 @@ let carry: int = bigint_add(a, b, result, 4)
 
 ---
 
-## `bigint_sub` <Badge type="info" text="Since v1.0.0" />
+## `bigint_sub` <Badge type="info" text="v1.0.0" />
 
 Subtract bigint b from a, writing result (assumes a >= b, no underflow check).
 
@@ -150,7 +150,7 @@ fn bigint_sub(a: int[], b: int[], result: int[], len: int)
 
 ---
 
-## `bigint_mul_small` <Badge type="info" text="Since v1.0.0" />
+## `bigint_mul_small` <Badge type="info" text="v1.0.0" />
 
 Multiply a bigint by a small integer (1 ≤ n ≤ 9999).
 
@@ -177,7 +177,7 @@ bigint_mul_small(a, 1000, result, 4)  // result = a × 1000
 
 ---
 
-## `bigint_div_small` <Badge type="info" text="Since v1.0.0" />
+## `bigint_div_small` <Badge type="info" text="v1.0.0" />
 
 Divide a bigint by a small integer (1 ≤ divisor ≤ 9999), returning quotient and remainder.
 
@@ -204,7 +204,7 @@ let rem: int = bigint_div_small(a, 7, result, 4)
 
 ---
 
-## `bigint_mod_small` <Badge type="info" text="Since v1.0.0" />
+## `bigint_mod_small` <Badge type="info" text="v1.0.0" />
 
 Compute a bigint modulo a small integer without allocating a quotient array.
 
@@ -230,7 +230,7 @@ let mod: int = bigint_mod_small(a, 10, 4)  // last decimal digit of a
 
 ---
 
-## `bigint_mul` <Badge type="info" text="Since v1.0.0" />
+## `bigint_mul` <Badge type="info" text="v1.0.0" />
 
 Multiply two bigints using schoolbook O(n²) algorithm.
 
@@ -259,7 +259,7 @@ bigint_mul(a, b, result, 4, 3)
 
 ---
 
-## `bigint_sq` <Badge type="info" text="Since v1.0.0" />
+## `bigint_sq` <Badge type="info" text="v1.0.0" />
 
 Square a bigint (optimized: computes upper triangle only).
 
@@ -286,7 +286,7 @@ bigint_sq(a, sq, 4)  // sq = a²
 
 ---
 
-## `bigint_div` <Badge type="info" text="Since v1.0.0" />
+## `bigint_div` <Badge type="info" text="v1.0.0" />
 
 Full arbitrary-precision integer division: a / b → quotient and remainder.
 

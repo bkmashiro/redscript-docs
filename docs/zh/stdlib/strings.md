@@ -11,7 +11,7 @@
 
 ---
 
-## `str_len` <Badge type="info" text="Since v1.0.0" />
+## `str_len` <Badge type="info" text="v1.0.0" />
 
 返回 rs:strings.{s} 中字符串的长度（MC 限制：普通字符串总返回 1）
 
@@ -35,7 +35,7 @@ str_len("A")  // result: 1 (plain string) or char count (char-list)
 
 ---
 
-## `str_concat` <Badge type="info" text="Since v1.0.0" />
+## `str_concat` <Badge type="info" text="v1.0.0" />
 
 将 rs:strings 中的两个字符串拼接，结果以 NBT 列表形式写入 rs:strings.Result
 
@@ -60,7 +60,7 @@ str_concat("A", "B")  // rs:strings.Result = ["hello", "world"]
 
 ---
 
-## `str_contains` <Badge type="info" text="Since v1.0.0" />
+## `str_contains` <Badge type="info" text="v1.0.0" />
 
 检测 rs:strings.{s} 是否包含 rs:strings.{sub}（因 MC 限制始终返回 0）
 
@@ -79,7 +79,7 @@ fn str_contains(s: string, sub: string) -> int
 
 ---
 
-## `str_slice` <Badge type="info" text="Since v2.2.0" />
+## `str_slice` <Badge type="info" text="v2.2.0" />
 
 从 rs:strings.{s} 中提取子串，写入 rs:strings.Result（需要 MC 1.20.2+）
 

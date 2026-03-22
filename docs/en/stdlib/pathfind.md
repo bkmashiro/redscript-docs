@@ -17,7 +17,7 @@
 
 ---
 
-## `pf_pack` <Badge type="info" text="Since v1.0.0" />
+## `pf_pack` <Badge type="info" text="v1.0.0" />
 
 Encode a (x, z) grid coordinate pair as a single packed integer.
 
@@ -42,7 +42,7 @@ let p: int = pf_pack(3, 7)  // result: 55
 
 ---
 
-## `pf_unpack_x` <Badge type="info" text="Since v1.0.0" />
+## `pf_unpack_x` <Badge type="info" text="v1.0.0" />
 
 Extract the X coordinate from a packed grid index.
 
@@ -66,7 +66,7 @@ let x: int = pf_unpack_x(55)  // result: 3
 
 ---
 
-## `pf_unpack_z` <Badge type="info" text="Since v1.0.0" />
+## `pf_unpack_z` <Badge type="info" text="v1.0.0" />
 
 Extract the Z coordinate from a packed grid index.
 
@@ -90,7 +90,7 @@ let z: int = pf_unpack_z(55)  // result: 7
 
 ---
 
-## `pf_new_map` <Badge type="info" text="Since v1.0.0" />
+## `pf_new_map` <Badge type="info" text="v1.0.0" />
 
 Allocate a new 16×16 grid obstacle map with all cells passable.
 
@@ -108,7 +108,7 @@ let map: int[] = pf_new_map()
 
 ---
 
-## `pf_set_blocked` <Badge type="info" text="Since v1.0.0" />
+## `pf_set_blocked` <Badge type="info" text="v1.0.0" />
 
 Mark a grid cell as impassable (blocked).
 
@@ -134,7 +134,7 @@ pf_set_blocked(map, 5, 3)  // block cell (5, 3)
 
 ---
 
-## `pf_set_open` <Badge type="info" text="Since v1.0.0" />
+## `pf_set_open` <Badge type="info" text="v1.0.0" />
 
 Mark a grid cell as passable (open).
 
@@ -160,7 +160,7 @@ pf_set_open(map, 5, 3)  // re-open previously blocked cell (5, 3)
 
 ---
 
-## `pf_is_blocked` <Badge type="info" text="Since v1.0.0" />
+## `pf_is_blocked` <Badge type="info" text="v1.0.0" />
 
 Check whether a grid cell is blocked or out of bounds.
 
@@ -186,7 +186,7 @@ let blocked: int = pf_is_blocked(map, 5, 3)
 
 ---
 
-## `pf_heuristic` <Badge type="info" text="Since v1.0.0" />
+## `pf_heuristic` <Badge type="info" text="v1.0.0" />
 
 Compute Manhattan distance between two grid cells, scaled ×10000.
 
@@ -213,7 +213,7 @@ let h: int = pf_heuristic(0, 0, 3, 4)  // result: 70000 (7 Manhattan steps × 10
 
 ---
 
-## `pathfind_bfs` <Badge type="info" text="Since v1.0.0" />
+## `pathfind_bfs` <Badge type="info" text="v1.0.0" />
 
 Find the shortest path between two cells on a 16×16 grid using BFS.
 
@@ -244,7 +244,7 @@ let x0: int = pf_unpack_x(path[0])
 
 ---
 
-## `pf_noop` <Badge type="info" text="Since v1.0.0" />
+## `pf_noop` <Badge type="info" text="v1.0.0" />
 
 Default no-op onDone callback for pathfind_bfs_coro. Replace with your own handler.
 

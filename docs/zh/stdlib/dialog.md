@@ -13,7 +13,7 @@
 
 ---
 
-## `dialog_say` <Badge type="info" text="Since v1.0.0" />
+## `dialog_say` <Badge type="info" text="v1.0.0" />
 
 向玩家或选择器发送一条纯白色聊天消息
 
@@ -36,7 +36,7 @@ dialog_say(@p, "Quest updated")
 
 ---
 
-## `dialog_broadcast` <Badge type="info" text="Since v1.0.0" />
+## `dialog_broadcast` <Badge type="info" text="v1.0.0" />
 
 向所有玩家广播一条纯白色聊天消息
 
@@ -58,7 +58,7 @@ dialog_broadcast("Server restart in 60 seconds")
 
 ---
 
-## `dialog_say_color` <Badge type="info" text="Since v1.0.0" />
+## `dialog_say_color` <Badge type="info" text="v1.0.0" />
 
 向玩家或选择器发送带颜色的聊天消息，未知颜色值会回退为白色
 
@@ -82,7 +82,7 @@ dialog_say_color(@s, "You died!", 1)
 
 ---
 
-## `dialog_title` <Badge type="info" text="Since v1.0.0" />
+## `dialog_title` <Badge type="info" text="v1.0.0" />
 
 在玩家屏幕上显示标题和副标题
 
@@ -106,7 +106,7 @@ dialog_title(@s, "Stage 2", "Defeat the boss")
 
 ---
 
-## `dialog_title_clear` <Badge type="info" text="Since v1.0.0" />
+## `dialog_title_clear` <Badge type="info" text="v1.0.0" />
 
 清除目标当前显示的标题
 
@@ -128,7 +128,7 @@ dialog_title_clear(@s)
 
 ---
 
-## `dialog_actionbar` <Badge type="info" text="Since v1.0.0" />
+## `dialog_actionbar` <Badge type="info" text="v1.0.0" />
 
 在玩家动作栏显示一条短消息
 

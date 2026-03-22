@@ -14,7 +14,7 @@
 
 ---
 
-## `task_schedule` <Badge type="info" text="Since v1.0.0" />
+## `task_schedule` <Badge type="info" text="v1.0.0" />
 
 为玩家排程指定槽位的任务，在 delay 个 tick 后触发
 
@@ -38,7 +38,7 @@ task_schedule(@s, 0, 40)
 
 ---
 
-## `task_cancel` <Badge type="info" text="Since v1.0.0" />
+## `task_cancel` <Badge type="info" text="v1.0.0" />
 
 取消玩家指定槽位的任务（将计数器归零）
 
@@ -61,7 +61,7 @@ task_cancel(@s, 0)
 
 ---
 
-## `task_ready` <Badge type="info" text="Since v1.0.0" />
+## `task_ready` <Badge type="info" text="v1.0.0" />
 
 检查玩家指定槽位的任务是否在本 tick 触发；触发后自动清除
 
@@ -86,7 +86,7 @@ if (task_ready(@s, 0) == 1) { /* handle event */ }
 
 ---
 
-## `gtask_schedule` <Badge type="info" text="Since v1.0.0" />
+## `gtask_schedule` <Badge type="info" text="v1.0.0" />
 
 排程全局槽位任务（绑定到
 
@@ -109,7 +109,7 @@ gtask_schedule(0, 200)
 
 ---
 
-## `gtask_cancel` <Badge type="info" text="Since v1.0.0" />
+## `gtask_cancel` <Badge type="info" text="v1.0.0" />
 
 取消全局槽位任务
 
@@ -131,7 +131,7 @@ gtask_cancel(0)
 
 ---
 
-## `gtask_ready` <Badge type="info" text="Since v1.0.0" />
+## `gtask_ready` <Badge type="info" text="v1.0.0" />
 
 检查全局槽位任务是否在本 tick 触发；触发后自动清除
 
@@ -155,7 +155,7 @@ if (gtask_ready(0) == 1) { /* handle global event */ }
 
 ---
 
-## `scheduler_tick` <Badge type="info" text="Since v1.0.0" />
+## `scheduler_tick` <Badge type="info" text="v1.0.0" />
 
 每 tick 将所有激活的玩家和全局计时器减 1；在 @tick 函数中调用
 

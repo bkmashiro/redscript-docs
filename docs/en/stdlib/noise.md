@@ -16,7 +16,7 @@
 
 ---
 
-## `hash_1d` <Badge type="info" text="Since v1.0.0" />
+## `hash_1d` <Badge type="info" text="v1.0.0" />
 
 Generate a pseudo-random integer from a 1D integer coordinate.
 
@@ -40,7 +40,7 @@ let h: int = hash_1d(42)  // deterministic hash of coordinate 42
 
 ---
 
-## `hash_2d` <Badge type="info" text="Since v1.0.0" />
+## `hash_2d` <Badge type="info" text="v1.0.0" />
 
 Generate a pseudo-random integer from a 2D integer coordinate pair.
 
@@ -65,7 +65,7 @@ let h: int = hash_2d(10, 20)  // deterministic hash of (10, 20)
 
 ---
 
-## `hash_1d_pos` <Badge type="info" text="Since v1.0.0" />
+## `hash_1d_pos` <Badge type="info" text="v1.0.0" />
 
 Generate a non-negative hash in [0, 10000] from a 1D coordinate.
 
@@ -89,7 +89,7 @@ let v: int = hash_1d_pos(5)  // value between 0 and 10000
 
 ---
 
-## `hash_2d_pos` <Badge type="info" text="Since v1.0.0" />
+## `hash_2d_pos` <Badge type="info" text="v1.0.0" />
 
 Generate a non-negative hash in [0, 10000] from a 2D coordinate pair.
 
@@ -114,7 +114,7 @@ let v: int = hash_2d_pos(3, 7)  // value between 0 and 10000
 
 ---
 
-## `value_noise_1d` <Badge type="info" text="Since v1.0.0" />
+## `value_noise_1d` <Badge type="info" text="v1.0.0" />
 
 Smooth 1D value noise at a fixed-point position.
 
@@ -138,7 +138,7 @@ let n: int = value_noise_1d(15000)  // smooth noise at x=1.5
 
 ---
 
-## `value_noise_2d` <Badge type="info" text="Since v1.0.0" />
+## `value_noise_2d` <Badge type="info" text="v1.0.0" />
 
 Smooth 2D value noise at a fixed-point position.
 
@@ -163,7 +163,7 @@ let n: int = value_noise_2d(15000, 23000)  // noise at (1.5, 2.3)
 
 ---
 
-## `fbm_1d` <Badge type="info" text="Since v1.0.0" />
+## `fbm_1d` <Badge type="info" text="v1.0.0" />
 
 1D Fractal Brownian Motion — stacks multiple octaves of value noise.
 
@@ -189,7 +189,7 @@ let h: int = fbm_1d(50000, 4, 5000)  // 4 octave noise at x=5.0
 
 ---
 
-## `fbm_2d` <Badge type="info" text="Since v1.0.0" />
+## `fbm_2d` <Badge type="info" text="v1.0.0" />
 
 2D Fractal Brownian Motion — stacks multiple octaves of 2D value noise.
 
@@ -216,7 +216,7 @@ let h: int = fbm_2d(30000, 50000, 3, 5000)  // 3 octave 2D noise
 
 ---
 
-## `terrain_height` <Badge type="info" text="Since v1.0.0" />
+## `terrain_height` <Badge type="info" text="v1.0.0" />
 
 Generate a terrain height using 3-octave FBM noise.
 

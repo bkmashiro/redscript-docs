@@ -14,7 +14,7 @@
 
 ---
 
-## `result_ok` <Badge type="info" text="Since v1.0.0" />
+## `result_ok` <Badge type="info" text="v1.0.0" />
 
 构造一个携带成功值的 Result
 
@@ -38,7 +38,7 @@ let r = result_ok(42)  // Ok result carrying 42
 
 ---
 
-## `result_err` <Badge type="info" text="Since v1.0.0" />
+## `result_err` <Badge type="info" text="v1.0.0" />
 
 构造一个携带错误码的 Result
 
@@ -62,7 +62,7 @@ let r = result_err(-2)  // division-by-zero error
 
 ---
 
-## `result_is_ok` <Badge type="info" text="Since v1.0.0" />
+## `result_is_ok` <Badge type="info" text="v1.0.0" />
 
 判断 Result 是否为 Ok
 
@@ -98,7 +98,7 @@ fn result_is_err(r: Result): int
 
 ---
 
-## `result_value` <Badge type="info" text="Since v1.0.0" />
+## `result_value` <Badge type="info" text="v1.0.0" />
 
 从 Ok 结果中提取值（Err 时返回 0，请先调用 result_is_ok 检查）
 

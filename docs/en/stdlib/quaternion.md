@@ -41,7 +41,7 @@
 
 ---
 
-## `quat_identity_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_identity_w` <Badge type="info" text="v2.0.0" />
 
 W component of the identity quaternion `(0, 0, 0, 1)`.
 
@@ -53,7 +53,7 @@ fn quat_identity_w(): int
 
 ---
 
-## `quat_identity_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_identity_x` <Badge type="info" text="v2.0.0" />
 
 X component of the identity quaternion.
 
@@ -65,7 +65,7 @@ fn quat_identity_x(): int
 
 ---
 
-## `quat_identity_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_identity_y` <Badge type="info" text="v2.0.0" />
 
 Y component of the identity quaternion.
 
@@ -77,7 +77,7 @@ fn quat_identity_y(): int
 
 ---
 
-## `quat_identity_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_identity_z` <Badge type="info" text="v2.0.0" />
 
 Z component of the identity quaternion.
 
@@ -89,7 +89,7 @@ fn quat_identity_z(): int
 
 ---
 
-## `quat_axis_x_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_x_x` <Badge type="info" text="v2.0.0" />
 
 X component of a quaternion representing rotation by `angle_deg` around the X axis.
 
@@ -107,7 +107,7 @@ fn quat_axis_x_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_x_y` <Badge type="info" text="v2.0.0" />
 
 Y component of a quaternion representing rotation by `angle_deg` around the X axis.
 
@@ -125,7 +125,7 @@ fn quat_axis_x_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_x_z` <Badge type="info" text="v2.0.0" />
 
 Z component of a quaternion representing rotation by `angle_deg` around the X axis.
 
@@ -143,7 +143,7 @@ fn quat_axis_x_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_x_w` <Badge type="info" text="v2.0.0" />
 
 W component of a quaternion representing rotation by `angle_deg` around the X axis.
 
@@ -161,7 +161,7 @@ fn quat_axis_x_w(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_y_x` <Badge type="info" text="v2.0.0" />
 
 X component of a quaternion representing rotation by `angle_deg` around the Y axis.
 
@@ -179,7 +179,7 @@ fn quat_axis_y_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_y_y` <Badge type="info" text="v2.0.0" />
 
 Y component of a quaternion representing rotation by `angle_deg` around the Y axis.
 
@@ -197,7 +197,7 @@ fn quat_axis_y_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_y_z` <Badge type="info" text="v2.0.0" />
 
 Z component of a quaternion representing rotation by `angle_deg` around the Y axis.
 
@@ -215,7 +215,7 @@ fn quat_axis_y_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_y_w` <Badge type="info" text="v2.0.0" />
 
 W component of a quaternion representing rotation by `angle_deg` around the Y axis.
 
@@ -233,7 +233,7 @@ fn quat_axis_y_w(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_z_x` <Badge type="info" text="v2.0.0" />
 
 X component of a quaternion representing rotation by `angle_deg` around the Z axis.
 
@@ -251,7 +251,7 @@ fn quat_axis_z_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_z_y` <Badge type="info" text="v2.0.0" />
 
 Y component of a quaternion representing rotation by `angle_deg` around the Z axis.
 
@@ -269,7 +269,7 @@ fn quat_axis_z_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_z_z` <Badge type="info" text="v2.0.0" />
 
 Z component of a quaternion representing rotation by `angle_deg` around the Z axis.
 
@@ -287,7 +287,7 @@ fn quat_axis_z_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_axis_z_w` <Badge type="info" text="v2.0.0" />
 
 W component of a quaternion representing rotation by `angle_deg` around the Z axis.
 
@@ -305,7 +305,7 @@ fn quat_axis_z_w(angle_deg: int): int
 
 ---
 
-## `quat_mul_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_mul_x` <Badge type="info" text="v2.0.0" />
 
 X component of quaternion product `a × b`.
 
@@ -330,7 +330,7 @@ let rx: int = quat_mul_x(ax, ay, az, aw, bx, by, bz, bw)
 
 ---
 
-## `quat_mul_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_mul_y` <Badge type="info" text="v2.0.0" />
 
 Y component of quaternion product `a × b`.
 
@@ -349,7 +349,7 @@ fn quat_mul_y(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_mul_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_mul_z` <Badge type="info" text="v2.0.0" />
 
 Z component of quaternion product `a × b`.
 
@@ -368,7 +368,7 @@ fn quat_mul_z(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_mul_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_mul_w` <Badge type="info" text="v2.0.0" />
 
 W component of quaternion product `a × b`.
 
@@ -387,7 +387,7 @@ fn quat_mul_w(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_conj_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_conj_x` <Badge type="info" text="v2.0.0" />
 
 X component of the conjugate of quaternion `(qx, qy, qz, qw)`.
 
@@ -405,7 +405,7 @@ fn quat_conj_x(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_conj_y` <Badge type="info" text="v2.0.0" />
 
 Y component of the conjugate of quaternion `(qx, qy, qz, qw)`.
 
@@ -423,7 +423,7 @@ fn quat_conj_y(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_conj_z` <Badge type="info" text="v2.0.0" />
 
 Z component of the conjugate of quaternion `(qx, qy, qz, qw)`.
 
@@ -441,7 +441,7 @@ fn quat_conj_z(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_conj_w` <Badge type="info" text="v2.0.0" />
 
 W component of the conjugate of quaternion `(qx, qy, qz, qw)`.
 
@@ -459,7 +459,7 @@ fn quat_conj_w(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_mag_sq` <Badge type="info" text="Since v2.0.0" />
+## `quat_mag_sq` <Badge type="info" text="v2.0.0" />
 
 Magnitude squared of a quaternion in ×10000 scale.
 
@@ -479,7 +479,7 @@ fn quat_mag_sq(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_dot` <Badge type="info" text="Since v2.0.0" />
+## `quat_dot` <Badge type="info" text="v2.0.0" />
 
 Dot product of two quaternions in ×10000 scale.
 
@@ -498,7 +498,7 @@ fn quat_dot(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: i
 
 ---
 
-## `quat_slerp_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_slerp_x` <Badge type="info" text="v2.0.0" />
 
 X component of the SLERP interpolation between quaternions `a` and `b` at `t/1000`.
 
@@ -526,7 +526,7 @@ let rx: int = quat_slerp_x(ax, ay, az, aw, bx, by, bz, bw, 500)
 
 ---
 
-## `quat_slerp_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_slerp_y` <Badge type="info" text="v2.0.0" />
 
 Y component of the SLERP interpolation between quaternions `a` and `b` at `t/1000`.
 
@@ -546,7 +546,7 @@ fn quat_slerp_y(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_slerp_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_slerp_z` <Badge type="info" text="v2.0.0" />
 
 Z component of the SLERP interpolation between quaternions `a` and `b` at `t/1000`.
 
@@ -566,7 +566,7 @@ fn quat_slerp_z(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_slerp_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_slerp_w` <Badge type="info" text="v2.0.0" />
 
 W component of the SLERP interpolation between quaternions `a` and `b` at `t/1000`.
 
@@ -586,7 +586,7 @@ fn quat_slerp_w(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_euler_x` <Badge type="info" text="Since v2.0.0" />
+## `quat_euler_x` <Badge type="info" text="v2.0.0" />
 
 X component of the quaternion from Euler angles (YXZ order, MC convention).
 
@@ -612,7 +612,7 @@ let qx: int = quat_euler_x(90, 0, 0)
 
 ---
 
-## `quat_euler_y` <Badge type="info" text="Since v2.0.0" />
+## `quat_euler_y` <Badge type="info" text="v2.0.0" />
 
 Y component of the quaternion from Euler angles (YXZ order, MC convention).
 
@@ -632,7 +632,7 @@ fn quat_euler_y(yaw: int, pitch: int, roll: int): int
 
 ---
 
-## `quat_euler_z` <Badge type="info" text="Since v2.0.0" />
+## `quat_euler_z` <Badge type="info" text="v2.0.0" />
 
 Z component of the quaternion from Euler angles (YXZ order, MC convention).
 
@@ -652,7 +652,7 @@ fn quat_euler_z(yaw: int, pitch: int, roll: int): int
 
 ---
 
-## `quat_euler_w` <Badge type="info" text="Since v2.0.0" />
+## `quat_euler_w` <Badge type="info" text="v2.0.0" />
 
 W component of the quaternion from Euler angles (YXZ order, MC convention).
 

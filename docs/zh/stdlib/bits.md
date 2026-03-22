@@ -18,7 +18,7 @@
 
 ---
 
-## `bit_get` <Badge type="info" text="Since v1.0.0" />
+## `bit_get` <Badge type="info" text="v1.0.0" />
 
 检测 x 的第 n 位是否为 1
 
@@ -43,7 +43,7 @@ let b: int = bit_get(0b1010, 1)  // result: 1 (bit 1 of 10 is set)
 
 ---
 
-## `bit_set` <Badge type="info" text="Since v1.0.0" />
+## `bit_set` <Badge type="info" text="v1.0.0" />
 
 将 x 的第 n 位设为 1（幂等）
 
@@ -68,7 +68,7 @@ let v: int = bit_set(0b0100, 0)  // result: 0b0101 = 5
 
 ---
 
-## `bit_clear` <Badge type="info" text="Since v1.0.0" />
+## `bit_clear` <Badge type="info" text="v1.0.0" />
 
 将 x 的第 n 位清零（幂等）
 
@@ -93,7 +93,7 @@ let v: int = bit_clear(0b0111, 1)  // result: 0b0101 = 5
 
 ---
 
-## `bit_toggle` <Badge type="info" text="Since v1.0.0" />
+## `bit_toggle` <Badge type="info" text="v1.0.0" />
 
 翻转 x 的第 n 位（0→1 或 1→0）
 
@@ -118,7 +118,7 @@ let v: int = bit_toggle(0b0101, 1)  // result: 0b0111 = 7
 
 ---
 
-## `bit_shl` <Badge type="info" text="Since v1.0.0" />
+## `bit_shl` <Badge type="info" text="v1.0.0" />
 
 左移 x n 位（等效于 x * 2^n）
 
@@ -143,7 +143,7 @@ let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 
 ---
 
-## `bit_shr` <Badge type="info" text="Since v1.0.0" />
+## `bit_shr` <Badge type="info" text="v1.0.0" />
 
 逻辑右移 x n 位（等效于 x / 2^n，向零截断）
 
@@ -168,7 +168,7 @@ let v: int = bit_shr(256, 3)  // result: 32 (256 >> 3)
 
 ---
 
-## `bit_and` <Badge type="info" text="Since v1.0.0" />
+## `bit_and` <Badge type="info" text="v1.0.0" />
 
 两个整数的按位与（31 个非符号位）
 
@@ -193,7 +193,7 @@ let v: int = bit_and(0b1100, 0b1010)  // result: 0b1000 = 8
 
 ---
 
-## `bit_or` <Badge type="info" text="Since v1.0.0" />
+## `bit_or` <Badge type="info" text="v1.0.0" />
 
 两个整数的按位或（31 个非符号位）
 
@@ -218,7 +218,7 @@ let v: int = bit_or(0b1100, 0b1010)  // result: 0b1110 = 14
 
 ---
 
-## `bit_xor` <Badge type="info" text="Since v1.0.0" />
+## `bit_xor` <Badge type="info" text="v1.0.0" />
 
 两个整数的按位异或（31 个非符号位）
 
@@ -243,7 +243,7 @@ let v: int = bit_xor(0b1100, 0b1010)  // result: 0b0110 = 6
 
 ---
 
-## `bit_not` <Badge type="info" text="Since v1.0.0" />
+## `bit_not` <Badge type="info" text="v1.0.0" />
 
 按位非 — 翻转 x 的所有 31 个非符号位
 
@@ -267,7 +267,7 @@ let v: int = bit_not(0)  // result: 2147483647 (all 31 bits set)
 
 ---
 
-## `popcount` <Badge type="info" text="Since v1.0.0" />
+## `popcount` <Badge type="info" text="v1.0.0" />
 
 统计 x 中置 1 的位数（汉明重量）
 

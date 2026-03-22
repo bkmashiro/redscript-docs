@@ -17,7 +17,7 @@
 
 ---
 
-## `graph_is_valid_node` <Badge type="info" text="Since v1.0.0" />
+## `graph_is_valid_node` <Badge type="info" text="v1.0.0" />
 
 Check whether a node index is valid for this graph.
 
@@ -36,7 +36,7 @@ fn graph_is_valid_node(g: int[], node: int): int
 
 ---
 
-## `graph_new` <Badge type="info" text="Since v1.0.0" />
+## `graph_new` <Badge type="info" text="v1.0.0" />
 
 Create a new empty graph with n nodes and capacity for 256 directed edges.
 
@@ -60,7 +60,7 @@ let g: int[] = graph_new(5)  // graph with 5 nodes, no edges
 
 ---
 
-## `graph_add_edge` <Badge type="info" text="Since v1.0.0" />
+## `graph_add_edge` <Badge type="info" text="v1.0.0" />
 
 Add a directed weighted edge to the graph.
 
@@ -87,7 +87,7 @@ g = graph_add_edge(g, 0, 1, 5)  // edge from 0 to 1 with weight 5
 
 ---
 
-## `graph_add_undirected` <Badge type="info" text="Since v1.0.0" />
+## `graph_add_undirected` <Badge type="info" text="v1.0.0" />
 
 Add an undirected weighted edge (adds both a→b and b→a directed edges).
 
@@ -114,7 +114,7 @@ g = graph_add_undirected(g, 2, 3, 2)  // bidirectional edge between 2 and 3
 
 ---
 
-## `graph_node_count` <Badge type="info" text="Since v1.0.0" />
+## `graph_node_count` <Badge type="info" text="v1.0.0" />
 
 Return the number of nodes in the graph.
 
@@ -132,7 +132,7 @@ fn graph_node_count(g: int[]): int
 
 ---
 
-## `graph_edge_count` <Badge type="info" text="Since v1.0.0" />
+## `graph_edge_count` <Badge type="info" text="v1.0.0" />
 
 Return the number of directed edges in the graph.
 
@@ -150,7 +150,7 @@ fn graph_edge_count(g: int[]): int
 
 ---
 
-## `graph_bfs` <Badge type="info" text="Since v1.0.0" />
+## `graph_bfs` <Badge type="info" text="v1.0.0" />
 
 Breadth-first search from a start node, returning visit order.
 
@@ -177,7 +177,7 @@ let order: int[] = graph_bfs(g, 0, vis)
 
 ---
 
-## `graph_dfs` <Badge type="info" text="Since v1.0.0" />
+## `graph_dfs` <Badge type="info" text="v1.0.0" />
 
 Depth-first search from a start node, returning visit order.
 
@@ -204,7 +204,7 @@ let order: int[] = graph_dfs(g, 0, vis)
 
 ---
 
-## `graph_has_path` <Badge type="info" text="Since v1.0.0" />
+## `graph_has_path` <Badge type="info" text="v1.0.0" />
 
 Check whether a path exists between two nodes using BFS.
 
@@ -230,7 +230,7 @@ let reachable: int = graph_has_path(g, 0, 3)
 
 ---
 
-## `graph_shortest_path` <Badge type="info" text="Since v1.0.0" />
+## `graph_shortest_path` <Badge type="info" text="v1.0.0" />
 
 Find the shortest weighted path from src to all nodes using Dijkstra's algorithm.
 

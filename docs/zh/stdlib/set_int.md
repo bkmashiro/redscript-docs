@@ -14,7 +14,7 @@
 
 ---
 
-## `set_add` <Badge type="info" text="Since v3.0.0" />
+## `set_add` <Badge type="info" text="v3.0.0" />
 
 向 storage rs:set_int.{set_name} 中插入一个整数；若已存在则不会重复添加
 
@@ -37,7 +37,7 @@ set_add("Visited", 42)
 
 ---
 
-## `set_has` <Badge type="info" text="Since v3.0.0" />
+## `set_has` <Badge type="info" text="v3.0.0" />
 
 检查整数是否存在于 storage rs:set_int.{set_name} 中
 
@@ -62,7 +62,7 @@ if (set_has("Visited", 42) == 1) { }
 
 ---
 
-## `set_remove` <Badge type="info" text="Since v3.0.0" />
+## `set_remove` <Badge type="info" text="v3.0.0" />
 
 从 storage rs:set_int.{set_name} 中删除一个整数
 
@@ -85,7 +85,7 @@ set_remove("Visited", 42)
 
 ---
 
-## `set_size` <Badge type="info" text="Since v3.0.0" />
+## `set_size` <Badge type="info" text="v3.0.0" />
 
 返回 storage rs:set_int.{set_name} 中当前元素数量
 
@@ -109,7 +109,7 @@ let count: int = set_size("Visited")
 
 ---
 
-## `set_clear` <Badge type="info" text="Since v3.0.0" />
+## `set_clear` <Badge type="info" text="v3.0.0" />
 
 将 storage rs:set_int.{set_name} 重置为空整数列表
 
@@ -131,7 +131,7 @@ set_clear("Visited")
 
 ---
 
-## `set_union` <Badge type="info" text="Since v3.0.0" />
+## `set_union` <Badge type="info" text="v3.0.0" />
 
 计算两个整数集合的并集，并将结果写入目标集合
 
@@ -155,7 +155,7 @@ set_union("SeenA", "SeenB", "SeenAll")
 
 ---
 
-## `set_intersect` <Badge type="info" text="Since v3.0.0" />
+## `set_intersect` <Badge type="info" text="v3.0.0" />
 
 计算两个整数集合的交集，并将结果写入目标集合
 

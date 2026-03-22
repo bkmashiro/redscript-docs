@@ -22,7 +22,7 @@
 
 ---
 
-## `midpoint` <Badge type="info" text="Since v1.0.0" />
+## `midpoint` <Badge type="info" text="v1.0.0" />
 
 Compute the integer midpoint of two coordinates.
 
@@ -47,7 +47,7 @@ let m: int = midpoint(100, 300)  // result: 200
 
 ---
 
-## `aabb_contains` <Badge type="info" text="Since v1.0.0" />
+## `aabb_contains` <Badge type="info" text="v1.0.0" />
 
 Test whether a 3D point is inside an axis-aligned bounding box (AABB).
 
@@ -79,7 +79,7 @@ let inside: int = aabb_contains(50, 64, 50, 0, 60, 0, 100, 70, 100)
 
 ---
 
-## `sphere_contains` <Badge type="info" text="Since v1.0.0" />
+## `sphere_contains` <Badge type="info" text="v1.0.0" />
 
 Test whether a 3D point is inside a sphere (using squared distance, avoids sqrt).
 
@@ -109,7 +109,7 @@ let hit: int = sphere_contains(10, 64, 10, 0, 64, 0, 15)
 
 ---
 
-## `cylinder_contains` <Badge type="info" text="Since v1.0.0" />
+## `cylinder_contains` <Badge type="info" text="v1.0.0" />
 
 Test whether a 2D point (XZ plane) is inside a vertical cylinder (ignores Y).
 
@@ -137,7 +137,7 @@ let in_zone: int = cylinder_contains(5, 5, 0, 0, 8)
 
 ---
 
-## `parabola_y` <Badge type="info" text="Since v1.0.0" />
+## `parabola_y` <Badge type="info" text="v1.0.0" />
 
 Compute Y position of a projectile along a parabolic arc at tick t.
 
@@ -163,7 +163,7 @@ let y: int = parabola_y(6400, 100, 10)  // at tick 10, v0=1 block/tick
 
 ---
 
-## `parabola_x` <Badge type="info" text="Since v1.0.0" />
+## `parabola_x` <Badge type="info" text="v1.0.0" />
 
 Compute horizontal X position along a parabolic path (constant velocity).
 
@@ -189,7 +189,7 @@ let x: int = parabola_x(0, 50, 10)  // 0 + 50*10 = 500
 
 ---
 
-## `parabola_land_t` <Badge type="info" text="Since v1.0.0" />
+## `parabola_land_t` <Badge type="info" text="v1.0.0" />
 
 Estimate the tick when a projectile launched upward returns to Y=0.
 
@@ -213,7 +213,7 @@ let land: int = parabola_land_t(100)  // tick when projectile lands
 
 ---
 
-## `tile_of` <Badge type="info" text="Since v1.0.0" />
+## `tile_of` <Badge type="info" text="v1.0.0" />
 
 Compute which tile a coordinate falls in (floor division, handles negatives).
 
@@ -238,7 +238,7 @@ let tile: int = tile_of(250, 100)  // result: 2 (tile index 2)
 
 ---
 
-## `tile_center` <Badge type="info" text="Since v1.0.0" />
+## `tile_center` <Badge type="info" text="v1.0.0" />
 
 Compute the center coordinate of a tile.
 
@@ -263,7 +263,7 @@ let c: int = tile_center(2, 100)  // result: 250 (center of tile 2)
 
 ---
 
-## `angle_normalize` <Badge type="info" text="Since v1.0.0" />
+## `angle_normalize` <Badge type="info" text="v1.0.0" />
 
 Normalize an angle (degrees ×10000) to the range [0, 3600000).
 
@@ -287,7 +287,7 @@ let a: int = angle_normalize(-900000)  // result: 2700000 (270°)
 
 ---
 
-## `angle_diff` <Badge type="info" text="Since v1.0.0" />
+## `angle_diff` <Badge type="info" text="v1.0.0" />
 
 Compute the signed shortest angular difference between two angles (degrees ×10000).
 
@@ -312,7 +312,7 @@ let diff: int = angle_diff(3500000, 100000)  // ≈ -3400000 → wraps to short 
 
 ---
 
-## `mc_day_angle` <Badge type="info" text="Since v1.0.0" />
+## `mc_day_angle` <Badge type="info" text="v1.0.0" />
 
 Convert Minecraft daytime ticks to sun angle in degrees ×10000.
 
@@ -336,7 +336,7 @@ let sun: int = mc_day_angle(6000)  // noon → 1800000 (180°)
 
 ---
 
-## `in_cylinder` <Badge type="info" text="Since v1.0.0" />
+## `in_cylinder` <Badge type="info" text="v1.0.0" />
 
 Test whether a point is inside a vertical cylinder (XZ circle with Y bounds).
 
@@ -367,7 +367,7 @@ let hit: int = in_cylinder(100000, 640000, 100000, 0, 0, 80000, 600000, 800000)
 
 ---
 
-## `in_cone` <Badge type="info" text="Since v1.0.0" />
+## `in_cone` <Badge type="info" text="v1.0.0" />
 
 Test whether a point is inside an upright cone (axis along +Y or -Y from apex).
 
@@ -399,7 +399,7 @@ let hit: int = in_cone(px, py, pz, apex_x, apex_y, apex_z, 1, 10000, 50000)
 
 ---
 
-## `in_sector_2d` <Badge type="info" text="Since v1.0.0" />
+## `in_sector_2d` <Badge type="info" text="v1.0.0" />
 
 Test whether a 2D point is inside a sector (pie-slice) in the XZ plane.
 

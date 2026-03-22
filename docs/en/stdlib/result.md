@@ -14,7 +14,7 @@
 
 ---
 
-## `result_ok` <Badge type="info" text="Since v1.0.0" />
+## `result_ok` <Badge type="info" text="v1.0.0" />
 
 Construct a successful Result with the given value.
 
@@ -38,7 +38,7 @@ let r = result_ok(42)  // Ok result carrying 42
 
 ---
 
-## `result_err` <Badge type="info" text="Since v1.0.0" />
+## `result_err` <Badge type="info" text="v1.0.0" />
 
 Construct a failed Result with the given error code.
 
@@ -62,7 +62,7 @@ let r = result_err(-2)  // division-by-zero error
 
 ---
 
-## `result_is_ok` <Badge type="info" text="Since v1.0.0" />
+## `result_is_ok` <Badge type="info" text="v1.0.0" />
 
 Returns 1 if the Result is Ok, 0 otherwise.
 
@@ -96,7 +96,7 @@ fn result_is_err(r: Result): int
 
 ---
 
-## `result_value` <Badge type="info" text="Since v1.0.0" />
+## `result_value` <Badge type="info" text="v1.0.0" />
 
 Extract the value from an Ok result.
 Returns 0 if the Result is Err (check result_is_ok first).

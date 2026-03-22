@@ -10,7 +10,7 @@
 
 ---
 
-## `weapon_damage` <Badge type="info" text="Since v1.0.0" />
+## `weapon_damage` <Badge type="info" text="v1.0.0" />
 
 计算武器基础伤害加上加成的总伤害
 
@@ -35,7 +35,7 @@ let dmg: int = weapon_damage(10, 5)  // result: 15
 
 ---
 
-## `take_damage` <Badge type="info" text="Since v1.0.0" />
+## `take_damage` <Badge type="info" text="v1.0.0" />
 
 对生命值应用伤害，结果最低为 0
 
@@ -61,7 +61,7 @@ scoreboard_set(@p, #health, new_hp)
 
 ---
 
-## `is_dead` <Badge type="info" text="Since v1.0.0" />
+## `is_dead` <Badge type="info" text="v1.0.0" />
 
 判断实体是否已死亡（生命值 <= 0）
 

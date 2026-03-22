@@ -19,7 +19,7 @@
 
 ---
 
-## `speed` <Badge type="info" text="Since v1.0.0" />
+## `speed` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加速度提升效果
 
@@ -45,7 +45,7 @@ speed(@p, 200, 1)  // Speed II for 10 seconds
 
 ---
 
-## `jump` <Badge type="info" text="Since v1.0.0" />
+## `jump` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加跳跃提升效果
 
@@ -71,7 +71,7 @@ jump(@p, 100, 0)  // Jump Boost I for 5 seconds
 
 ---
 
-## `regen` <Badge type="info" text="Since v1.0.0" />
+## `regen` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加生命恢复效果
 
@@ -97,7 +97,7 @@ regen(@p, 60, 0)  // Regeneration I for 3 seconds
 
 ---
 
-## `resistance` <Badge type="info" text="Since v1.0.0" />
+## `resistance` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加伤害抵抗效果
 
@@ -123,7 +123,7 @@ resistance(@p, 400, 0)  // Resistance I for 20 seconds
 
 ---
 
-## `strength` <Badge type="info" text="Since v1.0.0" />
+## `strength` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加力量提升效果
 
@@ -149,7 +149,7 @@ strength(@p, 200, 1)  // Strength II for 10 seconds
 
 ---
 
-## `invisible` <Badge type="info" text="Since v1.0.0" />
+## `invisible` <Badge type="info" text="v1.0.0" />
 
 使目标实体隐身
 
@@ -174,7 +174,7 @@ invisible(@p, 300)  // invisibility for 15 seconds
 
 ---
 
-## `night_vision` <Badge type="info" text="Since v1.0.0" />
+## `night_vision` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加夜视效果
 
@@ -199,7 +199,7 @@ night_vision(@p, 6000)  // night vision for 5 minutes
 
 ---
 
-## `slow_fall` <Badge type="info" text="Since v1.0.0" />
+## `slow_fall` <Badge type="info" text="v1.0.0" />
 
 给目标实体施加缓降效果
 
@@ -224,7 +224,7 @@ slow_fall(@p, 200)  // slow falling for 10 seconds
 
 ---
 
-## `glow` <Badge type="info" text="Since v1.0.0" />
+## `glow` <Badge type="info" text="v1.0.0" />
 
 使目标实体发光轮廓
 
@@ -249,7 +249,7 @@ glow(@e[type=zombie], 100)  // make all zombies glow for 5 seconds
 
 ---
 
-## `clear_effects` <Badge type="info" text="Since v1.0.0" />
+## `clear_effects` <Badge type="info" text="v1.0.0" />
 
 清除目标实体的所有药水效果
 
@@ -273,7 +273,7 @@ clear_effects(@p)  // remove all effects from nearest player
 
 ---
 
-## `clear_effect` <Badge type="info" text="Since v1.0.0" />
+## `clear_effect` <Badge type="info" text="v1.0.0" />
 
 清除目标实体的特定效果
 
@@ -298,7 +298,7 @@ clear_effect(@p, "minecraft:poison")  // cure poison
 
 ---
 
-## `buff_all` <Badge type="info" text="Since v1.0.0" />
+## `buff_all` <Badge type="info" text="v1.0.0" />
 
 给目标施加完整增益套餐（速度 I、力量 I、生命恢复 I、抵抗 I）
 

@@ -13,7 +13,7 @@
 
 ---
 
-## `dialog_say` <Badge type="info" text="Since v1.0.0" />
+## `dialog_say` <Badge type="info" text="v1.0.0" />
 
 Sends a plain white chat message to a player or selector.
 
@@ -36,7 +36,7 @@ dialog_say(@p, "Quest updated")
 
 ---
 
-## `dialog_broadcast` <Badge type="info" text="Since v1.0.0" />
+## `dialog_broadcast` <Badge type="info" text="v1.0.0" />
 
 Broadcasts a plain white chat message to all players.
 
@@ -58,7 +58,7 @@ dialog_broadcast("Server restart in 60 seconds")
 
 ---
 
-## `dialog_say_color` <Badge type="info" text="Since v1.0.0" />
+## `dialog_say_color` <Badge type="info" text="v1.0.0" />
 
 Sends a colored chat message to a player or selector.
 
@@ -85,7 +85,7 @@ dialog_say_color(@s, "You died!", 1)
 
 ---
 
-## `dialog_title` <Badge type="info" text="Since v1.0.0" />
+## `dialog_title` <Badge type="info" text="v1.0.0" />
 
 Displays a title and subtitle on a player's screen.
 
@@ -109,7 +109,7 @@ dialog_title(@s, "Stage 2", "Defeat the boss")
 
 ---
 
-## `dialog_title_clear` <Badge type="info" text="Since v1.0.0" />
+## `dialog_title_clear` <Badge type="info" text="v1.0.0" />
 
 Clears any currently displayed title for the target selector.
 
@@ -131,7 +131,7 @@ dialog_title_clear(@s)
 
 ---
 
-## `dialog_actionbar` <Badge type="info" text="Since v1.0.0" />
+## `dialog_actionbar` <Badge type="info" text="v1.0.0" />
 
 Displays a short message in the player's actionbar.
 

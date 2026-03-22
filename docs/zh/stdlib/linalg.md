@@ -30,7 +30,7 @@
 
 ---
 
-## `vec2d_dot` <Badge type="info" text="Since v2.0.0" />
+## `vec2d_dot` <Badge type="info" text="v2.0.0" />
 
 两个二维向量的点积
 
@@ -57,7 +57,7 @@ let d: double = vec2d_dot(1.0d, 0.0d, 0.0d, 1.0d)
 
 ---
 
-## `vec2d_length` <Badge type="info" text="Since v2.0.0" />
+## `vec2d_length` <Badge type="info" text="v2.0.0" />
 
 二维向量的欧几里得长度
 
@@ -82,7 +82,7 @@ let len: double = vec2d_length(3.0d, 4.0d)
 
 ---
 
-## `vec2d_dist` <Badge type="info" text="Since v2.0.0" />
+## `vec2d_dist` <Badge type="info" text="v2.0.0" />
 
 两个二维点之间的欧几里得距离
 
@@ -109,7 +109,7 @@ let dist: double = vec2d_dist(0.0d, 0.0d, 3.0d, 4.0d)
 
 ---
 
-## `vec2d_normalize_x` <Badge type="info" text="Since v2.0.0" />
+## `vec2d_normalize_x` <Badge type="info" text="v2.0.0" />
 
 二维单位向量的 X 分量；零向量返回 0.0
 
@@ -134,7 +134,7 @@ let nx: double = vec2d_normalize_x(3.0d, 4.0d)
 
 ---
 
-## `vec2d_normalize_y` <Badge type="info" text="Since v2.0.0" />
+## `vec2d_normalize_y` <Badge type="info" text="v2.0.0" />
 
 二维单位向量的 Y 分量；零向量返回 0.0
 
@@ -159,7 +159,7 @@ let ny: double = vec2d_normalize_y(3.0d, 4.0d)
 
 ---
 
-## `vec3d_dot` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_dot` <Badge type="info" text="v2.0.0" />
 
 两个三维向量的点积
 
@@ -188,7 +188,7 @@ let d: double = vec3d_dot(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d)
 
 ---
 
-## `vec3d_length` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_length` <Badge type="info" text="v2.0.0" />
 
 三维向量的欧几里得长度
 
@@ -214,7 +214,7 @@ let len: double = vec3d_length(1.0d, 2.0d, 2.0d)
 
 ---
 
-## `vec3d_dist` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_dist` <Badge type="info" text="v2.0.0" />
 
 两个三维点之间的欧几里得距离
 
@@ -237,7 +237,7 @@ fn vec3d_dist(ax: double, ay: double, az: double, bx: double, by: double, bz: do
 
 ---
 
-## `vec3d_cross_x` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_cross_x` <Badge type="info" text="v2.0.0" />
 
 叉积 a × b 的 X 分量
 
@@ -256,7 +256,7 @@ fn vec3d_cross_x(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_cross_y` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_cross_y` <Badge type="info" text="v2.0.0" />
 
 叉积 a × b 的 Y 分量
 
@@ -275,7 +275,7 @@ fn vec3d_cross_y(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_cross_z` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_cross_z` <Badge type="info" text="v2.0.0" />
 
 叉积 a × b 的 Z 分量
 
@@ -294,7 +294,7 @@ fn vec3d_cross_z(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_normalize_x` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_normalize_x` <Badge type="info" text="v2.0.0" />
 
 三维单位向量的 X 分量；零向量返回 0.0
 
@@ -318,7 +318,7 @@ let nx: double = vec3d_normalize_x(3.0d, 4.0d, 0.0d)
 
 ---
 
-## `vec3d_normalize_y` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_normalize_y` <Badge type="info" text="v2.0.0" />
 
 三维单位向量的 Y 分量；零向量返回 0.0
 
@@ -336,7 +336,7 @@ fn vec3d_normalize_y(x: double, y: double, z: double): double
 
 ---
 
-## `vec3d_normalize_z` <Badge type="info" text="Since v2.0.0" />
+## `vec3d_normalize_z` <Badge type="info" text="v2.0.0" />
 
 三维单位向量的 Z 分量；零向量返回 0.0
 
@@ -354,7 +354,7 @@ fn vec3d_normalize_z(x: double, y: double, z: double): double
 
 ---
 
-## `mat2d_det` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_det` <Badge type="info" text="v2.0.0" />
 
 2×2 矩阵的行列式
 
@@ -379,7 +379,7 @@ let det: double = mat2d_det(1.0d, 2.0d, 3.0d, 4.0d)
 
 ---
 
-## `mat2d_mul_r0c0` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_mul_r0c0` <Badge type="info" text="v2.0.0" />
 
 两个 2×2 矩阵乘积 M0×M1 的元素 [0,0]
 
@@ -398,7 +398,7 @@ fn mat2d_mul_r0c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r0c1` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_mul_r0c1` <Badge type="info" text="v2.0.0" />
 
 两个 2×2 矩阵乘积 M0×M1 的元素 [0,1]
 
@@ -416,7 +416,7 @@ fn mat2d_mul_r0c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r1c0` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_mul_r1c0` <Badge type="info" text="v2.0.0" />
 
 两个 2×2 矩阵乘积 M0×M1 的元素 [1,0]
 
@@ -434,7 +434,7 @@ fn mat2d_mul_r1c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r1c1` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_mul_r1c1` <Badge type="info" text="v2.0.0" />
 
 两个 2×2 矩阵乘积 M0×M1 的元素 [1,1]
 
@@ -452,7 +452,7 @@ fn mat2d_mul_r1c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_vecmul_x` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_vecmul_x` <Badge type="info" text="v2.0.0" />
 
 2×2 矩阵与向量乘积 M×v 的 X 分量
 
@@ -471,7 +471,7 @@ fn mat2d_vecmul_x(a: double, b: double, c: double, d: double, vx: double, vy: do
 
 ---
 
-## `mat2d_vecmul_y` <Badge type="info" text="Since v2.0.0" />
+## `mat2d_vecmul_y` <Badge type="info" text="v2.0.0" />
 
 2×2 矩阵与向量乘积 M×v 的 Y 分量
 
@@ -490,7 +490,7 @@ fn mat2d_vecmul_y(a: double, b: double, c: double, d: double, vx: double, vy: do
 
 ---
 
-## `solve2d_x` <Badge type="info" text="Since v2.0.0" />
+## `solve2d_x` <Badge type="info" text="v2.0.0" />
 
 用 Cramer 法则求解 2×2 线性方程组的 x 分量
 
@@ -516,7 +516,7 @@ let x: double = solve2d_x(1.0d, 0.0d, 0.0d, 1.0d, 3.0d, 4.0d)
 
 ---
 
-## `solve2d_y` <Badge type="info" text="Since v2.0.0" />
+## `solve2d_y` <Badge type="info" text="v2.0.0" />
 
 用 Cramer 法则求解 2×2 线性方程组的 y 分量
 

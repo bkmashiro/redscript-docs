@@ -26,7 +26,7 @@
 
 ---
 
-## `ecs_registry_new` <Badge type="info" text="Since v2.0.0" />
+## `ecs_registry_new` <Badge type="info" text="v2.0.0" />
 
 分配一个全零的 16 槽组件注册表
 
@@ -44,7 +44,7 @@ let reg: int[] = ecs_registry_new()
 
 ---
 
-## `ecs_register` <Badge type="info" text="Since v2.0.0" />
+## `ecs_register` <Badge type="info" text="v2.0.0" />
 
 在注册表中标记 comp_id 为已注册，并返回更新后的注册表
 
@@ -69,7 +69,7 @@ reg = ecs_register(reg, ECS_COMP_HEALTH)
 
 ---
 
-## `ecs_is_registered` <Badge type="info" text="Since v2.0.0" />
+## `ecs_is_registered` <Badge type="info" text="v2.0.0" />
 
 检查 comp_id 是否已注册
 
@@ -94,7 +94,7 @@ if (ecs_is_registered(reg, ECS_COMP_HEALTH) == 1) { }
 
 ---
 
-## `ecs_health_init` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_init` <Badge type="info" text="v2.0.0" />
 
 创建血量为满血的 Health 组件状态
 
@@ -119,7 +119,7 @@ let hp: int[] = ecs_health_init(42, 100)
 
 ---
 
-## `ecs_health_get` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_get` <Badge type="info" text="v2.0.0" />
 
 从 Health 组件状态中返回当前 HP
 
@@ -143,7 +143,7 @@ let hp: int = ecs_health_get(state)
 
 ---
 
-## `ecs_health_max` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_max` <Badge type="info" text="v2.0.0" />
 
 从 Health 组件状态中返回最大 HP
 
@@ -167,7 +167,7 @@ let max: int = ecs_health_max(state)
 
 ---
 
-## `ecs_health_set` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_set` <Badge type="info" text="v2.0.0" />
 
 设置当前 HP（钳制到 [0, max]）并返回更新后的状态
 
@@ -192,7 +192,7 @@ state = ecs_health_set(state, 50)
 
 ---
 
-## `ecs_health_damage` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_damage` <Badge type="info" text="v2.0.0" />
 
 扣除 HP（钳制到 0）并返回更新后的状态
 
@@ -217,7 +217,7 @@ state = ecs_health_damage(state, 30)
 
 ---
 
-## `ecs_health_heal` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_heal` <Badge type="info" text="v2.0.0" />
 
 恢复 HP（钳制到最大值）并返回更新后的状态
 
@@ -242,7 +242,7 @@ state = ecs_health_heal(state, 20)
 
 ---
 
-## `ecs_health_is_dead` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_is_dead` <Badge type="info" text="v2.0.0" />
 
 判断实体 HP 是否归零
 
@@ -266,7 +266,7 @@ if (ecs_health_is_dead(state) == 1) { /* handle death */ }
 
 ---
 
-## `ecs_health_pct` <Badge type="info" text="Since v2.0.0" />
+## `ecs_health_pct` <Badge type="info" text="v2.0.0" />
 
 以 ×10000 定点数返回 HP 百分比（5000 = 50.00%）
 
@@ -290,7 +290,7 @@ let pct: int = ecs_health_pct(state)
 
 ---
 
-## `ecs_vel_init` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_init` <Badge type="info" text="v2.0.0" />
 
 创建具有给定初始速度的速度组件状态
 
@@ -316,7 +316,7 @@ let vel: int[] = ecs_vel_init(1000, 0, 500)
 
 ---
 
-## `ecs_vel_get_x` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_get_x` <Badge type="info" text="v2.0.0" />
 
 从速度组件状态中返回 X 速度
 
@@ -334,7 +334,7 @@ fn ecs_vel_get_x(state: int[]): int
 
 ---
 
-## `ecs_vel_get_y` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_get_y` <Badge type="info" text="v2.0.0" />
 
 从速度组件状态中返回 Y 速度
 
@@ -352,7 +352,7 @@ fn ecs_vel_get_y(state: int[]): int
 
 ---
 
-## `ecs_vel_get_z` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_get_z` <Badge type="info" text="v2.0.0" />
 
 从速度组件状态中返回 Z 速度
 
@@ -370,7 +370,7 @@ fn ecs_vel_get_z(state: int[]): int
 
 ---
 
-## `ecs_vel_set` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_set` <Badge type="info" text="v2.0.0" />
 
 设置所有速度分量并返回更新后的状态
 
@@ -397,7 +397,7 @@ state = ecs_vel_set(state, 500, 1200, 0)
 
 ---
 
-## `ecs_vel_speed` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_speed` <Badge type="info" text="v2.0.0" />
 
 返回速度向量的模（sqrt(vx²+vy²+vz²)）×1000
 
@@ -421,7 +421,7 @@ let speed: int = ecs_vel_speed(vel_state)
 
 ---
 
-## `ecs_vel_apply_gravity` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_apply_gravity` <Badge type="info" text="v2.0.0" />
 
 每 tick 将 Y 速度减去重力加速度
 
@@ -446,7 +446,7 @@ vel_state = ecs_vel_apply_gravity(vel_state, 980)
 
 ---
 
-## `ecs_vel_damp` <Badge type="info" text="Since v2.0.0" />
+## `ecs_vel_damp` <Badge type="info" text="v2.0.0" />
 
 对所有速度分量乘以阻力系数
 

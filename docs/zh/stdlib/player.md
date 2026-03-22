@@ -10,7 +10,7 @@
 
 ---
 
-## `heal` <Badge type="info" text="Since v1.0.0" />
+## `heal` <Badge type="info" text="v1.0.0" />
 
 通过给
 
@@ -34,7 +34,7 @@ heal(10)  // restore 10 HP to nearest player
 
 ---
 
-## `damage` <Badge type="info" text="Since v1.0.0" />
+## `damage` <Badge type="info" text="v1.0.0" />
 
 对最近的玩家造成伤害，生命值最低降至 0
 
@@ -58,7 +58,7 @@ damage(5)  // deal 5 damage to nearest player
 
 ---
 
-## `is_op` <Badge type="info" text="Since v1.0.0" />
+## `is_op` <Badge type="info" text="v1.0.0" />
 
 检查最近的玩家是否拥有 op 实体标签（管理员权限）
 

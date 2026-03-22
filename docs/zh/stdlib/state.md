@@ -12,7 +12,7 @@
 
 ---
 
-## `get_state` <Badge type="info" text="Since v1.0.0" />
+## `get_state` <Badge type="info" text="v1.0.0" />
 
 读取实体的当前状态值
 
@@ -36,7 +36,7 @@ let s: int = get_state(@s)
 
 ---
 
-## `set_state` <Badge type="info" text="Since v1.0.0" />
+## `set_state` <Badge type="info" text="v1.0.0" />
 
 将状态值写入实体
 
@@ -59,7 +59,7 @@ set_state(@s, 1)
 
 ---
 
-## `is_state` <Badge type="info" text="Since v1.0.0" />
+## `is_state` <Badge type="info" text="v1.0.0" />
 
 检查实体当前是否处于指定状态
 
@@ -84,7 +84,7 @@ if (is_state(@s, STATE_COMBAT) == 1) { /* per-tick combat logic */ }
 
 ---
 
-## `init_state` <Badge type="info" text="Since v1.0.0" />
+## `init_state` <Badge type="info" text="v1.0.0" />
 
 仅在实体未初始化时（得分为 -1）写入初始状态，避免覆盖进行中的状态
 
@@ -107,7 +107,7 @@ init_state(@s, STATE_IDLE)
 
 ---
 
-## `transition` <Badge type="info" text="Since v1.0.0" />
+## `transition` <Badge type="info" text="v1.0.0" />
 
 仅当实体处于 from 状态时执行受保护的状态转换
 

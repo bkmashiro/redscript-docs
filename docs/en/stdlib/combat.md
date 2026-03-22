@@ -10,7 +10,7 @@
 
 ---
 
-## `weapon_damage` <Badge type="info" text="Since v1.0.0" />
+## `weapon_damage` <Badge type="info" text="v1.0.0" />
 
 Calculate total weapon damage from a base value plus a bonus.
 
@@ -35,7 +35,7 @@ let dmg: int = weapon_damage(10, 5)  // result: 15
 
 ---
 
-## `take_damage` <Badge type="info" text="Since v1.0.0" />
+## `take_damage` <Badge type="info" text="v1.0.0" />
 
 Apply damage to a health value, clamping the result to a minimum of 0.
 
@@ -61,7 +61,7 @@ scoreboard_set(@p, #health, new_hp)
 
 ---
 
-## `is_dead` <Badge type="info" text="Since v1.0.0" />
+## `is_dead` <Badge type="info" text="v1.0.0" />
 
 Check whether an entity is dead (health at or below zero).
 

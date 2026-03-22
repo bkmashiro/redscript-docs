@@ -14,7 +14,7 @@
 
 ---
 
-## `task_schedule` <Badge type="info" text="Since v1.0.0" />
+## `task_schedule` <Badge type="info" text="v1.0.0" />
 
 Schedule slot `task_id` (0–7) to fire after `delay` ticks for player `p`.
 
@@ -38,7 +38,7 @@ task_schedule(@s, 0, 40)
 
 ---
 
-## `task_cancel` <Badge type="info" text="Since v1.0.0" />
+## `task_cancel` <Badge type="info" text="v1.0.0" />
 
 Cancel slot `task_id` for player `p` (zeroes the counter).
 
@@ -61,7 +61,7 @@ task_cancel(@s, 0)
 
 ---
 
-## `task_ready` <Badge type="info" text="Since v1.0.0" />
+## `task_ready` <Badge type="info" text="v1.0.0" />
 
 Returns `1` if slot `task_id` fired on this tick (counter reached 1), `0` otherwise.
 
@@ -88,7 +88,7 @@ if (task_ready(@s, 0) == 1) { /* handle event */ }
 
 ---
 
-## `gtask_schedule` <Badge type="info" text="Since v1.0.0" />
+## `gtask_schedule` <Badge type="info" text="v1.0.0" />
 
 Schedule global slot `task_id` (0–7) to fire after `delay` ticks.
 
@@ -114,7 +114,7 @@ gtask_schedule(0, 200)
 
 ---
 
-## `gtask_cancel` <Badge type="info" text="Since v1.0.0" />
+## `gtask_cancel` <Badge type="info" text="v1.0.0" />
 
 Cancel global slot `task_id` by zeroing its counter.
 
@@ -136,7 +136,7 @@ gtask_cancel(0)
 
 ---
 
-## `gtask_ready` <Badge type="info" text="Since v1.0.0" />
+## `gtask_ready` <Badge type="info" text="v1.0.0" />
 
 Returns `1` if global slot `task_id` fired this tick, `0` otherwise.
 
@@ -162,7 +162,7 @@ if (gtask_ready(0) == 1) { /* handle global event */ }
 
 ---
 
-## `scheduler_tick` <Badge type="info" text="Since v1.0.0" />
+## `scheduler_tick` <Badge type="info" text="v1.0.0" />
 
 Decrement all active per-player and global timers by 1 each tick.
 

@@ -17,7 +17,7 @@
 
 ---
 
-## `graph_is_valid_node` <Badge type="info" text="Since v1.0.0" />
+## `graph_is_valid_node` <Badge type="info" text="v1.0.0" />
 
 Check whether a node index is valid for this graph.
 
@@ -36,7 +36,7 @@ fn graph_is_valid_node(g: int[], node: int): int
 
 ---
 
-## `graph_new` <Badge type="info" text="Since v1.0.0" />
+## `graph_new` <Badge type="info" text="v1.0.0" />
 
 创建含 n 个节点、最多 256 条有向边的新空图
 
@@ -60,7 +60,7 @@ let g: int[] = graph_new(5)  // graph with 5 nodes, no edges
 
 ---
 
-## `graph_add_edge` <Badge type="info" text="Since v1.0.0" />
+## `graph_add_edge` <Badge type="info" text="v1.0.0" />
 
 向图中添加一条有向加权边
 
@@ -87,7 +87,7 @@ g = graph_add_edge(g, 0, 1, 5)  // edge from 0 to 1 with weight 5
 
 ---
 
-## `graph_add_undirected` <Badge type="info" text="Since v1.0.0" />
+## `graph_add_undirected` <Badge type="info" text="v1.0.0" />
 
 添加无向加权边（同时添加 a→b 和 b→a 两条有向边）
 
@@ -114,7 +114,7 @@ g = graph_add_undirected(g, 2, 3, 2)  // bidirectional edge between 2 and 3
 
 ---
 
-## `graph_node_count` <Badge type="info" text="Since v1.0.0" />
+## `graph_node_count` <Badge type="info" text="v1.0.0" />
 
 Return the number of nodes in the graph.
 
@@ -132,7 +132,7 @@ fn graph_node_count(g: int[]): int
 
 ---
 
-## `graph_edge_count` <Badge type="info" text="Since v1.0.0" />
+## `graph_edge_count` <Badge type="info" text="v1.0.0" />
 
 Return the number of directed edges in the graph.
 
@@ -150,7 +150,7 @@ fn graph_edge_count(g: int[]): int
 
 ---
 
-## `graph_bfs` <Badge type="info" text="Since v1.0.0" />
+## `graph_bfs` <Badge type="info" text="v1.0.0" />
 
 从起始节点广度优先搜索，返回访问顺序
 
@@ -177,7 +177,7 @@ let order: int[] = graph_bfs(g, 0, vis)
 
 ---
 
-## `graph_dfs` <Badge type="info" text="Since v1.0.0" />
+## `graph_dfs` <Badge type="info" text="v1.0.0" />
 
 从起始节点深度优先搜索，返回访问顺序（迭代实现，基于栈）
 
@@ -204,7 +204,7 @@ let order: int[] = graph_dfs(g, 0, vis)
 
 ---
 
-## `graph_has_path` <Badge type="info" text="Since v1.0.0" />
+## `graph_has_path` <Badge type="info" text="v1.0.0" />
 
 使用 BFS 检测两节点之间是否存在有向路径
 
@@ -230,7 +230,7 @@ let reachable: int = graph_has_path(g, 0, 3)
 
 ---
 
-## `graph_shortest_path` <Badge type="info" text="Since v1.0.0" />
+## `graph_shortest_path` <Badge type="info" text="v1.0.0" />
 
 使用 Dijkstra 算法计算从源节点到所有节点的最短加权路径
 

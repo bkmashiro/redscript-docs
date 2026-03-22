@@ -15,7 +15,7 @@
 
 ---
 
-## `next_lcg` <Badge type="info" text="Since v1.0.0" />
+## `next_lcg` <Badge type="info" text="v1.0.0" />
 
 Advance the LCG state by one step, returning the next pseudo-random int32.
 The returned value is also the new seed for the next call.
@@ -42,7 +42,7 @@ seed = next_lcg(seed)  // advance two steps
 
 ---
 
-## `random_range` <Badge type="info" text="Since v1.0.0" />
+## `random_range` <Badge type="info" text="v1.0.0" />
 
 Generate a pseudo-random integer in the range [lo, hi).
 
@@ -69,7 +69,7 @@ let roll: int = random_range(seed, 1, 7)  // dice roll: 1-6
 
 ---
 
-## `random_bool` <Badge type="info" text="Since v1.0.0" />
+## `random_bool` <Badge type="info" text="v1.0.0" />
 
 Generate a pseudo-random boolean (0 or 1) with equal probability.
 
@@ -94,7 +94,7 @@ let coin: int = random_bool(seed)  // 0 or 1
 
 ---
 
-## `pcg_next_lo` <Badge type="info" text="Since v1.0.0" />
+## `pcg_next_lo` <Badge type="info" text="v1.0.0" />
 
 Advance the PCG low-word state by one step.
 Call together with pcg_next_hi; use pcg_output to extract the random value.
@@ -119,7 +119,7 @@ let lo: int = pcg_next_lo(state_lo)
 
 ---
 
-## `pcg_next_hi` <Badge type="info" text="Since v1.0.0" />
+## `pcg_next_hi` <Badge type="info" text="v1.0.0" />
 
 Advance the PCG high-word state by one step.
 
@@ -144,7 +144,7 @@ let hi: int = pcg_next_hi(state_hi, state_lo)
 
 ---
 
-## `pcg_output` <Badge type="info" text="Since v1.0.0" />
+## `pcg_output` <Badge type="info" text="v1.0.0" />
 
 Extract an output value from the PCG low word using XSH-RR permutation.
 
@@ -168,7 +168,7 @@ let rng: int = pcg_output(state_lo)
 
 ---
 
-## `binomial_sample` <Badge type="info" text="Since v1.0.0" />
+## `binomial_sample` <Badge type="info" text="v1.0.0" />
 
 Simulate n Bernoulli trials and count the number of successes (binomial distribution).
 
@@ -194,7 +194,7 @@ let hits: int = binomial_sample(10, 5000, 99999)  // ~5 successes on average
 
 ---
 
-## `hypergeometric_sample` <Badge type="info" text="Since v1.0.0" />
+## `hypergeometric_sample` <Badge type="info" text="v1.0.0" />
 
 Draw `draws` items without replacement from a population and count successes (hypergeometric distribution).
 
