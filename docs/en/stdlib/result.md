@@ -1,100 +1,151 @@
-# `result` — Result type for fallible operations
+# Result
 
-Import: `import "stdlib/result.mcrs"`
-
-An enum-based `Result` helper for datapack code that may fail. A value is either `Ok(value)` for success or `Err(code)` for failure, where `code` is an integer error code chosen by the caller.
-
-## Enum
-
-### `Result`
-
-```rs
-enum Result {
-  Ok(value: int),
-  Err(code: int),
-}
-```
-
-Conventionally, negative integers are used for error codes:
-
-- `-1` — generic error
-- `-2` — division by zero
-- `-3` — not found
+> Auto-generated from `src/stdlib/result.mcrs` — do not edit manually.
 
 ## Functions
 
-### `result_ok(value: int): Result`
+- [result_ok](#result-ok)
+- [result_err](#result-err)
+- [result_is_ok](#result-is-ok)
+- [result_is_err](#result-is-err)
+- [result_value](#result-value)
+- [result_code](#result-code)
+- [result_divide](#result-divide)
 
-Construct a successful result.
+---
 
-**Example:**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_ok(42);
+## `result_ok`
+
+**Since:** 1.0.0
+
+Construct a successful Result with the given value.
+
+```redscript
+fn result_ok(value: int): Result
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `value` | The success value (any integer) |
+
+**Returns:** Result::Ok(value)
+
+**Example**
+
+```redscript
+let r = result_ok(42)  // Ok result carrying 42
 ```
 
 ---
 
-### `result_err(code: int): Result`
+## `result_err`
 
-Construct a failed result with the given error code.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_err(-1);
+Construct a failed Result with the given error code.
+
+```redscript
+fn result_err(code: int): Result
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `code` | Error code (use negative by convention: -1 generic, -2 div/zero) |
+
+**Returns:** Result::Err(code)
+
+**Example**
+
+```redscript
+let r = result_err(-2)  // division-by-zero error
 ```
 
 ---
 
-### `result_is_ok(r: Result): int`
+## `result_is_ok`
 
-Return `1` if `r` is `Ok`, otherwise `0`.
+**Since:** 1.0.0
 
----
+Returns 1 if the Result is Ok, 0 otherwise.
 
-### `result_is_err(r: Result): int`
+```redscript
+fn result_is_ok(r: Result): int
+```
 
-Return `1` if `r` is `Err`, otherwise `0`.
+**Parameters**
 
----
+| Parameter | Description |
+|-----------|-------------|
+| `r` | The Result to test |
 
-### `result_value(r: Result): int`
+**Returns:** 1 if Ok, 0 if Err
 
-Extract the success value from `Ok(value)`. Returns `0` if `r` is an error, so check `result_is_ok()` first when `0` is a meaningful success value.
+**Example**
 
-**Example:**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_ok(42);
-if (result_is_ok(r) == 1) {
-    let value: int = result_value(r);  // 42
-}
+```redscript
+let ok = result_is_ok(result_ok(5))  // result: 1
 ```
 
 ---
 
-### `result_code(r: Result): int`
+## `result_is_err`
 
-Extract the error code from `Err(code)`. Returns `0` if `r` is successful, so check `result_is_err()` first when `0` could be ambiguous.
+Returns 1 if the Result is Err, 0 otherwise.
+
+```redscript
+fn result_is_err(r: Result): int
+```
 
 ---
 
-### `result_divide(a: int, b: int): Result`
+## `result_value`
 
-Example helper for fallible arithmetic. Returns `Err(-2)` when `b == 0`, otherwise `Ok(a / b)`.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/result.mcrs";
+Extract the value from an Ok result.
+Returns 0 if the Result is Err (check result_is_ok first).
 
-let r: Result = result_divide(10, 2);
-if (result_is_ok(r) == 1) {
-    let q: int = result_value(r);  // 5
-}
+```redscript
+fn result_value(r: Result): int
 ```
 
-## Notes
+**Parameters**
 
-- This module currently uses `int` payloads only; it is a lightweight tagged union, not a fully generic algebraic data type.
-- Returning `0` from `result_value()` / `result_code()` on the opposite branch is a convenience fallback, not proof of success or failure.
+| Parameter | Description |
+|-----------|-------------|
+| `r` | The Result to unwrap |
+
+**Returns:** The Ok value, or 0 if Err
+
+**Example**
+
+```redscript
+let v = result_value(result_ok(99))  // result: 99
+```
+
+---
+
+## `result_code`
+
+Extract the error code from an Err result.
+Returns 0 if the Result is Ok (check result_is_err first).
+
+```redscript
+fn result_code(r: Result): int
+```
+
+---
+
+## `result_divide`
+
+Divide a by b; returns Err(-2) on division by zero.
+
+```redscript
+fn result_divide(a: int, b: int): Result
+```
+
+---

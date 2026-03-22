@@ -1,193 +1,170 @@
-# `vec` — 2D and 3D vectors
+# Vec
 
-Import: `import vec;`
+> 本文档由 `src/stdlib/vec.mcrs` 自动生成，请勿手动编辑。
 
-2D and 3D vector math with fixed-point scale=1000 (same as `math`). A unit vector has components in `[-1000, 1000]`. Provides dot product, cross product, Euclidean/Manhattan/Chebyshev distance, normalisation, linear interpolation, 2D rotation, `atan2` lookup, and 3D component-wise arithmetic. Requires `math` for `abs`, `sqrt_fixed`, `sin_fixed`, `cos_fixed`, `lerp`, `mulfix`.
+## 函数列表
 
-## Functions
-
-### `dot2d(ax: int, ay: int, bx: int, by: int): int`
-
-2D dot product of integer vectors. `dot2d(3, 4, 3, 4)` → 25.
-
----
-
-### `cross2d(ax: int, ay: int, bx: int, by: int): int`
-
-Z-component of the 3D cross product: `ax×by − ay×bx`. Positive means b is counter-clockwise from a.
+- [dot2d](#dot2d)
+- [length2d_fixed](#length2d-fixed)
+- [dot3d](#dot3d)
+- [cross3d_x](#cross3d-x)
+- [cross3d_y](#cross3d-y)
+- [cross3d_z](#cross3d-z)
 
 ---
 
-### `length2d_fixed(x: int, y: int): int`
+## `dot2d`
 
-Euclidean length ×1000. `length2d_fixed(3, 4)` → 5000. Input components safe up to ~1000.
+**版本：** 1.0.0
 
----
+两个二维整数向量的点积
 
-### `distance2d_fixed(x1: int, y1: int, x2: int, y2: int): int`
+```redscript
+fn dot2d(ax: int, ay: int, bx: int, by: int) -> int
+```
 
-Euclidean distance between two points ×1000. `distance2d_fixed(0, 0, 3, 4)` → 5000.
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `ax` | 向量 A 的 X 分量 |
+| `ay` | 向量 A 的 Y 分量 |
+| `bx` | 向量 B 的 X 分量 |
+| `by` | 向量 B 的 Y 分量 |
 
-### `manhattan(x1: int, y1: int, x2: int, y2: int): int`
+**返回：** ax*bx + ay*by
 
-Manhattan (taxicab) distance: `|dx| + |dy|`.
+**示例**
 
----
-
-### `chebyshev(x1: int, y1: int, x2: int, y2: int): int`
-
-Chebyshev (chess-king) distance: `max(|dx|, |dy|)`.
-
----
-
-### `normalize2d_x(x: int, y: int): int`
-
-X component of unit vector ×1000. Returns 0 for zero vector.
-
-**Example:**
-```rs
-import vec;
-let ux: int = normalize2d_x(3, 4);  // 600  (3/5 × 1000)
+```redscript
+let d = dot2d(3, 4, 3, 4)  // result: 25
 ```
 
 ---
 
-### `normalize2d_y(x: int, y: int): int`
+## `length2d_fixed`
 
-Y component of unit vector ×1000. `normalize2d_y(3, 4)` → 800.
+**版本：** 1.0.0
 
----
+二维向量的欧几里得长度，结果 ×1000 定点数
 
-### `lerp2d_x(ax: int, ay: int, bx: int, by: int, t: int): int`
+```redscript
+fn length2d_fixed(x: int, y: int) -> int
+```
 
-X component of linear interpolation between vectors a and b. `t ∈ [0, 1000]`.
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `x` | X 分量（保持 |x|, |y| ≤ ~1000 以避免溢出） |
+| `y` | Y 分量 |
 
-### `lerp2d_y(ax: int, ay: int, bx: int, by: int, t: int): int`
+**返回：** sqrt(x²+y²) × 1000
 
-Y component of linear interpolation. `lerp2d_y(0, 0, 100, 200, 500)` → 100.
+**示例**
 
----
-
-### `atan2_fixed(y: int, x: int): int`
-
-> **Cost:** O(log 46) — binary search on 46-entry tan table  
-> **Requires:** `math:tables` NBT storage must be pre-loaded (auto-loaded via `@require_on_load(_atan_init)`)
-
-Angle of vector `(y, x)` in integer degrees `[0, 359]`. Inputs clamped to ≤46340 to avoid overflow.
-
-**Example:**
-```rs
-import vec;
-let angle: int = atan2_fixed(1, 1);  // 45
+```redscript
+let l = length2d_fixed(3, 4)  // result: 5000
 ```
 
 ---
 
-### `rotate2d_x(x: int, y: int, deg: int): int`
+## `dot3d`
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+**版本：** 1.0.0
 
-X component after 2D rotation by `deg` degrees (integer degrees, not ×10000). `rotate2d_x(1000, 0, 90)` → 0.
+两个三维整数向量的点积
 
----
-
-### `rotate2d_y(x: int, y: int, deg: int): int`
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
-Y component after 2D rotation. `rotate2d_y(1000, 0, 90)` → 1000.
-
----
-
-### `dot3d(ax: int, ay: int, az: int, bx: int, by: int, bz: int): int`
-
-3D dot product.
-
----
-
-### `cross3d_x(ax: int, ay: int, az: int, bx: int, by: int, bz: int): int`
-
-X component of 3D cross product: `ay×bz − az×by`.
-
----
-
-### `cross3d_y(ax: int, ay: int, az: int, bx: int, by: int, bz: int): int`
-
-Y component of 3D cross product: `az×bx − ax×bz`.
-
----
-
-### `cross3d_z(ax: int, ay: int, az: int, bx: int, by: int, bz: int): int`
-
-Z component of 3D cross product: `ax×by − ay×bx`.
-
----
-
-### `length3d_fixed(x: int, y: int, z: int): int`
-
-Euclidean length ×1000. `length3d_fixed(1, 1, 1)` → 1732. Input components safe up to ~800.
-
----
-
-### `distance3d_fixed(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int): int`
-
-3D Euclidean distance ×1000.
-
----
-
-### `manhattan3d(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int): int`
-
-3D Manhattan distance.
-
----
-
-### `chebyshev3d(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int): int`
-
-3D Chebyshev distance.
-
----
-
-### 2D arithmetic helpers
-
-| Function | Description |
-|:--|:--|
-| `add2d_x(ax, bx)` | ax + bx |
-| `add2d_y(ay, by)` | ay + by |
-| `sub2d_x(ax, bx)` | ax - bx |
-| `sub2d_y(ay, by)` | ay - by |
-| `scale2d_x(x, s)` | x × s / 1000 |
-| `scale2d_y(y, s)` | y × s / 1000 |
-| `neg2d_x(x)` | -x |
-| `neg2d_y(y)` | -y |
-
----
-
-### 3D arithmetic helpers
-
-| Function | Description |
-|:--|:--|
-| `add3d_x(ax, bx)` | ax + bx |
-| `add3d_y(ay, by)` | ay + by |
-| `add3d_z(az, bz)` | az + bz |
-| `sub3d_x(ax, bx)` | ax - bx |
-| `sub3d_y(ay, by)` | ay - by |
-| `sub3d_z(az, bz)` | az - bz |
-| `scale3d_x(x, s)` | x × s / 1000 |
-| `scale3d_y(y, s)` | y × s / 1000 |
-| `scale3d_z(z, s)` | z × s / 1000 |
-| `neg3d_x(x)` | -x |
-| `neg3d_y(y)` | -y |
-| `neg3d_z(z)` | -z |
-
-**Example:**
-```rs
-import vec;
-// Normalize a 2D direction and scale to speed 300
-let dx: int = 3; let dy: int = 4;
-let vx: int = scale2d_x(normalize2d_x(dx, dy), 300);  // 180
-let vy: int = scale2d_y(normalize2d_y(dx, dy), 300);  // 240
+```redscript
+fn dot3d(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ax` | 向量 A 的 X 分量 |
+| `ay` | 向量 A 的 Y 分量 |
+| `az` | 向量 A 的 Z 分量 |
+| `bx` | 向量 B 的 X 分量 |
+| `by` | 向量 B 的 Y 分量 |
+| `bz` | 向量 B 的 Z 分量 |
+
+**返回：** ax*bx + ay*by + az*bz
+
+**示例**
+
+```redscript
+let d = dot3d(1, 0, 0, 1, 0, 0)  // result: 1
+```
+
+---
+
+## `cross3d_x`
+
+**版本：** 1.0.0
+
+叉积 A×B 的 X 分量（ay*bz - az*by）
+
+```redscript
+fn cross3d_x(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ax` | A 的 X 分量 |
+| `bx` | B 的 X 分量 |
+
+**返回：** ay*bz - az*by
+
+---
+
+## `cross3d_y`
+
+**版本：** 1.0.0
+
+叉积 A×B 的 Y 分量（az*bx - ax*bz）
+
+```redscript
+fn cross3d_y(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ax` | A 的 X 分量 |
+| `bx` | B 的 X 分量 |
+
+**返回：** az*bx - ax*bz
+
+---
+
+## `cross3d_z`
+
+**版本：** 1.0.0
+
+叉积 A×B 的 Z 分量（ax*by - ay*bx）
+
+```redscript
+fn cross3d_z(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ax` | A 的 X 分量 |
+| `bx` | B 的 X 分量 |
+
+**返回：** ax*by - ay*bx
+
+**示例**
+
+```redscript
+let z = cross3d_z(1, 0, 0, 0, 1, 0)  // result: 1
+```
+
+---

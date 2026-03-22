@@ -1,100 +1,155 @@
-# `result` — 可失败操作的 Result 类型
+# Result
 
-导入：`import "stdlib/result.mcrs"`
+> 本文档由 `src/stdlib/result.mcrs` 自动生成，请勿手动编辑。
 
-为可能失败的 datapack 代码提供基于枚举的 `Result` 辅助类型。一个值要么是表示成功的 `Ok(value)`，要么是表示失败的 `Err(code)`，其中 `code` 为调用方自定义的整数错误码。
+## 函数列表
 
-## 枚举
-
-### `Result`
-
-```rs
-enum Result {
-  Ok(value: int),
-  Err(code: int),
-}
-```
-
-通常约定使用负整数作为错误码：
-
-- `-1` — 通用错误
-- `-2` — 除零
-- `-3` — 未找到
-
-## 函数
-
-### `result_ok(value: int): Result`
-
-构造一个成功结果。
-
-**示例：**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_ok(42);
-```
+- [result_ok](#result-ok)
+- [result_err](#result-err)
+- [result_is_ok](#result-is-ok)
+- [result_is_err](#result-is-err)
+- [result_value](#result-value)
+- [result_code](#result-code)
+- [result_divide](#result-divide)
 
 ---
 
-### `result_err(code: int): Result`
+## `result_ok`
 
-使用给定错误码构造一个失败结果。
+**版本：** 1.0.0
 
-**示例：**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_err(-1);
+构造一个携带成功值的 Result
+
+```redscript
+fn result_ok(value: int): Result
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `value` | 成功值（任意整数） |
+
+**返回：** Result::Ok(value)
+
+**示例**
+
+```redscript
+let r = result_ok(42)  // Ok result carrying 42
 ```
 
 ---
 
-### `result_is_ok(r: Result): int`
+## `result_err`
 
-若 `r` 为 `Ok` 则返回 `1`，否则返回 `0`。
+**版本：** 1.0.0
 
----
+构造一个携带错误码的 Result
 
-### `result_is_err(r: Result): int`
+```redscript
+fn result_err(code: int): Result
+```
 
-若 `r` 为 `Err` 则返回 `1`，否则返回 `0`。
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `code` | 错误码（按惯例使用负数：-1 通用错误，-2 除零） |
 
-### `result_value(r: Result): int`
+**返回：** Result::Err(code)
 
-从 `Ok(value)` 中提取成功值。若 `r` 是错误则返回 `0`，因此当 `0` 也是合法成功值时，应先检查 `result_is_ok()`。
+**示例**
 
-**示例：**
-```rs
-import "stdlib/result.mcrs";
-let r: Result = result_ok(42);
-if (result_is_ok(r) == 1) {
-    let value: int = result_value(r);  // 42
-}
+```redscript
+let r = result_err(-2)  // division-by-zero error
 ```
 
 ---
 
-### `result_code(r: Result): int`
+## `result_is_ok`
 
-从 `Err(code)` 中提取错误码。若 `r` 是成功结果则返回 `0`，因此当 `0` 可能引起歧义时，应先检查 `result_is_err()`。
+**版本：** 1.0.0
+
+判断 Result 是否为 Ok
+
+```redscript
+fn result_is_ok(r: Result): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `r` | 要检测的 Result |
+
+**返回：** Ok 返回 1，Err 返回 0
+
+**示例**
+
+```redscript
+let ok = result_is_ok(result_ok(5))  // result: 1
+```
 
 ---
 
-### `result_divide(a: int, b: int): Result`
+## `result_is_err`
 
-一个可失败算术操作示例。若 `b == 0` 返回 `Err(-2)`，否则返回 `Ok(a / b)`。
+判断 Result 是否为 Err
 
-**示例：**
-```rs
-import "stdlib/result.mcrs";
-
-let r: Result = result_divide(10, 2);
-if (result_is_ok(r) == 1) {
-    let q: int = result_value(r);  // 5
-}
+```redscript
+fn result_is_err(r: Result): int
 ```
 
-## 说明
+**返回：** Err 返回 1，Ok 返回 0
 
-- 当前模块的载荷仅使用 `int`；它是轻量级标记联合，不是完全泛型的代数数据类型。
-- `result_value()` / `result_code()` 在另一分支返回 `0` 只是便利用法，不能单独作为成功或失败的判定依据。
+---
+
+## `result_value`
+
+**版本：** 1.0.0
+
+从 Ok 结果中提取值（Err 时返回 0，请先调用 result_is_ok 检查）
+
+```redscript
+fn result_value(r: Result): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `r` | 要解包的 Result |
+
+**返回：** Ok 的值，或 0（Err 时）
+
+**示例**
+
+```redscript
+let v = result_value(result_ok(99))  // result: 99
+```
+
+---
+
+## `result_code`
+
+从 Err 结果中提取错误码（Ok 时返回 0）
+
+```redscript
+fn result_code(r: Result): int
+```
+
+**返回：** Err 的错误码，或 0（Ok 时）
+
+---
+
+## `result_divide`
+
+带安全检查的整数除法，除数为零时返回 Err(-2)
+
+```redscript
+fn result_divide(a: int, b: int): Result
+```
+
+**返回：** Ok(a/b) 或 Err(-2)（b == 0 时）
+
+---
