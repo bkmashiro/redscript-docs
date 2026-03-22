@@ -20,9 +20,7 @@
 
 ---
 
-## `ode_mul_fx`
-
-**Since:** 2.0.0
+## `ode_mul_fx` <Badge type="info" text="Since v2.0.0" />
 
 Fixed-point multiplication: `a_fx * b_fx / 10000`.
 
@@ -41,9 +39,7 @@ fn ode_mul_fx(a_fx: int, b_fx: int): int
 
 ---
 
-## `ode_weighted_increment`
-
-**Since:** 2.0.0
+## `ode_weighted_increment` <Badge type="info" text="Since v2.0.0" />
 
 Compute the RK4 weighted increment: `h * (k1 + 2k2 + 2k3 + k4) / 6`.
 
@@ -64,9 +60,7 @@ fn ode_weighted_increment(h_fx: int, deriv_sum_fx: int): int
 
 ---
 
-## `ode_reset`
-
-**Since:** 2.0.0
+## `ode_reset` <Badge type="info" text="Since v2.0.0" />
 
 Initialise the ODE module state in `storage rs:ode`.
 
@@ -93,9 +87,7 @@ ode_reset(1, 0, 10000, 0, 10000, 0)
 
 ---
 
-## `ode_get_system`
-
-**Since:** 2.0.0
+## `ode_get_system` <Badge type="info" text="Since v2.0.0" />
 
 Return the current system ID from ODE state.
 
@@ -107,9 +99,7 @@ fn ode_get_system(): int
 
 ---
 
-## `ode_get_t`
-
-**Since:** 2.0.0
+## `ode_get_t` <Badge type="info" text="Since v2.0.0" />
 
 Return the current time `t` from ODE state (×10000).
 
@@ -121,9 +111,7 @@ fn ode_get_t(): int
 
 ---
 
-## `ode_get_y`
-
-**Since:** 2.0.0
+## `ode_get_y` <Badge type="info" text="Since v2.0.0" />
 
 Return the current primary variable `y` from ODE state (×10000).
 
@@ -135,9 +123,7 @@ fn ode_get_y(): int
 
 ---
 
-## `ode_get_y2`
-
-**Since:** 2.0.0
+## `ode_get_y2` <Badge type="info" text="Since v2.0.0" />
 
 Return the current secondary variable `y'` from ODE state (×10000).
 
@@ -149,9 +135,7 @@ fn ode_get_y2(): int
 
 ---
 
-## `ode_get_k`
-
-**Since:** 2.0.0
+## `ode_get_k` <Badge type="info" text="Since v2.0.0" />
 
 Return the rate constant `k` from ODE state (×10000).
 
@@ -163,9 +147,7 @@ fn ode_get_k(): int
 
 ---
 
-## `ode_get_extra`
-
-**Since:** 2.0.0
+## `ode_get_extra` <Badge type="info" text="Since v2.0.0" />
 
 Return the extra parameter from ODE state (×10000).
 
@@ -177,9 +159,7 @@ fn ode_get_extra(): int
 
 ---
 
-## `ode_get_steps`
-
-**Since:** 2.0.0
+## `ode_get_steps` <Badge type="info" text="Since v2.0.0" />
 
 Return the number of steps taken so far.
 
@@ -191,9 +171,7 @@ fn ode_get_steps(): int
 
 ---
 
-## `ode_step`
-
-**Since:** 2.0.0
+## `ode_step` <Badge type="info" text="Since v2.0.0" />
 
 Advance the ODE state by one RK4 step of size `h_fx`.
 
@@ -212,9 +190,7 @@ fn ode_step(h_fx: int)
 
 ---
 
-## `ode_run`
-
-**Since:** 2.0.0
+## `ode_run` <Badge type="info" text="Since v2.0.0" />
 
 Run `steps` RK4 steps of a scalar ODE system and store results in module state.
 
@@ -245,9 +221,7 @@ let y: int = ode_get_y()
 
 ---
 
-## `ode_run2`
-
-**Since:** 2.0.0
+## `ode_run2` <Badge type="info" text="Since v2.0.0" />
 
 Run `steps` RK4 steps of a 2D ODE system (e.g. harmonic oscillator).
 

@@ -20,9 +20,7 @@
 
 ---
 
-## `rgb_pack`
-
-**Since:** 1.0.0
+## `rgb_pack` <Badge type="info" text="Since v1.0.0" />
 
 Pack RGB components into a single integer (0xRRGGBB format).
 
@@ -48,9 +46,7 @@ let red: int = rgb_pack(255, 0, 0)  // result: 16711680 (0xFF0000)
 
 ---
 
-## `rgb_r`
-
-**Since:** 1.0.0
+## `rgb_r` <Badge type="info" text="Since v1.0.0" />
 
 Extract the red component from a packed RGB integer.
 
@@ -74,9 +70,7 @@ let r: int = rgb_r(16711680)  // result: 255
 
 ---
 
-## `rgb_g`
-
-**Since:** 1.0.0
+## `rgb_g` <Badge type="info" text="Since v1.0.0" />
 
 Extract the green component from a packed RGB integer.
 
@@ -100,9 +94,7 @@ let g: int = rgb_g(65280)  // result: 255 (0x00FF00)
 
 ---
 
-## `rgb_b`
-
-**Since:** 1.0.0
+## `rgb_b` <Badge type="info" text="Since v1.0.0" />
 
 Extract the blue component from a packed RGB integer.
 
@@ -126,9 +118,7 @@ let b: int = rgb_b(255)  // result: 255 (0x0000FF)
 
 ---
 
-## `rgb_lerp`
-
-**Since:** 1.0.0
+## `rgb_lerp` <Badge type="info" text="Since v1.0.0" />
 
 Linear interpolation between two packed RGB colors.
 
@@ -154,9 +144,7 @@ let mid: int = rgb_lerp(0xFF0000, 0x0000FF, 500)  // halfway between red and blu
 
 ---
 
-## `rgb_to_l`
-
-**Since:** 1.0.0
+## `rgb_to_l` <Badge type="info" text="Since v1.0.0" />
 
 Compute the HSL lightness from RGB components (×10000 scale).
 
@@ -182,9 +170,7 @@ let l: int = rgb_to_l(2550000, 2550000, 2550000)  // result: 10000 (white)
 
 ---
 
-## `rgb_to_s`
-
-**Since:** 1.0.0
+## `rgb_to_s` <Badge type="info" text="Since v1.0.0" />
 
 Compute the HSL saturation from RGB components (×10000 scale).
 
@@ -210,9 +196,7 @@ let s: int = rgb_to_s(2550000, 0, 0)  // result: 10000 (pure red is fully satura
 
 ---
 
-## `rgb_to_h`
-
-**Since:** 1.0.0
+## `rgb_to_h` <Badge type="info" text="Since v1.0.0" />
 
 Compute the HSL hue from RGB components (×10000 scale).
 
@@ -238,9 +222,7 @@ let h: int = rgb_to_h(0, 2550000, 0)  // result: 1200000 (120°, pure green)
 
 ---
 
-## `hsl_to_r`
-
-**Since:** 1.0.0
+## `hsl_to_r` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the red channel of RGB (×10000 scale).
 
@@ -266,9 +248,7 @@ let r: int = hsl_to_r(0, 10000, 5000)  // pure red → 2550000
 
 ---
 
-## `hsl_to_g`
-
-**Since:** 1.0.0
+## `hsl_to_g` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the green channel of RGB (×10000 scale).
 
@@ -294,9 +274,7 @@ let g: int = hsl_to_g(1200000, 10000, 5000)  // pure green → 2550000
 
 ---
 
-## `hsl_to_b`
-
-**Since:** 1.0.0
+## `hsl_to_b` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the blue channel of RGB (×10000 scale).
 
@@ -322,9 +300,7 @@ let b: int = hsl_to_b(2400000, 10000, 5000)  // pure blue → 2550000
 
 ---
 
-## `hsl_to_packed`
-
-**Since:** 1.0.0
+## `hsl_to_packed` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL (×10000 scale) to a packed RGB integer (0xRRGGBB).
 
@@ -350,9 +326,7 @@ let col: int = hsl_to_packed(0, 10000, 5000)  // pure red → 0xFF0000
 
 ---
 
-## `rgb_to_hex`
-
-**Since:** 1.0.0
+## `rgb_to_hex` <Badge type="info" text="Since v1.0.0" />
 
 Pack RGB into a 0xRRGGBB integer (alias for rgb_pack with explicit naming).
 

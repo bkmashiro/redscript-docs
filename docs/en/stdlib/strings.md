@@ -11,9 +11,7 @@
 
 ---
 
-## `str_len`
-
-**Since:** 1.0.0
+## `str_len` <Badge type="info" text="Since v1.0.0" />
 
 Returns the length of the string stored at rs:strings.{s}.
 
@@ -46,9 +44,7 @@ str_len("A")  // result: 1 (plain string) or char count (char-list)
 
 ---
 
-## `str_concat`
-
-**Since:** 1.0.0
+## `str_concat` <Badge type="info" text="Since v1.0.0" />
 
 Concatenates two strings from rs:strings and writes the result to
 rs:strings.Result as an NBT list [a_value, b_value].
@@ -86,9 +82,7 @@ str_concat("A", "B")  // rs:strings.Result = ["hello", "world"]
 
 ---
 
-## `str_contains`
-
-**Since:** 1.0.0
+## `str_contains` <Badge type="info" text="Since v1.0.0" />
 
 Checks whether the string at rs:strings.{s} contains the substring at
 rs:strings.{sub}. Returns 1 if found, 0 if not found.
@@ -121,9 +115,7 @@ fn str_contains(s: string, sub: string) -> int
 
 ---
 
-## `str_slice`
-
-**Since:** 2.2.0
+## `str_slice` <Badge type="info" text="Since v2.2.0" />
 
 Extracts a substring from rs:strings.{s} and writes it to rs:strings.Result.
 Uses the MC 1.20.2+ `data modify ... set string ... start end` feature.

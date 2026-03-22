@@ -18,9 +18,7 @@
 
 ---
 
-## `bit_get`
-
-**Since:** 1.0.0
+## `bit_get` <Badge type="info" text="Since v1.0.0" />
 
 Test whether bit n of x is set.
 
@@ -45,9 +43,7 @@ let b: int = bit_get(0b1010, 1)  // result: 1 (bit 1 of 10 is set)
 
 ---
 
-## `bit_set`
-
-**Since:** 1.0.0
+## `bit_set` <Badge type="info" text="Since v1.0.0" />
 
 Set bit n of x to 1 (idempotent if already set).
 
@@ -72,9 +68,7 @@ let v: int = bit_set(0b0100, 0)  // result: 0b0101 = 5
 
 ---
 
-## `bit_clear`
-
-**Since:** 1.0.0
+## `bit_clear` <Badge type="info" text="Since v1.0.0" />
 
 Clear bit n of x to 0 (idempotent if already clear).
 
@@ -99,9 +93,7 @@ let v: int = bit_clear(0b0111, 1)  // result: 0b0101 = 5
 
 ---
 
-## `bit_toggle`
-
-**Since:** 1.0.0
+## `bit_toggle` <Badge type="info" text="Since v1.0.0" />
 
 Toggle bit n of x (flip 0→1 or 1→0).
 
@@ -126,9 +118,7 @@ let v: int = bit_toggle(0b0101, 1)  // result: 0b0111 = 7
 
 ---
 
-## `bit_shl`
-
-**Since:** 1.0.0
+## `bit_shl` <Badge type="info" text="Since v1.0.0" />
 
 Left-shift x by n bits (equivalent to x * 2^n).
 
@@ -153,9 +143,7 @@ let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 
 ---
 
-## `bit_shr`
-
-**Since:** 1.0.0
+## `bit_shr` <Badge type="info" text="Since v1.0.0" />
 
 Logical right-shift x by n bits (equivalent to x / 2^n, truncating toward zero).
 
@@ -180,9 +168,7 @@ let v: int = bit_shr(256, 3)  // result: 32 (256 >> 3)
 
 ---
 
-## `bit_and`
-
-**Since:** 1.0.0
+## `bit_and` <Badge type="info" text="Since v1.0.0" />
 
 Bitwise AND of two integers (all 31 non-sign bits).
 
@@ -207,9 +193,7 @@ let v: int = bit_and(0b1100, 0b1010)  // result: 0b1000 = 8
 
 ---
 
-## `bit_or`
-
-**Since:** 1.0.0
+## `bit_or` <Badge type="info" text="Since v1.0.0" />
 
 Bitwise OR of two integers (all 31 non-sign bits).
 
@@ -234,9 +218,7 @@ let v: int = bit_or(0b1100, 0b1010)  // result: 0b1110 = 14
 
 ---
 
-## `bit_xor`
-
-**Since:** 1.0.0
+## `bit_xor` <Badge type="info" text="Since v1.0.0" />
 
 Bitwise XOR of two integers (all 31 non-sign bits).
 
@@ -261,9 +243,7 @@ let v: int = bit_xor(0b1100, 0b1010)  // result: 0b0110 = 6
 
 ---
 
-## `bit_not`
-
-**Since:** 1.0.0
+## `bit_not` <Badge type="info" text="Since v1.0.0" />
 
 Bitwise NOT — inverts all 31 non-sign bits of x.
 
@@ -287,9 +267,7 @@ let v: int = bit_not(0)  // result: 2147483647 (all 31 bits set)
 
 ---
 
-## `popcount`
-
-**Since:** 1.0.0
+## `popcount` <Badge type="info" text="Since v1.0.0" />
 
 Count the number of set bits in x (population count / Hamming weight).
 

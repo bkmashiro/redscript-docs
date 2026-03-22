@@ -14,9 +14,7 @@
 
 ---
 
-## `set_add`
-
-**Since:** 3.0.0
+## `set_add` <Badge type="info" text="Since v3.0.0" />
 
 Adds an integer to `storage rs:set_int.{set_name}` if it is not already present.
 
@@ -41,9 +39,7 @@ set_add("Visited", 42)
 
 ---
 
-## `set_has`
-
-**Since:** 3.0.0
+## `set_has` <Badge type="info" text="Since v3.0.0" />
 
 Checks whether an integer exists in `storage rs:set_int.{set_name}`.
 
@@ -68,9 +64,7 @@ if (set_has("Visited", 42) == 1) { }
 
 ---
 
-## `set_remove`
-
-**Since:** 3.0.0
+## `set_remove` <Badge type="info" text="Since v3.0.0" />
 
 Removes an integer from `storage rs:set_int.{set_name}`.
 
@@ -95,9 +89,7 @@ set_remove("Visited", 42)
 
 ---
 
-## `set_size`
-
-**Since:** 3.0.0
+## `set_size` <Badge type="info" text="Since v3.0.0" />
 
 Returns the number of elements in `storage rs:set_int.{set_name}`.
 
@@ -123,9 +115,7 @@ let count: int = set_size("Visited")
 
 ---
 
-## `set_clear`
-
-**Since:** 3.0.0
+## `set_clear` <Badge type="info" text="Since v3.0.0" />
 
 Clears all elements from `storage rs:set_int.{set_name}`.
 
@@ -147,9 +137,7 @@ set_clear("Visited")
 
 ---
 
-## `set_union`
-
-**Since:** 3.0.0
+## `set_union` <Badge type="info" text="Since v3.0.0" />
 
 Computes `result = a ∪ b`.
 
@@ -175,9 +163,7 @@ set_union("SeenA", "SeenB", "SeenAll")
 
 ---
 
-## `set_intersect`
-
-**Since:** 3.0.0
+## `set_intersect` <Badge type="info" text="Since v3.0.0" />
 
 Computes `result = a ∩ b`.
 

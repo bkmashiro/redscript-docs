@@ -13,9 +13,7 @@
 
 ---
 
-## `dot2d`
-
-**版本：** 1.0.0
+## `dot2d` <Badge type="info" text="Since v1.0.0" />
 
 两个二维整数向量的点积
 
@@ -42,9 +40,7 @@ let d = dot2d(3, 4, 3, 4)  // result: 25
 
 ---
 
-## `length2d_fixed`
-
-**版本：** 1.0.0
+## `length2d_fixed` <Badge type="info" text="Since v1.0.0" />
 
 二维向量的欧几里得长度，结果 ×1000 定点数
 
@@ -69,9 +65,7 @@ let l = length2d_fixed(3, 4)  // result: 5000
 
 ---
 
-## `dot3d`
-
-**版本：** 1.0.0
+## `dot3d` <Badge type="info" text="Since v1.0.0" />
 
 两个三维整数向量的点积
 
@@ -100,9 +94,7 @@ let d = dot3d(1, 0, 0, 1, 0, 0)  // result: 1
 
 ---
 
-## `cross3d_x`
-
-**版本：** 1.0.0
+## `cross3d_x` <Badge type="info" text="Since v1.0.0" />
 
 叉积 A×B 的 X 分量（ay*bz - az*by）
 
@@ -121,9 +113,7 @@ fn cross3d_x(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
 
 ---
 
-## `cross3d_y`
-
-**版本：** 1.0.0
+## `cross3d_y` <Badge type="info" text="Since v1.0.0" />
 
 叉积 A×B 的 Y 分量（az*bx - ax*bz）
 
@@ -142,9 +132,7 @@ fn cross3d_y(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
 
 ---
 
-## `cross3d_z`
-
-**版本：** 1.0.0
+## `cross3d_z` <Badge type="info" text="Since v1.0.0" />
 
 叉积 A×B 的 Z 分量（ax*by - ay*bx）
 

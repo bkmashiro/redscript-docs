@@ -12,9 +12,7 @@
 
 ---
 
-## `dft_noop`
-
-**版本：** 2.0.0
+## `dft_noop` <Badge type="info" text="Since v2.0.0" />
 
 dft_coro 的默认空回调，不执行任何操作
 
@@ -24,9 +22,7 @@ fn dft_noop(): void
 
 ---
 
-## `dft_real`
-
-**版本：** 2.0.0
+## `dft_real` <Badge type="info" text="Since v2.0.0" />
 
 计算 input[0..n-1] 的离散傅里叶变换，输出实部到 out_re
 
@@ -53,9 +49,7 @@ dft_real(sig, 4, re, im)
 
 ---
 
-## `dft_magnitude`
-
-**版本：** 2.0.0
+## `dft_magnitude` <Badge type="info" text="Since v2.0.0" />
 
 返回 DFT 第 k 个频段的幅度（sqrt(re²+im²)），×10000
 
@@ -81,9 +75,7 @@ let mag: int = dft_magnitude(re, im, 1)
 
 ---
 
-## `dft_power`
-
-**版本：** 2.0.0
+## `dft_power` <Badge type="info" text="Since v2.0.0" />
 
 返回 DFT 第 k 个频段的功率（re²/10000 + im²/10000），×10000
 
@@ -109,9 +101,7 @@ let power: int = dft_power(re, im, 2)
 
 ---
 
-## `dft_freq_bin`
-
-**版本：** 2.0.0
+## `dft_freq_bin` <Badge type="info" text="Since v2.0.0" />
 
 返回 DFT 第 k 个频段对应的频率（Hz）
 

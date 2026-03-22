@@ -11,9 +11,7 @@
 
 ---
 
-## `insertion_sort`
-
-**版本：** 1.0.0
+## `insertion_sort` <Badge type="info" text="Since v1.0.0" />
 
 就地升序排序整数数组（插入排序，O(n²)，适合 n≤64）
 
@@ -40,9 +38,7 @@ insertion_sort(data, 4)
 
 ---
 
-## `insertion_sort_desc`
-
-**版本：** 1.0.0
+## `insertion_sort_desc` <Badge type="info" text="Since v1.0.0" />
 
 就地降序排序整数数组（插入排序）
 
@@ -69,9 +65,7 @@ insertion_sort_desc(scores, 4)
 
 ---
 
-## `sort_merge`
-
-**版本：** 1.0.0
+## `sort_merge` <Badge type="info" text="Since v1.0.0" />
 
 将两个已排序数组合并为一个新的排序数组
 
@@ -99,9 +93,7 @@ let merged: int[] = sort_merge([1, 3, 5], 3, [2, 4, 6], 3)
 
 ---
 
-## `merge_sort_noop`
-
-**版本：** 1.0.0
+## `merge_sort_noop` <Badge type="info" text="Since v1.0.0" />
 
 Default no-op callback for merge_sort_coro. Replace with your own handler to react when sorting completes.
 

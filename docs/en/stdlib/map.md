@@ -12,9 +12,7 @@
 
 ---
 
-## `map_set`
-
-**Since:** 3.0.0
+## `map_set` <Badge type="info" text="Since v3.0.0" />
 
 Stores an integer value in `storage rs:maps.{map_name}.{key}`.
 
@@ -42,9 +40,7 @@ map_set("Stats", "kills", 7)
 
 ---
 
-## `map_get`
-
-**Since:** 3.0.0
+## `map_get` <Badge type="info" text="Since v3.0.0" />
 
 Reads an integer value from `storage rs:maps.{map_name}.{key}`.
 
@@ -71,9 +67,7 @@ let kills: int = map_get("Stats", "kills")
 
 ---
 
-## `map_has`
-
-**Since:** 3.0.0
+## `map_has` <Badge type="info" text="Since v3.0.0" />
 
 Checks whether `storage rs:maps.{map_name}.{key}` exists.
 
@@ -98,9 +92,7 @@ if (map_has("Stats", "kills") == 1) { }
 
 ---
 
-## `map_delete`
-
-**Since:** 3.0.0
+## `map_delete` <Badge type="info" text="Since v3.0.0" />
 
 Removes a key from the selected map compound.
 
@@ -125,9 +117,7 @@ map_delete("Stats", "kills")
 
 ---
 
-## `map_clear`
-
-**Since:** 3.0.0
+## `map_clear` <Badge type="info" text="Since v3.0.0" />
 
 Removes the entire map compound from `storage rs:maps`.
 

@@ -101,9 +101,7 @@ fn tick(self)
 
 ---
 
-## `tick_to_seconds`
-
-**Since:** 1.0.0
+## `tick_to_seconds` <Badge type="info" text="Since v1.0.0" />
 
 Convert Minecraft ticks to whole seconds (20 ticks = 1 second).
 
@@ -127,9 +125,7 @@ let s = tick_to_seconds(100)  // result: 5
 
 ---
 
-## `tick_to_ms`
-
-**Since:** 1.0.0
+## `tick_to_ms` <Badge type="info" text="Since v1.0.0" />
 
 Convert Minecraft ticks to milliseconds (1 tick = 50 ms).
 
@@ -153,9 +149,7 @@ let ms = tick_to_ms(20)  // result: 1000
 
 ---
 
-## `seconds_to_ticks`
-
-**Since:** 1.0.0
+## `seconds_to_ticks` <Badge type="info" text="Since v1.0.0" />
 
 Convert seconds to Minecraft ticks (1 second = 20 ticks).
 
@@ -179,9 +173,7 @@ let t = seconds_to_ticks(5)  // result: 100
 
 ---
 
-## `format_time_s`
-
-**Since:** 1.0.0
+## `format_time_s` <Badge type="info" text="Since v1.0.0" />
 
 Extract seconds component from a tick count (0-59).
 
@@ -205,9 +197,7 @@ let s = format_time_s(1500)  // result: 15  (75 seconds mod 60)
 
 ---
 
-## `format_time_m`
-
-**Since:** 1.0.0
+## `format_time_m` <Badge type="info" text="Since v1.0.0" />
 
 Extract minutes component from a tick count (0-59).
 
@@ -231,9 +221,7 @@ let m = format_time_m(72000)  // result: 0  (1 hour)
 
 ---
 
-## `format_time_h`
-
-**Since:** 1.0.0
+## `format_time_h` <Badge type="info" text="Since v1.0.0" />
 
 Extract hours component from a tick count.
 

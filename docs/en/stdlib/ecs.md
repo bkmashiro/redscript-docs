@@ -26,9 +26,7 @@
 
 ---
 
-## `ecs_registry_new`
-
-**Since:** 2.0.0
+## `ecs_registry_new` <Badge type="info" text="Since v2.0.0" />
 
 Allocate a blank 16-slot component registry.
 
@@ -46,9 +44,7 @@ let reg: int[] = ecs_registry_new()
 
 ---
 
-## `ecs_register`
-
-**Since:** 2.0.0
+## `ecs_register` <Badge type="info" text="Since v2.0.0" />
 
 Mark `comp_id` as registered in the registry and return the updated registry.
 
@@ -73,9 +69,7 @@ reg = ecs_register(reg, ECS_COMP_HEALTH)
 
 ---
 
-## `ecs_is_registered`
-
-**Since:** 2.0.0
+## `ecs_is_registered` <Badge type="info" text="Since v2.0.0" />
 
 Check whether `comp_id` is registered.
 
@@ -100,9 +94,7 @@ if (ecs_is_registered(reg, ECS_COMP_HEALTH) == 1) { }
 
 ---
 
-## `ecs_health_init`
-
-**Since:** 2.0.0
+## `ecs_health_init` <Badge type="info" text="Since v2.0.0" />
 
 Create a health component state with `current_hp = max_hp` (full health).
 
@@ -127,9 +119,7 @@ let hp: int[] = ecs_health_init(42, 100)
 
 ---
 
-## `ecs_health_get`
-
-**Since:** 2.0.0
+## `ecs_health_get` <Badge type="info" text="Since v2.0.0" />
 
 Return current HP from a health component state.
 
@@ -153,9 +143,7 @@ let hp: int = ecs_health_get(state)
 
 ---
 
-## `ecs_health_max`
-
-**Since:** 2.0.0
+## `ecs_health_max` <Badge type="info" text="Since v2.0.0" />
 
 Return maximum HP from a health component state.
 
@@ -179,9 +167,7 @@ let max: int = ecs_health_max(state)
 
 ---
 
-## `ecs_health_set`
-
-**Since:** 2.0.0
+## `ecs_health_set` <Badge type="info" text="Since v2.0.0" />
 
 Set current HP (clamped to [0, max]) and return the updated state.
 
@@ -206,9 +192,7 @@ state = ecs_health_set(state, 50)
 
 ---
 
-## `ecs_health_damage`
-
-**Since:** 2.0.0
+## `ecs_health_damage` <Badge type="info" text="Since v2.0.0" />
 
 Subtract `amount` from HP (clamped to 0) and return the updated state.
 
@@ -233,9 +217,7 @@ state = ecs_health_damage(state, 30)
 
 ---
 
-## `ecs_health_heal`
-
-**Since:** 2.0.0
+## `ecs_health_heal` <Badge type="info" text="Since v2.0.0" />
 
 Add `amount` to HP (clamped to max) and return the updated state.
 
@@ -260,9 +242,7 @@ state = ecs_health_heal(state, 20)
 
 ---
 
-## `ecs_health_is_dead`
-
-**Since:** 2.0.0
+## `ecs_health_is_dead` <Badge type="info" text="Since v2.0.0" />
 
 Return `1` if the entity HP is at or below zero, otherwise `0`.
 
@@ -286,9 +266,7 @@ if (ecs_health_is_dead(state) == 1) { /* handle death */ }
 
 ---
 
-## `ecs_health_pct`
-
-**Since:** 2.0.0
+## `ecs_health_pct` <Badge type="info" text="Since v2.0.0" />
 
 Return HP as a percentage in fixed-point ×10000 (e.g., `5000` = 50.00%).
 
@@ -312,9 +290,7 @@ let pct: int = ecs_health_pct(state)
 
 ---
 
-## `ecs_vel_init`
-
-**Since:** 2.0.0
+## `ecs_vel_init` <Badge type="info" text="Since v2.0.0" />
 
 Create a velocity component state with the given initial velocities.
 
@@ -340,9 +316,7 @@ let vel: int[] = ecs_vel_init(1000, 0, 500)
 
 ---
 
-## `ecs_vel_get_x`
-
-**Since:** 2.0.0
+## `ecs_vel_get_x` <Badge type="info" text="Since v2.0.0" />
 
 Return X velocity from a velocity component state.
 
@@ -360,9 +334,7 @@ fn ecs_vel_get_x(state: int[]): int
 
 ---
 
-## `ecs_vel_get_y`
-
-**Since:** 2.0.0
+## `ecs_vel_get_y` <Badge type="info" text="Since v2.0.0" />
 
 Return Y velocity from a velocity component state.
 
@@ -380,9 +352,7 @@ fn ecs_vel_get_y(state: int[]): int
 
 ---
 
-## `ecs_vel_get_z`
-
-**Since:** 2.0.0
+## `ecs_vel_get_z` <Badge type="info" text="Since v2.0.0" />
 
 Return Z velocity from a velocity component state.
 
@@ -400,9 +370,7 @@ fn ecs_vel_get_z(state: int[]): int
 
 ---
 
-## `ecs_vel_set`
-
-**Since:** 2.0.0
+## `ecs_vel_set` <Badge type="info" text="Since v2.0.0" />
 
 Set all velocity components and return the updated state.
 
@@ -429,9 +397,7 @@ state = ecs_vel_set(state, 500, 1200, 0)
 
 ---
 
-## `ecs_vel_speed`
-
-**Since:** 2.0.0
+## `ecs_vel_speed` <Badge type="info" text="Since v2.0.0" />
 
 Return the speed (magnitude) of the velocity vector ×1000.
 
@@ -458,9 +424,7 @@ let speed: int = ecs_vel_speed(vel_state)
 
 ---
 
-## `ecs_vel_apply_gravity`
-
-**Since:** 2.0.0
+## `ecs_vel_apply_gravity` <Badge type="info" text="Since v2.0.0" />
 
 Apply gravity by subtracting `gravity_fx` from the Y velocity each tick.
 
@@ -485,9 +449,7 @@ vel_state = ecs_vel_apply_gravity(vel_state, 980)
 
 ---
 
-## `ecs_vel_damp`
-
-**Since:** 2.0.0
+## `ecs_vel_damp` <Badge type="info" text="Since v2.0.0" />
 
 Apply a friction damping factor to all velocity components.
 

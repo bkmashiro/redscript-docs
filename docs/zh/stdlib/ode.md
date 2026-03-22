@@ -20,9 +20,7 @@
 
 ---
 
-## `ode_mul_fx`
-
-**版本：** 2.0.0
+## `ode_mul_fx` <Badge type="info" text="Since v2.0.0" />
 
 定点数乘法：a_fx * b_fx / 10000
 
@@ -41,9 +39,7 @@ fn ode_mul_fx(a_fx: int, b_fx: int): int
 
 ---
 
-## `ode_weighted_increment`
-
-**版本：** 2.0.0
+## `ode_weighted_increment` <Badge type="info" text="Since v2.0.0" />
 
 计算 RK4 加权增量：h * (k1 + 2k2 + 2k3 + k4) / 6
 
@@ -62,9 +58,7 @@ fn ode_weighted_increment(h_fx: int, deriv_sum_fx: int): int
 
 ---
 
-## `ode_reset`
-
-**版本：** 2.0.0
+## `ode_reset` <Badge type="info" text="Since v2.0.0" />
 
 在 storage rs:ode 中初始化 ODE 模块状态
 
@@ -91,9 +85,7 @@ ode_reset(1, 0, 10000, 0, 10000, 0)
 
 ---
 
-## `ode_get_system`
-
-**版本：** 2.0.0
+## `ode_get_system` <Badge type="info" text="Since v2.0.0" />
 
 返回 ODE 状态中的系统 ID
 
@@ -105,9 +97,7 @@ fn ode_get_system(): int
 
 ---
 
-## `ode_get_t`
-
-**版本：** 2.0.0
+## `ode_get_t` <Badge type="info" text="Since v2.0.0" />
 
 返回当前时间 t（×10000）
 
@@ -119,9 +109,7 @@ fn ode_get_t(): int
 
 ---
 
-## `ode_get_y`
-
-**版本：** 2.0.0
+## `ode_get_y` <Badge type="info" text="Since v2.0.0" />
 
 返回当前主变量 y（×10000）
 
@@ -133,9 +121,7 @@ fn ode_get_y(): int
 
 ---
 
-## `ode_get_y2`
-
-**版本：** 2.0.0
+## `ode_get_y2` <Badge type="info" text="Since v2.0.0" />
 
 返回当前次变量 y'（×10000，仅对 system 3 有意义）
 
@@ -147,9 +133,7 @@ fn ode_get_y2(): int
 
 ---
 
-## `ode_get_k`
-
-**版本：** 2.0.0
+## `ode_get_k` <Badge type="info" text="Since v2.0.0" />
 
 返回速率常数 k（×10000）
 
@@ -161,9 +145,7 @@ fn ode_get_k(): int
 
 ---
 
-## `ode_get_extra`
-
-**版本：** 2.0.0
+## `ode_get_extra` <Badge type="info" text="Since v2.0.0" />
 
 返回额外参数（×10000，system 3 中表示阻尼）
 
@@ -175,9 +157,7 @@ fn ode_get_extra(): int
 
 ---
 
-## `ode_get_steps`
-
-**版本：** 2.0.0
+## `ode_get_steps` <Badge type="info" text="Since v2.0.0" />
 
 返回已执行的步数
 
@@ -189,9 +169,7 @@ fn ode_get_steps(): int
 
 ---
 
-## `ode_step`
-
-**版本：** 2.0.0
+## `ode_step` <Badge type="info" text="Since v2.0.0" />
 
 向前推进一个 RK4 步
 
@@ -207,9 +185,7 @@ fn ode_step(h_fx: int)
 
 ---
 
-## `ode_run`
-
-**版本：** 2.0.0
+## `ode_run` <Badge type="info" text="Since v2.0.0" />
 
 对标量 ODE 系统执行 steps 步 RK4 积分
 
@@ -237,9 +213,7 @@ let y: int = ode_get_y()
 
 ---
 
-## `ode_run2`
-
-**版本：** 2.0.0
+## `ode_run2` <Badge type="info" text="Since v2.0.0" />
 
 对二维 ODE 系统（如谐振子）执行 steps 步 RK4 积分
 

@@ -21,9 +21,7 @@
 
 ---
 
-## `uniform_int`
-
-**Since:** 2.0.0
+## `uniform_int` <Badge type="info" text="Since v2.0.0" />
 
 Return a uniform integer in `[lo, hi]` inclusive.
 
@@ -51,9 +49,7 @@ let dmg: int = uniform_int(seed, 5, 15)
 
 ---
 
-## `uniform_frac`
-
-**Since:** 2.0.0
+## `uniform_frac` <Badge type="info" text="Since v2.0.0" />
 
 Return a uniform fraction in [0, 10000] (×10000 scale).
 
@@ -77,9 +73,7 @@ let frac: int = uniform_frac(seed)
 
 ---
 
-## `normal_approx12`
-
-**Since:** 2.0.0
+## `normal_approx12` <Badge type="info" text="Since v2.0.0" />
 
 Approximate N(0, 1) variate using the Irwin–Hall method (sum of 12 uniform samples).
 
@@ -106,9 +100,7 @@ let z: int = normal_approx12(seed)
 
 ---
 
-## `exp_dist_approx`
-
-**Since:** 2.0.0
+## `exp_dist_approx` <Badge type="info" text="Since v2.0.0" />
 
 Sample from an exponential distribution with rate `lambda_fx`.
 
@@ -138,9 +130,7 @@ let wait: int = exp_dist_approx(seed, 10000)
 
 ---
 
-## `bernoulli`
-
-**Since:** 2.0.0
+## `bernoulli` <Badge type="info" text="Since v2.0.0" />
 
 Return `1` with probability `p_fx / 10000`, otherwise `0`.
 
@@ -165,9 +155,7 @@ if (bernoulli(seed, 3000) == 1) { /* 30% chance */ }
 
 ---
 
-## `weighted2`
-
-**Since:** 2.0.0
+## `weighted2` <Badge type="info" text="Since v2.0.0" />
 
 Choose `0` or `1` with the given integer weights.
 
@@ -193,9 +181,7 @@ let side: int = weighted2(seed, 3, 7)
 
 ---
 
-## `weighted3`
-
-**Since:** 2.0.0
+## `weighted3` <Badge type="info" text="Since v2.0.0" />
 
 Choose `0`, `1`, or `2` with the given integer weights.
 
@@ -222,9 +208,7 @@ let tier: int = weighted3(seed, 50, 30, 20)
 
 ---
 
-## `gamma_sample`
-
-**Since:** 2.0.0
+## `gamma_sample` <Badge type="info" text="Since v2.0.0" />
 
 Sample from a Gamma(k, θ) distribution via summing k exponential samples.
 
@@ -253,9 +237,7 @@ let g: int = gamma_sample(20000, 10000, seed)
 
 ---
 
-## `poisson_sample`
-
-**Since:** 2.0.0
+## `poisson_sample` <Badge type="info" text="Since v2.0.0" />
 
 Sample from a Poisson(λ) distribution using the Knuth algorithm.
 
@@ -283,9 +265,7 @@ let n: int = poisson_sample(30000, seed)
 
 ---
 
-## `geometric_sample`
-
-**Since:** 2.0.0
+## `geometric_sample` <Badge type="info" text="Since v2.0.0" />
 
 Sample from a Geometric(p) distribution (number of failures before first success).
 
@@ -312,9 +292,7 @@ let fails: int = geometric_sample(5000, seed)
 
 ---
 
-## `negative_binomial_sample`
-
-**Since:** 2.0.0
+## `negative_binomial_sample` <Badge type="info" text="Since v2.0.0" />
 
 Sample from a Negative Binomial NegBin(r, p) distribution.
 
@@ -342,9 +320,7 @@ let n: int = negative_binomial_sample(3, 5000, seed)
 
 ---
 
-## `dft_real`
-
-**Since:** 2.0.0
+## `dft_real` <Badge type="info" text="Since v2.0.0" />
 
 Real part of DFT bin `k` for a real-valued signal with up to 8 samples.
 
@@ -375,9 +351,7 @@ let re0: int = dft_real(10000, 0, -10000, 0, 0, 0, 0, 0, 4, 0)
 
 ---
 
-## `dft_imag`
-
-**Since:** 2.0.0
+## `dft_imag` <Badge type="info" text="Since v2.0.0" />
 
 Imaginary part of DFT bin `k` for a real-valued signal with up to 8 samples.
 
@@ -399,9 +373,7 @@ fn dft_imag(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: i
 
 ---
 
-## `dft_magnitude`
-
-**Since:** 2.0.0
+## `dft_magnitude` <Badge type="info" text="Since v2.0.0" />
 
 Magnitude of DFT bin `k`: `sqrt(real² + imag²)` in ×10000.
 

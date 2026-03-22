@@ -23,9 +23,7 @@
 
 ---
 
-## `parabola_gravity`
-
-**Since:** 2.0.0
+## `parabola_gravity` <Badge type="info" text="Since v2.0.0" />
 
 Minecraft gravity per tick in ×10000 fixed-point (≈ 0.08 × 10000 = 800).
 
@@ -37,9 +35,7 @@ fn parabola_gravity(): int
 
 ---
 
-## `parabola_gravity_half`
-
-**Since:** 2.0.0
+## `parabola_gravity_half` <Badge type="info" text="Since v2.0.0" />
 
 Half of Minecraft gravity per tick (used for displacement formula).
 
@@ -51,9 +47,7 @@ fn parabola_gravity_half(): int
 
 ---
 
-## `parabola_vx`
-
-**Since:** 2.0.0
+## `parabola_vx` <Badge type="info" text="Since v2.0.0" />
 
 Compute the initial X velocity needed to reach `dx` blocks in `ticks` ticks.
 
@@ -78,9 +72,7 @@ let vx: int = parabola_vx(10, 20)
 
 ---
 
-## `parabola_vy`
-
-**Since:** 2.0.0
+## `parabola_vy` <Badge type="info" text="Since v2.0.0" />
 
 Compute the initial Y velocity needed to reach height `dy` in `ticks` ticks.
 
@@ -105,9 +97,7 @@ let vy: int = parabola_vy(5, 20)
 
 ---
 
-## `parabola_vz`
-
-**Since:** 2.0.0
+## `parabola_vz` <Badge type="info" text="Since v2.0.0" />
 
 Compute the initial Z velocity needed to reach `dz` blocks in `ticks` ticks.
 
@@ -126,9 +116,7 @@ fn parabola_vz(dz: int, ticks: int): int
 
 ---
 
-## `parabola_speed_xz`
-
-**Since:** 2.0.0
+## `parabola_speed_xz` <Badge type="info" text="Since v2.0.0" />
 
 Compute the horizontal speed `sqrt(vx² + vz²)` needed to reach `(dx, dz)` in `ticks` ticks.
 
@@ -148,9 +136,7 @@ fn parabola_speed_xz(dx: int, dz: int, ticks: int): int
 
 ---
 
-## `parabola_x`
-
-**Since:** 2.0.0
+## `parabola_x` <Badge type="info" text="Since v2.0.0" />
 
 X position at tick `t` given initial X velocity `vx0` ×10000.
 
@@ -169,9 +155,7 @@ fn parabola_x(vx0: int, t: int): int
 
 ---
 
-## `parabola_y`
-
-**Since:** 2.0.0
+## `parabola_y` <Badge type="info" text="Since v2.0.0" />
 
 Y position at tick `t` given initial Y velocity `vy0` ×10000.
 
@@ -190,9 +174,7 @@ fn parabola_y(vy0: int, t: int): int
 
 ---
 
-## `parabola_z`
-
-**Since:** 2.0.0
+## `parabola_z` <Badge type="info" text="Since v2.0.0" />
 
 Z position at tick `t` given initial Z velocity `vz0` ×10000.
 
@@ -211,9 +193,7 @@ fn parabola_z(vz0: int, t: int): int
 
 ---
 
-## `parabola_flight_time`
-
-**Since:** 2.0.0
+## `parabola_flight_time` <Badge type="info" text="Since v2.0.0" />
 
 Estimate the tick when the projectile returns to launch height (`y = 0`).
 
@@ -239,9 +219,7 @@ let t: int = parabola_flight_time(8000)
 
 ---
 
-## `parabola_max_height`
-
-**Since:** 2.0.0
+## `parabola_max_height` <Badge type="info" text="Since v2.0.0" />
 
 Maximum height (in blocks) above the launch point.
 
@@ -265,9 +243,7 @@ let h: int = parabola_max_height(8000)
 
 ---
 
-## `parabola_step_vx`
-
-**Since:** 2.0.0
+## `parabola_step_vx` <Badge type="info" text="Since v2.0.0" />
 
 Apply drag to the X velocity for one tick.
 
@@ -286,9 +262,7 @@ fn parabola_step_vx(vx: int, drag: int): int
 
 ---
 
-## `parabola_step_vy`
-
-**Since:** 2.0.0
+## `parabola_step_vy` <Badge type="info" text="Since v2.0.0" />
 
 Apply gravity and then drag to the Y velocity for one tick.
 
@@ -307,9 +281,7 @@ fn parabola_step_vy(vy: int, drag: int): int
 
 ---
 
-## `parabola_step_vz`
-
-**Since:** 2.0.0
+## `parabola_step_vz` <Badge type="info" text="Since v2.0.0" />
 
 Apply drag to the Z velocity for one tick.
 
@@ -328,9 +300,7 @@ fn parabola_step_vz(vz: int, drag: int): int
 
 ---
 
-## `parabola_ticks_for_range`
-
-**Since:** 2.0.0
+## `parabola_ticks_for_range` <Badge type="info" text="Since v2.0.0" />
 
 Estimate the number of ticks to reach a horizontal range using average arrow speed.
 
@@ -351,9 +321,7 @@ fn parabola_ticks_for_range(range: int): int
 
 ---
 
-## `parabola_in_range`
-
-**Since:** 2.0.0
+## `parabola_in_range` <Badge type="info" text="Since v2.0.0" />
 
 Check whether a target is within horizontal range.
 

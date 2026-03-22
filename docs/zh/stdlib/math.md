@@ -14,9 +14,7 @@
 
 ---
 
-## `abs`
-
-**版本：** 1.0.0
+## `abs` <Badge type="info" text="Since v1.0.0" />
 
 返回 x 的绝对值（支持泛型 T）
 
@@ -41,9 +39,7 @@ let b = abs(3)    // result: 3
 
 ---
 
-## `sign`
-
-**版本：** 1.0.0
+## `sign` <Badge type="info" text="Since v1.0.0" />
 
 返回 x 的符号：1、0 或 -1
 
@@ -67,9 +63,7 @@ let s = sign(-42)  // result: -1
 
 ---
 
-## `min`
-
-**版本：** 1.0.0
+## `min` <Badge type="info" text="Since v1.0.0" />
 
 返回两个值中较小的一个
 
@@ -94,9 +88,7 @@ let m = min(3, 7)  // result: 3
 
 ---
 
-## `max`
-
-**版本：** 1.0.0
+## `max` <Badge type="info" text="Since v1.0.0" />
 
 返回两个值中较大的一个
 
@@ -121,9 +113,7 @@ let m = max(3, 7)  // result: 7
 
 ---
 
-## `clamp`
-
-**版本：** 1.0.0
+## `clamp` <Badge type="info" text="Since v1.0.0" />
 
 将 x 限制在 [lo, hi] 范围内
 
@@ -150,9 +140,7 @@ let d = clamp(50, 0, 100)   // result: 50
 
 ---
 
-## `lerp`
-
-**版本：** 1.0.0
+## `lerp` <Badge type="info" text="Since v1.0.0" />
 
 在 a 和 b 之间进行线性插值，t 为定点数（范围 0-1000）
 
@@ -179,9 +167,7 @@ let w = lerp(100, 200, 750)   // result: 175
 
 ---
 
-## `sqrt_fixed`
-
-**版本：** 1.0.0
+## `sqrt_fixed` <Badge type="info" text="Since v1.0.0" />
 
 定点数平方根（精度 ×1000）
 

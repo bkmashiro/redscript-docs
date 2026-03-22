@@ -20,9 +20,7 @@
 
 ---
 
-## `rgb_pack`
-
-**版本：** 1.0.0
+## `rgb_pack` <Badge type="info" text="Since v1.0.0" />
 
 将 RGB 分量打包为单个整数（0xRRGGBB 格式）
 
@@ -48,9 +46,7 @@ let red: int = rgb_pack(255, 0, 0)  // result: 16711680 (0xFF0000)
 
 ---
 
-## `rgb_r`
-
-**版本：** 1.0.0
+## `rgb_r` <Badge type="info" text="Since v1.0.0" />
 
 从打包 RGB 整数中提取红色分量
 
@@ -74,9 +70,7 @@ let r: int = rgb_r(16711680)  // result: 255
 
 ---
 
-## `rgb_g`
-
-**版本：** 1.0.0
+## `rgb_g` <Badge type="info" text="Since v1.0.0" />
 
 从打包 RGB 整数中提取绿色分量
 
@@ -100,9 +94,7 @@ let g: int = rgb_g(65280)  // result: 255 (0x00FF00)
 
 ---
 
-## `rgb_b`
-
-**版本：** 1.0.0
+## `rgb_b` <Badge type="info" text="Since v1.0.0" />
 
 从打包 RGB 整数中提取蓝色分量
 
@@ -126,9 +118,7 @@ let b: int = rgb_b(255)  // result: 255 (0x0000FF)
 
 ---
 
-## `rgb_lerp`
-
-**版本：** 1.0.0
+## `rgb_lerp` <Badge type="info" text="Since v1.0.0" />
 
 两个打包 RGB 颜色之间的线性插值
 
@@ -154,9 +144,7 @@ let mid: int = rgb_lerp(0xFF0000, 0x0000FF, 500)  // halfway between red and blu
 
 ---
 
-## `rgb_to_l`
-
-**版本：** 1.0.0
+## `rgb_to_l` <Badge type="info" text="Since v1.0.0" />
 
 从 RGB 分量计算 HSL 亮度（×10000 精度）
 
@@ -182,9 +170,7 @@ let l: int = rgb_to_l(2550000, 2550000, 2550000)  // result: 10000 (white)
 
 ---
 
-## `rgb_to_s`
-
-**版本：** 1.0.0
+## `rgb_to_s` <Badge type="info" text="Since v1.0.0" />
 
 从 RGB 分量计算 HSL 饱和度（×10000 精度）
 
@@ -210,9 +196,7 @@ let s: int = rgb_to_s(2550000, 0, 0)  // result: 10000 (pure red is fully satura
 
 ---
 
-## `rgb_to_h`
-
-**版本：** 1.0.0
+## `rgb_to_h` <Badge type="info" text="Since v1.0.0" />
 
 从 RGB 分量计算 HSL 色相（×10000 精度）
 
@@ -238,9 +222,7 @@ let h: int = rgb_to_h(0, 2550000, 0)  // result: 1200000 (120°, pure green)
 
 ---
 
-## `hsl_to_r`
-
-**版本：** 1.0.0
+## `hsl_to_r` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the red channel of RGB (×10000 scale).
 
@@ -266,9 +248,7 @@ let r: int = hsl_to_r(0, 10000, 5000)  // pure red → 2550000
 
 ---
 
-## `hsl_to_g`
-
-**版本：** 1.0.0
+## `hsl_to_g` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the green channel of RGB (×10000 scale).
 
@@ -294,9 +274,7 @@ let g: int = hsl_to_g(1200000, 10000, 5000)  // pure green → 2550000
 
 ---
 
-## `hsl_to_b`
-
-**版本：** 1.0.0
+## `hsl_to_b` <Badge type="info" text="Since v1.0.0" />
 
 Convert HSL to the blue channel of RGB (×10000 scale).
 
@@ -322,9 +300,7 @@ let b: int = hsl_to_b(2400000, 10000, 5000)  // pure blue → 2550000
 
 ---
 
-## `hsl_to_packed`
-
-**版本：** 1.0.0
+## `hsl_to_packed` <Badge type="info" text="Since v1.0.0" />
 
 将 HSL（×10000 精度）转换为打包 RGB 整数（0xRRGGBB）
 
@@ -350,9 +326,7 @@ let col: int = hsl_to_packed(0, 10000, 5000)  // pure red → 0xFF0000
 
 ---
 
-## `rgb_to_hex`
-
-**版本：** 1.0.0
+## `rgb_to_hex` <Badge type="info" text="Since v1.0.0" />
 
 Pack RGB into a 0xRRGGBB integer (alias for rgb_pack with explicit naming).
 

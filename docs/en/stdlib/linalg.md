@@ -30,9 +30,7 @@
 
 ---
 
-## `vec2d_dot`
-
-**Since:** 2.0.0
+## `vec2d_dot` <Badge type="info" text="Since v2.0.0" />
 
 Dot product of two 2D vectors.
 
@@ -59,9 +57,7 @@ let d: double = vec2d_dot(1.0d, 0.0d, 0.0d, 1.0d)
 
 ---
 
-## `vec2d_length`
-
-**Since:** 2.0.0
+## `vec2d_length` <Badge type="info" text="Since v2.0.0" />
 
 Euclidean length of a 2D vector.
 
@@ -86,9 +82,7 @@ let len: double = vec2d_length(3.0d, 4.0d)
 
 ---
 
-## `vec2d_dist`
-
-**Since:** 2.0.0
+## `vec2d_dist` <Badge type="info" text="Since v2.0.0" />
 
 Euclidean distance between two 2D points.
 
@@ -115,9 +109,7 @@ let dist: double = vec2d_dist(0.0d, 0.0d, 3.0d, 4.0d)
 
 ---
 
-## `vec2d_normalize_x`
-
-**Since:** 2.0.0
+## `vec2d_normalize_x` <Badge type="info" text="Since v2.0.0" />
 
 X component of the normalized unit vector for a 2D vector.
 
@@ -144,9 +136,7 @@ let nx: double = vec2d_normalize_x(3.0d, 4.0d)
 
 ---
 
-## `vec2d_normalize_y`
-
-**Since:** 2.0.0
+## `vec2d_normalize_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component of the normalized unit vector for a 2D vector.
 
@@ -173,9 +163,7 @@ let ny: double = vec2d_normalize_y(3.0d, 4.0d)
 
 ---
 
-## `vec3d_dot`
-
-**Since:** 2.0.0
+## `vec3d_dot` <Badge type="info" text="Since v2.0.0" />
 
 Dot product of two 3D vectors.
 
@@ -204,9 +192,7 @@ let d: double = vec3d_dot(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d)
 
 ---
 
-## `vec3d_length`
-
-**Since:** 2.0.0
+## `vec3d_length` <Badge type="info" text="Since v2.0.0" />
 
 Euclidean length of a 3D vector.
 
@@ -232,9 +218,7 @@ let len: double = vec3d_length(1.0d, 2.0d, 2.0d)
 
 ---
 
-## `vec3d_dist`
-
-**Since:** 2.0.0
+## `vec3d_dist` <Badge type="info" text="Since v2.0.0" />
 
 Euclidean distance between two 3D points.
 
@@ -257,9 +241,7 @@ fn vec3d_dist(ax: double, ay: double, az: double, bx: double, by: double, bz: do
 
 ---
 
-## `vec3d_cross_x`
-
-**Since:** 2.0.0
+## `vec3d_cross_x` <Badge type="info" text="Since v2.0.0" />
 
 X component of the cross product `a × b`.
 
@@ -278,9 +260,7 @@ fn vec3d_cross_x(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_cross_y`
-
-**Since:** 2.0.0
+## `vec3d_cross_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component of the cross product `a × b`.
 
@@ -299,9 +279,7 @@ fn vec3d_cross_y(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_cross_z`
-
-**Since:** 2.0.0
+## `vec3d_cross_z` <Badge type="info" text="Since v2.0.0" />
 
 Z component of the cross product `a × b`.
 
@@ -320,9 +298,7 @@ fn vec3d_cross_z(ax: double, ay: double, az: double, bx: double, by: double, bz:
 
 ---
 
-## `vec3d_normalize_x`
-
-**Since:** 2.0.0
+## `vec3d_normalize_x` <Badge type="info" text="Since v2.0.0" />
 
 X component of the normalized unit vector for a 3D vector.
 
@@ -348,9 +324,7 @@ let nx: double = vec3d_normalize_x(3.0d, 4.0d, 0.0d)
 
 ---
 
-## `vec3d_normalize_y`
-
-**Since:** 2.0.0
+## `vec3d_normalize_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component of the normalized unit vector for a 3D vector.
 
@@ -370,9 +344,7 @@ fn vec3d_normalize_y(x: double, y: double, z: double): double
 
 ---
 
-## `vec3d_normalize_z`
-
-**Since:** 2.0.0
+## `vec3d_normalize_z` <Badge type="info" text="Since v2.0.0" />
 
 Z component of the normalized unit vector for a 3D vector.
 
@@ -392,9 +364,7 @@ fn vec3d_normalize_z(x: double, y: double, z: double): double
 
 ---
 
-## `mat2d_det`
-
-**Since:** 2.0.0
+## `mat2d_det` <Badge type="info" text="Since v2.0.0" />
 
 Determinant of a 2×2 matrix `[[a, b], [c, d]]`.
 
@@ -419,9 +389,7 @@ let det: double = mat2d_det(1.0d, 2.0d, 3.0d, 4.0d)
 
 ---
 
-## `mat2d_mul_r0c0`
-
-**Since:** 2.0.0
+## `mat2d_mul_r0c0` <Badge type="info" text="Since v2.0.0" />
 
 Element [0,0] of the 2×2 matrix product `M0 × M1`.
 
@@ -440,9 +408,7 @@ fn mat2d_mul_r0c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r0c1`
-
-**Since:** 2.0.0
+## `mat2d_mul_r0c1` <Badge type="info" text="Since v2.0.0" />
 
 Element [0,1] of the 2×2 matrix product `M0 × M1`.
 
@@ -460,9 +426,7 @@ fn mat2d_mul_r0c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r1c0`
-
-**Since:** 2.0.0
+## `mat2d_mul_r1c0` <Badge type="info" text="Since v2.0.0" />
 
 Element [1,0] of the 2×2 matrix product `M0 × M1`.
 
@@ -480,9 +444,7 @@ fn mat2d_mul_r1c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_mul_r1c1`
-
-**Since:** 2.0.0
+## `mat2d_mul_r1c1` <Badge type="info" text="Since v2.0.0" />
 
 Element [1,1] of the 2×2 matrix product `M0 × M1`.
 
@@ -500,9 +462,7 @@ fn mat2d_mul_r1c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1
 
 ---
 
-## `mat2d_vecmul_x`
-
-**Since:** 2.0.0
+## `mat2d_vecmul_x` <Badge type="info" text="Since v2.0.0" />
 
 X component of the 2×2 matrix–vector product `M × v`.
 
@@ -521,9 +481,7 @@ fn mat2d_vecmul_x(a: double, b: double, c: double, d: double, vx: double, vy: do
 
 ---
 
-## `mat2d_vecmul_y`
-
-**Since:** 2.0.0
+## `mat2d_vecmul_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component of the 2×2 matrix–vector product `M × v`.
 
@@ -542,9 +500,7 @@ fn mat2d_vecmul_y(a: double, b: double, c: double, d: double, vx: double, vy: do
 
 ---
 
-## `solve2d_x`
-
-**Since:** 2.0.0
+## `solve2d_x` <Badge type="info" text="Since v2.0.0" />
 
 X solution of the 2×2 linear system `[a b; c d] * [x; y] = [ex; ey]` via Cramer's rule.
 
@@ -572,9 +528,7 @@ let x: double = solve2d_x(1.0d, 0.0d, 0.0d, 1.0d, 3.0d, 4.0d)
 
 ---
 
-## `solve2d_y`
-
-**Since:** 2.0.0
+## `solve2d_y` <Badge type="info" text="Since v2.0.0" />
 
 Y solution of the 2×2 linear system `[a b; c d] * [x; y] = [ex; ey]` via Cramer's rule.
 

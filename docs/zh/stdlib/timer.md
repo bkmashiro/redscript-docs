@@ -109,9 +109,7 @@ fn tick(self)
 
 ---
 
-## `tick_to_seconds`
-
-**版本：** 1.0.0
+## `tick_to_seconds` <Badge type="info" text="Since v1.0.0" />
 
 将 Minecraft 游戏刻转换为整秒（20 刻 = 1 秒）
 
@@ -135,9 +133,7 @@ let s = tick_to_seconds(100)  // result: 5
 
 ---
 
-## `tick_to_ms`
-
-**版本：** 1.0.0
+## `tick_to_ms` <Badge type="info" text="Since v1.0.0" />
 
 将游戏刻转换为毫秒（1 刻 = 50 ms）
 
@@ -161,9 +157,7 @@ let ms = tick_to_ms(20)  // result: 1000
 
 ---
 
-## `seconds_to_ticks`
-
-**版本：** 1.0.0
+## `seconds_to_ticks` <Badge type="info" text="Since v1.0.0" />
 
 将秒转换为 Minecraft 游戏刻（1 秒 = 20 刻）
 
@@ -187,9 +181,7 @@ let t = seconds_to_ticks(5)  // result: 100
 
 ---
 
-## `format_time_s`
-
-**版本：** 1.0.0
+## `format_time_s` <Badge type="info" text="Since v1.0.0" />
 
 从刻数中提取秒分量（0-59）
 
@@ -213,9 +205,7 @@ let s = format_time_s(1500)  // result: 15  (75 seconds mod 60)
 
 ---
 
-## `format_time_m`
-
-**版本：** 1.0.0
+## `format_time_m` <Badge type="info" text="Since v1.0.0" />
 
 从刻数中提取分钟分量（0-59）
 
@@ -239,9 +229,7 @@ let m = format_time_m(72000)  // result: 0  (1 hour)
 
 ---
 
-## `format_time_h`
-
-**版本：** 1.0.0
+## `format_time_h` <Badge type="info" text="Since v1.0.0" />
 
 从刻数中提取小时分量
 

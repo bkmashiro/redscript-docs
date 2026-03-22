@@ -12,9 +12,7 @@
 
 ---
 
-## `dft_noop`
-
-**Since:** 2.0.0
+## `dft_noop` <Badge type="info" text="Since v2.0.0" />
 
 Default no-op completion callback for `dft_coro`. Does nothing.
 
@@ -24,9 +22,7 @@ fn dft_noop(): void
 
 ---
 
-## `dft_real`
-
-**Since:** 2.0.0
+## `dft_real` <Badge type="info" text="Since v2.0.0" />
 
 Compute the Discrete Fourier Transform of `input[0..n-1]`.
 
@@ -58,9 +54,7 @@ dft_real(sig, 4, re, im)
 
 ---
 
-## `dft_magnitude`
-
-**Since:** 2.0.0
+## `dft_magnitude` <Badge type="info" text="Since v2.0.0" />
 
 Return the magnitude of DFT bin `k`: `|X[k]| = sqrt(re[k]² + im[k]²)` in ×10000.
 
@@ -89,9 +83,7 @@ let mag: int = dft_magnitude(re, im, 1)
 
 ---
 
-## `dft_power`
-
-**Since:** 2.0.0
+## `dft_power` <Badge type="info" text="Since v2.0.0" />
 
 Return the power spectrum value for bin `k`: `re[k]²/10000 + im[k]²/10000`.
 
@@ -120,9 +112,7 @@ let power: int = dft_power(re, im, 2)
 
 ---
 
-## `dft_freq_bin`
-
-**Since:** 2.0.0
+## `dft_freq_bin` <Badge type="info" text="Since v2.0.0" />
 
 Return the frequency (Hz) corresponding to DFT bin `k`.
 

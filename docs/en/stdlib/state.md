@@ -12,9 +12,7 @@
 
 ---
 
-## `get_state`
-
-**Since:** 1.0.0
+## `get_state` <Badge type="info" text="Since v1.0.0" />
 
 Read the current state of an entity.
 
@@ -42,9 +40,7 @@ let s: int = get_state(@s)
 
 ---
 
-## `set_state`
-
-**Since:** 1.0.0
+## `set_state` <Badge type="info" text="Since v1.0.0" />
 
 Write a state value to an entity.
 
@@ -67,9 +63,7 @@ set_state(@s, 1)
 
 ---
 
-## `is_state`
-
-**Since:** 1.0.0
+## `is_state` <Badge type="info" text="Since v1.0.0" />
 
 Check whether an entity is currently in the given state.
 
@@ -94,9 +88,7 @@ if (is_state(@s, STATE_COMBAT) == 1) { /* per-tick combat logic */ }
 
 ---
 
-## `init_state`
-
-**Since:** 1.0.0
+## `init_state` <Badge type="info" text="Since v1.0.0" />
 
 Initialise an entity's state only if it has not been set yet (score == -1).
 
@@ -121,9 +113,7 @@ init_state(@s, STATE_IDLE)
 
 ---
 
-## `transition`
-
-**Since:** 1.0.0
+## `transition` <Badge type="info" text="Since v1.0.0" />
 
 Attempt a guarded transition from `from` to `to`.
 

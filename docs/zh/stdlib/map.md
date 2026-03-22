@@ -12,9 +12,7 @@
 
 ---
 
-## `map_set`
-
-**版本：** 3.0.0
+## `map_set` <Badge type="info" text="Since v3.0.0" />
 
 将整数值写入 storage rs:maps.{map_name}.{key}
 
@@ -38,9 +36,7 @@ map_set("Stats", "kills", 7)
 
 ---
 
-## `map_get`
-
-**版本：** 3.0.0
+## `map_get` <Badge type="info" text="Since v3.0.0" />
 
 读取 storage rs:maps.{map_name}.{key} 中的整数值
 
@@ -65,9 +61,7 @@ let kills: int = map_get("Stats", "kills")
 
 ---
 
-## `map_has`
-
-**版本：** 3.0.0
+## `map_has` <Badge type="info" text="Since v3.0.0" />
 
 检查 storage rs:maps.{map_name}.{key} 是否存在
 
@@ -92,9 +86,7 @@ if (map_has("Stats", "kills") == 1) { }
 
 ---
 
-## `map_delete`
-
-**版本：** 3.0.0
+## `map_delete` <Badge type="info" text="Since v3.0.0" />
 
 删除指定 map 中的一个键
 
@@ -117,9 +109,7 @@ map_delete("Stats", "kills")
 
 ---
 
-## `map_clear`
-
-**版本：** 3.0.0
+## `map_clear` <Badge type="info" text="Since v3.0.0" />
 
 删除整个 storage rs:maps.{map_name} compound
 

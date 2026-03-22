@@ -14,9 +14,7 @@
 
 ---
 
-## `abs`
-
-**Since:** 1.0.0
+## `abs` <Badge type="info" text="Since v1.0.0" />
 
 Return the absolute value of x.
 
@@ -41,9 +39,7 @@ let b = abs(3)    // result: 3
 
 ---
 
-## `sign`
-
-**Since:** 1.0.0
+## `sign` <Badge type="info" text="Since v1.0.0" />
 
 Return the sign of x: 1, 0, or -1.
 
@@ -67,9 +63,7 @@ let s = sign(-42)  // result: -1
 
 ---
 
-## `min`
-
-**Since:** 1.0.0
+## `min` <Badge type="info" text="Since v1.0.0" />
 
 Return the smaller of two values.
 
@@ -94,9 +88,7 @@ let m = min(3, 7)  // result: 3
 
 ---
 
-## `max`
-
-**Since:** 1.0.0
+## `max` <Badge type="info" text="Since v1.0.0" />
 
 Return the larger of two values.
 
@@ -121,9 +113,7 @@ let m = max(3, 7)  // result: 7
 
 ---
 
-## `clamp`
-
-**Since:** 1.0.0
+## `clamp` <Badge type="info" text="Since v1.0.0" />
 
 Clamp x to the range [lo, hi].
 
@@ -150,9 +140,7 @@ let d = clamp(50, 0, 100)   // result: 50
 
 ---
 
-## `lerp`
-
-**Since:** 1.0.0
+## `lerp` <Badge type="info" text="Since v1.0.0" />
 
 Linear interpolation between a and b using fixed-point t in [0, 1000].
 
@@ -179,9 +167,7 @@ let w = lerp(100, 200, 750)   // result: 175
 
 ---
 
-## `sqrt_fixed`
-
-**Since:** 1.0.0
+## `sqrt_fixed` <Badge type="info" text="Since v1.0.0" />
 
 Fixed-point square root (scale = 1000).
 

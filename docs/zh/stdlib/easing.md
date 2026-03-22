@@ -29,9 +29,7 @@
 
 ---
 
-## `ease_linear`
-
-**版本：** 1.0.0
+## `ease_linear` <Badge type="info" text="Since v1.0.0" />
 
 线性缓动，无加速或减速
 
@@ -55,9 +53,7 @@ let v: int = ease_linear(5000)  // result: 5000 (50%)
 
 ---
 
-## `ease_in_quad`
-
-**版本：** 1.0.0
+## `ease_in_quad` <Badge type="info" text="Since v1.0.0" />
 
 二次方缓入，慢开始快结束
 
@@ -81,9 +77,7 @@ let v: int = ease_in_quad(5000)  // result: 2500 (25%)
 
 ---
 
-## `ease_out_quad`
-
-**版本：** 1.0.0
+## `ease_out_quad` <Badge type="info" text="Since v1.0.0" />
 
 二次方缓出，快开始慢结束
 
@@ -107,9 +101,7 @@ let v: int = ease_out_quad(5000)  // result: 7500 (75%)
 
 ---
 
-## `ease_in_out_quad`
-
-**版本：** 1.0.0
+## `ease_in_out_quad` <Badge type="info" text="Since v1.0.0" />
 
 二次方缓入缓出，两端慢中间快
 
@@ -133,9 +125,7 @@ let v: int = ease_in_out_quad(2500)  // result: 1250 (12.5%)
 
 ---
 
-## `ease_in_cubic`
-
-**版本：** 1.0.0
+## `ease_in_cubic` <Badge type="info" text="Since v1.0.0" />
 
 三次方缓入（比二次方更强烈）
 
@@ -159,9 +149,7 @@ let v: int = ease_in_cubic(5000)  // result: 1250 (12.5%)
 
 ---
 
-## `ease_out_cubic`
-
-**版本：** 1.0.0
+## `ease_out_cubic` <Badge type="info" text="Since v1.0.0" />
 
 三次方缓出
 
@@ -185,9 +173,7 @@ let v: int = ease_out_cubic(5000)  // result: 8750 (87.5%)
 
 ---
 
-## `ease_in_out_cubic`
-
-**版本：** 1.0.0
+## `ease_in_out_cubic` <Badge type="info" text="Since v1.0.0" />
 
 Cubic ease-in-out — slow start and end, fast middle (stronger than quadratic).
 
@@ -211,9 +197,7 @@ let v: int = ease_in_out_cubic(5000)  // result: 5000 (50%)
 
 ---
 
-## `ease_in_quart`
-
-**版本：** 1.0.0
+## `ease_in_quart` <Badge type="info" text="Since v1.0.0" />
 
 Quartic ease-in — very slow start, very fast end (t⁴).
 
@@ -237,9 +221,7 @@ let v: int = ease_in_quart(5000)  // result: 625 (6.25%)
 
 ---
 
-## `ease_out_quart`
-
-**版本：** 1.0.0
+## `ease_out_quart` <Badge type="info" text="Since v1.0.0" />
 
 Quartic ease-out — very fast start, very slow end (1 - (1-t)⁴).
 
@@ -263,9 +245,7 @@ let v: int = ease_out_quart(5000)  // result: 9375 (93.75%)
 
 ---
 
-## `ease_in_sine`
-
-**版本：** 1.0.0
+## `ease_in_sine` <Badge type="info" text="Since v1.0.0" />
 
 Sinusoidal ease-in — starts slow, accelerates (approximated with polynomial).
 
@@ -289,9 +269,7 @@ let v: int = ease_in_sine(5000)  // ≈ 2929 (sin curve at 50%)
 
 ---
 
-## `ease_out_sine`
-
-**版本：** 1.0.0
+## `ease_out_sine` <Badge type="info" text="Since v1.0.0" />
 
 Sinusoidal ease-out — fast start, decelerates gently (approximated).
 
@@ -315,9 +293,7 @@ let v: int = ease_out_sine(5000)  // ≈ 7071
 
 ---
 
-## `ease_in_out_sine`
-
-**版本：** 1.0.0
+## `ease_in_out_sine` <Badge type="info" text="Since v1.0.0" />
 
 Sinusoidal ease-in-out — smooth start and end via sine wave.
 
@@ -341,9 +317,7 @@ let v: int = ease_in_out_sine(5000)  // result: 5000 (symmetrical)
 
 ---
 
-## `ease_in_expo`
-
-**版本：** 1.0.0
+## `ease_in_expo` <Badge type="info" text="Since v1.0.0" />
 
 Exponential ease-in — nearly zero at start, explosive at end.
 
@@ -367,9 +341,7 @@ let v: int = ease_in_expo(8000)  // very small until close to the end
 
 ---
 
-## `ease_out_expo`
-
-**版本：** 1.0.0
+## `ease_out_expo` <Badge type="info" text="Since v1.0.0" />
 
 Exponential ease-out — explosive start, slows to near-zero at end.
 
@@ -393,9 +365,7 @@ let v: int = ease_out_expo(2000)  // large value even early
 
 ---
 
-## `ease_in_back`
-
-**版本：** 1.0.0
+## `ease_in_back` <Badge type="info" text="Since v1.0.0" />
 
 后退缓入，运动前先轻微后退（过冲预备）
 
@@ -419,9 +389,7 @@ let v: int = ease_in_back(2000)  // negative briefly, then rises
 
 ---
 
-## `ease_out_back`
-
-**版本：** 1.0.0
+## `ease_out_back` <Badge type="info" text="Since v1.0.0" />
 
 Back ease-out — overshoots target then settles back.
 
@@ -445,9 +413,7 @@ let v: int = ease_out_back(8000)  // overshoots near the end
 
 ---
 
-## `ease_in_out_back`
-
-**版本：** 1.0.0
+## `ease_in_out_back` <Badge type="info" text="Since v1.0.0" />
 
 Back ease-in-out — pullback on entry, overshoot on exit.
 
@@ -471,9 +437,7 @@ let v: int = ease_in_out_back(5000)  // result: 5000 (midpoint)
 
 ---
 
-## `ease_out_bounce`
-
-**版本：** 1.0.0
+## `ease_out_bounce` <Badge type="info" text="Since v1.0.0" />
 
 弹跳缓出，结尾模拟球落地弹跳
 
@@ -497,9 +461,7 @@ let v: int = ease_out_bounce(8000)  // bouncing near the end
 
 ---
 
-## `ease_in_bounce`
-
-**版本：** 1.0.0
+## `ease_in_bounce` <Badge type="info" text="Since v1.0.0" />
 
 Bounce ease-in — bounces at the start before settling into forward motion.
 
@@ -523,9 +485,7 @@ let v: int = ease_in_bounce(2000)  // bouncing at the start
 
 ---
 
-## `ease_in_out_bounce`
-
-**版本：** 1.0.0
+## `ease_in_out_bounce` <Badge type="info" text="Since v1.0.0" />
 
 Bounce ease-in-out — bounce on both entry and exit.
 
@@ -549,9 +509,7 @@ let v: int = ease_in_out_bounce(5000)  // result: 5000 (midpoint)
 
 ---
 
-## `ease_smooth`
-
-**版本：** 1.0.0
+## `ease_smooth` <Badge type="info" text="Since v1.0.0" />
 
 平滑步进缓动（Hermite 三次曲线：3t² - 2t³）
 
@@ -575,9 +533,7 @@ let v: int = ease_smooth(5000)  // result: 5000 (symmetric)
 
 ---
 
-## `ease_smoother`
-
-**版本：** 1.0.0
+## `ease_smoother` <Badge type="info" text="Since v1.0.0" />
 
 更平滑步进（Ken Perlin 五次曲线：6t⁵ - 15t⁴ + 10t³）
 

@@ -13,9 +13,7 @@
 
 ---
 
-## `dot2d`
-
-**Since:** 1.0.0
+## `dot2d` <Badge type="info" text="Since v1.0.0" />
 
 Dot product of two 2D integer vectors.
 
@@ -42,9 +40,7 @@ let d = dot2d(3, 4, 3, 4)  // result: 25
 
 ---
 
-## `length2d_fixed`
-
-**Since:** 1.0.0
+## `length2d_fixed` <Badge type="info" text="Since v1.0.0" />
 
 Euclidean length of a 2D vector, returned as ×1000 fixed-point.
 
@@ -69,9 +65,7 @@ let l = length2d_fixed(3, 4)  // result: 5000
 
 ---
 
-## `dot3d`
-
-**Since:** 1.0.0
+## `dot3d` <Badge type="info" text="Since v1.0.0" />
 
 Dot product of two 3D integer vectors.
 
@@ -100,9 +94,7 @@ let d = dot3d(1, 0, 0, 1, 0, 0)  // result: 1
 
 ---
 
-## `cross3d_x`
-
-**Since:** 1.0.0
+## `cross3d_x` <Badge type="info" text="Since v1.0.0" />
 
 X component of the cross product A×B (ay*bz − az*by).
 
@@ -121,9 +113,7 @@ fn cross3d_x(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
 
 ---
 
-## `cross3d_y`
-
-**Since:** 1.0.0
+## `cross3d_y` <Badge type="info" text="Since v1.0.0" />
 
 Y component of the cross product A×B (az*bx − ax*bz).
 
@@ -142,9 +132,7 @@ fn cross3d_y(ax: int, ay: int, az: int, bx: int, by: int, bz: int) -> int
 
 ---
 
-## `cross3d_z`
-
-**Since:** 1.0.0
+## `cross3d_z` <Badge type="info" text="Since v1.0.0" />
 
 Z component of the cross product A×B (ax*by − ay*bx).
 

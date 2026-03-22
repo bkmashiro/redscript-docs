@@ -25,9 +25,7 @@
 
 ---
 
-## `rotate2d_x`
-
-**Since:** 2.0.0
+## `rotate2d_x` <Badge type="info" text="Since v2.0.0" />
 
 X component after 2D rotation of `(x, y)` by `angle_deg` (×10000).
 
@@ -53,9 +51,7 @@ let rx: int = rotate2d_x(10000, 0, 900000)
 
 ---
 
-## `rotate2d_y`
-
-**Since:** 2.0.0
+## `rotate2d_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component after 2D rotation of `(x, y)` by `angle_deg` (×10000).
 
@@ -75,9 +71,7 @@ fn rotate2d_y(x: int, y: int, angle_deg: int): int
 
 ---
 
-## `scale_x`
-
-**Since:** 2.0.0
+## `scale_x` <Badge type="info" text="Since v2.0.0" />
 
 Scale X coordinate by `sx_fx` (×10000).
 
@@ -96,9 +90,7 @@ fn scale_x(x: int, sx_fx: int): int
 
 ---
 
-## `scale_y`
-
-**Since:** 2.0.0
+## `scale_y` <Badge type="info" text="Since v2.0.0" />
 
 Scale Y coordinate by `sy_fx` (×10000).
 
@@ -117,9 +109,7 @@ fn scale_y(y: int, sy_fx: int): int
 
 ---
 
-## `scale_z`
-
-**Since:** 2.0.0
+## `scale_z` <Badge type="info" text="Since v2.0.0" />
 
 Scale Z coordinate by `sz_fx` (×10000).
 
@@ -138,9 +128,7 @@ fn scale_z(z: int, sz_fx: int): int
 
 ---
 
-## `uniform_scale`
-
-**Since:** 2.0.0
+## `uniform_scale` <Badge type="info" text="Since v2.0.0" />
 
 Apply a uniform scale factor to a single component.
 
@@ -159,9 +147,7 @@ fn uniform_scale(v: int, s_fx: int): int
 
 ---
 
-## `rotate_y_x`
-
-**Since:** 2.0.0
+## `rotate_y_x` <Badge type="info" text="Since v2.0.0" />
 
 X component after rotation around the Y axis by `angle_deg` (×10000).
 
@@ -181,9 +167,7 @@ fn rotate_y_x(x: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_y_z`
-
-**Since:** 2.0.0
+## `rotate_y_z` <Badge type="info" text="Since v2.0.0" />
 
 Z component after rotation around the Y axis by `angle_deg` (×10000).
 
@@ -203,9 +187,7 @@ fn rotate_y_z(x: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_x_y`
-
-**Since:** 2.0.0
+## `rotate_x_y` <Badge type="info" text="Since v2.0.0" />
 
 Y component after rotation around the X axis by `angle_deg` (×10000).
 
@@ -225,9 +207,7 @@ fn rotate_x_y(y: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_x_z`
-
-**Since:** 2.0.0
+## `rotate_x_z` <Badge type="info" text="Since v2.0.0" />
 
 Z component after rotation around the X axis by `angle_deg` (×10000).
 
@@ -247,9 +227,7 @@ fn rotate_x_z(y: int, z: int, angle_deg: int): int
 
 ---
 
-## `quat_sin_half`
-
-**Since:** 2.0.0
+## `quat_sin_half` <Badge type="info" text="Since v2.0.0" />
 
 sin(angle/2) in ×1000 for a Display Entity Y-axis quaternion.
 
@@ -267,9 +245,7 @@ fn quat_sin_half(angle_deg_fx: int): int
 
 ---
 
-## `quat_cos_half`
-
-**Since:** 2.0.0
+## `quat_cos_half` <Badge type="info" text="Since v2.0.0" />
 
 cos(angle/2) in ×1000 for a Display Entity Y-axis quaternion.
 
@@ -287,9 +263,7 @@ fn quat_cos_half(angle_deg_fx: int): int
 
 ---
 
-## `billboard_y`
-
-**Since:** 2.0.0
+## `billboard_y` <Badge type="info" text="Since v2.0.0" />
 
 Compute the Y rotation for a billboard that faces the player.
 
@@ -313,9 +287,7 @@ let by: int = billboard_y(player_yaw)
 
 ---
 
-## `lerp_angle`
-
-**Since:** 2.0.0
+## `lerp_angle` <Badge type="info" text="Since v2.0.0" />
 
 Interpolate between two angles (×10000) taking the shortest arc.
 
@@ -343,9 +315,7 @@ let a: int = lerp_angle(0, 3600000, 5000)
 
 ---
 
-## `mat3_mul_elem`
-
-**Since:** 2.0.0
+## `mat3_mul_elem` <Badge type="info" text="Since v2.0.0" />
 
 Compute element `C[row][col]` of the 3×3 matrix product `A × B`.
 
@@ -369,9 +339,7 @@ fn mat3_mul_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: int, a2
 
 ---
 
-## `mat3_mul_vec3_elem`
-
-**Since:** 2.0.0
+## `mat3_mul_vec3_elem` <Badge type="info" text="Since v2.0.0" />
 
 Compute one component of the 3×3 matrix–vector product `A × v`.
 
@@ -391,9 +359,7 @@ fn mat3_mul_vec3_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: in
 
 ---
 
-## `mat4_mul_elem`
-
-**Since:** 2.0.0
+## `mat4_mul_elem` <Badge type="info" text="Since v2.0.0" />
 
 Compute element `C[row][col]` of the 4×4 matrix product `A × B`.
 
@@ -416,9 +382,7 @@ fn mat4_mul_elem( a00: int, a01: int, a02: int, a03: int, a10: int, a11: int, a1
 
 ---
 
-## `mat4_mul_vec4_elem`
-
-**Since:** 2.0.0
+## `mat4_mul_vec4_elem` <Badge type="info" text="Since v2.0.0" />
 
 Compute one component of the 4×4 matrix–homogeneous-vector product `A × v`.
 

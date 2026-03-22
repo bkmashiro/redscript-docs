@@ -23,9 +23,7 @@
 
 ---
 
-## `parabola_gravity`
-
-**版本：** 2.0.0
+## `parabola_gravity` <Badge type="info" text="Since v2.0.0" />
 
 每 tick 的 Minecraft 重力加速度（×10000，固定为 800）
 
@@ -37,9 +35,7 @@ fn parabola_gravity(): int
 
 ---
 
-## `parabola_gravity_half`
-
-**版本：** 2.0.0
+## `parabola_gravity_half` <Badge type="info" text="Since v2.0.0" />
 
 每 tick 重力加速度的一半（用于位移公式）
 
@@ -51,9 +47,7 @@ fn parabola_gravity_half(): int
 
 ---
 
-## `parabola_vx`
-
-**版本：** 2.0.0
+## `parabola_vx` <Badge type="info" text="Since v2.0.0" />
 
 计算在 ticks 个 tick 内水平移动 dx 格所需的初始 X 速度（×10000）
 
@@ -78,9 +72,7 @@ let vx: int = parabola_vx(10, 20)
 
 ---
 
-## `parabola_vy`
-
-**版本：** 2.0.0
+## `parabola_vy` <Badge type="info" text="Since v2.0.0" />
 
 计算在 ticks 个 tick 内垂直移动 dy 格所需的初始 Y 速度（×10000）
 
@@ -105,9 +97,7 @@ let vy: int = parabola_vy(5, 20)
 
 ---
 
-## `parabola_vz`
-
-**版本：** 2.0.0
+## `parabola_vz` <Badge type="info" text="Since v2.0.0" />
 
 计算在 ticks 个 tick 内水平移动 dz 格所需的初始 Z 速度（×10000）
 
@@ -126,9 +116,7 @@ fn parabola_vz(dz: int, ticks: int): int
 
 ---
 
-## `parabola_speed_xz`
-
-**版本：** 2.0.0
+## `parabola_speed_xz` <Badge type="info" text="Since v2.0.0" />
 
 计算到达 (dx, dz) 所需的水平速度大小（×10000）
 
@@ -148,9 +136,7 @@ fn parabola_speed_xz(dx: int, dz: int, ticks: int): int
 
 ---
 
-## `parabola_x`
-
-**版本：** 2.0.0
+## `parabola_x` <Badge type="info" text="Since v2.0.0" />
 
 在 t tick 时的 X 位置（格）
 
@@ -169,9 +155,7 @@ fn parabola_x(vx0: int, t: int): int
 
 ---
 
-## `parabola_y`
-
-**版本：** 2.0.0
+## `parabola_y` <Badge type="info" text="Since v2.0.0" />
 
 在 t tick 时的 Y 位置（格）
 
@@ -190,9 +174,7 @@ fn parabola_y(vy0: int, t: int): int
 
 ---
 
-## `parabola_z`
-
-**版本：** 2.0.0
+## `parabola_z` <Badge type="info" text="Since v2.0.0" />
 
 在 t tick 时的 Z 位置（格）
 
@@ -211,9 +193,7 @@ fn parabola_z(vz0: int, t: int): int
 
 ---
 
-## `parabola_flight_time`
-
-**版本：** 2.0.0
+## `parabola_flight_time` <Badge type="info" text="Since v2.0.0" />
 
 估算抛体返回发射高度时的 tick 数
 
@@ -237,9 +217,7 @@ let t: int = parabola_flight_time(8000)
 
 ---
 
-## `parabola_max_height`
-
-**版本：** 2.0.0
+## `parabola_max_height` <Badge type="info" text="Since v2.0.0" />
 
 抛体高出发射点的最大高度（格）
 
@@ -263,9 +241,7 @@ let h: int = parabola_max_height(8000)
 
 ---
 
-## `parabola_step_vx`
-
-**版本：** 2.0.0
+## `parabola_step_vx` <Badge type="info" text="Since v2.0.0" />
 
 对 X 速度施加一 tick 阻力
 
@@ -284,9 +260,7 @@ fn parabola_step_vx(vx: int, drag: int): int
 
 ---
 
-## `parabola_step_vy`
-
-**版本：** 2.0.0
+## `parabola_step_vy` <Badge type="info" text="Since v2.0.0" />
 
 对 Y 速度先施加重力再施加阻力（一 tick）
 
@@ -305,9 +279,7 @@ fn parabola_step_vy(vy: int, drag: int): int
 
 ---
 
-## `parabola_step_vz`
-
-**版本：** 2.0.0
+## `parabola_step_vz` <Badge type="info" text="Since v2.0.0" />
 
 对 Z 速度施加一 tick 阻力
 
@@ -326,9 +298,7 @@ fn parabola_step_vz(vz: int, drag: int): int
 
 ---
 
-## `parabola_ticks_for_range`
-
-**版本：** 2.0.0
+## `parabola_ticks_for_range` <Badge type="info" text="Since v2.0.0" />
 
 根据水平距离估算飞行 tick 数（启发式，约 0.8 格/tick 水平速度）
 
@@ -346,9 +316,7 @@ fn parabola_ticks_for_range(range: int): int
 
 ---
 
-## `parabola_in_range`
-
-**版本：** 2.0.0
+## `parabola_in_range` <Badge type="info" text="Since v2.0.0" />
 
 检查目标是否在水平射程内
 

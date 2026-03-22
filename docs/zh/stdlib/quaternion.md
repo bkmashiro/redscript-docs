@@ -41,9 +41,7 @@
 
 ---
 
-## `quat_identity_w`
-
-**版本：** 2.0.0
+## `quat_identity_w` <Badge type="info" text="Since v2.0.0" />
 
 单位四元数 (0,0,0,1) 的 W 分量
 
@@ -55,9 +53,7 @@ fn quat_identity_w(): int
 
 ---
 
-## `quat_identity_x`
-
-**版本：** 2.0.0
+## `quat_identity_x` <Badge type="info" text="Since v2.0.0" />
 
 单位四元数的 X 分量
 
@@ -69,9 +65,7 @@ fn quat_identity_x(): int
 
 ---
 
-## `quat_identity_y`
-
-**版本：** 2.0.0
+## `quat_identity_y` <Badge type="info" text="Since v2.0.0" />
 
 单位四元数的 Y 分量
 
@@ -83,9 +77,7 @@ fn quat_identity_y(): int
 
 ---
 
-## `quat_identity_z`
-
-**版本：** 2.0.0
+## `quat_identity_z` <Badge type="info" text="Since v2.0.0" />
 
 单位四元数的 Z 分量
 
@@ -97,9 +89,7 @@ fn quat_identity_z(): int
 
 ---
 
-## `quat_axis_x_x`
-
-**版本：** 2.0.0
+## `quat_axis_x_x` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg° 的四元数 X 分量
 
@@ -117,9 +107,7 @@ fn quat_axis_x_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_y`
-
-**版本：** 2.0.0
+## `quat_axis_x_y` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg° 的四元数 Y 分量
 
@@ -137,9 +125,7 @@ fn quat_axis_x_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_z`
-
-**版本：** 2.0.0
+## `quat_axis_x_z` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg° 的四元数 Z 分量
 
@@ -157,9 +143,7 @@ fn quat_axis_x_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_x_w`
-
-**版本：** 2.0.0
+## `quat_axis_x_w` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg° 的四元数 W 分量
 
@@ -177,9 +161,7 @@ fn quat_axis_x_w(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_x`
-
-**版本：** 2.0.0
+## `quat_axis_y_x` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg° 的四元数 X 分量
 
@@ -197,9 +179,7 @@ fn quat_axis_y_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_y`
-
-**版本：** 2.0.0
+## `quat_axis_y_y` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg° 的四元数 Y 分量
 
@@ -217,9 +197,7 @@ fn quat_axis_y_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_z`
-
-**版本：** 2.0.0
+## `quat_axis_y_z` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg° 的四元数 Z 分量
 
@@ -237,9 +215,7 @@ fn quat_axis_y_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_y_w`
-
-**版本：** 2.0.0
+## `quat_axis_y_w` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg° 的四元数 W 分量
 
@@ -257,9 +233,7 @@ fn quat_axis_y_w(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_x`
-
-**版本：** 2.0.0
+## `quat_axis_z_x` <Badge type="info" text="Since v2.0.0" />
 
 绕 Z 轴旋转 angle_deg° 的四元数 X 分量
 
@@ -277,9 +251,7 @@ fn quat_axis_z_x(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_y`
-
-**版本：** 2.0.0
+## `quat_axis_z_y` <Badge type="info" text="Since v2.0.0" />
 
 绕 Z 轴旋转 angle_deg° 的四元数 Y 分量
 
@@ -297,9 +269,7 @@ fn quat_axis_z_y(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_z`
-
-**版本：** 2.0.0
+## `quat_axis_z_z` <Badge type="info" text="Since v2.0.0" />
 
 绕 Z 轴旋转 angle_deg° 的四元数 Z 分量
 
@@ -317,9 +287,7 @@ fn quat_axis_z_z(angle_deg: int): int
 
 ---
 
-## `quat_axis_z_w`
-
-**版本：** 2.0.0
+## `quat_axis_z_w` <Badge type="info" text="Since v2.0.0" />
 
 绕 Z 轴旋转 angle_deg° 的四元数 W 分量
 
@@ -337,9 +305,7 @@ fn quat_axis_z_w(angle_deg: int): int
 
 ---
 
-## `quat_mul_x`
-
-**版本：** 2.0.0
+## `quat_mul_x` <Badge type="info" text="Since v2.0.0" />
 
 四元数乘积 a×b 的 X 分量（所有分量 ×10000）
 
@@ -364,9 +330,7 @@ let rx: int = quat_mul_x(ax, ay, az, aw, bx, by, bz, bw)
 
 ---
 
-## `quat_mul_y`
-
-**版本：** 2.0.0
+## `quat_mul_y` <Badge type="info" text="Since v2.0.0" />
 
 四元数乘积 a×b 的 Y 分量
 
@@ -385,9 +349,7 @@ fn quat_mul_y(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_mul_z`
-
-**版本：** 2.0.0
+## `quat_mul_z` <Badge type="info" text="Since v2.0.0" />
 
 四元数乘积 a×b 的 Z 分量
 
@@ -406,9 +368,7 @@ fn quat_mul_z(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_mul_w`
-
-**版本：** 2.0.0
+## `quat_mul_w` <Badge type="info" text="Since v2.0.0" />
 
 四元数乘积 a×b 的 W 分量
 
@@ -427,9 +387,7 @@ fn quat_mul_w(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw:
 
 ---
 
-## `quat_conj_x`
-
-**版本：** 2.0.0
+## `quat_conj_x` <Badge type="info" text="Since v2.0.0" />
 
 四元数共轭的 X 分量
 
@@ -447,9 +405,7 @@ fn quat_conj_x(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_y`
-
-**版本：** 2.0.0
+## `quat_conj_y` <Badge type="info" text="Since v2.0.0" />
 
 四元数共轭的 Y 分量
 
@@ -467,9 +423,7 @@ fn quat_conj_y(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_z`
-
-**版本：** 2.0.0
+## `quat_conj_z` <Badge type="info" text="Since v2.0.0" />
 
 四元数共轭的 Z 分量
 
@@ -487,9 +441,7 @@ fn quat_conj_z(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_conj_w`
-
-**版本：** 2.0.0
+## `quat_conj_w` <Badge type="info" text="Since v2.0.0" />
 
 四元数共轭的 W 分量（不变）
 
@@ -507,9 +459,7 @@ fn quat_conj_w(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_mag_sq`
-
-**版本：** 2.0.0
+## `quat_mag_sq` <Badge type="info" text="Since v2.0.0" />
 
 四元数的模平方（×10000）；单位四元数应等于 10000
 
@@ -527,9 +477,7 @@ fn quat_mag_sq(qx: int, qy: int, qz: int, qw: int): int
 
 ---
 
-## `quat_dot`
-
-**版本：** 2.0.0
+## `quat_dot` <Badge type="info" text="Since v2.0.0" />
 
 两个四元数的点积（×10000）
 
@@ -548,9 +496,7 @@ fn quat_dot(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, bw: i
 
 ---
 
-## `quat_slerp_x`
-
-**版本：** 2.0.0
+## `quat_slerp_x` <Badge type="info" text="Since v2.0.0" />
 
 两个四元数在 t/1000 处球面线性插值的 X 分量（LERP + 归一化近似）
 
@@ -576,9 +522,7 @@ let rx: int = quat_slerp_x(ax, ay, az, aw, bx, by, bz, bw, 500)
 
 ---
 
-## `quat_slerp_y`
-
-**版本：** 2.0.0
+## `quat_slerp_y` <Badge type="info" text="Since v2.0.0" />
 
 两个四元数在 t/1000 处球面线性插值的 Y 分量
 
@@ -598,9 +542,7 @@ fn quat_slerp_y(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_slerp_z`
-
-**版本：** 2.0.0
+## `quat_slerp_z` <Badge type="info" text="Since v2.0.0" />
 
 两个四元数在 t/1000 处球面线性插值的 Z 分量
 
@@ -620,9 +562,7 @@ fn quat_slerp_z(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_slerp_w`
-
-**版本：** 2.0.0
+## `quat_slerp_w` <Badge type="info" text="Since v2.0.0" />
 
 两个四元数在 t/1000 处球面线性插值的 W 分量
 
@@ -642,9 +582,7 @@ fn quat_slerp_w(ax: int, ay: int, az: int, aw: int, bx: int, by: int, bz: int, b
 
 ---
 
-## `quat_euler_x`
-
-**版本：** 2.0.0
+## `quat_euler_x` <Badge type="info" text="Since v2.0.0" />
 
 欧拉角（YXZ 顺序，MC 约定）转换为四元数的 X 分量
 
@@ -670,9 +608,7 @@ let qx: int = quat_euler_x(90, 0, 0)
 
 ---
 
-## `quat_euler_y`
-
-**版本：** 2.0.0
+## `quat_euler_y` <Badge type="info" text="Since v2.0.0" />
 
 欧拉角（YXZ 顺序）转换为四元数的 Y 分量
 
@@ -692,9 +628,7 @@ fn quat_euler_y(yaw: int, pitch: int, roll: int): int
 
 ---
 
-## `quat_euler_z`
-
-**版本：** 2.0.0
+## `quat_euler_z` <Badge type="info" text="Since v2.0.0" />
 
 欧拉角（YXZ 顺序）转换为四元数的 Z 分量
 
@@ -714,9 +648,7 @@ fn quat_euler_z(yaw: int, pitch: int, roll: int): int
 
 ---
 
-## `quat_euler_w`
-
-**版本：** 2.0.0
+## `quat_euler_w` <Badge type="info" text="Since v2.0.0" />
 
 欧拉角（YXZ 顺序）转换为四元数的 W 分量
 

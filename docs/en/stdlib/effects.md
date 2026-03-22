@@ -19,9 +19,7 @@
 
 ---
 
-## `speed`
-
-**Since:** 1.0.0
+## `speed` <Badge type="info" text="Since v1.0.0" />
 
 Give a speed boost to the target entity.
 
@@ -47,9 +45,7 @@ speed(@p, 200, 1)  // Speed II for 10 seconds
 
 ---
 
-## `jump`
-
-**Since:** 1.0.0
+## `jump` <Badge type="info" text="Since v1.0.0" />
 
 Give a jump boost to the target entity.
 
@@ -75,9 +71,7 @@ jump(@p, 100, 0)  // Jump Boost I for 5 seconds
 
 ---
 
-## `regen`
-
-**Since:** 1.0.0
+## `regen` <Badge type="info" text="Since v1.0.0" />
 
 Give regeneration to the target entity.
 
@@ -103,9 +97,7 @@ regen(@p, 60, 0)  // Regeneration I for 3 seconds
 
 ---
 
-## `resistance`
-
-**Since:** 1.0.0
+## `resistance` <Badge type="info" text="Since v1.0.0" />
 
 Give damage resistance to the target entity.
 
@@ -131,9 +123,7 @@ resistance(@p, 400, 0)  // Resistance I for 20 seconds
 
 ---
 
-## `strength`
-
-**Since:** 1.0.0
+## `strength` <Badge type="info" text="Since v1.0.0" />
 
 Give strength to the target entity.
 
@@ -159,9 +149,7 @@ strength(@p, 200, 1)  // Strength II for 10 seconds
 
 ---
 
-## `invisible`
-
-**Since:** 1.0.0
+## `invisible` <Badge type="info" text="Since v1.0.0" />
 
 Make the target entity invisible.
 
@@ -186,9 +174,7 @@ invisible(@p, 300)  // invisibility for 15 seconds
 
 ---
 
-## `night_vision`
-
-**Since:** 1.0.0
+## `night_vision` <Badge type="info" text="Since v1.0.0" />
 
 Give night vision to the target entity.
 
@@ -213,9 +199,7 @@ night_vision(@p, 6000)  // night vision for 5 minutes
 
 ---
 
-## `slow_fall`
-
-**Since:** 1.0.0
+## `slow_fall` <Badge type="info" text="Since v1.0.0" />
 
 Give slow falling to the target entity.
 
@@ -240,9 +224,7 @@ slow_fall(@p, 200)  // slow falling for 10 seconds
 
 ---
 
-## `glow`
-
-**Since:** 1.0.0
+## `glow` <Badge type="info" text="Since v1.0.0" />
 
 Give the glowing outline effect to the target entity.
 
@@ -267,9 +249,7 @@ glow(@e[type=zombie], 100)  // make all zombies glow for 5 seconds
 
 ---
 
-## `clear_effects`
-
-**Since:** 1.0.0
+## `clear_effects` <Badge type="info" text="Since v1.0.0" />
 
 Clear all active effects from the target entity.
 
@@ -293,9 +273,7 @@ clear_effects(@p)  // remove all effects from nearest player
 
 ---
 
-## `clear_effect`
-
-**Since:** 1.0.0
+## `clear_effect` <Badge type="info" text="Since v1.0.0" />
 
 Clear a specific effect from the target entity.
 
@@ -320,9 +298,7 @@ clear_effect(@p, "minecraft:poison")  // cure poison
 
 ---
 
-## `buff_all`
-
-**Since:** 1.0.0
+## `buff_all` <Badge type="info" text="Since v1.0.0" />
 
 Apply a full buff package (Speed I, Strength I, Regeneration I, Resistance I).
 

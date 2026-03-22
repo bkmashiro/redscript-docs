@@ -11,9 +11,7 @@
 
 ---
 
-## `insertion_sort`
-
-**Since:** 1.0.0
+## `insertion_sort` <Badge type="info" text="Since v1.0.0" />
 
 Sort an integer array ascending in-place using insertion sort.
 
@@ -40,9 +38,7 @@ insertion_sort(data, 4)
 
 ---
 
-## `insertion_sort_desc`
-
-**Since:** 1.0.0
+## `insertion_sort_desc` <Badge type="info" text="Since v1.0.0" />
 
 Sort an integer array descending in-place using insertion sort.
 
@@ -69,9 +65,7 @@ insertion_sort_desc(scores, 4)
 
 ---
 
-## `sort_merge`
-
-**Since:** 1.0.0
+## `sort_merge` <Badge type="info" text="Since v1.0.0" />
 
 Merge two sorted integer arrays into a new sorted array.
 
@@ -99,9 +93,7 @@ let merged: int[] = sort_merge([1, 3, 5], 3, [2, 4, 6], 3)
 
 ---
 
-## `merge_sort_noop`
-
-**Since:** 1.0.0
+## `merge_sort_noop` <Badge type="info" text="Since v1.0.0" />
 
 Default no-op callback for merge_sort_coro. Replace with your own handler to react when sorting completes.
 

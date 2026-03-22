@@ -25,9 +25,7 @@
 
 ---
 
-## `rotate2d_x`
-
-**版本：** 2.0.0
+## `rotate2d_x` <Badge type="info" text="Since v2.0.0" />
 
 将 (x, y) 绕原点旋转 angle_deg（×10000°）后的 X 分量
 
@@ -53,9 +51,7 @@ let rx: int = rotate2d_x(10000, 0, 900000)
 
 ---
 
-## `rotate2d_y`
-
-**版本：** 2.0.0
+## `rotate2d_y` <Badge type="info" text="Since v2.0.0" />
 
 将 (x, y) 绕原点旋转 angle_deg（×10000°）后的 Y 分量
 
@@ -75,9 +71,7 @@ fn rotate2d_y(x: int, y: int, angle_deg: int): int
 
 ---
 
-## `scale_x`
-
-**版本：** 2.0.0
+## `scale_x` <Badge type="info" text="Since v2.0.0" />
 
 对 X 坐标施加缩放（sx_fx ×10000）
 
@@ -96,9 +90,7 @@ fn scale_x(x: int, sx_fx: int): int
 
 ---
 
-## `scale_y`
-
-**版本：** 2.0.0
+## `scale_y` <Badge type="info" text="Since v2.0.0" />
 
 对 Y 坐标施加缩放
 
@@ -117,9 +109,7 @@ fn scale_y(y: int, sy_fx: int): int
 
 ---
 
-## `scale_z`
-
-**版本：** 2.0.0
+## `scale_z` <Badge type="info" text="Since v2.0.0" />
 
 对 Z 坐标施加缩放
 
@@ -138,9 +128,7 @@ fn scale_z(z: int, sz_fx: int): int
 
 ---
 
-## `uniform_scale`
-
-**版本：** 2.0.0
+## `uniform_scale` <Badge type="info" text="Since v2.0.0" />
 
 对单个分量施加均匀缩放
 
@@ -159,9 +147,7 @@ fn uniform_scale(v: int, s_fx: int): int
 
 ---
 
-## `rotate_y_x`
-
-**版本：** 2.0.0
+## `rotate_y_x` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg（×10000°）后的 X 分量
 
@@ -181,9 +167,7 @@ fn rotate_y_x(x: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_y_z`
-
-**版本：** 2.0.0
+## `rotate_y_z` <Badge type="info" text="Since v2.0.0" />
 
 绕 Y 轴旋转 angle_deg（×10000°）后的 Z 分量
 
@@ -203,9 +187,7 @@ fn rotate_y_z(x: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_x_y`
-
-**版本：** 2.0.0
+## `rotate_x_y` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg（×10000°）后的 Y 分量
 
@@ -225,9 +207,7 @@ fn rotate_x_y(y: int, z: int, angle_deg: int): int
 
 ---
 
-## `rotate_x_z`
-
-**版本：** 2.0.0
+## `rotate_x_z` <Badge type="info" text="Since v2.0.0" />
 
 绕 X 轴旋转 angle_deg（×10000°）后的 Z 分量
 
@@ -247,9 +227,7 @@ fn rotate_x_z(y: int, z: int, angle_deg: int): int
 
 ---
 
-## `quat_sin_half`
-
-**版本：** 2.0.0
+## `quat_sin_half` <Badge type="info" text="Since v2.0.0" />
 
 用于 Display Entity Y 轴四元数的 sin(angle/2)，×1000
 
@@ -267,9 +245,7 @@ fn quat_sin_half(angle_deg_fx: int): int
 
 ---
 
-## `quat_cos_half`
-
-**版本：** 2.0.0
+## `quat_cos_half` <Badge type="info" text="Since v2.0.0" />
 
 用于 Display Entity Y 轴四元数的 cos(angle/2)，×1000
 
@@ -287,9 +263,7 @@ fn quat_cos_half(angle_deg_fx: int): int
 
 ---
 
-## `billboard_y`
-
-**版本：** 2.0.0
+## `billboard_y` <Badge type="info" text="Since v2.0.0" />
 
 计算朝向玩家的广告牌 Y 轴旋转角度
 
@@ -313,9 +287,7 @@ let by: int = billboard_y(player_yaw)
 
 ---
 
-## `lerp_angle`
-
-**版本：** 2.0.0
+## `lerp_angle` <Badge type="info" text="Since v2.0.0" />
 
 在两个角度（×10000）之间沿最短弧线性插值
 
@@ -341,9 +313,7 @@ let a: int = lerp_angle(0, 3600000, 5000)
 
 ---
 
-## `mat3_mul_elem`
-
-**版本：** 2.0.0
+## `mat3_mul_elem` <Badge type="info" text="Since v2.0.0" />
 
 计算 3×3 矩阵乘积 A×B 的元素 C[row][col]（×10000）
 
@@ -364,9 +334,7 @@ fn mat3_mul_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: int, a2
 
 ---
 
-## `mat3_mul_vec3_elem`
-
-**版本：** 2.0.0
+## `mat3_mul_vec3_elem` <Badge type="info" text="Since v2.0.0" />
 
 计算 3×3 矩阵与列向量乘积 A×v 的一个分量
 
@@ -386,9 +354,7 @@ fn mat3_mul_vec3_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: in
 
 ---
 
-## `mat4_mul_elem`
-
-**版本：** 2.0.0
+## `mat4_mul_elem` <Badge type="info" text="Since v2.0.0" />
 
 计算 4×4 矩阵乘积 A×B 的元素 C[row][col]（×10000）
 
@@ -409,9 +375,7 @@ fn mat4_mul_elem( a00: int, a01: int, a02: int, a03: int, a10: int, a11: int, a1
 
 ---
 
-## `mat4_mul_vec4_elem`
-
-**版本：** 2.0.0
+## `mat4_mul_vec4_elem` <Badge type="info" text="Since v2.0.0" />
 
 计算 4×4 矩阵与齐次向量乘积 A×v 的一个分量
 

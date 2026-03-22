@@ -14,9 +14,7 @@
 
 ---
 
-## `heap_new`
-
-**Since:** 1.0.0
+## `heap_new` <Badge type="info" text="Since v1.0.0" />
 
 Allocate a new empty heap with capacity for 64 elements.
 
@@ -34,9 +32,7 @@ let h: int[] = heap_new()
 
 ---
 
-## `heap_size`
-
-**Since:** 1.0.0
+## `heap_size` <Badge type="info" text="Since v1.0.0" />
 
 Return the number of elements currently stored in the heap.
 
@@ -60,9 +56,7 @@ let sz: int = heap_size(h)
 
 ---
 
-## `heap_peek`
-
-**Since:** 1.0.0
+## `heap_peek` <Badge type="info" text="Since v1.0.0" />
 
 Return the root element without removing it (min for MinHeap, max for MaxHeap).
 
@@ -86,9 +80,7 @@ let top: int = heap_peek(h)  // peek min without modifying heap
 
 ---
 
-## `heap_push`
-
-**Since:** 1.0.0
+## `heap_push` <Badge type="info" text="Since v1.0.0" />
 
 Insert a value into a MinHeap (smallest element at root).
 
@@ -115,9 +107,7 @@ h = heap_push(h, 7)
 
 ---
 
-## `heap_pop`
-
-**Since:** 1.0.0
+## `heap_pop` <Badge type="info" text="Since v1.0.0" />
 
 Remove and discard the minimum element from a MinHeap.
 
@@ -142,9 +132,7 @@ h = heap_pop(h)  // remove the minimum
 
 ---
 
-## `max_heap_push`
-
-**Since:** 1.0.0
+## `max_heap_push` <Badge type="info" text="Since v1.0.0" />
 
 Insert a value into a MaxHeap (largest element at root).
 
@@ -171,9 +159,7 @@ h = max_heap_push(h, 99)
 
 ---
 
-## `max_heap_pop`
-
-**Since:** 1.0.0
+## `max_heap_pop` <Badge type="info" text="Since v1.0.0" />
 
 Remove and discard the maximum element from a MaxHeap.
 

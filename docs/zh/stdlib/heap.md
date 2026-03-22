@@ -14,9 +14,7 @@
 
 ---
 
-## `heap_new`
-
-**版本：** 1.0.0
+## `heap_new` <Badge type="info" text="Since v1.0.0" />
 
 分配一个可容纳 64 个元素的新空堆
 
@@ -34,9 +32,7 @@ let h: int[] = heap_new()
 
 ---
 
-## `heap_size`
-
-**版本：** 1.0.0
+## `heap_size` <Badge type="info" text="Since v1.0.0" />
 
 返回堆中当前存储的元素数量
 
@@ -60,9 +56,7 @@ let sz: int = heap_size(h)
 
 ---
 
-## `heap_peek`
-
-**版本：** 1.0.0
+## `heap_peek` <Badge type="info" text="Since v1.0.0" />
 
 查看堆顶元素但不移除（最小堆返回最小值，最大堆返回最大值）
 
@@ -86,9 +80,7 @@ let top: int = heap_peek(h)  // peek min without modifying heap
 
 ---
 
-## `heap_push`
-
-**版本：** 1.0.0
+## `heap_push` <Badge type="info" text="Since v1.0.0" />
 
 向最小堆插入一个值
 
@@ -115,9 +107,7 @@ h = heap_push(h, 7)
 
 ---
 
-## `heap_pop`
-
-**版本：** 1.0.0
+## `heap_pop` <Badge type="info" text="Since v1.0.0" />
 
 移除并丢弃最小堆的最小元素
 
@@ -142,9 +132,7 @@ h = heap_pop(h)  // remove the minimum
 
 ---
 
-## `max_heap_push`
-
-**版本：** 1.0.0
+## `max_heap_push` <Badge type="info" text="Since v1.0.0" />
 
 向最大堆插入一个值
 
@@ -171,9 +159,7 @@ h = max_heap_push(h, 99)
 
 ---
 
-## `max_heap_pop`
-
-**版本：** 1.0.0
+## `max_heap_pop` <Badge type="info" text="Since v1.0.0" />
 
 移除并丢弃最大堆的最大元素
 

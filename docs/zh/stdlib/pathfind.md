@@ -17,9 +17,7 @@
 
 ---
 
-## `pf_pack`
-
-**版本：** 1.0.0
+## `pf_pack` <Badge type="info" text="Since v1.0.0" />
 
 将 (x, z) 网格坐标编码为单个打包整数
 
@@ -44,9 +42,7 @@ let p: int = pf_pack(3, 7)  // result: 55
 
 ---
 
-## `pf_unpack_x`
-
-**版本：** 1.0.0
+## `pf_unpack_x` <Badge type="info" text="Since v1.0.0" />
 
 从打包网格索引中提取 X 坐标
 
@@ -70,9 +66,7 @@ let x: int = pf_unpack_x(55)  // result: 3
 
 ---
 
-## `pf_unpack_z`
-
-**版本：** 1.0.0
+## `pf_unpack_z` <Badge type="info" text="Since v1.0.0" />
 
 从打包网格索引中提取 Z 坐标
 
@@ -96,9 +90,7 @@ let z: int = pf_unpack_z(55)  // result: 7
 
 ---
 
-## `pf_new_map`
-
-**版本：** 1.0.0
+## `pf_new_map` <Badge type="info" text="Since v1.0.0" />
 
 分配一个新的 16×16 网格障碍物地图，所有格子初始可通行
 
@@ -116,9 +108,7 @@ let map: int[] = pf_new_map()
 
 ---
 
-## `pf_set_blocked`
-
-**版本：** 1.0.0
+## `pf_set_blocked` <Badge type="info" text="Since v1.0.0" />
 
 将网格格子标记为不可通行（阻塞）
 
@@ -144,9 +134,7 @@ pf_set_blocked(map, 5, 3)  // block cell (5, 3)
 
 ---
 
-## `pf_set_open`
-
-**版本：** 1.0.0
+## `pf_set_open` <Badge type="info" text="Since v1.0.0" />
 
 将网格格子标记为可通行（开放）
 
@@ -172,9 +160,7 @@ pf_set_open(map, 5, 3)  // re-open previously blocked cell (5, 3)
 
 ---
 
-## `pf_is_blocked`
-
-**版本：** 1.0.0
+## `pf_is_blocked` <Badge type="info" text="Since v1.0.0" />
 
 检查网格格子是否被阻塞或超出边界
 
@@ -200,9 +186,7 @@ let blocked: int = pf_is_blocked(map, 5, 3)
 
 ---
 
-## `pf_heuristic`
-
-**版本：** 1.0.0
+## `pf_heuristic` <Badge type="info" text="Since v1.0.0" />
 
 计算两个网格格子之间的曼哈顿距离（×10000 精度）
 
@@ -229,9 +213,7 @@ let h: int = pf_heuristic(0, 0, 3, 4)  // result: 70000 (7 Manhattan steps × 10
 
 ---
 
-## `pathfind_bfs`
-
-**版本：** 1.0.0
+## `pathfind_bfs` <Badge type="info" text="Since v1.0.0" />
 
 使用 BFS 在 16×16 网格上寻找两格子之间的最短路径
 
@@ -262,9 +244,7 @@ let x0: int = pf_unpack_x(path[0])
 
 ---
 
-## `pf_noop`
-
-**版本：** 1.0.0
+## `pf_noop` <Badge type="info" text="Since v1.0.0" />
 
 Default no-op onDone callback for pathfind_bfs_coro. Replace with your own handler.
 
