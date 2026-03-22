@@ -16,7 +16,7 @@ export default defineConfig({
       {
         ...JSON.parse(readFileSync(resolve(__dirname, 'languages/mcrs.tmLanguage.json'), 'utf-8')),
         name: 'mcrs',
-        aliases: ['rs'],
+        aliases: ['rs', 'redscript'],
       }
     ]
   },
