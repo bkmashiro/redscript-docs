@@ -1,87 +1,150 @@
-# `teams` — Team management
+# Teams
 
-Import: `import teams;`
+> 本文档由 `src/stdlib/teams.mcrs` 自动生成，请勿手动编辑。
 
-Team management helpers for common multi-team game setups. Provides named team creation with colour and friendly-fire settings, player assignment/removal, and full 2- and 4-team game setup/cleanup helpers.
+## API 列表
 
-## Functions
+- [create_team](#create-team)
+- [create_red_team](#create-red-team)
+- [create_blue_team](#create-blue-team)
+- [create_green_team](#create-green-team)
+- [create_yellow_team](#create-yellow-team)
+- [add_to_team](#add-to-team)
+- [remove_from_teams](#remove-from-teams)
+- [setup_two_teams](#setup-two-teams)
+- [setup_four_teams](#setup-four-teams)
+- [cleanup_teams](#cleanup-teams)
 
-### `create_team(name: string, color: string)`
+---
 
-Create a team with the given name and color using `team_add` and `team_option`.
+## `create_team`
 
-**Example:**
-```rs
-import teams;
-create_team("purple", "dark_purple");
+创建一个队伍并设置显示颜色
+
+```redscript
+fn create_team(name: string, color: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `name` | 计分板队伍名称 |
+| `color` | Minecraft 队伍颜色字符串，如 `red` 或 `blue` |
+
+**示例**
+
+```redscript
+create_team("spectator", "gray")
 ```
 
 ---
 
-### `create_red_team()`
+## `create_red_team`
 
-Create the `red` team with red colour and friendly fire disabled.
+创建默认红队，并关闭队友伤害
 
----
+```redscript
+fn create_red_team()
+```
 
-### `create_blue_team()`
+**示例**
 
-Create the `blue` team with blue colour and friendly fire disabled.
-
----
-
-### `create_green_team()`
-
-Create the `green` team with green colour and friendly fire disabled.
-
----
-
-### `create_yellow_team()`
-
-Create the `yellow` team with yellow colour and friendly fire disabled.
-
----
-
-### `add_to_team(target: selector, team_name: string)`
-
-Add entities to a team.
-
-**Example:**
-```rs
-import teams;
-add_to_team(@s, "red");
+```redscript
+create_red_team()
 ```
 
 ---
 
-### `remove_from_teams(target: selector)`
+## `create_blue_team`
 
-Remove entities from all teams.
+创建默认蓝队，并关闭队友伤害
 
----
-
-### `setup_two_teams()`
-
-Create red and blue teams. Convenience wrapper for 1v1 or 2-team games.
-
-**Example:**
-```rs
-import teams;
-
-@load
-fn init() {
-    setup_two_teams();
-}
+```redscript
+fn create_blue_team()
 ```
 
 ---
 
-### `setup_four_teams()`
+## `create_green_team`
 
-Create red, blue, green, and yellow teams.
+创建默认绿队，并关闭队友伤害
+
+```redscript
+fn create_green_team()
+```
 
 ---
 
-### `cleanup_teams()`
+## `create_yellow_team`
 
-Remove red, blue, green, and yellow teams.
+创建默认黄队，并关闭队友伤害
+
+```redscript
+fn create_yellow_team()
+```
+
+---
+
+## `add_to_team`
+
+将目标选择器加入指定队伍
+
+```redscript
+fn add_to_team(target: selector, team_name: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要加入队伍的目标选择器 |
+| `team_name` | 已存在的队伍名称 |
+
+---
+
+## `remove_from_teams`
+
+将目标选择器从所有队伍中移除
+
+```redscript
+fn remove_from_teams(target: selector)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要移除的目标选择器 |
+
+---
+
+## `setup_two_teams`
+
+创建默认的双队配置（红队和蓝队）
+
+```redscript
+fn setup_two_teams()
+```
+
+---
+
+## `setup_four_teams`
+
+创建默认的四队配置（红蓝绿黄）
+
+```redscript
+fn setup_four_teams()
+```
+
+---
+
+## `cleanup_teams`
+
+删除本模块默认创建的四个标准队伍
+
+```redscript
+fn cleanup_teams()
+```
+
+---

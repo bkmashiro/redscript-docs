@@ -2,7 +2,7 @@
 
 > 本文档由 `src/stdlib/math.mcrs` 自动生成，请勿手动编辑。
 
-## 函数列表
+## API 列表
 
 - [abs](#abs)
 - [sign](#sign)

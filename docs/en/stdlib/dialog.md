@@ -1,120 +1,124 @@
-# `dialog` — Player dialog and messaging
+# Dialog
 
-Import: `import dialog;`
+> Auto-generated from `src/stdlib/dialog.mcrs` — do not edit manually.
 
-Helpers for displaying messages to players: chat messages, broadcast, coloured text, title/subtitle overlays, action bar text, and tab-list header/footer. Built on Minecraft's `tellraw`, `title`, and `actionbar` commands.
+## API
 
-## Functions
+- [dialog_say](#dialog-say)
+- [dialog_broadcast](#dialog-broadcast)
+- [dialog_say_color](#dialog-say-color)
+- [dialog_title](#dialog-title)
+- [dialog_title_clear](#dialog-title-clear)
+- [dialog_actionbar](#dialog-actionbar)
 
-### `dialog_say(p: selector, msg: string)`
+---
 
-Send a plain chat message to the targeted player(s).
+## `dialog_say`
 
-**Example:**
-```rs
-import dialog;
-dialog_say(@s, "Welcome to the arena!");
+Sends a plain white chat message to a player or selector.
+
+```redscript
+fn dialog_say(p: selector, msg: string)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient selector |
+| `msg` | Plain text message content |
+
+**Example**
+
+```redscript
+dialog_say(@p, "Quest updated")
 ```
 
 ---
 
-### `dialog_broadcast(msg: string)`
+## `dialog_broadcast`
 
-Send a chat message to **all** players on the server (`@a`).
+Broadcasts a plain white chat message to all players.
 
-**Example:**
-```rs
-import dialog;
-dialog_broadcast("The round has started!");
+```redscript
+fn dialog_broadcast(msg: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `msg` | Plain text message content |
 
 ---
 
-### `dialog_say_color(p: selector, msg: string, color: int)`
+## `dialog_say_color`
 
-Send a coloured chat message. `color` is an integer 0–4:
+Sends a colored chat message to a player or selector.
+Color mapping: `0=white`, `1=red`, `2=green`, `3=gold`, `4=aqua`.
+Any other value falls back to white.
 
-| Value | Colour |
-|-------|--------|
-| `0` | White (default) |
-| `1` | Yellow |
-| `2` | Red |
-| `3` | Green |
-| `4` | Aqua |
-
-**Example:**
-```rs
-import dialog;
-dialog_say_color(@s, "Warning: low health!", 2);   // red
-dialog_say_color(@a, "You won!", 3);               // green
+```redscript
+fn dialog_say_color(p: selector, msg: string, color: int)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient selector |
+| `msg` | Plain text message content |
+| `color` | Color selector integer |
 
 ---
 
-### `dialog_title(p: selector, title: string, subtitle: string)`
+## `dialog_title`
 
-Display a title and subtitle overlay to the targeted player(s). Uses Minecraft's default fade-in/stay/fade-out timing.
+Displays a title and subtitle on a player's screen.
 
-**Example:**
-```rs
-import dialog;
-dialog_title(@s, "Round 1", "Survive for 60 seconds");
+```redscript
+fn dialog_title(p: selector, title: string, subtitle: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient selector |
+| `title` | Large title text |
+| `subtitle` | Subtitle text shown below the title |
 
 ---
 
-### `dialog_title_clear(p: selector)`
+## `dialog_title_clear`
 
-Clear the title overlay immediately for the targeted player(s).
+Clears any currently displayed title for the target selector.
 
-**Example:**
-```rs
-import dialog;
-dialog_title_clear(@s);
+```redscript
+fn dialog_title_clear(p: selector)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient selector |
 
 ---
 
-### `dialog_actionbar(p: selector, msg: string)`
+## `dialog_actionbar`
 
-Display a message in the action bar (the area just above the hotbar). The message disappears after ~2 seconds unless refreshed every tick.
+Displays a short message in the player's actionbar.
 
-**Example:**
-```rs
-import dialog;
-dialog_actionbar(@s, "HP: ${score(@s, #hp)} / 100");
+```redscript
+fn dialog_actionbar(p: selector, msg: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient selector |
+| `msg` | Plain text message content |
 
 ---
-
-## Full example
-
-```rs
-import dialog;
-import state;
-
-let STATE_WAITING: int = 0;
-let STATE_PLAYING: int = 1;
-let STATE_ENDED:   int = 2;
-
-@load
-fn on_load() {
-    dialog_broadcast("Datapack loaded. Type /trigger start to begin.");
-}
-
-fn start_round(round: int) {
-    dialog_broadcast("Round ${round} starting!");
-    dialog_title(@a, "Round ${round}", "Fight!");
-}
-
-fn warn_low_hp() {
-    dialog_say_color(@s, "Your health is critically low!", 2);
-    dialog_actionbar(@s, "⚠ Low HP — heal up!");
-}
-
-fn end_round(winner: selector) {
-    dialog_title_clear(@a);
-    dialog_title(winner, "Victory!", "You won the round");
-    dialog_broadcast("Round over!");
-}
-```

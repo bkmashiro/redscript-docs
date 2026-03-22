@@ -1,101 +1,177 @@
-# `bossbar` — Boss bar UI helpers
+# Bossbar
 
-Import: `import bossbar;`
+> Auto-generated from `src/stdlib/bossbar.mcrs` — do not edit manually.
 
-Convenience wrappers around the built-in `bossbar_*` commands for common boss bar patterns: timers, health bars, progress bars, and dynamic colour updates based on percentage.
+## API
 
-## Functions
+- [create_timer_bar](#create-timer-bar)
+- [create_health_bar](#create-health-bar)
+- [create_progress_bar](#create-progress-bar)
+- [update_bar](#update-bar)
+- [hide_bar](#hide-bar)
+- [show_bar](#show-bar)
+- [remove_bar](#remove-bar)
+- [update_bar_color](#update-bar-color)
 
-### `create_timer_bar(id: string, name: string, max_seconds: int)`
+---
 
-Create and show a green timer boss bar visible to all players. Value starts at `max_seconds × 20` (full) and is displayed with the `"progress"` style.
+## `create_timer_bar`
 
-**Example:**
-```rs
-import bossbar;
-create_timer_bar("my_pack:timer", "Round Timer", 60);
+Creates a visible timer bossbar for all players.
+The bossbar max and current value are initialized to `max_seconds * 20`
+so callers can update it directly in game ticks.
+
+```redscript
+fn create_timer_bar(id: string, name: string, max_seconds: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier, usually `<namespace>:<name>` |
+| `name` | Display name shown on the bossbar |
+| `max_seconds` | Duration in seconds; converted to ticks internally |
+
+**Example**
+
+```redscript
+create_timer_bar("game:round", "Round Timer", 90)
 ```
 
 ---
 
-### `create_health_bar(id: string, name: string, max_val: int)`
+## `create_health_bar`
 
-Create a red health-style boss bar visible to all players, starting at full (`max_val`).
+Creates a visible red bossbar initialized at full value.
+Useful for boss HP or shared health objectives.
 
-**Example:**
-```rs
-import bossbar;
-create_health_bar("my_pack:boss_hp", "Boss Health", 200);
+```redscript
+fn create_health_bar(id: string, name: string, max_val: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier, usually `<namespace>:<name>` |
+| `name` | Display name shown on the bossbar |
+| `max_val` | Maximum value and initial value of the bar |
+
+**Example**
+
+```redscript
+create_health_bar("raid:boss_hp", "Warden", 500)
 ```
 
 ---
 
-### `create_progress_bar(id: string, name: string, max_val: int)`
+## `create_progress_bar`
 
-Create a blue progress boss bar visible to all players, starting at 0.
+Creates a visible blue progress bossbar starting at zero.
+Useful for charge bars, capture progress, or phase tracking.
 
-**Example:**
-```rs
-import bossbar;
-create_progress_bar("my_pack:quest", "Quest Progress", 100);
+```redscript
+fn create_progress_bar(id: string, name: string, max_val: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier, usually `<namespace>:<name>` |
+| `name` | Display name shown on the bossbar |
+| `max_val` | Maximum progress value |
+
+**Example**
+
+```redscript
+create_progress_bar("game:capture", "Capture", 100)
 ```
 
 ---
 
-### `update_bar(id: string, value: int)`
+## `update_bar`
 
-Update the current value of a boss bar.
+Sets the current value of an existing bossbar.
+RedScript does not clamp the value; Minecraft handles display behavior.
 
-**Example:**
-```rs
-import bossbar;
-update_bar("my_pack:boss_hp", 150);
+```redscript
+fn update_bar(id: string, value: int)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier |
+| `value` | New current value |
 
 ---
 
-### `hide_bar(id: string)`
+## `hide_bar`
 
-Hide a boss bar (sets visible = 0).
+Hides an existing bossbar from all assigned players.
 
-**Example:**
-```rs
-import bossbar;
-hide_bar("my_pack:timer");
+```redscript
+fn hide_bar(id: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier |
 
 ---
 
-### `show_bar(id: string)`
+## `show_bar`
 
-Show a hidden boss bar (sets visible = 1).
+Shows an existing bossbar to all assigned players.
 
-**Example:**
-```rs
-import bossbar;
-show_bar("my_pack:timer");
+```redscript
+fn show_bar(id: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier |
 
 ---
 
-### `remove_bar(id: string)`
+## `remove_bar`
 
-Permanently remove a boss bar.
+Removes an existing bossbar entirely.
+After removal, the same `id` must be recreated before reuse.
 
-**Example:**
-```rs
-import bossbar;
-remove_bar("my_pack:timer");
+```redscript
+fn remove_bar(id: string)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier |
 
 ---
 
-### `update_bar_color(id: string, percent: int)`
+## `update_bar_color`
 
-Set boss bar colour based on percentage: green if > 66%, yellow if > 33%, red otherwise.
+Updates the bossbar color from a percentage threshold.
+Values above 66 use green, above 33 use yellow, otherwise red.
 
-**Example:**
-```rs
-import bossbar;
-update_bar_color("my_pack:boss_hp", 45);  // yellow
+```redscript
+fn update_bar_color(id: string, percent: int)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `id` | Bossbar identifier |
+| `percent` | Percentage in the expected 0-100 range |
+
+---

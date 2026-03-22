@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/stdlib/vec.mcrs` — do not edit manually.
 
-## Functions
+## API
 
 - [dot2d](#dot2d)
 - [length2d_fixed](#length2d-fixed)

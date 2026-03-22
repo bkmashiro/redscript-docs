@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/stdlib/result.mcrs` — do not edit manually.
 
-## Functions
+## API
 
 - [result_ok](#result-ok)
 - [result_err](#result-err)

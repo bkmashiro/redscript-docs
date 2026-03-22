@@ -1,115 +1,122 @@
-# `dialog` — 玩家对话与消息
+# Dialog
 
-Import: `import dialog;`
+> 本文档由 `src/stdlib/dialog.mcrs` 自动生成，请勿手动编辑。
 
-向玩家显示消息的辅助函数：聊天消息、广播、彩色文本、标题/副标题叠加层、动作栏文本等。基于 Minecraft 的 `tellraw`、`title` 和 `actionbar` 命令构建。
+## API 列表
 
-## Functions
+- [dialog_say](#dialog-say)
+- [dialog_broadcast](#dialog-broadcast)
+- [dialog_say_color](#dialog-say-color)
+- [dialog_title](#dialog-title)
+- [dialog_title_clear](#dialog-title-clear)
+- [dialog_actionbar](#dialog-actionbar)
 
-### `dialog_say(p: selector, msg: string)`
+---
 
-向目标玩家发送普通聊天消息。
+## `dialog_say`
 
-**示例：**
-```rs
-import dialog;
-dialog_say(@s, "欢迎来到竞技场！");
+向玩家或选择器发送一条纯白色聊天消息
+
+```redscript
+fn dialog_say(p: selector, msg: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p` | 接收者选择器 |
+| `msg` | 纯文本消息内容 |
+
+**示例**
+
+```redscript
+dialog_say(@p, "Quest updated")
 ```
 
 ---
 
-### `dialog_broadcast(msg: string)`
+## `dialog_broadcast`
 
-向服务器上**所有**玩家（`@a`）发送聊天消息。
+向所有玩家广播一条纯白色聊天消息
 
-**示例：**
-```rs
-import dialog;
-dialog_broadcast("回合已开始！");
+```redscript
+fn dialog_broadcast(msg: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `msg` | 纯文本消息内容 |
 
 ---
 
-### `dialog_say_color(p: selector, msg: string, color: int)`
+## `dialog_say_color`
 
-发送彩色聊天消息。`color` 为 0–4 的整数：
+向玩家或选择器发送带颜色的聊天消息，未知颜色值会回退为白色
 
-| 值 | 颜色 |
-|----|------|
-| `0` | 白色（默认） |
-| `1` | 黄色 |
-| `2` | 红色 |
-| `3` | 绿色 |
-| `4` | 青色 |
-
-**示例：**
-```rs
-import dialog;
-dialog_say_color(@s, "警告：生命值过低！", 2);   // 红色
-dialog_say_color(@a, "你赢了！", 3);              // 绿色
+```redscript
+fn dialog_say_color(p: selector, msg: string, color: int)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p` | 接收者选择器 |
+| `msg` | 纯文本消息内容 |
+| `color` | 颜色编号（0=white, 1=red, 2=green, 3=gold, 4=aqua） |
 
 ---
 
-### `dialog_title(p: selector, title: string, subtitle: string)`
+## `dialog_title`
 
-向目标玩家显示标题与副标题叠加层。使用 Minecraft 默认的淡入/停留/淡出时间。
+在玩家屏幕上显示标题和副标题
 
-**示例：**
-```rs
-import dialog;
-dialog_title(@s, "第 1 回合", "存活 60 秒");
+```redscript
+fn dialog_title(p: selector, title: string, subtitle: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p` | 接收者选择器 |
+| `title` | 主标题文本 |
+| `subtitle` | 副标题文本 |
 
 ---
 
-### `dialog_title_clear(p: selector)`
+## `dialog_title_clear`
 
-立即清除目标玩家的标题叠加层。
+清除目标当前显示的标题
 
-**示例：**
-```rs
-import dialog;
-dialog_title_clear(@s);
+```redscript
+fn dialog_title_clear(p: selector)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p` | 接收者选择器 |
 
 ---
 
-### `dialog_actionbar(p: selector, msg: string)`
+## `dialog_actionbar`
 
-在动作栏（快捷栏上方区域）显示消息。消息约 2 秒后消失，如需持续显示需每 tick 刷新。
+在玩家动作栏显示一条短消息
 
-**示例：**
-```rs
-import dialog;
-dialog_actionbar(@s, "生命：${score(@s, #hp)} / 100");
+```redscript
+fn dialog_actionbar(p: selector, msg: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p` | 接收者选择器 |
+| `msg` | 纯文本消息内容 |
 
 ---
-
-## 完整示例
-
-```rs
-import dialog;
-
-@load
-fn on_load() {
-    dialog_broadcast("数据包已加载。输入 /trigger start 开始。");
-}
-
-fn start_round(round: int) {
-    dialog_broadcast("第 ${round} 回合开始！");
-    dialog_title(@a, "第 ${round} 回合", "战斗！");
-}
-
-fn warn_low_hp() {
-    dialog_say_color(@s, "你的生命值极低！", 2);
-    dialog_actionbar(@s, "⚠ 生命值过低 — 请立即回血！");
-}
-
-fn end_round(winner: selector) {
-    dialog_title_clear(@a);
-    dialog_title(winner, "胜利！", "你赢得了本回合");
-    dialog_broadcast("回合结束！");
-}
-```

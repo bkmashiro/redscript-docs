@@ -2,7 +2,7 @@
 
 > 本文档由 `src/stdlib/strings.mcrs` 自动生成，请勿手动编辑。
 
-## 函数列表
+## API 列表
 
 - [str_len](#str-len)
 - [str_concat](#str-concat)

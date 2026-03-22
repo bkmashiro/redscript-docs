@@ -1,87 +1,153 @@
-# `teams` — Team management
+# Teams
 
-Import: `import teams;`
+> Auto-generated from `src/stdlib/teams.mcrs` — do not edit manually.
 
-Team management helpers for common multi-team game setups. Provides named team creation with colour and friendly-fire settings, player assignment/removal, and full 2- and 4-team game setup/cleanup helpers.
+## API
 
-## Functions
+- [create_team](#create-team)
+- [create_red_team](#create-red-team)
+- [create_blue_team](#create-blue-team)
+- [create_green_team](#create-green-team)
+- [create_yellow_team](#create-yellow-team)
+- [add_to_team](#add-to-team)
+- [remove_from_teams](#remove-from-teams)
+- [setup_two_teams](#setup-two-teams)
+- [setup_four_teams](#setup-four-teams)
+- [cleanup_teams](#cleanup-teams)
 
-### `create_team(name: string, color: string)`
+---
 
-Create a team with the given name and color using `team_add` and `team_option`.
+## `create_team`
 
-**Example:**
-```rs
-import teams;
-create_team("purple", "dark_purple");
+Creates a team and applies a display color.
+
+```redscript
+fn create_team(name: string, color: string)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `name` | Team name used by the scoreboard team system |
+| `color` | Minecraft team color string such as `red` or `blue` |
+
+**Example**
+
+```redscript
+create_team("spectator", "gray")
 ```
 
 ---
 
-### `create_red_team()`
+## `create_red_team`
 
-Create the `red` team with red colour and friendly fire disabled.
+Creates the standard red team with friendly fire disabled.
 
----
+```redscript
+fn create_red_team()
+```
 
-### `create_blue_team()`
+**Example**
 
-Create the `blue` team with blue colour and friendly fire disabled.
-
----
-
-### `create_green_team()`
-
-Create the `green` team with green colour and friendly fire disabled.
-
----
-
-### `create_yellow_team()`
-
-Create the `yellow` team with yellow colour and friendly fire disabled.
-
----
-
-### `add_to_team(target: selector, team_name: string)`
-
-Add entities to a team.
-
-**Example:**
-```rs
-import teams;
-add_to_team(@s, "red");
+```redscript
+create_red_team()
 ```
 
 ---
 
-### `remove_from_teams(target: selector)`
+## `create_blue_team`
 
-Remove entities from all teams.
+Creates the standard blue team with friendly fire disabled.
 
----
-
-### `setup_two_teams()`
-
-Create red and blue teams. Convenience wrapper for 1v1 or 2-team games.
-
-**Example:**
-```rs
-import teams;
-
-@load
-fn init() {
-    setup_two_teams();
-}
+```redscript
+fn create_blue_team()
 ```
 
 ---
 
-### `setup_four_teams()`
+## `create_green_team`
 
-Create red, blue, green, and yellow teams.
+Creates the standard green team with friendly fire disabled.
+
+```redscript
+fn create_green_team()
+```
 
 ---
 
-### `cleanup_teams()`
+## `create_yellow_team`
 
-Remove red, blue, green, and yellow teams.
+Creates the standard yellow team with friendly fire disabled.
+
+```redscript
+fn create_yellow_team()
+```
+
+---
+
+## `add_to_team`
+
+Adds an entity or player selector to a team.
+
+```redscript
+fn add_to_team(target: selector, team_name: string)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Target selector to join the team |
+| `team_name` | Existing team name |
+
+---
+
+## `remove_from_teams`
+
+Removes an entity or player selector from all teams.
+
+```redscript
+fn remove_from_teams(target: selector)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Target selector to remove from teams |
+
+---
+
+## `setup_two_teams`
+
+Creates the default two-team setup used by many arena games.
+This creates `red` and `blue`.
+
+```redscript
+fn setup_two_teams()
+```
+
+---
+
+## `setup_four_teams`
+
+Creates the default four-team setup.
+This creates `red`, `blue`, `green`, and `yellow`.
+
+```redscript
+fn setup_four_teams()
+```
+
+---
+
+## `cleanup_teams`
+
+Removes the default team set created by this module.
+Safe to call during cleanup even if some teams were unused.
+
+```redscript
+fn cleanup_teams()
+```
+
+---

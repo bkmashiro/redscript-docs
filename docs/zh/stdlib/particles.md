@@ -1,123 +1,307 @@
-# `particles` — 粒子效果辅助函数
+# Particles
 
-Import: `import particles;`
+> 本文档由 `src/stdlib/particles.mcrs` 自动生成，请勿手动编辑。
 
-常见粒子效果在指定位置的命名包装函数，以及用于绘制二维/三维粒子图形（线、圆、螺旋）的辅助函数。除另有说明外，坐标使用方块整数。
+## API 列表
 
-## Functions
+- [hearts_at](#hearts-at)
+- [flames](#flames)
+- [smoke](#smoke)
+- [explosion_effect](#explosion-effect)
+- [sparkles_at](#sparkles-at)
+- [angry_at](#angry-at)
+- [happy_at](#happy-at)
+- [portal_effect](#portal-effect)
+- [totem_at](#totem-at)
+- [end_sparkles_at](#end-sparkles-at)
+- [particle_at_fx](#particle-at-fx)
+- [draw_line_2d](#draw-line-2d)
+- [draw_circle](#draw-circle)
+- [draw_helix](#draw-helix)
+- [particle_dot](#particle-dot)
 
-### `hearts_at(x: int, y: int, z: int)`
+---
 
-在方块坐标处生成 `heart`（爱心）粒子。
+## `hearts_at`
 
-**Example:**
-```rs
-import particles;
-hearts_at(0, 65, 0);
+在指定坐标生成爱心粒子
+
+```redscript
+fn hearts_at(x: int, y: int, z: int)
 ```
 
----
+**参数**
 
-### `flames(x: int, y: int, z: int)`
-
-在坐标处生成 `flame`（火焰）粒子。
-
----
-
-### `smoke(x: int, y: int, z: int)`
-
-在坐标处生成 `large_smoke`（大烟雾）粒子。
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
 
 ---
 
-### `explosion_effect(x: int, y: int, z: int)`
+## `flames`
 
-在坐标处生成 `explosion`（爆炸）粒子。
+在指定坐标生成火焰粒子
 
----
-
-### `sparkles_at(x: int, y: int, z: int)`
-
-在坐标处生成 `enchant`（附魔闪光）粒子。
-
----
-
-### `angry_at(x: int, y: int, z: int)`
-
-在坐标处生成 `angry_villager`（愤怒村民）粒子。
-
----
-
-### `happy_at(x: int, y: int, z: int)`
-
-在坐标处生成 `happy_villager`（快乐村民）粒子。
-
----
-
-### `portal_effect(x: int, y: int, z: int)`
-
-在坐标处生成 `portal`（传送门）粒子。
-
----
-
-### `totem_at(x: int, y: int, z: int)`
-
-在坐标处生成 `totem_of_undying`（不死图腾）粒子。
-
----
-
-### `end_sparkles_at(x: int, y: int, z: int)`
-
-在坐标处生成 `end_rod`（末地烛）闪光粒子。
-
----
-
-### `particle_at_fx(x_fx: int, y_fx: int, z_fx: int, particle: string)`
-
-在定点坐标（×100；1 方块 = 100 单位）处生成粒子。发射前转换为十进制方块坐标。
-
-**Example:**
-```rs
-import particles;
-particle_at_fx(150, 6400, 250, "minecraft:flame");  // 1.5, 64.0, 2.5
+```redscript
+fn flames(x: int, y: int, z: int)
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
 ---
 
-### `draw_line_2d(x0: int, y0: int, x1: int, y1: int, steps: int, z: int, particle: string)`
+## `smoke`
 
-从 `(x0, y0)` 到 `(x1, y1)` 用 `steps` 个粒子采样点画一条直线。所有坐标 ×100。
+在指定坐标生成大烟雾粒子
 
-**Example:**
-```rs
-import particles;
-draw_line_2d(0, 6400, 1000, 6400, 20, 0, "minecraft:flame");  // 水平线
+```redscript
+fn smoke(x: int, y: int, z: int)
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
 ---
 
-### `draw_circle(cx: int, cy: int, cz: int, r: int, steps: int, particle: string)`
+## `explosion_effect`
 
-在 XZ 平面以 `(cx, cy, cz)` 为圆心画圆。`cx`、`cy`、`cz` 为方块坐标；`r` 为 ×100 单位；`steps` 个粒子。
+在指定坐标生成爆炸粒子
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded (uses `sin_fixed`/`cos_fixed`)
-
-**Example:**
-```rs
-import particles;
-draw_circle(0, 65, 0, 500, 36, "minecraft:enchant");  // 半径 5 方块的圆
+```redscript
+fn explosion_effect(x: int, y: int, z: int)
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
 ---
 
-### `draw_helix(cx: int, cy_start: int, cz: int, r: int, height: int, rotations: int, steps: int, particle: string)`
+## `sparkles_at`
 
-画螺旋线。`r` 为 ×100 单位；`height` 为方块数。
+在指定坐标生成附魔闪烁粒子
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+```redscript
+fn sparkles_at(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
 
 ---
 
-### `particle_dot(x: int, y: int, z: int, particle: string)`
+## `angry_at`
 
-使用 `raw()` 在整数方块坐标处生成单个粒子。
+在指定坐标生成愤怒村民粒子
+
+```redscript
+fn angry_at(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
+---
+
+## `happy_at`
+
+在指定坐标生成开心村民粒子
+
+```redscript
+fn happy_at(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
+---
+
+## `portal_effect`
+
+在指定坐标生成传送门粒子
+
+```redscript
+fn portal_effect(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
+---
+
+## `totem_at`
+
+在指定坐标生成不死图腾粒子
+
+```redscript
+fn totem_at(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
+---
+
+## `end_sparkles_at`
+
+在指定坐标生成末地烛粒子
+
+```redscript
+fn end_sparkles_at(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标 |
+| `y` | Y 坐标 |
+| `z` | Z 坐标 |
+
+---
+
+## `particle_at_fx`
+
+在以方块 ×100 表示的定点坐标上生成粒子
+
+```redscript
+fn particle_at_fx(x_fx: int, y_fx: int, z_fx: int, particle: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x_fx` | X 坐标（方块 ×100） |
+| `y_fx` | Y 坐标（方块 ×100） |
+| `z_fx` | Z 坐标（方块 ×100） |
+| `particle` | 粒子 ID，如 `minecraft:flame` |
+
+---
+
+## `draw_line_2d`
+
+使用线性插值绘制二维粒子直线
+
+```redscript
+fn draw_line_2d(x0: int, y0: int, x1: int, y1: int, steps: int, z: int, particle: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x0` | 起点 X（方块 ×100） |
+| `y0` | 起点 Y（方块 ×100） |
+| `x1` | 终点 X（方块 ×100） |
+| `y1` | 终点 Y（方块 ×100） |
+| `steps` | 插值步数 |
+| `z` | 所在 Z 平面（方块 ×100） |
+| `particle` | 粒子 ID |
+
+---
+
+## `draw_circle`
+
+在 XZ 平面绘制粒子圆环
+
+```redscript
+fn draw_circle(cx: int, cy: int, cz: int, r: int, steps: int, particle: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `cx` | 圆心 X（方块） |
+| `cy` | 圆心 Y（方块） |
+| `cz` | 圆心 Z（方块） |
+| `r` | 半径（方块 ×100） |
+| `steps` | 采样点数量 |
+| `particle` | 粒子 ID |
+
+---
+
+## `draw_helix`
+
+绘制可配置半径、高度和圈数的粒子螺旋
+
+```redscript
+fn draw_helix(cx: int, cy_start: int, cz: int, r: int, height: int, rotations: int, steps: int, particle: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `cx` | 中心 X（方块） |
+| `cy_start` | 起始 Y（方块） |
+| `cz` | 中心 Z（方块） |
+| `r` | 半径（方块 ×100） |
+| `height` | 总高度（方块） |
+| `rotations` | 完整旋转圈数 |
+| `steps` | 采样点数量 |
+| `particle` | 粒子 ID |
+
+---
+
+## `particle_dot`
+
+在整数方块坐标生成单个粒子
+
+```redscript
+fn particle_dot(x: int, y: int, z: int, particle: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | X 坐标（整数方块） |
+| `y` | Y 坐标（整数方块） |
+| `z` | Z 坐标（整数方块） |
+| `particle` | 粒子 ID |
+
+---

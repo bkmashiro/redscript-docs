@@ -2,7 +2,7 @@
 
 > 本文档由 `src/stdlib/timer.mcrs` 自动生成，请勿手动编辑。
 
-## 函数列表
+## API 列表
 
 - [Timer.new](#timer-new)
 - [Timer.start](#timer-start)

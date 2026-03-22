@@ -1,53 +1,94 @@
-# `inventory` — Inventory management
+# Inventory
 
-Import: `import inventory;`
+> 本文档由 `src/stdlib/inventory.mcrs` 自动生成，请勿手动编辑。
 
-Inventory management helpers for clearing inventories and giving pre-defined item kits to players.
+## API 列表
 
-## Functions
+- [clear_inventory](#clear-inventory)
+- [give_kit_warrior](#give-kit-warrior)
+- [give_kit_archer](#give-kit-archer)
+- [give_kit_mage](#give-kit-mage)
+- [remove_item](#remove-item)
 
-### `clear_inventory(target: selector)`
+---
 
-Clear all items from a player's inventory.
+## `clear_inventory`
 
-**Example:**
-```rs
-import inventory;
-clear_inventory(@a);
+清空目标选择器的全部背包内容
+
+```redscript
+fn clear_inventory(target: selector)
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要清空背包的玩家或实体选择器 |
+
 ---
 
-### `give_kit_warrior(target: selector)`
+## `give_kit_warrior`
 
-Give the warrior kit: iron sword, iron chestplate, iron leggings, iron boots, shield, 16× cooked beef.
+给目标发放战士套装，包含铁甲、近战武器、盾牌和食物
 
-**Example:**
-```rs
-import inventory;
-give_kit_warrior(@s);
+```redscript
+fn give_kit_warrior(target: selector)
 ```
 
----
+**参数**
 
-### `give_kit_archer(target: selector)`
-
-Give the archer kit: bow, 64× arrows, leather chestplate, leather leggings, leather boots, 16× cooked beef.
-
----
-
-### `give_kit_mage(target: selector)`
-
-Give the mage kit: wooden sword, 8× golden apple, 16× ender pearl, 8× splash harming potion, 16× cooked beef.
+| 参数 | 说明 |
+|------|------|
+| `target` | 接收套装的玩家或实体选择器 |
 
 ---
 
-### `remove_item(target: selector, item: string)`
+## `give_kit_archer`
 
-Remove a specific item from the player's inventory using `clear`.
+给目标发放弓箭手套装，包含弓箭、轻甲和食物
 
-**Example:**
-```rs
-import inventory;
-remove_item(@s, "minecraft:poisonous_potato");
+```redscript
+fn give_kit_archer(target: selector)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 接收套装的玩家或实体选择器 |
+
+---
+
+## `give_kit_mage`
+
+给目标发放法师套装，包含位移、消耗品和范围伤害道具
+
+```redscript
+fn give_kit_mage(target: selector)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 接收套装的玩家或实体选择器 |
+
+---
+
+## `remove_item`
+
+从目标背包中移除指定物品的全部副本
+
+```redscript
+fn remove_item(target: selector, item: string)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要移除物品的玩家或实体选择器 |
+| `item` | 传给 `clear` 命令的物品参数，可包含 NBT |
+
+---

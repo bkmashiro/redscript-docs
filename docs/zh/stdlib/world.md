@@ -1,151 +1,289 @@
-# `world` — 世界查询与操作
+# World
 
-Import: `import world;`
+> 本文档由 `src/stdlib/world.mcrs` 自动生成，请勿手动编辑。
 
-世界操作辅助函数：时间控制、天气、游戏规则、难度、区域填充辅助以及太阳角度计算。太阳角度函数使用 `×10000` 缩放，并依赖 `math` 中的 `sin_fixed`。
+## API 列表
 
-## Functions
-
-### `set_day()`
-
-将世界时间设为白天（tick 1000）。
-
----
-
-### `set_night()`
-
-将世界时间设为夜晚（tick 13000）。
-
----
-
-### `set_noon()`
-
-将世界时间设为正午（tick 6000）。
-
----
-
-### `set_midnight()`
-
-将世界时间设为午夜（tick 18000）。
+- [set_day](#set-day)
+- [set_night](#set-night)
+- [set_noon](#set-noon)
+- [set_midnight](#set-midnight)
+- [weather_clear](#weather-clear)
+- [weather_rain](#weather-rain)
+- [weather_thunder](#weather-thunder)
+- [enable_keep_inventory](#enable-keep-inventory)
+- [disable_keep_inventory](#disable-keep-inventory)
+- [disable_mob_griefing](#disable-mob-griefing)
+- [disable_fire_spread](#disable-fire-spread)
+- [set_peaceful](#set-peaceful)
+- [set_easy](#set-easy)
+- [set_normal](#set-normal)
+- [set_hard](#set-hard)
+- [barrier_wall](#barrier-wall)
+- [clear_area](#clear-area)
+- [glass_box](#glass-box)
+- [sun_altitude](#sun-altitude)
+- [sun_azimuth](#sun-azimuth)
 
 ---
 
-### `weather_clear()`
+## `set_day`
 
-将天气设为晴天。
+将世界时间设置为白天（tick 1000）
 
----
-
-### `weather_rain()`
-
-将天气设为下雨。
-
----
-
-### `weather_thunder()`
-
-将天气设为雷雨。
-
----
-
-### `enable_keep_inventory()`
-
-将 `keepInventory` 游戏规则设为 true。
-
----
-
-### `disable_keep_inventory()`
-
-将 `keepInventory` 游戏规则设为 false。
-
----
-
-### `disable_mob_griefing()`
-
-将 `mobGriefing` 游戏规则设为 false。
-
----
-
-### `disable_fire_spread()`
-
-将 `doFireTick` 游戏规则设为 false。
-
----
-
-### `set_peaceful()`
-
-将难度设为和平。
-
----
-
-### `set_easy()`
-
-将难度设为简单。
-
----
-
-### `set_normal()`
-
-将难度设为普通。
-
----
-
-### `set_hard()`
-
-将难度设为困难。
-
----
-
-### `barrier_wall(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
-
-用 `minecraft:barrier`（屏障）方块填充区域。
-
-**Example:**
-```rs
-import world;
-barrier_wall(-50, 0, -50, 50, 256, -50);
+```redscript
+fn set_day()
 ```
 
 ---
 
-### `clear_area(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
+## `set_night`
 
-用 `minecraft:air`（空气）填充区域。
+将世界时间设置为夜晚（tick 13000）
 
----
-
-### `glass_box(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
-
-创建空心玻璃盒：用玻璃填充外壳，用空气清空内部。
-
-**Example:**
-```rs
-import world;
-glass_box(0, 64, 0, 10, 74, 10);
+```redscript
+fn set_night()
 ```
 
 ---
 
-### `sun_altitude(ticks: int): int`
+## `set_noon`
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded (uses `sin_fixed`)
+将世界时间设置为正午（tick 6000）
 
-太阳地平线以上的仰角 ×10000。正午（tick 6000）→ 900000（+90°）；午夜（tick 18000）→ -900000（-90°）。使用 `sin_fixed`。
-
-**Example:**
-```rs
-import world;
-let alt: int = sun_altitude(6000);  // 900000（正头顶）
+```redscript
+fn set_noon()
 ```
 
 ---
 
-### `sun_azimuth(ticks: int): int`
+## `set_midnight`
 
-太阳的罗盘方位角 ×10000。Tick 0 = 0°（东方），在 24000 tick 内线性增加到 3600000。
+将世界时间设置为午夜（tick 18000）
 
-**Example:**
-```rs
-import world;
-let az: int = sun_azimuth(12000);  // 1800000（180°，西方）
+```redscript
+fn set_midnight()
 ```
+
+---
+
+## `weather_clear`
+
+将天气设置为晴天
+
+```redscript
+fn weather_clear()
+```
+
+---
+
+## `weather_rain`
+
+将天气设置为下雨
+
+```redscript
+fn weather_rain()
+```
+
+---
+
+## `weather_thunder`
+
+将天气设置为雷暴
+
+```redscript
+fn weather_thunder()
+```
+
+---
+
+## `enable_keep_inventory`
+
+启用 `keepInventory` 游戏规则
+
+```redscript
+fn enable_keep_inventory()
+```
+
+---
+
+## `disable_keep_inventory`
+
+关闭 `keepInventory` 游戏规则
+
+```redscript
+fn disable_keep_inventory()
+```
+
+---
+
+## `disable_mob_griefing`
+
+将 `mobGriefing` 设为 false，禁止生物破坏方块
+
+```redscript
+fn disable_mob_griefing()
+```
+
+---
+
+## `disable_fire_spread`
+
+将 `doFireTick` 设为 false，禁止火焰蔓延
+
+```redscript
+fn disable_fire_spread()
+```
+
+---
+
+## `set_peaceful`
+
+将难度设置为和平
+
+```redscript
+fn set_peaceful()
+```
+
+---
+
+## `set_easy`
+
+将难度设置为简单
+
+```redscript
+fn set_easy()
+```
+
+---
+
+## `set_normal`
+
+将难度设置为普通
+
+```redscript
+fn set_normal()
+```
+
+---
+
+## `set_hard`
+
+将难度设置为困难
+
+```redscript
+fn set_hard()
+```
+
+---
+
+## `barrier_wall`
+
+用屏障方块填充一个长方体区域
+
+```redscript
+fn barrier_wall(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x1` | 第一个角点 X 坐标 |
+| `y1` | 第一个角点 Y 坐标 |
+| `z1` | 第一个角点 Z 坐标 |
+| `x2` | 对角点 X 坐标 |
+| `y2` | 对角点 Y 坐标 |
+| `z2` | 对角点 Z 坐标 |
+
+---
+
+## `clear_area`
+
+用空气填充一个长方体区域，以清空该区域
+
+```redscript
+fn clear_area(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x1` | 第一个角点 X 坐标 |
+| `y1` | 第一个角点 Y 坐标 |
+| `z1` | 第一个角点 Z 坐标 |
+| `x2` | 对角点 X 坐标 |
+| `y2` | 对角点 Y 坐标 |
+| `z2` | 对角点 Z 坐标 |
+
+---
+
+## `glass_box`
+
+构建一个中空玻璃盒，先填满外壳再挖空内部
+
+```redscript
+fn glass_box(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x1` | 第一个角点 X 坐标 |
+| `y1` | 第一个角点 Y 坐标 |
+| `z1` | 第一个角点 Z 坐标 |
+| `x2` | 对角点 X 坐标 |
+| `y2` | 对角点 Y 坐标 |
+| `z2` | 对角点 Z 坐标 |
+
+---
+
+## `sun_altitude`
+
+根据世界时间计算太阳高度角，结果为角度 ×10000 定点数
+
+```redscript
+fn sun_altitude(ticks: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ticks` | Minecraft 世界时间（游戏刻） |
+
+**返回：** 太阳高度角，单位为角度 ×10000
+
+**示例**
+
+```redscript
+let alt = sun_altitude(6000)  // 900000
+```
+
+---
+
+## `sun_azimuth`
+
+根据世界时间计算太阳方位角，结果为角度 ×10000 定点数
+
+```redscript
+fn sun_azimuth(ticks: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `ticks` | Minecraft 世界时间（游戏刻） |
+
+**返回：** 方位角，范围为 `[0, 3600000)`
+
+**示例**
+
+```redscript
+let az = sun_azimuth(6000)  // 900000
+```
+
+---

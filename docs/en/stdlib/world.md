@@ -1,151 +1,298 @@
-# `world` — World queries and manipulation
+# World
 
-Import: `import world;`
+> Auto-generated from `src/stdlib/world.mcrs` — do not edit manually.
 
-World manipulation helpers: time control, weather, gamerules, difficulty, fill helpers, and sun angle calculations. Sun angle functions use `×10000` scale and require `math` for `sin_fixed`.
+## API
 
-## Functions
-
-### `set_day()`
-
-Set world time to day (tick 1000).
-
----
-
-### `set_night()`
-
-Set world time to night (tick 13000).
-
----
-
-### `set_noon()`
-
-Set world time to noon (tick 6000).
-
----
-
-### `set_midnight()`
-
-Set world time to midnight (tick 18000).
+- [set_day](#set-day)
+- [set_night](#set-night)
+- [set_noon](#set-noon)
+- [set_midnight](#set-midnight)
+- [weather_clear](#weather-clear)
+- [weather_rain](#weather-rain)
+- [weather_thunder](#weather-thunder)
+- [enable_keep_inventory](#enable-keep-inventory)
+- [disable_keep_inventory](#disable-keep-inventory)
+- [disable_mob_griefing](#disable-mob-griefing)
+- [disable_fire_spread](#disable-fire-spread)
+- [set_peaceful](#set-peaceful)
+- [set_easy](#set-easy)
+- [set_normal](#set-normal)
+- [set_hard](#set-hard)
+- [barrier_wall](#barrier-wall)
+- [clear_area](#clear-area)
+- [glass_box](#glass-box)
+- [sun_altitude](#sun-altitude)
+- [sun_azimuth](#sun-azimuth)
 
 ---
 
-### `weather_clear()`
+## `set_day`
 
-Set weather to clear.
+Sets the world time to daytime.
+Uses tick 1000, the standard morning daylight value in Minecraft.
 
----
-
-### `weather_rain()`
-
-Set weather to rain.
-
----
-
-### `weather_thunder()`
-
-Set weather to thunder.
-
----
-
-### `enable_keep_inventory()`
-
-Set `keepInventory` gamerule to true.
-
----
-
-### `disable_keep_inventory()`
-
-Set `keepInventory` gamerule to false.
-
----
-
-### `disable_mob_griefing()`
-
-Set `mobGriefing` gamerule to false.
-
----
-
-### `disable_fire_spread()`
-
-Set `doFireTick` gamerule to false.
-
----
-
-### `set_peaceful()`
-
-Set difficulty to peaceful.
-
----
-
-### `set_easy()`
-
-Set difficulty to easy.
-
----
-
-### `set_normal()`
-
-Set difficulty to normal.
-
----
-
-### `set_hard()`
-
-Set difficulty to hard.
-
----
-
-### `barrier_wall(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
-
-Fill region with `minecraft:barrier` blocks.
-
-**Example:**
-```rs
-import world;
-barrier_wall(-50, 0, -50, 50, 256, -50);
+```redscript
+fn set_day()
 ```
 
 ---
 
-### `clear_area(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
+## `set_night`
 
-Fill region with `minecraft:air`.
+Sets the world time to night.
+Uses tick 13000, the standard nighttime value in Minecraft.
 
----
-
-### `glass_box(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)`
-
-Create a hollow glass box: fills outer shell with glass, clears interior with air.
-
-**Example:**
-```rs
-import world;
-glass_box(0, 64, 0, 10, 74, 10);
+```redscript
+fn set_night()
 ```
 
 ---
 
-### `sun_altitude(ticks: int): int`
+## `set_noon`
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded (uses `sin_fixed`)
+Sets the world time to noon.
+Uses tick 6000, when the sun is at its highest point.
 
-Sun elevation above the horizon ×10000. Noon (tick 6000) → 900000 (+90°); midnight (tick 18000) → -900000 (-90°). Uses `sin_fixed`.
-
-**Example:**
-```rs
-import world;
-let alt: int = sun_altitude(6000);  // 900000 (directly overhead)
+```redscript
+fn set_noon()
 ```
 
 ---
 
-### `sun_azimuth(ticks: int): int`
+## `set_midnight`
 
-Compass angle of the sun ×10000. Tick 0 = 0° (east), increases linearly to 3600000 over 24000 ticks.
+Sets the world time to midnight.
+Uses tick 18000, when the moon is at its highest point.
 
-**Example:**
-```rs
-import world;
-let az: int = sun_azimuth(12000);  // 1800000 (180°, west)
+```redscript
+fn set_midnight()
 ```
+
+---
+
+## `weather_clear`
+
+Sets the weather to clear.
+
+```redscript
+fn weather_clear()
+```
+
+---
+
+## `weather_rain`
+
+Sets the weather to rain.
+
+```redscript
+fn weather_rain()
+```
+
+---
+
+## `weather_thunder`
+
+Sets the weather to thunder.
+
+```redscript
+fn weather_thunder()
+```
+
+---
+
+## `enable_keep_inventory`
+
+Enables the `keepInventory` gamerule.
+
+```redscript
+fn enable_keep_inventory()
+```
+
+---
+
+## `disable_keep_inventory`
+
+Disables the `keepInventory` gamerule.
+
+```redscript
+fn disable_keep_inventory()
+```
+
+---
+
+## `disable_mob_griefing`
+
+Disables mob griefing by setting `mobGriefing` to false.
+
+```redscript
+fn disable_mob_griefing()
+```
+
+---
+
+## `disable_fire_spread`
+
+Disables fire spread by setting `doFireTick` to false.
+
+```redscript
+fn disable_fire_spread()
+```
+
+---
+
+## `set_peaceful`
+
+Sets the difficulty to peaceful.
+
+```redscript
+fn set_peaceful()
+```
+
+---
+
+## `set_easy`
+
+Sets the difficulty to easy.
+
+```redscript
+fn set_easy()
+```
+
+---
+
+## `set_normal`
+
+Sets the difficulty to normal.
+
+```redscript
+fn set_normal()
+```
+
+---
+
+## `set_hard`
+
+Sets the difficulty to hard.
+
+```redscript
+fn set_hard()
+```
+
+---
+
+## `barrier_wall`
+
+Fills a cuboid with barriers.
+
+```redscript
+fn barrier_wall(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x1` | First corner X |
+| `y1` | First corner Y |
+| `z1` | First corner Z |
+| `x2` | Opposite corner X |
+| `y2` | Opposite corner Y |
+| `z2` | Opposite corner Z |
+
+---
+
+## `clear_area`
+
+Replaces a cuboid with air to clear the area.
+
+```redscript
+fn clear_area(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x1` | First corner X |
+| `y1` | First corner Y |
+| `z1` | First corner Z |
+| `x2` | Opposite corner X |
+| `y2` | Opposite corner Y |
+| `z2` | Opposite corner Z |
+
+---
+
+## `glass_box`
+
+Builds a hollow glass box.
+The outer cuboid is filled with glass and the interior is then carved out.
+
+```redscript
+fn glass_box(x1: int, y1: int, z1: int, x2: int, y2: int, z2: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x1` | First corner X |
+| `y1` | First corner Y |
+| `z1` | First corner Z |
+| `x2` | Opposite corner X |
+| `y2` | Opposite corner Y |
+| `z2` | Opposite corner Z |
+
+---
+
+## `sun_altitude`
+
+Computes the sun elevation angle from world time.
+Result is fixed-point degrees ×10000 where noon is `900000` (+90°)
+and midnight is `-900000` (-90°).
+Uses `sin_fixed`, so callers must also include `math.mcrs`.
+
+```redscript
+fn sun_altitude(ticks: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ticks` | World time in Minecraft ticks |
+
+**Returns:** Sun altitude in degrees ×10000
+
+**Example**
+
+```redscript
+let alt = sun_altitude(6000)  // 900000
+```
+
+---
+
+## `sun_azimuth`
+
+Computes the sun compass azimuth from world time.
+Tick 0 maps to east (`0`) and advances linearly through the day.
+
+```redscript
+fn sun_azimuth(ticks: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ticks` | World time in Minecraft ticks |
+
+**Returns:** Compass angle in degrees ×10000, wrapped to `[0, 3600000)`
+
+**Example**
+
+```redscript
+let az = sun_azimuth(6000)  // 900000
+```
+
+---

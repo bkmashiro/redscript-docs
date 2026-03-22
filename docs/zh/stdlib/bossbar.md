@@ -1,101 +1,170 @@
-# `bossbar` — Boss bar UI helpers
+# Bossbar
 
-Import: `import bossbar;`
+> 本文档由 `src/stdlib/bossbar.mcrs` 自动生成，请勿手动编辑。
 
-Convenience wrappers around the built-in `bossbar_*` commands for common boss bar patterns: timers, health bars, progress bars, and dynamic colour updates based on percentage.
+## API 列表
 
-## Functions
+- [create_timer_bar](#create-timer-bar)
+- [create_health_bar](#create-health-bar)
+- [create_progress_bar](#create-progress-bar)
+- [update_bar](#update-bar)
+- [hide_bar](#hide-bar)
+- [show_bar](#show-bar)
+- [remove_bar](#remove-bar)
+- [update_bar_color](#update-bar-color)
 
-### `create_timer_bar(id: string, name: string, max_seconds: int)`
+---
 
-Create and show a green timer boss bar visible to all players. Value starts at `max_seconds × 20` (full) and is displayed with the `"progress"` style.
+## `create_timer_bar`
 
-**Example:**
-```rs
-import bossbar;
-create_timer_bar("my_pack:timer", "Round Timer", 60);
+创建一个对所有玩家可见的计时器 Bossbar，并以秒数初始化最大值和当前值
+
+```redscript
+fn create_timer_bar(id: string, name: string, max_seconds: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符，通常使用 `<namespace>:<name>` |
+| `name` | Bossbar 显示名称 |
+| `max_seconds` | 持续秒数，内部会转换为游戏刻 |
+
+**示例**
+
+```redscript
+create_timer_bar("game:round", "Round Timer", 90)
 ```
 
 ---
 
-### `create_health_bar(id: string, name: string, max_val: int)`
+## `create_health_bar`
 
-Create a red health-style boss bar visible to all players, starting at full (`max_val`).
+创建一个红色血量风格 Bossbar，并以满值显示
 
-**Example:**
-```rs
-import bossbar;
-create_health_bar("my_pack:boss_hp", "Boss Health", 200);
+```redscript
+fn create_health_bar(id: string, name: string, max_val: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
+| `name` | Bossbar 显示名称 |
+| `max_val` | 最大值，同时也是初始值 |
+
+**示例**
+
+```redscript
+create_health_bar("raid:boss_hp", "Warden", 500)
 ```
 
 ---
 
-### `create_progress_bar(id: string, name: string, max_val: int)`
+## `create_progress_bar`
 
-Create a blue progress boss bar visible to all players, starting at 0.
+创建一个蓝色进度 Bossbar，初始值为 0
 
-**Example:**
-```rs
-import bossbar;
-create_progress_bar("my_pack:quest", "Quest Progress", 100);
+```redscript
+fn create_progress_bar(id: string, name: string, max_val: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
+| `name` | Bossbar 显示名称 |
+| `max_val` | 进度最大值 |
+
+**示例**
+
+```redscript
+create_progress_bar("game:capture", "Capture", 100)
 ```
 
 ---
 
-### `update_bar(id: string, value: int)`
+## `update_bar`
 
-Update the current value of a boss bar.
+设置已有 Bossbar 的当前值
 
-**Example:**
-```rs
-import bossbar;
-update_bar("my_pack:boss_hp", 150);
+```redscript
+fn update_bar(id: string, value: int)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
+| `value` | 新的当前值 |
 
 ---
 
-### `hide_bar(id: string)`
+## `hide_bar`
 
-Hide a boss bar (sets visible = 0).
+将已有 Bossbar 设为不可见
 
-**Example:**
-```rs
-import bossbar;
-hide_bar("my_pack:timer");
+```redscript
+fn hide_bar(id: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
 
 ---
 
-### `show_bar(id: string)`
+## `show_bar`
 
-Show a hidden boss bar (sets visible = 1).
+将已有 Bossbar 重新显示给已分配的玩家
 
-**Example:**
-```rs
-import bossbar;
-show_bar("my_pack:timer");
+```redscript
+fn show_bar(id: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
 
 ---
 
-### `remove_bar(id: string)`
+## `remove_bar`
 
-Permanently remove a boss bar.
+彻底移除一个 Bossbar
 
-**Example:**
-```rs
-import bossbar;
-remove_bar("my_pack:timer");
+```redscript
+fn remove_bar(id: string)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
 
 ---
 
-### `update_bar_color(id: string, percent: int)`
+## `update_bar_color`
 
-Set boss bar colour based on percentage: green if > 66%, yellow if > 33%, red otherwise.
+根据百分比阈值更新 Bossbar 颜色
 
-**Example:**
-```rs
-import bossbar;
-update_bar_color("my_pack:boss_hp", 45);  // yellow
+```redscript
+fn update_bar_color(id: string, percent: int)
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `id` | Bossbar 标识符 |
+| `percent` | 预期为 0-100 的百分比值 |
+
+---

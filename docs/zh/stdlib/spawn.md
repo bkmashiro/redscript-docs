@@ -1,65 +1,142 @@
-# `spawn` — Entity spawning and teleportation
+# Spawn
 
-Import: `import spawn;`
+> 本文档由 `src/stdlib/spawn.mcrs` 自动生成，请勿手动编辑。
 
-Teleportation and spawn point helpers for players and entities.
+## API 列表
 
-## Functions
+- [teleport_to](#teleport-to)
+- [teleport_to_entity](#teleport-to-entity)
+- [spread_players](#spread-players)
+- [gather_all](#gather-all)
+- [launch_up](#launch-up)
+- [goto_lobby](#goto-lobby)
+- [goto_arena](#goto-arena)
 
-### `teleport_to(target: selector, x: int, y: int, z: int)`
+---
 
-Teleport `target` to absolute coordinates.
+## `teleport_to`
 
-**Example:**
-```rs
-import spawn;
-teleport_to(@s, 100, 64, 100);
+将目标选择器传送到固定坐标
+
+```redscript
+fn teleport_to(target: selector, x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要传送的目标选择器 |
+| `x` | 目标 X 坐标 |
+| `y` | 目标 Y 坐标 |
+| `z` | 目标 Z 坐标 |
+
+**示例**
+
+```redscript
+teleport_to(@p, 0, 64, 0)
 ```
 
 ---
 
-### `teleport_to_entity(target: selector, dest: selector)`
+## `teleport_to_entity`
 
-Teleport `target` to another entity's location.
+将目标选择器传送到另一个实体当前位置
 
-**Example:**
-```rs
-import spawn;
-teleport_to_entity(@a, @e[type=armor_stand, tag=spawn_point, limit=1]);
+```redscript
+fn teleport_to_entity(target: selector, dest: selector)
 ```
 
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要传送的目标选择器 |
+| `dest` | 作为目的地的实体选择器 |
+
 ---
 
-### `spread_players(x: int, z: int, radius: int)`
+## `spread_players`
 
-Spread players randomly within `radius` of `(x, z)`. Currently emits a placeholder message; implement with `raw("spreadplayers ...")` for full functionality.
+预留的随机分散玩家辅助函数；当前仅输出提示消息，尚未真正执行 spreadplayers
 
----
-
-### `gather_all(x: int, y: int, z: int)`
-
-Teleport all players to one location.
-
-**Example:**
-```rs
-import spawn;
-gather_all(0, 64, 0);
+```redscript
+fn spread_players(x: int, z: int, radius: int)
 ```
 
----
+**参数**
 
-### `launch_up(target: selector, height: int)`
-
-Teleport target upward by `height` blocks using relative coordinates.
-
----
-
-### `goto_lobby(target: selector)`
-
-Teleport target to the lobby (default: 0, 64, 0) and show "Welcome to Lobby!" title.
+| 参数 | 说明 |
+|------|------|
+| `x` | 中心点 X 坐标 |
+| `z` | 中心点 Z 坐标 |
+| `radius` | 最大分散半径（方块） |
 
 ---
 
-### `goto_arena(target: selector)`
+## `gather_all`
 
-Teleport target to the arena (default: 100, 64, 100) and show "Fight!" title.
+将所有玩家传送到同一位置
+
+```redscript
+fn gather_all(x: int, y: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 目标 X 坐标 |
+| `y` | 目标 Y 坐标 |
+| `z` | 目标 Z 坐标 |
+
+---
+
+## `launch_up`
+
+按相对坐标将目标向上抬升
+
+```redscript
+fn launch_up(target: selector, height: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要传送的目标选择器 |
+| `height` | 相对 Y 偏移（方块） |
+
+---
+
+## `goto_lobby`
+
+将目标传送到内置大厅坐标，并显示欢迎标题
+
+```redscript
+fn goto_lobby(target: selector)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要传送到大厅的目标选择器 |
+
+---
+
+## `goto_arena`
+
+将目标传送到内置竞技场坐标，并显示开战标题
+
+```redscript
+fn goto_arena(target: selector)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `target` | 要传送到竞技场的目标选择器 |
+
+---

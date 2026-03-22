@@ -1,65 +1,147 @@
-# `spawn` — Entity spawning and teleportation
+# Spawn
 
-Import: `import spawn;`
+> Auto-generated from `src/stdlib/spawn.mcrs` — do not edit manually.
 
-Teleportation and spawn point helpers for players and entities.
+## API
 
-## Functions
+- [teleport_to](#teleport-to)
+- [teleport_to_entity](#teleport-to-entity)
+- [spread_players](#spread-players)
+- [gather_all](#gather-all)
+- [launch_up](#launch-up)
+- [goto_lobby](#goto-lobby)
+- [goto_arena](#goto-arena)
 
-### `teleport_to(target: selector, x: int, y: int, z: int)`
+---
 
-Teleport `target` to absolute coordinates.
+## `teleport_to`
 
-**Example:**
-```rs
-import spawn;
-teleport_to(@s, 100, 64, 100);
+Teleports the target selector to fixed world coordinates.
+
+```redscript
+fn teleport_to(target: selector, x: int, y: int, z: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Target selector to move |
+| `x` | Destination X coordinate |
+| `y` | Destination Y coordinate |
+| `z` | Destination Z coordinate |
+
+**Example**
+
+```redscript
+teleport_to(@p, 0, 64, 0)
 ```
 
 ---
 
-### `teleport_to_entity(target: selector, dest: selector)`
+## `teleport_to_entity`
 
-Teleport `target` to another entity's location.
+Teleports the target selector to another entity.
 
-**Example:**
-```rs
-import spawn;
-teleport_to_entity(@a, @e[type=armor_stand, tag=spawn_point, limit=1]);
+```redscript
+fn teleport_to_entity(target: selector, dest: selector)
 ```
 
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Selector to teleport |
+| `dest` | Selector whose current position is used as the destination |
+
 ---
 
-### `spread_players(x: int, z: int, radius: int)`
+## `spread_players`
 
-Spread players randomly within `radius` of `(x, z)`. Currently emits a placeholder message; implement with `raw("spreadplayers ...")` for full functionality.
+Placeholder helper for spreading all players randomly in an area.
+The raw `spreadplayers` command is noted here but not emitted yet.
+Current behavior only broadcasts a status message.
 
----
-
-### `gather_all(x: int, y: int, z: int)`
-
-Teleport all players to one location.
-
-**Example:**
-```rs
-import spawn;
-gather_all(0, 64, 0);
+```redscript
+fn spread_players(x: int, z: int, radius: int)
 ```
 
----
+**Parameters**
 
-### `launch_up(target: selector, height: int)`
-
-Teleport target upward by `height` blocks using relative coordinates.
-
----
-
-### `goto_lobby(target: selector)`
-
-Teleport target to the lobby (default: 0, 64, 0) and show "Welcome to Lobby!" title.
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Center X coordinate |
+| `z` | Center Z coordinate |
+| `radius` | Maximum spread radius in blocks |
 
 ---
 
-### `goto_arena(target: selector)`
+## `gather_all`
 
-Teleport target to the arena (default: 100, 64, 100) and show "Fight!" title.
+Teleports all players to one location.
+
+```redscript
+fn gather_all(x: int, y: int, z: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Destination X coordinate |
+| `y` | Destination Y coordinate |
+| `z` | Destination Z coordinate |
+
+---
+
+## `launch_up`
+
+Teleports the target upward relative to its current position.
+Useful for launch pads or scripted knock-up effects.
+
+```redscript
+fn launch_up(target: selector, height: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Selector to move |
+| `height` | Relative Y offset in blocks |
+
+---
+
+## `goto_lobby`
+
+Teleports the target to the hard-coded lobby position.
+This helper also shows a welcome title and should be customized per map.
+
+```redscript
+fn goto_lobby(target: selector)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Selector to move to the lobby |
+
+---
+
+## `goto_arena`
+
+Teleports the target to the hard-coded arena position.
+This helper also shows a fight title and should be customized per map.
+
+```redscript
+fn goto_arena(target: selector)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Selector to move to the arena |
+
+---

@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/stdlib/timer.mcrs` — do not edit manually.
 
-## Functions
+## API
 
 - [Timer.new](#timer-new)
 - [Timer.start](#timer-start)

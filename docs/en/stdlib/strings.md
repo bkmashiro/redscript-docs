@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/stdlib/strings.mcrs` — do not edit manually.
 
-## Functions
+## API
 
 - [str_len](#str-len)
 - [str_concat](#str-concat)

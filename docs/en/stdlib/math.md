@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/stdlib/math.mcrs` — do not edit manually.
 
-## Functions
+## API
 
 - [abs](#abs)
 - [sign](#sign)
