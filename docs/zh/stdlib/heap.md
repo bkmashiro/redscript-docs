@@ -1,116 +1,199 @@
-# `heap` — 小根堆与大根堆优先队列
+# Heap
 
-导入：`import "stdlib/heap.mcrs"`
+> 本文档由 `src/stdlib/heap.mcrs` 自动生成，请勿手动编辑。
 
-用于 RedScript datapack 的二叉堆优先队列。提供**小根堆**（根为最小元素）和**大根堆**（根为最大元素），底层使用固定容量的 `int[]`（65 个槽位，索引 0–64）。`h[0]` 存储当前大小；元素存储在 `h[1]` 到 `h[size]`。容量：最多 64 个元素。
+## API 列表
 
-## 函数
+- [heap_new](#heap-new)
+- [heap_size](#heap-size)
+- [heap_peek](#heap-peek)
+- [heap_push](#heap-push)
+- [heap_pop](#heap-pop)
+- [max_heap_push](#max-heap-push)
+- [max_heap_pop](#max-heap-pop)
 
-### `heap_new(): int[]`
+---
 
-分配一个新的堆数组，`size = 0`，64 个槽位预置为零。
+## `heap_new`
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
+**版本：** 1.0.0
+
+分配一个可容纳 64 个元素的新空堆
+
+```redscript
+fn heap_new(): int[]
+```
+
+**返回：** int[]，h[0]=0（大小），h[1..64] 预分配为零
+
+**示例**
+
+```redscript
+let h: int[] = heap_new()
 ```
 
 ---
 
-### `heap_size(h: int[]): int`
+## `heap_size`
 
-返回堆中当前存储的元素数量。
+**版本：** 1.0.0
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 7);
-let n: int = heap_size(h);  // 1
+返回堆中当前存储的元素数量
+
+```redscript
+fn heap_size(h: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 由 heap_new 创建的堆数组 |
+
+**返回：** 当前元素数量（h[0]）
+
+**示例**
+
+```redscript
+let sz: int = heap_size(h)
 ```
 
 ---
 
-### `heap_peek(h: int[]): int`
+## `heap_peek`
 
-返回根元素但不将其移除。对于小根堆，根是最小值；对于大根堆，根是最大值。
+**版本：** 1.0.0
 
-> **前提条件：** `heap_size(h) > 0`
+查看堆顶元素但不移除（最小堆返回最小值，最大堆返回最大值）
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 42);
-h = heap_push(h, 7);
-let top: int = heap_peek(h);  // 7  (最小值)
+```redscript
+fn heap_peek(h: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 非空堆数组；前置条件：heap_size(h) > 0 |
+
+**返回：** 堆顶元素（h[1]）
+
+**示例**
+
+```redscript
+let top: int = heap_peek(h)  // peek min without modifying heap
 ```
 
 ---
 
-### `heap_push(h: int[], val: int): int[]`
+## `heap_push`
 
-将 `val` 插入小根堆并返回更新后的堆。通过向上调整（sift-up）维护堆的性质。
+**版本：** 1.0.0
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 30);
-h = heap_push(h, 10);
-h = heap_push(h, 20);
-let top: int = heap_peek(h);  // 10
+向最小堆插入一个值
+
+```redscript
+fn heap_push(h: int[], val: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 由 heap_new 创建的堆数组 |
+| `val` | 要插入的值 |
+
+**返回：** 保持堆属性的更新堆数组
+
+**示例**
+
+```redscript
+h = heap_push(h, 42)
+h = heap_push(h, 7)
+// heap_peek(h) == 7
 ```
 
 ---
 
-### `heap_pop(h: int[]): int[]`
+## `heap_pop`
 
-从小根堆中移除（并丢弃）最小元素。返回更新后的堆。通过向下调整（sift-down）维护堆的性质。
+**版本：** 1.0.0
 
-> **前提条件：** `heap_size(h) > 0`
+移除并丢弃最小堆的最小元素
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 30);
-h = heap_push(h, 10);
-h = heap_pop(h);              // 移除 10
-let top: int = heap_peek(h);  // 30
+```redscript
+fn heap_pop(h: int[]): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 非空最小堆；前置条件：heap_size(h) > 0 |
+
+**返回：** 移除最小值并恢复堆属性的更新堆数组
+
+**示例**
+
+```redscript
+let min_val: int = heap_peek(h)
+h = heap_pop(h)  // remove the minimum
 ```
 
 ---
 
-### `max_heap_push(h: int[], val: int): int[]`
+## `max_heap_push`
 
-将 `val` 插入大根堆并返回更新后的堆。向上调整使用 `>` 比较，使最大元素浮到根部。
+**版本：** 1.0.0
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = max_heap_push(h, 10);
-h = max_heap_push(h, 99);
-h = max_heap_push(h, 55);
-let top: int = heap_peek(h);  // 99
+向最大堆插入一个值
+
+```redscript
+fn max_heap_push(h: int[], val: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 由 heap_new 创建的堆数组 |
+| `val` | 要插入的值 |
+
+**返回：** 保持最大堆属性的更新堆数组
+
+**示例**
+
+```redscript
+h = max_heap_push(h, 5)
+h = max_heap_push(h, 99)
+// heap_peek(h) == 99
 ```
 
 ---
 
-### `max_heap_pop(h: int[]): int[]`
+## `max_heap_pop`
 
-从大根堆中移除（并丢弃）最大元素。返回更新后的堆。
+**版本：** 1.0.0
 
-> **前提条件：** `heap_size(h) > 0`
+移除并丢弃最大堆的最大元素
 
-**示例：**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = max_heap_push(h, 10);
-h = max_heap_push(h, 99);
-h = max_heap_pop(h);          // 移除 99
-let top: int = heap_peek(h);  // 10
+```redscript
+fn max_heap_pop(h: int[]): int[]
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h` | 非空最大堆；前置条件：heap_size(h) > 0 |
+
+**返回：** 移除最大值并恢复最大堆属性的更新堆数组
+
+**示例**
+
+```redscript
+let max_val: int = heap_peek(h)
+h = max_heap_pop(h)  // remove the maximum
+```
+
+---

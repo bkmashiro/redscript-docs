@@ -1,268 +1,603 @@
-# `linalg` — Linear Algebra (2D/3D Vectors and 2×2 Matrices)
+# Linalg
 
-Import: `import "stdlib/linalg.mcrs"`
+> Auto-generated from `src/stdlib/linalg.mcrs` — do not edit manually.
 
-Double-precision linear algebra utilities for RedScript datapacks. Covers 2D and 3D vector arithmetic, 2×2 matrix operations, and a 2×2 linear system solver via Cramer's rule. All values use native IEEE 754 `double` — there is no fixed-point scaling; `1.0d` means exactly 1.0.
+## API
 
-**Dependency:** This module requires `stdlib/math_hp` for `double_sqrt`.
-
-## Quick Example
-
-```rs
-import "stdlib/linalg.mcrs";
-import "stdlib/math_hp.mcrs";
-
-// Normalize a 3D direction vector
-let dx: double = 3.0d;
-let dy: double = 0.0d;
-let dz: double = 4.0d;
-let nx: double = vec3d_normalize_x(dx, dy, dz);   // 0.6
-let ny: double = vec3d_normalize_y(dx, dy, dz);   // 0.0
-let nz: double = vec3d_normalize_z(dx, dy, dz);   // 0.8
-
-// Solve rotation-matrix inverse: [cos θ  -sin θ] [x] = [bx]
-//                                 [sin θ   cos θ] [y]   [by]
-let c: double = 0.866d;    // cos 30°
-let s: double = 0.5d;      // sin 30°
-let ns: double = double_sub(0.0d, s);
-let x: double = solve2d_x(c, ns, s, c, 1.0d, 0.0d);
-let y: double = solve2d_y(c, ns, s, c, 1.0d, 0.0d);
-```
-
-## 2D Vector Functions
+- [vec2d_dot](#vec2d-dot)
+- [vec2d_length](#vec2d-length)
+- [vec2d_dist](#vec2d-dist)
+- [vec2d_normalize_x](#vec2d-normalize-x)
+- [vec2d_normalize_y](#vec2d-normalize-y)
+- [vec3d_dot](#vec3d-dot)
+- [vec3d_length](#vec3d-length)
+- [vec3d_dist](#vec3d-dist)
+- [vec3d_cross_x](#vec3d-cross-x)
+- [vec3d_cross_y](#vec3d-cross-y)
+- [vec3d_cross_z](#vec3d-cross-z)
+- [vec3d_normalize_x](#vec3d-normalize-x)
+- [vec3d_normalize_y](#vec3d-normalize-y)
+- [vec3d_normalize_z](#vec3d-normalize-z)
+- [mat2d_det](#mat2d-det)
+- [mat2d_mul_r0c0](#mat2d-mul-r0c0)
+- [mat2d_mul_r0c1](#mat2d-mul-r0c1)
+- [mat2d_mul_r1c0](#mat2d-mul-r1c0)
+- [mat2d_mul_r1c1](#mat2d-mul-r1c1)
+- [mat2d_vecmul_x](#mat2d-vecmul-x)
+- [mat2d_vecmul_y](#mat2d-vecmul-y)
+- [solve2d_x](#solve2d-x)
+- [solve2d_y](#solve2d-y)
 
 ---
 
-### `vec2d_dot(ax: double, ay: double, bx: double, by: double): double`
+## `vec2d_dot`
 
-Dot product of 2D vectors **a** and **b**: ax·bx + ay·by.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-let d: double = vec2d_dot(1.0d, 0.0d, 0.0d, 1.0d);   // 0.0  (perpendicular)
-let d2: double = vec2d_dot(3.0d, 4.0d, 3.0d, 4.0d);  // 25.0
+Dot product of two 2D vectors.
+
+```redscript
+fn vec2d_dot(ax: double, ay: double, bx: double, by: double): double
 ```
 
----
+**Parameters**
 
-### `vec2d_length(x: double, y: double): double`
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X component of vector A |
+| `ay` | Y component of vector A |
+| `bx` | X component of vector B |
+| `by` | Y component of vector B |
 
-Euclidean length of 2D vector: √(x² + y²).
+**Returns:** `ax*bx + ay*by`
 
-**Example:**
-```rs
-let len: double = vec2d_length(3.0d, 4.0d);   // 5.0
-```
+**Example**
 
----
-
-### `vec2d_dist(ax: double, ay: double, bx: double, by: double): double`
-
-Euclidean distance between two 2D points: `vec2d_length(a − b)`.
-
-**Example:**
-```rs
-let d: double = vec2d_dist(0.0d, 0.0d, 3.0d, 4.0d);   // 5.0
+```redscript
+let d: double = vec2d_dot(1.0d, 0.0d, 0.0d, 1.0d)
 ```
 
 ---
 
-### `vec2d_normalize_x(x: double, y: double): double`
+## `vec2d_length`
 
-X component of the unit vector in the direction of (x, y). Returns `0.0` for zero-length input.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-let nx: double = vec2d_normalize_x(3.0d, 4.0d);   // 0.6
+Euclidean length of a 2D vector.
+
+```redscript
+fn vec2d_length(x: double, y: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component |
+| `y` | Y component |
+
+**Returns:** `sqrt(x² + y²)`
+
+**Example**
+
+```redscript
+let len: double = vec2d_length(3.0d, 4.0d)
 ```
 
 ---
 
-### `vec2d_normalize_y(x: double, y: double): double`
+## `vec2d_dist`
 
-Y component of the unit vector in the direction of (x, y). Returns `0.0` for zero-length input.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-let ny: double = vec2d_normalize_y(3.0d, 4.0d);   // 0.8
+Euclidean distance between two 2D points.
+
+```redscript
+fn vec2d_dist(ax: double, ay: double, bx: double, by: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X coordinate of point A |
+| `ay` | Y coordinate of point A |
+| `bx` | X coordinate of point B |
+| `by` | Y coordinate of point B |
+
+**Returns:** `sqrt((ax-bx)² + (ay-by)²)`
+
+**Example**
+
+```redscript
+let dist: double = vec2d_dist(0.0d, 0.0d, 3.0d, 4.0d)
 ```
 
 ---
 
-## 3D Vector Functions
+## `vec2d_normalize_x`
 
----
+**Since:** 2.0.0
 
-### `vec3d_dot(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double`
+X component of the normalized unit vector for a 2D vector.
 
-Dot product of 3D vectors **a** and **b**: ax·bx + ay·by + az·bz.
+Returns `0.0` if the vector has zero length.
 
-**Example:**
-```rs
-let d: double = vec3d_dot(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d);   // 0.0
+```redscript
+fn vec2d_normalize_x(x: double, y: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component |
+| `y` | Y component |
+
+**Returns:** `x / ||(x, y)||`, or `0.0` for a zero vector
+
+**Example**
+
+```redscript
+let nx: double = vec2d_normalize_x(3.0d, 4.0d)
 ```
 
 ---
 
-### `vec3d_length(x: double, y: double, z: double): double`
+## `vec2d_normalize_y`
 
-Euclidean length of 3D vector: √(x² + y² + z²).
+**Since:** 2.0.0
 
-**Example:**
-```rs
-let len: double = vec3d_length(1.0d, 2.0d, 2.0d);   // 3.0
+Y component of the normalized unit vector for a 2D vector.
+
+Returns `0.0` if the vector has zero length.
+
+```redscript
+fn vec2d_normalize_y(x: double, y: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component |
+| `y` | Y component |
+
+**Returns:** `y / ||(x, y)||`, or `0.0` for a zero vector
+
+**Example**
+
+```redscript
+let ny: double = vec2d_normalize_y(3.0d, 4.0d)
 ```
 
 ---
 
-### `vec3d_dist(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double`
+## `vec3d_dot`
+
+**Since:** 2.0.0
+
+Dot product of two 3D vectors.
+
+```redscript
+fn vec3d_dot(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X component of vector A |
+| `ay` | Y component of vector A |
+| `az` | Z component of vector A |
+| `bx` | X component of vector B |
+| `by` | Y component of vector B |
+| `bz` | Z component of vector B |
+
+**Returns:** `ax*bx + ay*by + az*bz`
+
+**Example**
+
+```redscript
+let d: double = vec3d_dot(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d)
+```
+
+---
+
+## `vec3d_length`
+
+**Since:** 2.0.0
+
+Euclidean length of a 3D vector.
+
+```redscript
+fn vec3d_length(x: double, y: double, z: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component |
+| `y` | Y component |
+| `z` | Z component |
+
+**Returns:** `sqrt(x² + y² + z²)`
+
+**Example**
+
+```redscript
+let len: double = vec3d_length(1.0d, 2.0d, 2.0d)
+```
+
+---
+
+## `vec3d_dist`
+
+**Since:** 2.0.0
 
 Euclidean distance between two 3D points.
 
-**Example:**
-```rs
-let d: double = vec3d_dist(0.0d, 0.0d, 0.0d, 1.0d, 2.0d, 2.0d);   // 3.0
+```redscript
+fn vec3d_dist(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X coordinate of point A |
+| `ay` | Y coordinate of point A |
+| `az` | Z coordinate of point A |
+| `bx` | X coordinate of point B |
+| `by` | Y coordinate of point B |
+| `bz` | Z coordinate of point B |
+
+**Returns:** `sqrt((ax-bx)² + (ay-by)² + (az-bz)²)`
+
+---
+
+## `vec3d_cross_x`
+
+**Since:** 2.0.0
+
+X component of the cross product `a × b`.
+
+```redscript
+fn vec3d_cross_x(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X of A   @param ay  Y of A   @param az  Z of A |
+| `bx` | X of B   @param by  Y of B   @param bz  Z of B |
+
+**Returns:** `ay*bz - az*by`
+
+---
+
+## `vec3d_cross_y`
+
+**Since:** 2.0.0
+
+Y component of the cross product `a × b`.
+
+```redscript
+fn vec3d_cross_y(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X of A   @param ay  Y of A   @param az  Z of A |
+| `bx` | X of B   @param by  Y of B   @param bz  Z of B |
+
+**Returns:** `az*bx - ax*bz`
+
+---
+
+## `vec3d_cross_z`
+
+**Since:** 2.0.0
+
+Z component of the cross product `a × b`.
+
+```redscript
+fn vec3d_cross_z(ax: double, ay: double, az: double, bx: double, by: double, bz: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `ax` | X of A   @param ay  Y of A   @param az  Z of A |
+| `bx` | X of B   @param by  Y of B   @param bz  Z of B |
+
+**Returns:** `ax*by - ay*bx`
+
+---
+
+## `vec3d_normalize_x`
+
+**Since:** 2.0.0
+
+X component of the normalized unit vector for a 3D vector.
+
+Returns `0.0` if the vector has zero length.
+
+```redscript
+fn vec3d_normalize_x(x: double, y: double, z: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component   @param y  Y component   @param z  Z component |
+
+**Returns:** `x / ||(x, y, z)||`, or `0.0` for a zero vector
+
+**Example**
+
+```redscript
+let nx: double = vec3d_normalize_x(3.0d, 4.0d, 0.0d)
 ```
 
 ---
 
-### Cross product — three component functions
+## `vec3d_normalize_y`
 
-The cross product **a** × **b** is split into three functions, one per output component.
+**Since:** 2.0.0
 
-| Function | Returns | Formula |
-|----------|---------|---------|
-| `vec3d_cross_x(ax,ay,az, bx,by,bz)` | x = ay·bz − az·by |
-| `vec3d_cross_y(ax,ay,az, bx,by,bz)` | y = az·bx − ax·bz |
-| `vec3d_cross_z(ax,ay,az, bx,by,bz)` | z = ax·by − ay·bx |
+Y component of the normalized unit vector for a 3D vector.
 
-**Example:**
-```rs
-// (1,0,0) × (0,1,0) = (0,0,1)
-let cx: double = vec3d_cross_x(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d);   // 0.0
-let cy: double = vec3d_cross_y(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d);   // 0.0
-let cz: double = vec3d_cross_z(1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 0.0d);   // 1.0
+Returns `0.0` if the vector has zero length.
+
+```redscript
+fn vec3d_normalize_y(x: double, y: double, z: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component   @param y  Y component   @param z  Z component |
+
+**Returns:** `y / ||(x, y, z)||`, or `0.0` for a zero vector
+
+---
+
+## `vec3d_normalize_z`
+
+**Since:** 2.0.0
+
+Z component of the normalized unit vector for a 3D vector.
+
+Returns `0.0` if the vector has zero length.
+
+```redscript
+fn vec3d_normalize_z(x: double, y: double, z: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | X component   @param y  Y component   @param z  Z component |
+
+**Returns:** `z / ||(x, y, z)||`, or `0.0` for a zero vector
+
+---
+
+## `mat2d_det`
+
+**Since:** 2.0.0
+
+Determinant of a 2×2 matrix `[[a, b], [c, d]]`.
+
+```redscript
+fn mat2d_det(a: double, b: double, c: double, d: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | Element [0,0]   @param b  Element [0,1] |
+| `c` | Element [1,0]   @param d  Element [1,1] |
+
+**Returns:** `a*d - b*c`
+
+**Example**
+
+```redscript
+let det: double = mat2d_det(1.0d, 2.0d, 3.0d, 4.0d)
 ```
 
 ---
 
-### Normalize — three component functions
+## `mat2d_mul_r0c0`
 
-| Function | Returns |
-|----------|---------|
-| `vec3d_normalize_x(x, y, z): double` | X component of unit vector |
-| `vec3d_normalize_y(x, y, z): double` | Y component of unit vector |
-| `vec3d_normalize_z(x, y, z): double` | Z component of unit vector |
+**Since:** 2.0.0
 
-All three return `0.0` for zero-length input.
+Element [0,0] of the 2×2 matrix product `M0 × M1`.
 
-**Example:**
-```rs
-let nx: double = vec3d_normalize_x(3.0d, 0.0d, 4.0d);   // 0.6
-let ny: double = vec3d_normalize_y(3.0d, 0.0d, 4.0d);   // 0.0
-let nz: double = vec3d_normalize_z(3.0d, 0.0d, 4.0d);   // 0.8
+```redscript
+fn mat2d_mul_r0c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1: double, c1: double, d1: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a0` | M0 row-major elements (a0, b0, c0, d0) |
+| `a1` | M1 row-major elements (a1, b1, c1, d1) |
+
+**Returns:** `a0*a1 + b0*c1`
+
+---
+
+## `mat2d_mul_r0c1`
+
+**Since:** 2.0.0
+
+Element [0,1] of the 2×2 matrix product `M0 × M1`.
+
+```redscript
+fn mat2d_mul_r0c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1: double, c1: double, d1: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a0` | M0 row-major elements   @param a1  M1 row-major elements |
+
+**Returns:** `a0*b1 + b0*d1`
+
+---
+
+## `mat2d_mul_r1c0`
+
+**Since:** 2.0.0
+
+Element [1,0] of the 2×2 matrix product `M0 × M1`.
+
+```redscript
+fn mat2d_mul_r1c0(a0: double, b0: double, c0: double, d0: double, a1: double, b1: double, c1: double, d1: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a0` | M0 row-major elements   @param a1  M1 row-major elements |
+
+**Returns:** `c0*a1 + d0*c1`
+
+---
+
+## `mat2d_mul_r1c1`
+
+**Since:** 2.0.0
+
+Element [1,1] of the 2×2 matrix product `M0 × M1`.
+
+```redscript
+fn mat2d_mul_r1c1(a0: double, b0: double, c0: double, d0: double, a1: double, b1: double, c1: double, d1: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a0` | M0 row-major elements   @param a1  M1 row-major elements |
+
+**Returns:** `c0*b1 + d0*d1`
+
+---
+
+## `mat2d_vecmul_x`
+
+**Since:** 2.0.0
+
+X component of the 2×2 matrix–vector product `M × v`.
+
+```redscript
+fn mat2d_vecmul_x(a: double, b: double, c: double, d: double, vx: double, vy: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | M[0,0]   @param b  M[0,1]   @param c  M[1,0]   @param d  M[1,1] |
+| `vx` | Vector X component   @param vy  Vector Y component |
+
+**Returns:** `a*vx + b*vy`
+
+---
+
+## `mat2d_vecmul_y`
+
+**Since:** 2.0.0
+
+Y component of the 2×2 matrix–vector product `M × v`.
+
+```redscript
+fn mat2d_vecmul_y(a: double, b: double, c: double, d: double, vx: double, vy: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | M[0,0]   @param b  M[0,1]   @param c  M[1,0]   @param d  M[1,1] |
+| `vx` | Vector X component   @param vy  Vector Y component |
+
+**Returns:** `c*vx + d*vy`
+
+---
+
+## `solve2d_x`
+
+**Since:** 2.0.0
+
+X solution of the 2×2 linear system `[a b; c d] * [x; y] = [ex; ey]` via Cramer's rule.
+
+Caller must ensure `det(a, b, c, d) ≠ 0`.
+
+```redscript
+fn solve2d_x(a: double, b: double, c: double, d: double, ex: double, ey: double): double
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | M[0,0]   @param b   M[0,1] |
+| `c` | M[1,0]   @param d   M[1,1] |
+| `ex` | RHS x    @param ey  RHS y |
+
+**Returns:** `(ex*d - b*ey) / det`
+
+**Example**
+
+```redscript
+let x: double = solve2d_x(1.0d, 0.0d, 0.0d, 1.0d, 3.0d, 4.0d)
 ```
 
 ---
 
-## 2×2 Matrix Functions
+## `solve2d_y`
 
-Matrices are represented as four individual `double` scalars in **row-major** order:
+**Since:** 2.0.0
 
-```
-[ a  b ]   a = [0,0]   b = [0,1]
-[ c  d ]   c = [1,0]   d = [1,1]
-```
+Y solution of the 2×2 linear system `[a b; c d] * [x; y] = [ex; ey]` via Cramer's rule.
 
----
+Caller must ensure `det(a, b, c, d) ≠ 0`.
 
-### `mat2d_det(a: double, b: double, c: double, d: double): double`
-
-Determinant of a 2×2 matrix: a·d − b·c.
-
-**Example:**
-```rs
-let det: double = mat2d_det(2.0d, 1.0d, 1.0d, 3.0d);   // 5.0
+```redscript
+fn solve2d_y(a: double, b: double, c: double, d: double, ex: double, ey: double): double
 ```
 
----
+**Parameters**
 
-### Matrix multiply — four element functions
+| Parameter | Description |
+|-----------|-------------|
+| `a` | M[0,0]   @param b   M[0,1] |
+| `c` | M[1,0]   @param d   M[1,1] |
+| `ex` | RHS x    @param ey  RHS y |
 
-Matrix product **M0 × M1**, one element at a time:
+**Returns:** `(a*ey - ex*c) / det`
 
-| Function | Element | Formula |
-|----------|---------|---------|
-| `mat2d_mul_r0c0(a0,b0,c0,d0, a1,b1,c1,d1)` | [0,0] | a0·a1 + b0·c1 |
-| `mat2d_mul_r0c1(a0,b0,c0,d0, a1,b1,c1,d1)` | [0,1] | a0·b1 + b0·d1 |
-| `mat2d_mul_r1c0(a0,b0,c0,d0, a1,b1,c1,d1)` | [1,0] | c0·a1 + d0·c1 |
-| `mat2d_mul_r1c1(a0,b0,c0,d0, a1,b1,c1,d1)` | [1,1] | c0·b1 + d0·d1 |
+**Example**
 
-**Example:**
-```rs
-// Identity × Identity
-let r00: double = mat2d_mul_r0c0(1.0d, 0.0d, 0.0d, 1.0d,  1.0d, 0.0d, 0.0d, 1.0d);   // 1.0
-let r01: double = mat2d_mul_r0c1(1.0d, 0.0d, 0.0d, 1.0d,  1.0d, 0.0d, 0.0d, 1.0d);   // 0.0
+```redscript
+let y: double = solve2d_y(1.0d, 0.0d, 0.0d, 1.0d, 3.0d, 4.0d)
 ```
 
 ---
-
-### `mat2d_vecmul_x(a: double, b: double, c: double, d: double, vx: double, vy: double): double`
-
-X component of the matrix-vector product **M × v**: a·vx + b·vy.
-
----
-
-### `mat2d_vecmul_y(a: double, b: double, c: double, d: double, vx: double, vy: double): double`
-
-Y component of the matrix-vector product **M × v**: c·vx + d·vy.
-
-**Example:**
-```rs
-// Rotate (1, 0) by 90°: [[0,-1],[1,0]] × [1,0] = [0,1]
-let rx: double = mat2d_vecmul_x(0.0d, -1.0d, 1.0d, 0.0d,  1.0d, 0.0d);   // 0.0
-let ry: double = mat2d_vecmul_y(0.0d, -1.0d, 1.0d, 0.0d,  1.0d, 0.0d);   // 1.0
-```
-
----
-
-## Linear System Solver (Cramer's Rule)
-
-Solves the 2×2 system:
-
-```
-[ a  b ] [x]   [ex]
-[ c  d ] [y] = [ey]
-```
-
----
-
-### `solve2d_x(a: double, b: double, c: double, d: double, ex: double, ey: double): double`
-
-X solution: `(ex·d − b·ey) / det(a,b,c,d)`.
-
----
-
-### `solve2d_y(a: double, b: double, c: double, d: double, ex: double, ey: double): double`
-
-Y solution: `(a·ey − ex·c) / det(a,b,c,d)`.
-
-**Example:**
-```rs
-// Solve: 2x + y = 5
-//         x + 3y = 7
-let x: double = solve2d_x(2.0d, 1.0d, 1.0d, 3.0d,  5.0d, 7.0d);   // 1.6
-let y: double = solve2d_y(2.0d, 1.0d, 1.0d, 3.0d,  5.0d, 7.0d);   // 1.8
-```
-
-> **Precondition:** The determinant must be non-zero. There is no guard — passing a singular matrix causes division by zero.
-
----
-
-## Notes & Limitations
-
-- **Double precision, not fixed-point:** All values are native `double`. Unlike other stdlib modules there is no ×10000 scale factor.
-- **No `vec3d_dist` shorthand for 2D:** Use `vec2d_dist` for 2D point distances.
-- **Normalize zero-vector:** Normalize functions return `0.0` component-wise rather than NaN or error when the input is a zero vector.
-- **Singular matrix:** `solve2d_x`/`solve2d_y` and `mat2d_det` do not check for singular matrices. Guard with `mat2d_det(…) != 0.0d` before solving.
-- **`math_hp` required:** Forgetting `import "stdlib/math_hp.mcrs"` causes a linker error at compile time since `double_sqrt` is undefined.

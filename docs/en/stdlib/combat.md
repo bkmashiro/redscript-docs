@@ -1,78 +1,94 @@
-# `combat` — Damage and health helpers
+# Combat
 
-Import: `import combat;`
+> Auto-generated from `src/stdlib/combat.mcrs` — do not edit manually.
 
-Simple RPG-style combat utilities built on scoreboard patterns. Manages health values stored in a `#health` scoreboard objective.
+## API
 
-## Functions
+- [weapon_damage](#weapon-damage)
+- [take_damage](#take-damage)
+- [is_dead](#is-dead)
 
-### `weapon_damage(base: int, bonus: int): int`
+---
 
-Calculate total weapon damage as `base + bonus`.
+## `weapon_damage`
 
-**Example:**
-```rs
-import combat;
-let dmg: int = weapon_damage(10, 5);  // 15
+**Since:** 1.0.0
+
+Calculate total weapon damage from a base value plus a bonus.
+
+```redscript
+fn weapon_damage(base: int, bonus: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `base` | Base weapon damage value |
+| `bonus` | Additional damage modifier (e.g. from enchantments or buffs) |
+
+**Returns:** base + bonus
+
+**Example**
+
+```redscript
+let dmg: int = weapon_damage(10, 5)  // result: 15
 ```
 
 ---
 
-### `enemy_health(name: string): int`
+## `take_damage`
 
-Read the health scoreboard value for the named entity.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import combat;
-let hp: int = enemy_health("boss");
+Apply damage to a health value, clamping the result to a minimum of 0.
+
+```redscript
+fn take_damage(health: int, amount: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `health` | Current health value (e.g. from scoreboard) |
+| `amount` | Damage amount to subtract |
+
+**Returns:** health - amount, clamped to 0; use scoreboard_set after calling
+
+**Example**
+
+```redscript
+let new_hp: int = take_damage(current_hp, 8)
+scoreboard_set(@p, #health, new_hp)
 ```
 
 ---
 
-### `take_damage(health: int, amount: int): int`
+## `is_dead`
 
-Subtract `amount` from `health` and return the new health value, clamped to a minimum of 0.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import combat;
-let hp: int = 100;
-hp = take_damage(hp, 25);  // 75
-hp = take_damage(hp, 80);  // 0 (clamped)
+Check whether an entity is dead (health at or below zero).
+
+```redscript
+fn is_dead(health: int): int
 ```
 
----
+**Parameters**
 
-### `is_dead(health: int): int`
+| Parameter | Description |
+|-----------|-------------|
+| `health` | Current health value to test |
 
-Returns `1` if `health` is 0 or below, `0` otherwise.
+**Returns:** 1 if health <= 0 (dead), 0 otherwise (alive)
 
-**Example:**
-```rs
-import combat;
-let hp: int = take_damage(10, 15);  // 0
-if (is_dead(hp) == 1) {
-    say("entity is dead");
+**Example**
+
+```redscript
+if (is_dead(current_hp) == 1) {
+    // trigger death logic
 }
 ```
 
 ---
-
-## Full example
-
-```rs
-import combat;
-
-let STATE_ALIVE: int = 0;
-let STATE_DEAD:  int = 1;
-
-fn on_hit(amount: int) {
-    let hp: int = enemy_health("boss");
-    hp = take_damage(hp, amount);
-
-    if (is_dead(hp) == 1) {
-        say("Boss defeated!");
-    }
-}
-```

@@ -1,104 +1,279 @@
-# `graph` — Directed and Undirected Weighted Graphs
+# Graph
 
-Import: `import "stdlib/graph.mcrs"`
+> Auto-generated from `src/stdlib/graph.mcrs` — do not edit manually.
 
-Fixed-capacity graph utilities for RedScript datapacks. The graph is stored in a single flat `int[]`, supports up to **64 nodes** and **256 directed edges**, and provides traversal plus shortest-path helpers without any dynamic graph object type.
+## API
 
-## Data Layout
+- [graph_is_valid_node](#graph-is-valid-node)
+- [graph_new](#graph-new)
+- [graph_add_edge](#graph-add-edge)
+- [graph_add_undirected](#graph-add-undirected)
+- [graph_node_count](#graph-node-count)
+- [graph_edge_count](#graph-edge-count)
+- [graph_bfs](#graph-bfs)
+- [graph_dfs](#graph-dfs)
+- [graph_has_path](#graph-has-path)
+- [graph_shortest_path](#graph-shortest-path)
 
-`graph_new()` allocates a 770-element `int[]` with this layout:
+---
 
-| Index | Meaning |
-|------|------|
-| `g[0]` | Current directed edge count |
-| `g[1]` | Node count |
-| `g[2 + i * 3]` | Edge `i` source |
-| `g[2 + i * 3 + 1]` | Edge `i` destination |
-| `g[2 + i * 3 + 2]` | Edge `i` weight |
+## `graph_is_valid_node`
 
-Nodes are zero-based integers in `[0, graph_node_count(g))`.
+**Since:** 1.0.0
 
-## Quick Example
+Check whether a node index is valid for this graph.
 
-```rs
-import "stdlib/graph.mcrs";
-
-let g: int[] = graph_new(5);
-g = graph_add_edge(g, 0, 1, 1);
-g = graph_add_edge(g, 0, 2, 4);
-g = graph_add_undirected(g, 2, 3, 2);
-g = graph_add_edge(g, 1, 3, 2);
-g = graph_add_edge(g, 3, 4, 1);
-
-let vis: int[] = [0, 0, 0, 0, 0];
-let bfs_order: int[] = graph_bfs(g, 0, vis);
-
-let dist: int[] = [0, 0, 0, 0, 0];
-let shortest: int = graph_shortest_path(g, 0, 4, dist);
-// shortest = 4 via 0 -> 1 -> 3 -> 4
+```redscript
+fn graph_is_valid_node(g: int[], node: int): int
 ```
 
-## Functions
+**Parameters**
 
-### `graph_new(n: int): int[]`
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array (from graph_new) |
+| `node` | Node index to validate |
 
-Allocate a new graph with `n` nodes and no edges. `n` is clamped to `[0, 64]`.
+**Returns:** 1 if node is in [0, node_count), 0 otherwise
 
-### `graph_add_edge(g: int[], src: int, dst: int, weight: int): int[]`
+---
 
-Append one directed edge `src -> dst`. If `src` or `dst` is invalid, or the graph already holds 256 directed edges, the input graph is returned unchanged.
+## `graph_new`
 
-### `graph_add_undirected(g: int[], a: int, b: int, weight: int): int[]`
+**Since:** 1.0.0
 
-Append `a -> b` and `b -> a` with the same weight. This consumes two directed-edge slots.
+Create a new empty graph with n nodes and capacity for 256 directed edges.
 
-### `graph_node_count(g: int[]): int`
+```redscript
+fn graph_new(n: int): int[]
+```
 
-Return the configured node count.
+**Parameters**
 
-### `graph_edge_count(g: int[]): int`
+| Parameter | Description |
+|-----------|-------------|
+| `n` | Number of nodes (clamped to [0, 64]) |
 
-Return the current directed edge count.
+**Returns:** Initialized graph int[] with g[0]=0 (edges), g[1]=n (nodes)
 
-### `graph_bfs(g: int[], start: int, out_visited: int[]): int[]`
+**Example**
 
-Breadth-first search from `start`.
+```redscript
+let g: int[] = graph_new(5)  // graph with 5 nodes, no edges
+```
 
-- Returns node indices in BFS visit order.
-- Writes `1` into `out_visited[i]` for each reachable node.
-- Returns `[]` if `start` is invalid.
+---
 
-`out_visited` must have at least `graph_node_count(g)` slots and should be zero-initialized by the caller.
+## `graph_add_edge`
 
-### `graph_dfs(g: int[], start: int, out_visited: int[]): int[]`
+**Since:** 1.0.0
 
-Depth-first search from `start`.
+Add a directed weighted edge to the graph.
 
-- Returns node indices in DFS visit order.
-- Writes `1` into `out_visited[i]` for each reachable node.
-- Returns `[]` if `start` is invalid.
+```redscript
+fn graph_add_edge(g: int[], src: int, dst: int, weight: int): int[]
+```
 
-Like `graph_bfs()`, the caller owns the output array sizing.
+**Parameters**
 
-### `graph_has_path(g: int[], src: int, dst: int): int`
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `src` | Source node index |
+| `dst` | Destination node index |
+| `weight` | Edge weight (use 1 for unweighted graphs) |
 
-Return `1` if a directed path exists from `src` to `dst`, otherwise `0`.
+**Returns:** Updated graph array; silently ignores invalid nodes or full edge list
 
-- Invalid endpoints also return `0`.
-- The implementation uses BFS over the stored directed edges.
+**Example**
 
-### `graph_shortest_path(g: int[], src: int, dst: int, out_dist: int[]): int`
+```redscript
+g = graph_add_edge(g, 0, 1, 5)  // edge from 0 to 1 with weight 5
+```
 
-Run Dijkstra from `src` and fill `out_dist` with shortest distances.
+---
 
-- `out_dist[i]` becomes the shortest distance from `src` to node `i`.
-- Unreachable nodes are written as `-1`.
-- The function returns `out_dist[dst]`.
-- Invalid `src` or `dst` returns `-1`.
+## `graph_add_undirected`
 
-## Notes
+**Since:** 1.0.0
 
-- Edge weights are plain integers.
-- Negative weights are not supported safely because the algorithm is Dijkstra.
-- `graph_bfs()` and `graph_dfs()` use fixed-size internal arrays sized for 64 nodes.
-- `graph_shortest_path()` uses `999999` as its internal infinity sentinel.
+Add an undirected weighted edge (adds both a→b and b→a directed edges).
+
+```redscript
+fn graph_add_undirected(g: int[], a: int, b: int, weight: int): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `a` | First node index |
+| `b` | Second node index |
+| `weight` | Edge weight |
+
+**Returns:** Updated graph array with two directed edges added
+
+**Example**
+
+```redscript
+g = graph_add_undirected(g, 2, 3, 2)  // bidirectional edge between 2 and 3
+```
+
+---
+
+## `graph_node_count`
+
+**Since:** 1.0.0
+
+Return the number of nodes in the graph.
+
+```redscript
+fn graph_node_count(g: int[]): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+
+**Returns:** Node count (g[1])
+
+---
+
+## `graph_edge_count`
+
+**Since:** 1.0.0
+
+Return the number of directed edges in the graph.
+
+```redscript
+fn graph_edge_count(g: int[]): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+
+**Returns:** Edge count (g[0])
+
+---
+
+## `graph_bfs`
+
+**Since:** 1.0.0
+
+Breadth-first search from a start node, returning visit order.
+
+```redscript
+fn graph_bfs(g: int[], start: int, out_visited: int[]): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `start` | Starting node index |
+| `out_visited` | int[] of length >= node_count; cells set to 1 for visited nodes |
+
+**Returns:** int[] of node indices in BFS visit order; empty if start is invalid
+
+**Example**
+
+```redscript
+let vis: int[] = [0, 0, 0, 0, 0]
+let order: int[] = graph_bfs(g, 0, vis)
+```
+
+---
+
+## `graph_dfs`
+
+**Since:** 1.0.0
+
+Depth-first search from a start node, returning visit order.
+
+```redscript
+fn graph_dfs(g: int[], start: int, out_visited: int[]): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `start` | Starting node index |
+| `out_visited` | int[] of length >= node_count; cells set to 1 for visited nodes |
+
+**Returns:** int[] of node indices in DFS visit order (iterative, stack-based)
+
+**Example**
+
+```redscript
+let vis: int[] = [0, 0, 0, 0, 0]
+let order: int[] = graph_dfs(g, 0, vis)
+```
+
+---
+
+## `graph_has_path`
+
+**Since:** 1.0.0
+
+Check whether a path exists between two nodes using BFS.
+
+```redscript
+fn graph_has_path(g: int[], src: int, dst: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `src` | Source node index |
+| `dst` | Destination node index |
+
+**Returns:** 1 if a directed path from src to dst exists, 0 otherwise
+
+**Example**
+
+```redscript
+let reachable: int = graph_has_path(g, 0, 3)
+```
+
+---
+
+## `graph_shortest_path`
+
+**Since:** 1.0.0
+
+Find the shortest weighted path from src to all nodes using Dijkstra's algorithm.
+
+```redscript
+fn graph_shortest_path(g: int[], src: int, dst: int, out_dist: int[]): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `g` | Graph array |
+| `src` | Source node index |
+| `dst` | Destination node index (for return value) |
+| `out_dist` | int[] of length >= node_count; filled with shortest distances (-1 if unreachable) |
+
+**Returns:** Shortest distance from src to dst, or -1 if unreachable
+
+**Example**
+
+```redscript
+let dist: int[] = [0, 0, 0, 0, 0]
+let d: int = graph_shortest_path(g, 0, 3, dist)
+```
+
+---

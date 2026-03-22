@@ -1,166 +1,269 @@
-# `ode` — Runge-Kutta 常微分方程求解器
+# Ode
 
-导入：`import "stdlib/ode.mcrs"`
+> 本文档由 `src/stdlib/ode.mcrs` 自动生成，请勿手动编辑。
 
-使用**四阶 Runge-Kutta（RK4）**方法的常微分方程（ODE）数值求解器。RK4 的每步精度达到 O(h⁴)——对于相同步长，远比欧拉积分更精确——是 datapack 中平滑物理模拟的标准选择。
+## API 列表
 
-状态持久化在 NBT storage 命名空间 `rs:ode` 中，可以跨函数调用边界保存。所有值使用**×10000 定点数缩放**：整数 `10000` 表示实数值 `1.0`，`3679` 表示 `0.3679`，以此类推。
-
-## 内置系统
-
-| ID | 常量               | 方程                                | 说明           |
-|----|--------------------|-------------------------------------|----------------|
-| `1` | `ODE_SYSTEM_DECAY` | dy/dt = −k·y                       | 指数衰减       |
-| `2` | `ODE_SYSTEM_GROWTH` | dy/dt = +k·y                       | 指数增长       |
-| `3` | *(谐振子)*         | y′ = y₂, y₂′ = −k·y − extra·y₂   | 阻尼谐振子     |
-
-## 快速示例——指数衰减
-
-模拟 **dy/dt = −y**（k = 1），y(0) = 1，步长 h = 0.1，共 10 步：
-
-```rs
-import "stdlib/ode.mcrs";
-
-// system=1 (DECAY), t0=0, y0=1.0, h=0.1, steps=10, k=1.0
-// 所有值使用 ×10000 定点数
-ode_run(1, 0, 10000, 1000, 10, 10000);
-
-let t_fx: int = ode_get_t();    // 10000  → t = 1.0
-let y_fx: int = ode_get_y();    // ≈ 3679 → y ≈ 0.3679  (精确值：e⁻¹ ≈ 0.36788)
-```
-
-精确解 y(t) = e^(−t) 给出 y(1) ≈ 0.3679。使用步长 h = 0.1 的 RK4 执行 10 步后可精确到 4 位以上有效数字。
-
-## API 参考
+- [ode_mul_fx](#ode-mul-fx)
+- [ode_weighted_increment](#ode-weighted-increment)
+- [ode_reset](#ode-reset)
+- [ode_get_system](#ode-get-system)
+- [ode_get_t](#ode-get-t)
+- [ode_get_y](#ode-get-y)
+- [ode_get_y2](#ode-get-y2)
+- [ode_get_k](#ode-get-k)
+- [ode_get_extra](#ode-get-extra)
+- [ode_get_steps](#ode-get-steps)
+- [ode_step](#ode-step)
+- [ode_run](#ode-run)
+- [ode_run2](#ode-run2)
 
 ---
 
-### `ode_run(system_id: int, t0_fx: int, y0_fx: int, h_fx: int, steps: int, k_fx: int)`
+## `ode_mul_fx`
 
-从头运行一个标量 ODE 系统。内部先调用 `ode_reset`，然后以 `ode_step` 迭代 `steps` 次。专为单变量系统（1 和 2）设计。
+**版本：** 2.0.0
 
-| 参数        | 类型  | 说明 |
-|-------------|-------|------|
-| `system_id` | `int` | 系统标识符（1 = 衰减，2 = 增长） |
-| `t0_fx`     | `int` | 初始时间，×10000 定点数（例如 `0` 表示 t=0） |
-| `y0_fx`     | `int` | 初始 y 值，×10000 定点数（例如 `10000` 表示 y=1.0） |
-| `h_fx`      | `int` | 步长，×10000 定点数（例如 `1000` 表示 h=0.1） |
-| `steps`     | `int` | 要执行的 RK4 步数 |
-| `k_fx`      | `int` | 速率常数 k，×10000 定点数 |
+定点数乘法：a_fx * b_fx / 10000
 
-**示例：**
-```rs
-// 衰减：dy/dt = -0.5*y，y(0)=2.0，h=0.05，20 步 → t=1.0
-ode_run(1, 0, 20000, 500, 20, 5000);
+```redscript
+fn ode_mul_fx(a_fx: int, b_fx: int): int
 ```
 
----
+**参数**
 
-### `ode_init(system_id: int, t0_fx: int, y0_fx: int, y20_fx: int, k_fx: int, extra_fx: int)`
-
-`ode_reset` 的别名。初始化求解器状态但不执行任何步骤。当你想用 `ode_eval` 手动步进时使用此函数。
-
-| 参数         | 类型  | 说明 |
-|--------------|-------|------|
-| `system_id`  | `int` | 系统标识符 |
-| `t0_fx`      | `int` | 初始时间（×10000） |
-| `y0_fx`      | `int` | 初始 y（×10000） |
-| `y20_fx`     | `int` | 初始 y₂（×10000）；标量系统使用 `0` |
-| `k_fx`       | `int` | 速率常数 k（×10000） |
-| `extra_fx`   | `int` | 次要参数（×10000）；系统 3 中为阻尼系数，其他情况不使用 |
-
-**示例：**
-```rs
-// 设置谐振子：k=4，extra（阻尼）=0，y(0)=1，y'(0)=0
-ode_init(3, 0, 10000, 0, 40000, 0);
-```
-
----
-
-### `ode_eval(h_fx: int)`
-
-将求解器前进一个大小为 `h_fx` 的 RK4 步。必须在 `ode_init` 或 `ode_reset` 之后调用。对于系统 3，y 和 y₂ 会同时更新。
-
-| 参数   | 类型  | 说明 |
-|--------|-------|------|
-| `h_fx` | `int` | 步长，×10000 定点数 |
-
-**示例：**
-```rs
-ode_init(1, 0, 10000, 0, 10000, 0);
-let i: int = 0;
-while (i < 5) {
-    ode_eval(1000);   // 每步 h = 0.1
-    i = i + 1;
-}
-let y: int = ode_get_y();
-```
-
-> **注意：** `ode_eval` 是底层步进函数，在源码中实现为 `ode_step`。一次性模拟请使用 `ode_run`。
-
----
-
-### `ode_get_t(): int`
-
-以 ×10000 定点数返回当前时间 `t`。
-
-**示例：**
-```rs
-let t: int = ode_get_t();   // 例如 10000 → t = 1.0
-```
-
----
-
-### `ode_get_y(): int`
-
-以 ×10000 定点数返回当前主状态变量 `y`。
-
-**示例：**
-```rs
-let y: int = ode_get_y();   // 例如 3679 → y ≈ 0.3679
-```
-
----
-
-### `ode_deriv(system_id: int, t_fx: int, y_fx: int, y2_fx: int, k_fx: int, extra_fx: int): int`
-
-在给定点计算给定系统的导数 dy/dt，而不推进求解器状态。适用于检查导数或构建自定义积分器。
-
-在源码中对应 `ode_eval_y`。
-
-| 参数         | 类型  | 说明 |
-|--------------|-------|------|
-| `system_id`  | `int` | 系统标识符 |
-| `t_fx`       | `int` | 时间（×10000） |
-| `y_fx`       | `int` | 主变量 y（×10000） |
-| `y2_fx`      | `int` | 次变量 y₂（×10000）；标量系统使用 `0` |
-| `k_fx`       | `int` | 速率常数（×10000） |
-| `extra_fx`   | `int` | 额外参数（×10000） |
-
-**返回值：** ×10000 定点数形式的 dy/dt。
-
-**示例：**
-```rs
-// 在 t=0，y=10000（=1.0），k=10000（=1.0）时：dy/dt = -1.0 → -10000
-let deriv: int = ode_deriv(1, 0, 10000, 0, 10000, 0);
-```
-
----
-
-## 附加函数
-
-| 函数 | 说明 |
+| 参数 | 说明 |
 |------|------|
-| `ode_get_y2(): int` | 次状态变量 y₂（例如系统 3 中的速度） |
-| `ode_get_steps(): int` | 自上次重置以来执行的步数 |
-| `ode_run2(system_id, t0, y0, y20, h, steps, k, extra)` | `ode_run` 的双变量变体（用于系统 3） |
+| `a_fx` | 第一个操作数 ×10000 |
+| `b_fx` | 第二个操作数 ×10000 |
+
+**返回：** 乘积（×10000）
 
 ---
 
-## 注意事项与限制
+## `ode_weighted_increment`
 
-- **定点数缩放：** 所有输入和输出使用 ×10000。实数值 `v` 变为整数 `v * 10000`。忘记此规则会导致完全错误的结果。
-- **全局状态：** `rs:ode` storage 中只有一个求解器状态。不能同时进行多个模拟——如有需要，请手动保存和恢复状态。
-- **系统 3 需用 `ode_run2`：** `ode_run` 会将 y₂ 和 `extra` 清零。要模拟阻尼振子，请使用 `ode_run2` 或 `ode_init` + `ode_eval`。
-- **步长精度：** 较小的 h 在更多步数的代价下能获得更高精度。h = 0.1（1000 fx）通常是个不错的默认值。
-- **整数溢出：** y、k 的值过大或步数过多可能导致 ×10000 算术溢出。请将中间值控制在 `int` 范围内。
+**版本：** 2.0.0
+
+计算 RK4 加权增量：h * (k1 + 2k2 + 2k3 + k4) / 6
+
+```redscript
+fn ode_weighted_increment(h_fx: int, deriv_sum_fx: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h_fx` | 步长 ×10000 |
+| `deriv_sum_fx` | k1 + 2k2 + 2k3 + k4，×10000 |
+
+**返回：** 加权增量 ×10000
+
+---
+
+## `ode_reset`
+
+**版本：** 2.0.0
+
+在 storage rs:ode 中初始化 ODE 模块状态
+
+```redscript
+fn ode_reset(system_id: int, t_fx: int, y_fx: int, y2_fx: int, k_fx: int, extra_fx: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `system_id` | 内置系统常量（1=衰减，2=增长，3=振荡器） |
+| `t_fx` | 初始时间 ×10000 |
+| `y_fx` | 初始主变量 y(0) ×10000 |
+| `y2_fx` | 初始次变量 y'(0) ×10000（仅 system 3 使用） |
+| `k_fx` | 速率/弹性常数 ×10000 |
+| `extra_fx` | 阻尼系数 ×10000（仅 system 3 使用） |
+
+**示例**
+
+```redscript
+ode_reset(1, 0, 10000, 0, 10000, 0)
+```
+
+---
+
+## `ode_get_system`
+
+**版本：** 2.0.0
+
+返回 ODE 状态中的系统 ID
+
+```redscript
+fn ode_get_system(): int
+```
+
+**返回：** 槽位 0 中存储的系统 ID
+
+---
+
+## `ode_get_t`
+
+**版本：** 2.0.0
+
+返回当前时间 t（×10000）
+
+```redscript
+fn ode_get_t(): int
+```
+
+**返回：** 当前时间 ×10000
+
+---
+
+## `ode_get_y`
+
+**版本：** 2.0.0
+
+返回当前主变量 y（×10000）
+
+```redscript
+fn ode_get_y(): int
+```
+
+**返回：** 当前 y 值 ×10000
+
+---
+
+## `ode_get_y2`
+
+**版本：** 2.0.0
+
+返回当前次变量 y'（×10000，仅对 system 3 有意义）
+
+```redscript
+fn ode_get_y2(): int
+```
+
+**返回：** 当前 y' 值 ×10000
+
+---
+
+## `ode_get_k`
+
+**版本：** 2.0.0
+
+返回速率常数 k（×10000）
+
+```redscript
+fn ode_get_k(): int
+```
+
+**返回：** 速率常数 ×10000
+
+---
+
+## `ode_get_extra`
+
+**版本：** 2.0.0
+
+返回额外参数（×10000，system 3 中表示阻尼）
+
+```redscript
+fn ode_get_extra(): int
+```
+
+**返回：** 额外参数 ×10000
+
+---
+
+## `ode_get_steps`
+
+**版本：** 2.0.0
+
+返回已执行的步数
+
+```redscript
+fn ode_get_steps(): int
+```
+
+**返回：** 步数（普通整数）
+
+---
+
+## `ode_step`
+
+**版本：** 2.0.0
+
+向前推进一个 RK4 步
+
+```redscript
+fn ode_step(h_fx: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `h_fx` | 步长 ×10000（如 1000 = 0.1 时间单位） |
+
+---
+
+## `ode_run`
+
+**版本：** 2.0.0
+
+对标量 ODE 系统执行 steps 步 RK4 积分
+
+```redscript
+fn ode_run(system_id: int, t0_fx: int, y0_fx: int, h_fx: int, steps: int, k_fx: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `system_id` | 内置系统常量（1 或 2 用于标量系统） |
+| `t0_fx` | 初始时间 ×10000 |
+| `y0_fx` | 初始 y 值 ×10000 |
+| `h_fx` | 步长 ×10000 |
+| `steps` | RK4 步数 |
+| `k_fx` | 速率常数 ×10000 |
+
+**示例**
+
+```redscript
+ode_run(1, 0, 10000, 1000, 10, 10000)
+let y: int = ode_get_y()
+```
+
+---
+
+## `ode_run2`
+
+**版本：** 2.0.0
+
+对二维 ODE 系统（如谐振子）执行 steps 步 RK4 积分
+
+```redscript
+fn ode_run2(system_id: int, t0_fx: int, y0_fx: int, y20_fx: int, h_fx: int, steps: int, k_fx: int, extra_fx: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `system_id` | 内置系统常量（system 3 = 谐振子） |
+| `t0_fx` | 初始时间 ×10000 |
+| `y0_fx` | 初始 y 值 ×10000 |
+| `y20_fx` | 初始 y' 值 ×10000 |
+| `h_fx` | 步长 ×10000 |
+| `steps` | RK4 步数 |
+| `k_fx` | 弹性常数 ×10000 |
+| `extra_fx` | 阻尼系数 ×10000 |
+
+**示例**
+
+```redscript
+ode_run2(3, 0, 10000, 0, 1000, 20, 10000, 500)
+```
+
+---

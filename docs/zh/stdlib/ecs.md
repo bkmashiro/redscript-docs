@@ -1,244 +1,510 @@
-# `ecs` — Entity Component System
+# Ecs
 
-导入：`import "stdlib/ecs.mcrs"`
+> 本文档由 `src/stdlib/ecs.mcrs` 自动生成，请勿手动编辑。
 
-Entity Component System（ECS）是一种数据驱动的模式，用于将带类型的"组件"（结构化数据）附加到游戏实体上。Minecraft Java 版 datapack 没有内置的组件系统（与基岩版不同），因此 `ecs.mcrs` 使用以下方式提供此功能：
+## API 列表
 
-- **scoreboard objectives** — 整数字段（HP、速度等）
-- **entity tags** — 组件存在标志（`ecs_has_<comp_name>`）
-- **NBT storage** — 复杂数据（通过 `raw()`）
-
-若不使用 ECS，每种实体类型都需要编写数百行硬编码的原始 NBT。使用 `ecs.mcrs` 后，组件状态存储在一个有类型的 `int[]` 数组中，可以通过命名辅助函数传递、修改和读取——更接近通用游戏引擎中组件系统的工作方式。
-
-## Tag 命名规范
-
-携带某个组件的实体应添加对应的 Minecraft tag：
-
-```
-ecs_has_health     → 实体拥有 health 组件
-ecs_has_velocity   → 实体拥有 velocity 组件
-ecs_has_damage     → 实体拥有 damage 组件
-```
-
-这样可以让选择器高效过滤：`@e[tag=ecs_has_health]`。
-
-## 组件类型 ID
-
-注册表使用三个内置组件类型常量：
-
-| 常量               | 值 |
-|--------------------|----|
-| `ECS_COMP_HEALTH`  | 1  |
-| `ECS_COMP_VELOCITY`| 2  |
-| `ECS_COMP_DAMAGE`  | 3  |
-
-## 使用示例
-
-完整的实体生命周期——创建、受伤、检查死亡：
-
-```rs
-import "stdlib/ecs.mcrs";
-
-// --- 注册表设置 ---
-let reg: int[] = ecs_registry_new();
-reg = ecs_register(reg, ECS_COMP_HEALTH);
-reg = ecs_register(reg, ECS_COMP_VELOCITY);
-
-// --- 生成 ID 为 42 的实体 ---
-let hp: int[] = ecs_health_init(42, 100);     // 满血，最大 100
-let vel: int[] = ecs_vel_init(1000, 0, 500);  // vx=1.0, vy=0.0, vz=0.5 (×1000)
-
-// 在 Minecraft 中为实体添加 tag（通过 raw() 或 .mcfunction）：
-//   tag @e[scores={ecs_entity=42}] add ecs_has_health
-//   tag @e[scores={ecs_entity=42}] add ecs_has_velocity
-
-// --- 战斗 tick ---
-hp = ecs_health_damage(hp, 30);  // 受到 30 点伤害 → 70 HP
-
-// --- 物理 tick ---
-vel = ecs_vel_apply_gravity(vel, 980);  // 每 tick 减少 0.980 格/tick²
-vel = ecs_vel_damp(vel, 9000);          // 90% 空气阻力
-
-// --- 死亡检查 ---
-if (ecs_health_is_dead(hp) == 1) {
-    // 实体死亡——触发死亡逻辑
-}
-
-let pct: int = ecs_health_pct(hp);  // 7000 = 70.00%
-```
-
-## 函数
-
-### 注册表
-
-#### `ecs_registry_new(): int[]`
-
-分配一个空白的 16 槽注册表。所有槽位初始化为 0（未注册任何组件）。注册表追踪 datapack 中哪些组件类型处于激活状态。
+- [ecs_registry_new](#ecs-registry-new)
+- [ecs_register](#ecs-register)
+- [ecs_is_registered](#ecs-is-registered)
+- [ecs_health_init](#ecs-health-init)
+- [ecs_health_get](#ecs-health-get)
+- [ecs_health_max](#ecs-health-max)
+- [ecs_health_set](#ecs-health-set)
+- [ecs_health_damage](#ecs-health-damage)
+- [ecs_health_heal](#ecs-health-heal)
+- [ecs_health_is_dead](#ecs-health-is-dead)
+- [ecs_health_pct](#ecs-health-pct)
+- [ecs_vel_init](#ecs-vel-init)
+- [ecs_vel_get_x](#ecs-vel-get-x)
+- [ecs_vel_get_y](#ecs-vel-get-y)
+- [ecs_vel_get_z](#ecs-vel-get-z)
+- [ecs_vel_set](#ecs-vel-set)
+- [ecs_vel_speed](#ecs-vel-speed)
+- [ecs_vel_apply_gravity](#ecs-vel-apply-gravity)
+- [ecs_vel_damp](#ecs-vel-damp)
 
 ---
 
-#### `ecs_register(reg: int[], comp_id: int): int[]`
+## `ecs_registry_new`
 
-在 `reg` 中将 `comp_id` 标记为已注册。返回更新后的注册表。`comp_id` 必须在 `[0, 15]` 范围内；超出范围的值会被静默忽略。
+**版本：** 2.0.0
 
-**示例：**
-```rs
-let reg: int[] = ecs_registry_new();
-reg = ecs_register(reg, ECS_COMP_HEALTH);
+分配一个全零的 16 槽组件注册表
+
+```redscript
+fn ecs_registry_new(): int[]
+```
+
+**返回：** 长度为 16 的 int[]，所有槽位为 0
+
+**示例**
+
+```redscript
+let reg: int[] = ecs_registry_new()
 ```
 
 ---
 
-#### `ecs_is_registered(reg: int[], comp_id: int): int`
+## `ecs_register`
 
-如果 `comp_id` 已注册则返回 `1`，否则返回 `0`。超出范围的 ID 返回 `0`。
+**版本：** 2.0.0
 
-**示例：**
-```rs
-let ok: int = ecs_is_registered(reg, ECS_COMP_VELOCITY);  // 1 或 0
+在注册表中标记 comp_id 为已注册，并返回更新后的注册表
+
+```redscript
+fn ecs_register(reg: int[], comp_id: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `reg` | 来自 ecs_registry_new 的注册表数组 |
+| `comp_id` | 组件类型 ID（0–15） |
+
+**返回：** 更新后的注册表数组
+
+**示例**
+
+```redscript
+reg = ecs_register(reg, ECS_COMP_HEALTH)
 ```
 
 ---
 
-### Health 组件
+## `ecs_is_registered`
 
-状态布局——`int[8]`：
+**版本：** 2.0.0
 
-| 索引 | 字段           | 说明                           |
-|------|----------------|--------------------------------|
-| 0    | `entity_score` | 用作实体 ID 的 scoreboard 分数 |
-| 1    | `current_hp`   | 当前生命值                     |
-| 2    | `max_hp`       | 最大生命值                     |
-| 3–7  | *(保留)*       | 0                              |
+检查 comp_id 是否已注册
 
-#### `ecs_health_init(entity_score: int, max_hp: int): int[]`
+```redscript
+fn ecs_is_registered(reg: int[], comp_id: int): int
+```
 
-创建 health 组件状态。将 `current_hp = max_hp`（生成时满血）。
+**参数**
 
-```rs
-let hp: int[] = ecs_health_init(42, 100);  // 实体 42，100/100 HP
+| 参数 | 说明 |
+|------|------|
+| `reg` | 来自 ecs_registry_new 的注册表数组 |
+| `comp_id` | 组件类型 ID（0–15） |
+
+**返回：** 已注册返回 1，否则返回 0
+
+**示例**
+
+```redscript
+if (ecs_is_registered(reg, ECS_COMP_HEALTH) == 1) { }
 ```
 
 ---
 
-#### `ecs_health_get(state: int[]): int`
+## `ecs_health_init`
 
-返回当前 HP。
+**版本：** 2.0.0
 
----
+创建血量为满血的 Health 组件状态
 
-#### `ecs_health_max(state: int[]): int`
-
-返回最大 HP。
-
----
-
-#### `ecs_health_set(state: int[], hp: int): int[]`
-
-设置当前 HP，夹紧到 `[0, max_hp]`。返回更新后的状态。
-
----
-
-#### `ecs_health_damage(state: int[], amount: int): int[]`
-
-从当前 HP 中减去 `amount`，夹紧到 `0`。返回更新后的状态。
-
----
-
-#### `ecs_health_heal(state: int[], amount: int): int[]`
-
-向当前 HP 中加上 `amount`，夹紧到 `max_hp`。返回更新后的状态。
-
----
-
-#### `ecs_health_is_dead(state: int[]): int`
-
-如果 `current_hp <= 0` 则返回 `1`，否则返回 `0`。
-
----
-
-#### `ecs_health_pct(state: int[]): int`
-
-以 ×10000 定点数形式返回 HP 百分比。
-
-```
-pct = current_hp × 10000 / max_hp
+```redscript
+fn ecs_health_init(entity_score: int, max_hp: int): int[]
 ```
 
-50 HP / 100 最大值 → `5000`（= 50.00%）。如果 `max_hp <= 0` 则返回 `0`。
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `entity_score` | 用于标识实体的计分板得分 |
+| `max_hp` | 最大生命值 |
 
-### Velocity 组件
+**返回：** 长度为 8 的 Health 组件状态数组
 
-状态布局——`int[8]`：
+**示例**
 
-| 索引 | 字段   | 说明                                           |
-|------|--------|------------------------------------------------|
-| 0    | `vx`   | X 方向速度，×1000 定点数（1000 = 1.0 格/tick）|
-| 1    | `vy`   | Y 方向速度，×1000 定点数                       |
-| 2    | `vz`   | Z 方向速度，×1000 定点数                       |
-| 3–7  | *(保留)* | 0                                            |
-
-定点数约定：`1000` = 1.0 格/tick。
-
-#### `ecs_vel_init(vx: int, vy: int, vz: int): int[]`
-
-创建具有给定分量的 velocity 组件状态。
-
-```rs
-let vel: int[] = ecs_vel_init(1000, 0, 500);  // 1.0, 0.0, 0.5 格/tick
+```redscript
+let hp: int[] = ecs_health_init(42, 100)
 ```
 
 ---
 
-#### `ecs_vel_get_x(state: int[]): int`
+## `ecs_health_get`
 
-返回 `vx`（×1000）。
+**版本：** 2.0.0
 
----
+从 Health 组件状态中返回当前 HP
 
-#### `ecs_vel_get_y(state: int[]): int`
-
-返回 `vy`（×1000）。
-
----
-
-#### `ecs_vel_get_z(state: int[]): int`
-
-返回 `vz`（×1000）。
-
----
-
-#### `ecs_vel_set(state: int[], vx: int, vy: int, vz: int): int[]`
-
-设置全部三个速度分量。返回更新后的状态。
-
----
-
-#### `ecs_vel_speed(state: int[]): int`
-
-以 ×1000 定点数返回速度向量的大小。
-
-```
-speed = sqrt(vx² + vy² + vz²)
+```redscript
+fn ecs_health_get(state: int[]): int
 ```
 
-**示例：** `ecs_vel_speed([3000, 4000, 0, ...])` → `5000`（勾股定理 3-4-5）。
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `state` | 来自 ecs_health_init 的状态数组 |
 
-#### `ecs_vel_apply_gravity(state: int[], gravity_fx: int): int[]`
+**返回：** 当前生命值
 
-每 tick 从 `vy` 中减去 `gravity_fx`。`gravity_fx` 为 ×1000 定点数；例如 `980` ≈ 0.980 格/tick²（近似 Minecraft 默认重力 0.08 g/tick）。返回更新后的状态。
+**示例**
 
----
-
-#### `ecs_vel_damp(state: int[], factor_fx: int): int[]`
-
-将每个速度分量乘以 `factor_fx / 10000`（摩擦力/空气阻力）。`factor_fx` 为 ×10000；例如 `8000` = 0.80 阻尼（每 tick 损失 20% 速度）。返回更新后的状态。
-
-**示例：**
-```rs
-vel = ecs_vel_damp(vel, 9000);  // 每 tick 保留 90%
+```redscript
+let hp: int = ecs_health_get(state)
 ```
+
+---
+
+## `ecs_health_max`
+
+**版本：** 2.0.0
+
+从 Health 组件状态中返回最大 HP
+
+```redscript
+fn ecs_health_max(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 来自 ecs_health_init 的状态数组 |
+
+**返回：** 最大生命值
+
+**示例**
+
+```redscript
+let max: int = ecs_health_max(state)
+```
+
+---
+
+## `ecs_health_set`
+
+**版本：** 2.0.0
+
+设置当前 HP（钳制到 [0, max]）并返回更新后的状态
+
+```redscript
+fn ecs_health_set(state: int[], hp: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | Health 组件状态 |
+| `hp` | 新的生命值（自动钳制到有效范围） |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+state = ecs_health_set(state, 50)
+```
+
+---
+
+## `ecs_health_damage`
+
+**版本：** 2.0.0
+
+扣除 HP（钳制到 0）并返回更新后的状态
+
+```redscript
+fn ecs_health_damage(state: int[], amount: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | Health 组件状态 |
+| `amount` | 扣除量（正整数） |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+state = ecs_health_damage(state, 30)
+```
+
+---
+
+## `ecs_health_heal`
+
+**版本：** 2.0.0
+
+恢复 HP（钳制到最大值）并返回更新后的状态
+
+```redscript
+fn ecs_health_heal(state: int[], amount: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | Health 组件状态 |
+| `amount` | 恢复量（正整数） |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+state = ecs_health_heal(state, 20)
+```
+
+---
+
+## `ecs_health_is_dead`
+
+**版本：** 2.0.0
+
+判断实体 HP 是否归零
+
+```redscript
+fn ecs_health_is_dead(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | Health 组件状态 |
+
+**返回：** HP <= 0 返回 1，存活返回 0
+
+**示例**
+
+```redscript
+if (ecs_health_is_dead(state) == 1) { /* handle death */ }
+```
+
+---
+
+## `ecs_health_pct`
+
+**版本：** 2.0.0
+
+以 ×10000 定点数返回 HP 百分比（5000 = 50.00%）
+
+```redscript
+fn ecs_health_pct(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | Health 组件状态 |
+
+**返回：** current_hp * 10000 / max_hp；max_hp 为 0 时返回 0
+
+**示例**
+
+```redscript
+let pct: int = ecs_health_pct(state)
+```
+
+---
+
+## `ecs_vel_init`
+
+**版本：** 2.0.0
+
+创建具有给定初始速度的速度组件状态
+
+```redscript
+fn ecs_vel_init(vx: int, vy: int, vz: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `vx` | X 方向速度 ×1000（1000 = 1.0 格/tick） |
+| `vy` | Y 方向速度 ×1000 |
+| `vz` | Z 方向速度 ×1000 |
+
+**返回：** 长度为 8 的速度组件状态数组
+
+**示例**
+
+```redscript
+let vel: int[] = ecs_vel_init(1000, 0, 500)
+```
+
+---
+
+## `ecs_vel_get_x`
+
+**版本：** 2.0.0
+
+从速度组件状态中返回 X 速度
+
+```redscript
+fn ecs_vel_get_x(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+
+**返回：** X 速度 ×1000
+
+---
+
+## `ecs_vel_get_y`
+
+**版本：** 2.0.0
+
+从速度组件状态中返回 Y 速度
+
+```redscript
+fn ecs_vel_get_y(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+
+**返回：** Y 速度 ×1000
+
+---
+
+## `ecs_vel_get_z`
+
+**版本：** 2.0.0
+
+从速度组件状态中返回 Z 速度
+
+```redscript
+fn ecs_vel_get_z(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+
+**返回：** Z 速度 ×1000
+
+---
+
+## `ecs_vel_set`
+
+**版本：** 2.0.0
+
+设置所有速度分量并返回更新后的状态
+
+```redscript
+fn ecs_vel_set(state: int[], vx: int, vy: int, vz: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+| `vx` | 新 X 速度 ×1000 |
+| `vy` | 新 Y 速度 ×1000 |
+| `vz` | 新 Z 速度 ×1000 |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+state = ecs_vel_set(state, 500, 1200, 0)
+```
+
+---
+
+## `ecs_vel_speed`
+
+**版本：** 2.0.0
+
+返回速度向量的模（sqrt(vx²+vy²+vz²)）×1000
+
+```redscript
+fn ecs_vel_speed(state: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+
+**返回：** 速度大小 ×1000
+
+**示例**
+
+```redscript
+let speed: int = ecs_vel_speed(vel_state)
+```
+
+---
+
+## `ecs_vel_apply_gravity`
+
+**版本：** 2.0.0
+
+每 tick 将 Y 速度减去重力加速度
+
+```redscript
+fn ecs_vel_apply_gravity(state: int[], gravity_fx: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+| `gravity_fx` | 重力加速度 ×1000（如 980 ≈ 0.98 格/tick²） |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+vel_state = ecs_vel_apply_gravity(vel_state, 980)
+```
+
+---
+
+## `ecs_vel_damp`
+
+**版本：** 2.0.0
+
+对所有速度分量乘以阻力系数
+
+```redscript
+fn ecs_vel_damp(state: int[], factor_fx: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state` | 速度组件状态 |
+| `factor_fx` | 阻力系数 ×10000（如 8000 = 0.80 倍衰减） |
+
+**返回：** 更新后的状态数组
+
+**示例**
+
+```redscript
+vel_state = ecs_vel_damp(vel_state, 9000)
+```
+
+---

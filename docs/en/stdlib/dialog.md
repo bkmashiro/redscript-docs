@@ -15,6 +15,8 @@
 
 ## `dialog_say`
 
+**Since:** 1.0.0
+
 Sends a plain white chat message to a player or selector.
 
 ```redscript
@@ -38,6 +40,8 @@ dialog_say(@p, "Quest updated")
 
 ## `dialog_broadcast`
 
+**Since:** 1.0.0
+
 Broadcasts a plain white chat message to all players.
 
 ```redscript
@@ -50,11 +54,20 @@ fn dialog_broadcast(msg: string)
 |-----------|-------------|
 | `msg` | Plain text message content |
 
+**Example**
+
+```redscript
+dialog_broadcast("Server restart in 60 seconds")
+```
+
 ---
 
 ## `dialog_say_color`
 
+**Since:** 1.0.0
+
 Sends a colored chat message to a player or selector.
+
 Color mapping: `0=white`, `1=red`, `2=green`, `3=gold`, `4=aqua`.
 Any other value falls back to white.
 
@@ -68,11 +81,19 @@ fn dialog_say_color(p: selector, msg: string, color: int)
 |-----------|-------------|
 | `p` | Recipient selector |
 | `msg` | Plain text message content |
-| `color` | Color selector integer |
+| `color` | Color selector integer (0=white, 1=red, 2=green, 3=gold, 4=aqua) |
+
+**Example**
+
+```redscript
+dialog_say_color(@s, "You died!", 1)
+```
 
 ---
 
 ## `dialog_title`
+
+**Since:** 1.0.0
 
 Displays a title and subtitle on a player's screen.
 
@@ -88,9 +109,17 @@ fn dialog_title(p: selector, title: string, subtitle: string)
 | `title` | Large title text |
 | `subtitle` | Subtitle text shown below the title |
 
+**Example**
+
+```redscript
+dialog_title(@s, "Stage 2", "Defeat the boss")
+```
+
 ---
 
 ## `dialog_title_clear`
+
+**Since:** 1.0.0
 
 Clears any currently displayed title for the target selector.
 
@@ -104,9 +133,17 @@ fn dialog_title_clear(p: selector)
 |-----------|-------------|
 | `p` | Recipient selector |
 
+**Example**
+
+```redscript
+dialog_title_clear(@s)
+```
+
 ---
 
 ## `dialog_actionbar`
+
+**Since:** 1.0.0
 
 Displays a short message in the player's actionbar.
 
@@ -120,5 +157,11 @@ fn dialog_actionbar(p: selector, msg: string)
 |-----------|-------------|
 | `p` | Recipient selector |
 | `msg` | Plain text message content |
+
+**Example**
+
+```redscript
+dialog_actionbar(@s, "Mana: 80/100")
+```
 
 ---

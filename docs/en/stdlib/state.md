@@ -1,163 +1,152 @@
-# `state` — Scoreboard-backed state machine
+# State
 
-Import: `import "stdlib/state.mcrs"`
+> Auto-generated from `src/stdlib/state.mcrs` — do not edit manually.
 
-Provides a minimal, composable state machine built on a single Minecraft scoreboard objective (`rs.state`). Each entity carries an integer state value; the helpers let you read, write, guard, and transition between states in a type-safe way.
+## API
 
-## Setup
+- [get_state](#get-state)
+- [set_state](#set-state)
+- [is_state](#is-state)
+- [init_state](#init-state)
+- [transition](#transition)
 
-Add the following command to your datapack's `load` function so the objective exists before any state operations run:
+---
 
-```mcfunction
-scoreboard objectives add rs.state dummy
+## `get_state`
+
+**Since:** 1.0.0
+
+Read the current state of an entity.
+
+Returns `-1` if the entity has not been initialised (score is 0 = unset in
+Minecraft, but we reserve `-1` as the sentinel for "never set via
+`init_state`").
+
+```redscript
+fn get_state(entity: selector) -> int
 ```
 
-## State constants
+**Parameters**
 
-Define your own state constants in your RedScript code:
+| Parameter | Description |
+|-----------|-------------|
+| `entity` | Selector for the target entity |
 
-```rs
-let STATE_IDLE:   int = 0
-let STATE_COMBAT: int = 1
-let STATE_DEAD:   int = 2
-```
+**Returns:** Current state value stored in `rs.state`, or `-1` if unset
 
-Use `-1` as the sentinel for "not yet initialised" (see [`init_state`](#init_stateentity-selector-initial-int)).
+**Example**
 
-## Functions
-
-### `get_state(entity: selector): Option<int>`
-
-Return the current state of `entity` as stored in `rs.state` wrapped in `Some(state)`. Returns `None` when the entity has not been initialised via `init_state`.
-
-**Example:**
-```rs
-import "stdlib/state.mcrs"
-
-if let Some(s) = get_state(@s) {
-    // entity is initialised; s is the current state
-}
+```redscript
+let s: int = get_state(@s)
 ```
 
 ---
 
-### `set_state(entity: selector, state: int)`
+## `set_state`
 
-Write `state` directly into `rs.state` for `entity`. No guards — use [`transition`](#transitionentity-selector-from-int-to-int-int) for guarded writes.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/state.mcrs"
+Write a state value to an entity.
 
-set_state(@s, STATE_IDLE)
+```redscript
+fn set_state(entity: selector, state: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity` | Selector for the target entity |
+| `state` | Integer state constant to write |
+
+**Example**
+
+```redscript
+set_state(@s, 1)
 ```
 
 ---
 
-### `is_state(entity: selector, state: int): int`
+## `is_state`
 
-Check whether `entity` is currently in `state`.
+**Since:** 1.0.0
 
-Returns `1` if the entity's current state equals `state`, `0` otherwise.
+Check whether an entity is currently in the given state.
 
-**Example:**
-```rs
-import "stdlib/state.mcrs"
+```redscript
+fn is_state(entity: selector, state: int) -> int
+```
 
-if (is_state(@s, STATE_COMBAT) == 1) {
-    // entity is fighting
-}
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity` | Selector for the target entity |
+| `state` | Integer state constant to compare against |
+
+**Returns:** `1` if the entity is in `state`, `0` otherwise
+
+**Example**
+
+```redscript
+if (is_state(@s, STATE_COMBAT) == 1) { /* per-tick combat logic */ }
 ```
 
 ---
 
-### `init_state(entity: selector, initial: int)`
+## `init_state`
 
-Initialise `entity` to `initial` **only** if it has not been set before (current score is `-1`). Safe to call every tick; it is a no-op after the first successful initialisation.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/state.mcrs"
+Initialise an entity's state only if it has not been set yet (score == -1).
 
-// Call on every tick — will only set STATE_IDLE once.
+Call once on spawn or load to avoid overwriting an in-progress state.
+
+```redscript
+fn init_state(entity: selector, initial: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `entity` | Selector for the target entity |
+| `initial` | State constant to write when the entity is uninitialised |
+
+**Example**
+
+```redscript
 init_state(@s, STATE_IDLE)
 ```
 
 ---
 
-### `clear_state(entity: selector)`
+## `transition`
 
-Remove the state value for `entity` from `rs.state`, resetting it to the uninitialised sentinel (`-1`). Use this when an entity is removed or you want to fully reset its state machine.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/state.mcrs"
+Attempt a guarded transition from `from` to `to`.
 
-// Entity despawned — wipe its state so a fresh spawn can re-initialise.
-clear_state(@s)
+Only performs the transition when the entity is currently in `from`.
+
+```redscript
+fn transition(entity: selector, from: int, to: int) -> int
 ```
 
----
+**Parameters**
 
-### `transition(entity: selector, from: int, to: int): int`
+| Parameter | Description |
+|-----------|-------------|
+| `entity` | Selector for the target entity |
+| `from` | Required current state |
+| `to` | State to transition into |
 
-Attempt a guarded transition: move `entity` from state `from` to state `to` only if it is currently in `from`.
+**Returns:** `1` on success, `0` if the entity was not in `from`
 
-Returns `1` on success, `0` if the entity was not in `from` (transition did not occur).
+**Example**
 
-**Example:**
-```rs
-import "stdlib/state.mcrs"
-
+```redscript
 let ok: int = transition(@s, STATE_IDLE, STATE_COMBAT)
-if (ok == 1) {
-    // entity entered combat
-}
 ```
 
 ---
-
-## Full example
-
-```rs
-import "stdlib/state.mcrs"
-
-let STATE_IDLE:   int = 0
-let STATE_COMBAT: int = 1
-let STATE_DEAD:   int = 2
-
-// Called once per entity spawn (e.g., from your load/init function).
-fn entity_spawn() {
-    init_state(@s, STATE_IDLE)
-}
-
-// Called every tick for every managed entity.
-fn entity_tick() {
-    // Dispatch on current state
-    if (is_state(@s, STATE_IDLE) == 1) {
-        // idle logic …
-    }
-
-    if (is_state(@s, STATE_COMBAT) == 1) {
-        // combat logic …
-        // If HP drops to zero, transition to dead
-        let ok: int = transition(@s, STATE_COMBAT, STATE_DEAD)
-    }
-
-    if (is_state(@s, STATE_DEAD) == 1) {
-        // death logic …
-    }
-}
-
-// Triggered by an external event (e.g., player proximity detected).
-fn on_player_near() {
-    // Only enter combat from idle — safe to call even if already in combat.
-    let ok: int = transition(@s, STATE_IDLE, STATE_COMBAT)
-}
-```
-
-## Notes
-
-- The `rs.state` objective uses the `dummy` criterion, so values persist across ticks but are **not** saved between datapack reloads unless your load function preserves them.
-- Scoreboard values default to `0` for new entities — **not** `-1`. Always call `init_state` (or `set_state(@s, -1)` + `init_state`) after spawning an entity to ensure the sentinel is set correctly before the first `init_state` call.
-- For multiple independent state machines on the same entity, define separate scoreboard objectives and write thin wrappers that call the raw scoreboard builtins directly.

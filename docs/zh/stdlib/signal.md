@@ -1,141 +1,401 @@
-# `signal` — Statistical distributions, DFT, and signal processing
+# Signal
 
-Import: `import signal;`
+> 本文档由 `src/stdlib/signal.mcrs` 自动生成，请勿手动编辑。
 
-Statistical distributions (uniform, Gaussian approximation, exponential, Bernoulli, weighted choice, gamma, Poisson, geometric, negative binomial) and Discrete Fourier Transform helpers for up to 8 samples. All probability and distribution values use ×10000 scale. Requires `math` for `ln`, `exp_fx`, `sqrt_fx`; requires `random` for `next_lcg`.
+## API 列表
 
-## Functions
+- [uniform_int](#uniform-int)
+- [uniform_frac](#uniform-frac)
+- [normal_approx12](#normal-approx12)
+- [exp_dist_approx](#exp-dist-approx)
+- [bernoulli](#bernoulli)
+- [weighted2](#weighted2)
+- [weighted3](#weighted3)
+- [gamma_sample](#gamma-sample)
+- [poisson_sample](#poisson-sample)
+- [geometric_sample](#geometric-sample)
+- [negative_binomial_sample](#negative-binomial-sample)
+- [dft_real](#dft-real)
+- [dft_imag](#dft-imag)
+- [dft_magnitude](#dft-magnitude)
 
-### `uniform_int(seed: int, lo: int, hi: int): int`
+---
 
-Uniform integer in `[lo, hi]` inclusive using inline LCG.
+## `uniform_int`
 
-**Example:**
-```rs
-import signal;
-let roll: int = uniform_int(42, 1, 6);  // d6
+**版本：** 2.0.0
+
+返回 [lo, hi] 内的均匀随机整数（使用 LCG 随机数生成器）
+
+```redscript
+fn uniform_int(seed: int, lo: int, hi: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
+| `lo` | 下界（含） |
+| `hi` | 上界（含） |
+
+**返回：** [lo, hi] 内的伪随机整数
+
+**示例**
+
+```redscript
+let dmg: int = uniform_int(seed, 5, 15)
 ```
 
 ---
 
-### `uniform_frac(seed: int): int`
+## `uniform_frac`
 
-Uniform fraction in `[0, 10000]` (×10000 scale).
+**版本：** 2.0.0
 
----
+返回 [0, 10000] 内的均匀随机分数（×10000 精度）
 
-### `normal_approx12(seed: int): int`
+```redscript
+fn uniform_frac(seed: int): int
+```
 
-> **Cost:** 12 LCG advances per call
+**参数**
 
-Approximate N(0, 1) × 10000 using the sum-of-12-uniforms method. Output range ≈ `[-60000, 60000]`. Mean = 0, σ ≈ 10000. Good enough for game use.
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
 
-**Example:**
-```rs
-import signal;
-let noise: int = normal_approx12(seed);  // ≈ N(0,1) × 10000
+**返回：** [0, 10000] 内的伪随机整数
+
+**示例**
+
+```redscript
+let frac: int = uniform_frac(seed)
 ```
 
 ---
 
-### `exp_dist_approx(seed: int, lambda_fx: int): int`
+## `normal_approx12`
 
-> **Requires:** `math` for `ln`
+**版本：** 2.0.0
 
-Exponential distribution variate ×10000. `lambda_fx ×10000` (e.g. 10000 = rate 1.0). Output capped at 100000 (10.0) for MC sanity.
+使用 Irwin-Hall 方法（12 个均匀采样之和）近似 N(0,1) 变量
 
----
+```redscript
+fn normal_approx12(seed: int): int
+```
 
-### `bernoulli(seed: int, p_fx: int): int`
+**参数**
 
-Bernoulli trial: 1 with probability `p_fx / 10000`, 0 otherwise.
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
 
-**Example:**
-```rs
-import signal;
-let hit: int = bernoulli(seed, 3000);  // 30% chance of 1
+**返回：** 近似 N(0,1) 采样值 ×10000，范围约 [-60000, 60000]
+
+**示例**
+
+```redscript
+let z: int = normal_approx12(seed)
 ```
 
 ---
 
-### `weighted2(seed: int, w0: int, w1: int): int`
+## `exp_dist_approx`
 
-Choose 0 or 1 with integer weights `w0`, `w1`.
+**版本：** 2.0.0
 
----
+从速率为 lambda_fx 的指数分布中采样（结果上限为 100000）
 
-### `weighted3(seed: int, w0: int, w1: int, w2: int): int`
+```redscript
+fn exp_dist_approx(seed: int, lambda_fx: int): int
+```
 
-Choose 0, 1, or 2 with integer weights.
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
+| `lambda_fx` | 速率参数 ×10000（如 10000 = 速率 1.0） |
 
-### `gamma_sample(shape_k: int, scale_theta: int, seed: int): int`
+**返回：** 指数分布变量 ×10000，上限 100000
 
-> **Cost:** O(shape_k / 10000) — up to 5 exponential samples  
-> **Requires:** `math` for `ln`
+**示例**
 
-Gamma(k, θ) variate ×10000. `shape_k ×10000` (e.g. 20000 = k=2), `scale_theta ×10000`. Handles k = 1..5.
-
----
-
-### `poisson_sample(lambda: int, seed: int): int`
-
-> **Cost:** O(lambda / 10000) expected — Knuth algorithm  
-> **Requires:** `math` for `exp_fx`
-
-Poisson(λ) count. `lambda ×10000`. Works well for λ ≤ 20 (200000 in ×10000). Hard cap at 100 iterations.
-
-**Example:**
-```rs
-import signal;
-let spawns: int = poisson_sample(30000, seed);  // Poisson(3) spawn count
+```redscript
+let wait: int = exp_dist_approx(seed, 10000)
 ```
 
 ---
 
-### `geometric_sample(p_success: int, seed: int): int`
+## `bernoulli`
 
-> **Requires:** `math` for `ln`
+**版本：** 2.0.0
 
-Geometric(p) — count of failures before first success. `p_success ×10000`. Returns non-negative integer.
+以 p_fx/10000 的概率返回 1，否则返回 0
 
----
+```redscript
+fn bernoulli(seed: int, p_fx: int): int
+```
 
-### `negative_binomial_sample(r: int, p_success: int, seed: int): int`
+**参数**
 
-> **Cost:** O(r) — sums r geometric samples  
-> **Requires:** `geometric_sample`
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
+| `p_fx` | 概率 ×10000（如 5000 = 50%，1000 = 10%） |
 
-Negative Binomial(r, p) — failures before `r` successes. `p_success ×10000`.
+**返回：** 以给定概率返回 1，否则返回 0
 
----
+**示例**
 
-### `dft_real(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int`
-
-> **Cost:** O(n) — n multiply-add operations using 45°-step trig lookup
-
-Real part of DFT bin `k` for `n` samples (`n ≤ 8`). All sample values ×10000. Returns `(1/n) × Σ samples[j] × cos(2π k j / n)` × 10000. Uses `_cos45`/`_sin45` which handle 45°-step angles without NBT.
-
-**Example:**
-```rs
-import signal;
-// Compute DC component (k=0) of a 4-sample signal
-let dc: int = dft_real(10000, 5000, 0, -5000, 0, 0, 0, 0, 4, 0);
+```redscript
+if (bernoulli(seed, 3000) == 1) { /* 30% chance */ }
 ```
 
 ---
 
-### `dft_imag(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int`
+## `weighted2`
 
-> **Cost:** O(n)
+**版本：** 2.0.0
 
-Imaginary part of DFT bin `k` (negative sine convention). Returns `-(1/n) × Σ samples[j] × sin(2π k j / n)` × 10000.
+按权重 w0、w1 随机选择 0 或 1
+
+```redscript
+fn weighted2(seed: int, w0: int, w1: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
+| `w0` | 结果 0 的权重 |
+| `w1` | 结果 1 的权重 |
+
+**返回：** 按权重比例采样的 0 或 1
+
+**示例**
+
+```redscript
+let side: int = weighted2(seed, 3, 7)
+```
 
 ---
 
-### `dft_magnitude(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int`
+## `weighted3`
 
-> **Cost:** O(n) + sqrt
+**版本：** 2.0.0
 
-Magnitude of DFT bin `k`: `√(real² + imag²)`.
+按权重 w0、w1、w2 随机选择 0、1 或 2
+
+```redscript
+fn weighted3(seed: int, w0: int, w1: int, w2: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | 任意整数种子 |
+| `w0` | 结果 0 的权重 |
+| `w1` | 结果 1 的权重 |
+| `w2` | 结果 2 的权重 |
+
+**返回：** 按权重比例采样的 0、1 或 2
+
+**示例**
+
+```redscript
+let tier: int = weighted3(seed, 50, 30, 20)
+```
+
+---
+
+## `gamma_sample`
+
+**版本：** 2.0.0
+
+从 Gamma(k, θ) 分布中采样（支持整数 k = 1..5）
+
+```redscript
+fn gamma_sample(shape_k: int, scale_theta: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `shape_k` | 形状参数 k ×10000（如 20000 = k=2） |
+| `scale_theta` | 尺度参数 θ ×10000（如 10000 = θ=1.0） |
+| `seed` | 任意整数种子 |
+
+**返回：** Gamma 分布变量 ×10000
+
+**示例**
+
+```redscript
+let g: int = gamma_sample(20000, 10000, seed)
+```
+
+---
+
+## `poisson_sample`
+
+**版本：** 2.0.0
+
+使用 Knuth 算法从 Poisson(λ) 分布中采样（λ ≤ 20 时效果最佳）
+
+```redscript
+fn poisson_sample(lambda: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `lambda` | 速率参数 ×10000（如 30000 = λ=3.0） |
+| `seed` | 任意整数种子 |
+
+**返回：** Poisson 计数（普通整数，非 ×10000）
+
+**示例**
+
+```redscript
+let n: int = poisson_sample(30000, seed)
+```
+
+---
+
+## `geometric_sample`
+
+**版本：** 2.0.0
+
+从几何分布 Geometric(p) 中采样（首次成功前失败次数）
+
+```redscript
+fn geometric_sample(p_success: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `p_success` | 成功概率 ×10000（如 5000 = p=0.5） |
+| `seed` | 任意整数种子 |
+
+**返回：** 非负整数失败次数
+
+**示例**
+
+```redscript
+let fails: int = geometric_sample(5000, seed)
+```
+
+---
+
+## `negative_binomial_sample`
+
+**版本：** 2.0.0
+
+从负二项分布 NegBin(r, p) 中采样（r 次成功前的总失败次数）
+
+```redscript
+fn negative_binomial_sample(r: int, p_success: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `r` | 成功次数（普通整数，如 1, 2, 3） |
+| `p_success` | 成功概率 ×10000 |
+| `seed` | 任意整数种子 |
+
+**返回：** 总失败次数
+
+**示例**
+
+```redscript
+let n: int = negative_binomial_sample(3, 5000, seed)
+```
+
+---
+
+## `dft_real`
+
+**版本：** 2.0.0
+
+计算最多 8 个样本的实值信号第 k 个 DFT 频段实部
+
+```redscript
+fn dft_real(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `s0` | 样本 0 ×10000  …  s7: 样本 7 ×10000 |
+| `n` | 样本数（1–8） |
+| `k` | 频段索引（0 到 n−1） |
+
+**返回：** DFT 第 k 频段实部，×10000
+
+**示例**
+
+```redscript
+let re0: int = dft_real(10000, 0, -10000, 0, 0, 0, 0, 0, 4, 0)
+```
+
+---
+
+## `dft_imag`
+
+**版本：** 2.0.0
+
+计算最多 8 个样本的实值信号第 k 个 DFT 频段虚部
+
+```redscript
+fn dft_imag(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `s0` | 样本 0 ×10000  …  s7: 样本 7 ×10000 |
+| `n` | 样本数（1–8） |
+| `k` | 频段索引 |
+
+**返回：** DFT 第 k 频段虚部，×10000（使用负正弦约定）
+
+---
+
+## `dft_magnitude`
+
+**版本：** 2.0.0
+
+计算 DFT 第 k 频段的幅度 sqrt(re² + im²)，×10000
+
+```redscript
+fn dft_magnitude(s0: int, s1: int, s2: int, s3: int, s4: int, s5: int, s6: int, s7: int, n: int, k: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `s0` | 样本 0 ×10000  …  s7: 样本 7 ×10000 |
+| `n` | 样本数 |
+| `k` | 频段索引 |
+
+**返回：** 第 k 频段幅度，×10000
+
+**示例**
+
+```redscript
+let mag: int = dft_magnitude(10000, 0, -10000, 0, 0, 0, 0, 0, 4, 1)
+```
+
+---

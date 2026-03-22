@@ -1,116 +1,199 @@
-# `heap` — Min-heap and Max-heap priority queues
+# Heap
 
-Import: `import "stdlib/heap.mcrs"`
+> Auto-generated from `src/stdlib/heap.mcrs` — do not edit manually.
 
-Binary heap priority queues for RedScript datapacks. Provides both a **MinHeap** (root is the smallest element) and a **MaxHeap** (root is the largest element), backed by a fixed-capacity `int[]` of 65 slots (indices 0–64). `h[0]` stores the current size; elements live at `h[1]` through `h[size]`. Capacity: up to 64 elements.
+## API
 
-## Functions
+- [heap_new](#heap-new)
+- [heap_size](#heap-size)
+- [heap_peek](#heap-peek)
+- [heap_push](#heap-push)
+- [heap_pop](#heap-pop)
+- [max_heap_push](#max-heap-push)
+- [max_heap_pop](#max-heap-pop)
 
-### `heap_new(): int[]`
+---
 
-Allocate a fresh heap array with `size = 0` and 64 pre-zeroed slots.
+## `heap_new`
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
+**Since:** 1.0.0
+
+Allocate a new empty heap with capacity for 64 elements.
+
+```redscript
+fn heap_new(): int[]
+```
+
+**Returns:** int[] with h[0]=0 (size) and h[1..64] pre-allocated as zeros
+
+**Example**
+
+```redscript
+let h: int[] = heap_new()
 ```
 
 ---
 
-### `heap_size(h: int[]): int`
+## `heap_size`
+
+**Since:** 1.0.0
 
 Return the number of elements currently stored in the heap.
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 7);
-let n: int = heap_size(h);  // 1
+```redscript
+fn heap_size(h: int[]): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Heap array (created with heap_new) |
+
+**Returns:** Current element count (h[0])
+
+**Example**
+
+```redscript
+let sz: int = heap_size(h)
 ```
 
 ---
 
-### `heap_peek(h: int[]): int`
+## `heap_peek`
 
-Return the root element without removing it. For a MinHeap this is the minimum; for a MaxHeap it is the maximum.
+**Since:** 1.0.0
 
-> **Precondition:** `heap_size(h) > 0`
+Return the root element without removing it (min for MinHeap, max for MaxHeap).
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 42);
-h = heap_push(h, 7);
-let top: int = heap_peek(h);  // 7  (min)
+```redscript
+fn heap_peek(h: int[]): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Non-empty heap array; precondition: heap_size(h) > 0 |
+
+**Returns:** The root element (h[1])
+
+**Example**
+
+```redscript
+let top: int = heap_peek(h)  // peek min without modifying heap
 ```
 
 ---
 
-### `heap_push(h: int[], val: int): int[]`
+## `heap_push`
 
-Insert `val` into the MinHeap and return the updated heap. Maintains the heap property via sift-up.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 30);
-h = heap_push(h, 10);
-h = heap_push(h, 20);
-let top: int = heap_peek(h);  // 10
+Insert a value into a MinHeap (smallest element at root).
+
+```redscript
+fn heap_push(h: int[], val: int): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Heap array (from heap_new) |
+| `val` | Value to insert |
+
+**Returns:** Updated heap array with val inserted and heap property maintained
+
+**Example**
+
+```redscript
+h = heap_push(h, 42)
+h = heap_push(h, 7)
+// heap_peek(h) == 7
 ```
 
 ---
 
-### `heap_pop(h: int[]): int[]`
+## `heap_pop`
 
-Remove (and discard) the minimum element from the MinHeap. Returns the updated heap. Maintains the heap property via sift-down.
+**Since:** 1.0.0
 
-> **Precondition:** `heap_size(h) > 0`
+Remove and discard the minimum element from a MinHeap.
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = heap_push(h, 30);
-h = heap_push(h, 10);
-h = heap_pop(h);              // removes 10
-let top: int = heap_peek(h);  // 30
+```redscript
+fn heap_pop(h: int[]): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Non-empty MinHeap array; precondition: heap_size(h) > 0 |
+
+**Returns:** Updated heap array with minimum removed and heap property restored
+
+**Example**
+
+```redscript
+let min_val: int = heap_peek(h)
+h = heap_pop(h)  // remove the minimum
 ```
 
 ---
 
-### `max_heap_push(h: int[], val: int): int[]`
+## `max_heap_push`
 
-Insert `val` into the MaxHeap and return the updated heap. Sift-up uses a `>` comparison so the largest element floats to the root.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = max_heap_push(h, 10);
-h = max_heap_push(h, 99);
-h = max_heap_push(h, 55);
-let top: int = heap_peek(h);  // 99
+Insert a value into a MaxHeap (largest element at root).
+
+```redscript
+fn max_heap_push(h: int[], val: int): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Heap array (from heap_new) |
+| `val` | Value to insert |
+
+**Returns:** Updated heap array with val inserted and max-heap property maintained
+
+**Example**
+
+```redscript
+h = max_heap_push(h, 5)
+h = max_heap_push(h, 99)
+// heap_peek(h) == 99
 ```
 
 ---
 
-### `max_heap_pop(h: int[]): int[]`
+## `max_heap_pop`
 
-Remove (and discard) the maximum element from the MaxHeap. Returns the updated heap.
+**Since:** 1.0.0
 
-> **Precondition:** `heap_size(h) > 0`
+Remove and discard the maximum element from a MaxHeap.
 
-**Example:**
-```rs
-import "stdlib/heap.mcrs";
-let h: int[] = heap_new();
-h = max_heap_push(h, 10);
-h = max_heap_push(h, 99);
-h = max_heap_pop(h);          // removes 99
-let top: int = heap_peek(h);  // 10
+```redscript
+fn max_heap_pop(h: int[]): int[]
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h` | Non-empty MaxHeap array; precondition: heap_size(h) > 0 |
+
+**Returns:** Updated heap array with maximum removed and max-heap property restored
+
+**Example**
+
+```redscript
+let max_val: int = heap_peek(h)
+h = max_heap_pop(h)  // remove the maximum
+```
+
+---

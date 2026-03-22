@@ -1,86 +1,238 @@
-# `random` — LCG/PCG 随机数生成器与概率分布
+# Random
 
-Import: `import random;`
+> 本文档由 `src/stdlib/random.mcrs` 自动生成，请勿手动编辑。
 
-伪随机数生成器与统计采样。LCG（线性同余生成器），参数来自 Numerical Recipes（a=1664525，c=1013904223，通过 int32 溢出实现模 2³²）。还提供简化的 PCG32 变体、二项分布采样和超几何分布采样。
+## API 列表
 
-## Functions
+- [next_lcg](#next-lcg)
+- [random_range](#random-range)
+- [random_bool](#random-bool)
+- [pcg_next_lo](#pcg-next-lo)
+- [pcg_next_hi](#pcg-next-hi)
+- [pcg_output](#pcg-output)
+- [binomial_sample](#binomial-sample)
+- [hypergeometric_sample](#hypergeometric-sample)
 
-### `next_lcg(seed: int): int`
+---
 
-推进 LCG 状态：`seed × 1664525 + 1013904223`。返回值既是新种子，也是随机输出。速度快，适合大多数游戏逻辑。
+## `next_lcg`
 
-**Example:**
-```rs
-import random;
-let seed: int = 12345;
-seed = next_lcg(seed);
+**版本：** 1.0.0
+
+推进 LCG 状态一步，返回下一个伪随机 int32
+
+```redscript
+fn next_lcg(seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | 当前 LCG 状态（任意非零整数） |
+
+**返回：** 下一个伪随机 int32（同时作为下次调用的种子）
+
+**示例**
+
+```redscript
+let seed: int = 12345
+seed = next_lcg(seed)
+seed = next_lcg(seed)  // advance two steps
 ```
 
 ---
 
-### `random_range(seed: int, lo: int, hi: int): int`
+## `random_range`
 
-返回 `[lo, hi)` 范围内的整数。`seed` 应为 `next_lcg` 的输出。使用绝对值 + 取模。
+**版本：** 1.0.0
 
-**Example:**
-```rs
-import random;
-let seed: int = next_lcg(42);
-let roll: int = random_range(seed, 1, 7);  // d6: 1–6
+生成 [lo, hi) 范围内的伪随机整数
+
+```redscript
+fn random_range(seed: int, lo: int, hi: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `seed` | next_lcg 的输出值 |
+| `lo` | 下界（含） |
+| `hi` | 上界（不含，必须 > lo） |
+
+**返回：** 范围 [lo, hi) 内的整数
+
+**示例**
+
+```redscript
+seed = next_lcg(seed)
+let roll: int = random_range(seed, 1, 7)  // dice roll: 1-6
 ```
 
 ---
 
-### `random_bool(seed: int): int`
+## `random_bool`
 
-以等概率返回 0 或 1。
+**版本：** 1.0.0
 
----
+以相等概率生成 0 或 1 的伪随机布尔值
 
-### `pcg_next_lo(state_lo: int): int`
+```redscript
+fn random_bool(seed: int): int
+```
 
-推进 PCG 状态低位字。与 `pcg_next_hi` 配合使用以维护双字状态。
+**参数**
 
----
+| 参数 | 说明 |
+|------|------|
+| `seed` | next_lcg 的输出值 |
 
-### `pcg_next_hi(state_hi: int, state_lo: int): int`
+**返回：** 0 或 1，各约 50% 概率
 
-推进 PCG 状态高位字。
+**示例**
 
----
-
-### `pcg_output(state_lo: int): int`
-
-使用 XSH-RR 置换（简化异或移位）从 PCG 低位字提取输出值。
-
-> **Note:** Statistical quality is better than plain LCG but this is a simplified PCG32 variant, not the full reference implementation.
-
----
-
-### `binomial_sample(n: int, p_x10000: int, seed: int): int`
-
-> **Cost:** O(n) — n LCG advances
-
-统计 `n` 次 Bernoulli 试验中的成功次数。`p_x10000`：概率 ×10000（5000 = 50%）。返回计数 ∈ `[0, n]`。
-
-**Example:**
-```rs
-import random;
-let hits: int = binomial_sample(10, 3000, 99999);  // 10 次试验，每次 30% 概率
+```redscript
+seed = next_lcg(seed)
+let coin: int = random_bool(seed)  // 0 or 1
 ```
 
 ---
 
-### `hypergeometric_sample(pop_size: int, success_states: int, draws: int, seed: int): int`
+## `pcg_next_lo`
 
-> **Cost:** O(draws)
+**版本：** 1.0.0
 
-从 `pop_size` 个物品（其中 `success_states` 个为成功项）中无放回抽取 `draws` 个。返回抽到的成功项数 ∈ `[0, min(draws, success_states)]`。
+Advance the PCG low-word state by one step.
+Call together with pcg_next_hi; use pcg_output to extract the random value.
 
-**Example:**
-```rs
-import random;
-// 从 52 张牌中抽 5 张，其中有 4 张 A
-let aces: int = hypergeometric_sample(52, 4, 5, 12345);
+```redscript
+fn pcg_next_lo(state_lo: int): int
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state_lo` | Current low word of PCG state |
+
+**返回：** New low word
+
+**示例**
+
+```redscript
+let lo: int = pcg_next_lo(state_lo)
+```
+
+---
+
+## `pcg_next_hi`
+
+**版本：** 1.0.0
+
+Advance the PCG high-word state by one step.
+
+```redscript
+fn pcg_next_hi(state_hi: int, state_lo: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state_hi` | Current high word of PCG state |
+| `state_lo` | Current low word of PCG state (previous, before pcg_next_lo) |
+
+**返回：** New high word
+
+**示例**
+
+```redscript
+let hi: int = pcg_next_hi(state_hi, state_lo)
+```
+
+---
+
+## `pcg_output`
+
+**版本：** 1.0.0
+
+Extract an output value from the PCG low word using XSH-RR permutation.
+
+```redscript
+fn pcg_output(state_lo: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `state_lo` | Current low word of PCG state (after pcg_next_lo) |
+
+**返回：** Pseudo-random output value (unsigned, any int)
+
+**示例**
+
+```redscript
+let rng: int = pcg_output(state_lo)
+```
+
+---
+
+## `binomial_sample`
+
+**版本：** 1.0.0
+
+模拟 n 次伯努利试验并统计成功次数（二项分布）
+
+```redscript
+fn binomial_sample(n: int, p_x10000: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `n` | 试验次数 |
+| `p_x10000` | 成功概率 ×10000（如 5000 = 50%） |
+| `seed` | LCG 种子（任意非零整数） |
+
+**返回：** 成功次数，范围 [0, n]
+
+**示例**
+
+```redscript
+let hits: int = binomial_sample(10, 5000, 99999)  // ~5 successes on average
+```
+
+---
+
+## `hypergeometric_sample`
+
+**版本：** 1.0.0
+
+无放回抽样并统计成功项数（超几何分布）
+
+```redscript
+fn hypergeometric_sample(pop_size: int, success_states: int, draws: int, seed: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `pop_size` | 总体大小 |
+| `success_states` | 总体中成功项数量 |
+| `draws` | 抽取数量 |
+| `seed` | LCG 种子 |
+
+**返回：** 抽中的成功项数，范围 [0, min(draws, success_states)]
+
+**示例**
+
+```redscript
+// 52-card deck, 4 aces, draw 5 cards
+let aces: int = hypergeometric_sample(52, 4, 5, 42)
+```
+
+---

@@ -1,159 +1,314 @@
-# `bits` — Bitwise operations
+# Bits
 
-Import: `import bits;`
+> 本文档由 `src/stdlib/bits.mcrs` 自动生成，请勿手动编辑。
 
-Bitwise operations simulated with integer arithmetic (multiply/divide/modulo), since MC scoreboard has no native bitwise ops. Performance is O(32) per operation — fast enough for most game logic. For hot paths (>1000 calls/tick), consider lookup tables or restructuring the algorithm.
+## API 列表
 
-## Functions
+- [bit_get](#bit-get)
+- [bit_set](#bit-set)
+- [bit_clear](#bit-clear)
+- [bit_toggle](#bit-toggle)
+- [bit_shl](#bit-shl)
+- [bit_shr](#bit-shr)
+- [bit_and](#bit-and)
+- [bit_or](#bit-or)
+- [bit_xor](#bit-xor)
+- [bit_not](#bit-not)
+- [popcount](#popcount)
 
-### `bit_get(x: int, n: int): int`
+---
 
-> **Cost:** O(n) — n up to 30 iterations
+## `bit_get`
 
-Return 1 if bit `n` is set in `x`, 0 otherwise. `n ∈ [0, 30]`.
+**版本：** 1.0.0
 
-**Example:**
-```rs
-import bits;
-let flag: int = bit_get(0b1010, 1);  // 1
+检测 x 的第 n 位是否为 1
+
+```redscript
+fn bit_get(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要检测的整数 |
+| `n` | 位索引（0 = 最低位），范围 [0, 30] |
+
+**返回：** 第 n 位为 1 则返回 1，否则返回 0
+
+**示例**
+
+```redscript
+let b: int = bit_get(0b1010, 1)  // result: 1 (bit 1 of 10 is set)
 ```
 
 ---
 
-### `bit_set(x: int, n: int): int`
+## `bit_set`
 
-> **Cost:** O(n)
+**版本：** 1.0.0
 
-Set bit `n` to 1. `n ∈ [0, 30]`. Returns updated value.
+将 x 的第 n 位设为 1（幂等）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_set(0, 3);  // 8
+```redscript
+fn bit_set(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要修改的整数 |
+| `n` | 要置 1 的位索引，范围 [0, 30] |
+
+**返回：** 第 n 位置为 1 后的 x
+
+**示例**
+
+```redscript
+let v: int = bit_set(0b0100, 0)  // result: 0b0101 = 5
 ```
 
 ---
 
-### `bit_clear(x: int, n: int): int`
+## `bit_clear`
 
-> **Cost:** O(n)
+**版本：** 1.0.0
 
-Clear bit `n` to 0. `n ∈ [0, 30]`. Returns updated value.
+将 x 的第 n 位清零（幂等）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_clear(15, 0);  // 14
+```redscript
+fn bit_clear(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要修改的整数 |
+| `n` | 要清零的位索引，范围 [0, 30] |
+
+**返回：** 第 n 位置为 0 后的 x
+
+**示例**
+
+```redscript
+let v: int = bit_clear(0b0111, 1)  // result: 0b0101 = 5
 ```
 
 ---
 
-### `bit_toggle(x: int, n: int): int`
+## `bit_toggle`
 
-> **Cost:** O(n)
+**版本：** 1.0.0
 
-Toggle bit `n`. `n ∈ [0, 30]`. Returns updated value.
+翻转 x 的第 n 位（0→1 或 1→0）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_toggle(5, 1);  // 7  (101 → 111)
+```redscript
+fn bit_toggle(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要修改的整数 |
+| `n` | 要翻转的位索引，范围 [0, 30] |
+
+**返回：** 第 n 位翻转后的 x
+
+**示例**
+
+```redscript
+let v: int = bit_toggle(0b0101, 1)  // result: 0b0111 = 7
 ```
 
 ---
 
-### `bit_shl(x: int, n: int): int`
+## `bit_shl`
 
-> **Cost:** O(n)
+**版本：** 1.0.0
 
-Left shift `x` by `n` bits (`x << n`). `n ∈ [0, 30]`.
+左移 x n 位（等效于 x * 2^n）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_shl(1, 4);  // 16
+```redscript
+fn bit_shl(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要移位的整数 |
+| `n` | 左移位数，范围 [0, 30] |
+
+**返回：** x << n
+
+**示例**
+
+```redscript
+let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 ```
 
 ---
 
-### `bit_shr(x: int, n: int): int`
+## `bit_shr`
 
-> **Cost:** O(n)
+**版本：** 1.0.0
 
-Logical right shift `x` by `n` bits (`x >> n`). Divides by 2^n, truncating toward zero. `n ∈ [0, 30]`.
+逻辑右移 x n 位（等效于 x / 2^n，向零截断）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_shr(16, 2);  // 4
+```redscript
+fn bit_shr(x: int, n: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要移位的整数 |
+| `n` | 右移位数，范围 [0, 30] |
+
+**返回：** x >> n
+
+**示例**
+
+```redscript
+let v: int = bit_shr(256, 3)  // result: 32 (256 >> 3)
 ```
 
 ---
 
-### `bit_and(a: int, b: int): int`
+## `bit_and`
 
-> **Cost:** O(31) — iterates over 31 bits
+**版本：** 1.0.0
 
-Bitwise AND of `a` and `b`. Operates on bits 0–30 (sign bit excluded).
+两个整数的按位与（31 个非符号位）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_and(12, 10);  // 8  (1100 & 1010 = 1000)
+```redscript
+fn bit_and(a: int, b: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个操作数 |
+| `b` | 第二个操作数 |
+
+**返回：** a & b（两者均为 1 的位）
+
+**示例**
+
+```redscript
+let v: int = bit_and(0b1100, 0b1010)  // result: 0b1000 = 8
 ```
 
 ---
 
-### `bit_or(a: int, b: int): int`
+## `bit_or`
 
-> **Cost:** O(31)
+**版本：** 1.0.0
 
-Bitwise OR of `a` and `b`. Operates on bits 0–30.
+两个整数的按位或（31 个非符号位）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_or(12, 10);  // 14  (1100 | 1010 = 1110)
+```redscript
+fn bit_or(a: int, b: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个操作数 |
+| `b` | 第二个操作数 |
+
+**返回：** a | b（至少一个为 1 的位）
+
+**示例**
+
+```redscript
+let v: int = bit_or(0b1100, 0b1010)  // result: 0b1110 = 14
 ```
 
 ---
 
-### `bit_xor(a: int, b: int): int`
+## `bit_xor`
 
-> **Cost:** O(31)
+**版本：** 1.0.0
 
-Bitwise XOR of `a` and `b`. Operates on bits 0–30.
+两个整数的按位异或（31 个非符号位）
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_xor(12, 10);  // 6  (1100 ^ 1010 = 0110)
+```redscript
+fn bit_xor(a: int, b: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 第一个操作数 |
+| `b` | 第二个操作数 |
+
+**返回：** a ^ b（恰好一个为 1 的位）
+
+**示例**
+
+```redscript
+let v: int = bit_xor(0b1100, 0b1010)  // result: 0b0110 = 6
 ```
 
 ---
 
-### `bit_not(x: int): int`
+## `bit_not`
 
-> **Cost:** O(31)
+**版本：** 1.0.0
 
-Bitwise NOT of `x`. Inverts all 31 bits (sign bit excluded).
+按位非 — 翻转 x 的所有 31 个非符号位
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_not(0);  // 2147483647  (all 31 bits set)
+```redscript
+fn bit_not(x: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 要取反的整数 |
+
+**返回：** ~x（所有 31 个低位翻转；符号位不变）
+
+**示例**
+
+```redscript
+let v: int = bit_not(0)  // result: 2147483647 (all 31 bits set)
 ```
 
 ---
 
-### `popcount(x: int): int`
+## `popcount`
 
-> **Cost:** O(31)
+**版本：** 1.0.0
 
-Count the number of set bits in `x`. Returns a value in `[0, 31]`.
+统计 x 中置 1 的位数（汉明重量）
 
-**Example:**
-```rs
-import bits;
-let count: int = popcount(255);  // 8
+```redscript
+fn popcount(x: int): int
 ```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 整数值（使用 31 个低位；符号位不计） |
+
+**返回：** 置 1 的位数，范围 [0, 31]
+
+**示例**
+
+```redscript
+let n: int = popcount(255)  // result: 8 (0xFF has 8 bits set)
+```
+
+---

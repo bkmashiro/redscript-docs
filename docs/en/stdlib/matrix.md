@@ -1,209 +1,439 @@
-# `matrix` — Matrix math for Display Entities
+# Matrix
 
-Import: `import matrix;`
+> Auto-generated from `src/stdlib/matrix.mcrs` — do not edit manually.
 
-2D/3D transformation matrix helpers for MC Display Entities. Provides 2D rotation, scale, 3D Euler-angle rotation (Y-up), quaternion half-angle components, billboard rotation, and angle lerp. All values ×10000 unless noted; angles in degrees ×10000. Requires `math` for `sin_fixed`, `cos_fixed`, `abs`.
+## API
 
-## Functions
+- [rotate2d_x](#rotate2d-x)
+- [rotate2d_y](#rotate2d-y)
+- [scale_x](#scale-x)
+- [scale_y](#scale-y)
+- [scale_z](#scale-z)
+- [uniform_scale](#uniform-scale)
+- [rotate_y_x](#rotate-y-x)
+- [rotate_y_z](#rotate-y-z)
+- [rotate_x_y](#rotate-x-y)
+- [rotate_x_z](#rotate-x-z)
+- [quat_sin_half](#quat-sin-half)
+- [quat_cos_half](#quat-cos-half)
+- [billboard_y](#billboard-y)
+- [lerp_angle](#lerp-angle)
+- [mat3_mul_elem](#mat3-mul-elem)
+- [mat3_mul_vec3_elem](#mat3-mul-vec3-elem)
+- [mat4_mul_elem](#mat4-mul-elem)
+- [mat4_mul_vec4_elem](#mat4-mul-vec4-elem)
 
-### `rotate2d_x(x: int, y: int, angle_deg: int): int`
+---
 
-X component after 2D rotation by `angle_deg ×10000`. Uses `cos_fixed`/`sin_fixed`.
+## `rotate2d_x`
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import matrix;
-let nx: int = rotate2d_x(1000, 0, 900000);  // 0  (rotated 90°)
+X component after 2D rotation of `(x, y)` by `angle_deg` (×10000).
+
+```redscript
+fn rotate2d_x(x: int, y: int, angle_deg: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Input X coordinate ×10000 |
+| `y` | Input Y coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 (e.g. `450000` = 45°) |
+
+**Returns:** `x*cos(angle) - y*sin(angle)` in ×10000
+
+**Example**
+
+```redscript
+let rx: int = rotate2d_x(10000, 0, 900000)
 ```
 
 ---
 
-### `rotate2d_y(x: int, y: int, angle_deg: int): int`
+## `rotate2d_y`
 
-Y component after 2D rotation. Returns `x×sin + y×cos`.
+**Since:** 2.0.0
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+Y component after 2D rotation of `(x, y)` by `angle_deg` (×10000).
 
----
+```redscript
+fn rotate2d_y(x: int, y: int, angle_deg: int): int
+```
 
-### `scale_x(x: int, sx_fx: int): int`
+**Parameters**
 
-Scale x by `sx_fx ×10000` (e.g. 20000 = 2×).
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Input X coordinate ×10000 |
+| `y` | Input Y coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 |
 
----
-
-### `scale_y(y: int, sy_fx: int): int`
-
-Scale y component.
-
----
-
-### `scale_z(z: int, sz_fx: int): int`
-
-Scale z component.
+**Returns:** `x*sin(angle) + y*cos(angle)` in ×10000
 
 ---
 
-### `uniform_scale(v: int, s_fx: int): int`
+## `scale_x`
 
-Apply uniform scale to a component value.
+**Since:** 2.0.0
 
----
+Scale X coordinate by `sx_fx` (×10000).
 
-### `rotate_y_x(x: int, z: int, angle_deg: int): int`
+```redscript
+fn scale_x(x: int, sx_fx: int): int
+```
 
-X component after rotation around Y axis (Euler, Y-up). `angle_deg ×10000`.
+**Parameters**
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Input X value ×10000 |
+| `sx_fx` | Scale factor ×10000 (e.g. `20000` = 2×) |
 
----
-
-### `rotate_y_z(x: int, z: int, angle_deg: int): int`
-
-Z component after rotation around Y axis.
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
----
-
-### `rotate_x_y(y: int, z: int, angle_deg: int): int`
-
-Y component after rotation around X axis.
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+**Returns:** `x * sx_fx / 10000`
 
 ---
 
-### `rotate_x_z(y: int, z: int, angle_deg: int): int`
+## `scale_y`
 
-Z component after rotation around X axis.
+**Since:** 2.0.0
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+Scale Y coordinate by `sy_fx` (×10000).
 
----
+```redscript
+fn scale_y(y: int, sy_fx: int): int
+```
 
-### `quat_sin_half(angle_deg_fx: int): int`
+**Parameters**
 
-`sin(angle/2) ×1000` for quaternion construction. `angle_deg_fx` is degrees ×10000.
+| Parameter | Description |
+|-----------|-------------|
+| `y` | Input Y value ×10000 |
+| `sy_fx` | Scale factor ×10000 |
 
-> **Requires:** `math:tables` NBT storage must be pre-loaded
-
----
-
-### `quat_cos_half(angle_deg_fx: int): int`
-
-`cos(angle/2) ×1000` for quaternion construction.
-
-> **Requires:** `math:tables` NBT storage must be pre-loaded
+**Returns:** `y * sy_fx / 10000`
 
 ---
 
-### `billboard_y(player_yaw_fx: int): int`
+## `scale_z`
 
-Y rotation for a billboard facing the player. Input: player yaw ×10000. Returns the opposite direction mod 360°.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import matrix;
-let rot: int = billboard_y(900000);  // 2700000 (facing opposite)
+Scale Z coordinate by `sz_fx` (×10000).
+
+```redscript
+fn scale_z(z: int, sz_fx: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `z` | Input Z value ×10000 |
+| `sz_fx` | Scale factor ×10000 |
+
+**Returns:** `z * sz_fx / 10000`
+
+---
+
+## `uniform_scale`
+
+**Since:** 2.0.0
+
+Apply a uniform scale factor to a single component.
+
+```redscript
+fn uniform_scale(v: int, s_fx: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `v` | Input component value ×10000 |
+| `s_fx` | Uniform scale factor ×10000 |
+
+**Returns:** `v * s_fx / 10000`
+
+---
+
+## `rotate_y_x`
+
+**Since:** 2.0.0
+
+X component after rotation around the Y axis by `angle_deg` (×10000).
+
+```redscript
+fn rotate_y_x(x: int, z: int, angle_deg: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Input X coordinate ×10000 |
+| `z` | Input Z coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 |
+
+**Returns:** `x*cos(angle) + z*sin(angle)` in ×10000
+
+---
+
+## `rotate_y_z`
+
+**Since:** 2.0.0
+
+Z component after rotation around the Y axis by `angle_deg` (×10000).
+
+```redscript
+fn rotate_y_z(x: int, z: int, angle_deg: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Input X coordinate ×10000 |
+| `z` | Input Z coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 |
+
+**Returns:** `-x*sin(angle) + z*cos(angle)` in ×10000
+
+---
+
+## `rotate_x_y`
+
+**Since:** 2.0.0
+
+Y component after rotation around the X axis by `angle_deg` (×10000).
+
+```redscript
+fn rotate_x_y(y: int, z: int, angle_deg: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `y` | Input Y coordinate ×10000 |
+| `z` | Input Z coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 |
+
+**Returns:** `y*cos(angle) - z*sin(angle)` in ×10000
+
+---
+
+## `rotate_x_z`
+
+**Since:** 2.0.0
+
+Z component after rotation around the X axis by `angle_deg` (×10000).
+
+```redscript
+fn rotate_x_z(y: int, z: int, angle_deg: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `y` | Input Y coordinate ×10000 |
+| `z` | Input Z coordinate ×10000 |
+| `angle_deg` | Angle in degrees ×10000 |
+
+**Returns:** `y*sin(angle) + z*cos(angle)` in ×10000
+
+---
+
+## `quat_sin_half`
+
+**Since:** 2.0.0
+
+sin(angle/2) in ×1000 for a Display Entity Y-axis quaternion.
+
+```redscript
+fn quat_sin_half(angle_deg_fx: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `angle_deg_fx` | Full rotation angle in degrees ×10000 |
+
+**Returns:** `sin(angle/2)` in ×1000
+
+---
+
+## `quat_cos_half`
+
+**Since:** 2.0.0
+
+cos(angle/2) in ×1000 for a Display Entity Y-axis quaternion.
+
+```redscript
+fn quat_cos_half(angle_deg_fx: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `angle_deg_fx` | Full rotation angle in degrees ×10000 |
+
+**Returns:** `cos(angle/2)` in ×1000
+
+---
+
+## `billboard_y`
+
+**Since:** 2.0.0
+
+Compute the Y rotation for a billboard that faces the player.
+
+```redscript
+fn billboard_y(player_yaw_fx: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `player_yaw_fx` | Player yaw angle ×10000 (from entity NBT `Rotation[0]`) |
+
+**Returns:** Billboard Y rotation ×10000 (opposite of player yaw, in [0, 3600000))
+
+**Example**
+
+```redscript
+let by: int = billboard_y(player_yaw)
 ```
 
 ---
 
-### `lerp_angle(a_fx: int, b_fx: int, t: int): int`
+## `lerp_angle`
 
-Lerp between two angles ×10000, taking the shortest angular path (normalises difference to [-1800000, 1800000]). `t ∈ [0, 10000]`.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import matrix;
-let a: int = lerp_angle(0, 1800000, 5000);  // 900000
+Interpolate between two angles (×10000) taking the shortest arc.
+
+Normalises the angular difference to [−1800000, 1800000] before interpolating.
+
+```redscript
+fn lerp_angle(a_fx: int, b_fx: int, t: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a_fx` | Start angle ×10000 |
+| `b_fx` | End angle ×10000 |
+| `t` | Interpolation factor ×10000 (0 = a, 10000 = b) |
+
+**Returns:** Interpolated angle ×10000
+
+**Example**
+
+```redscript
+let a: int = lerp_angle(0, 3600000, 5000)
 ```
 
 ---
 
-### `mat3_mul_elem(a00…a22: int, b00…b22: int, row: int, col: int): int`
+## `mat3_mul_elem`
 
-Compute one element `C[row][col]` of the product of two 3×3 matrices **A** and **B**. All 18 matrix components are passed individually, all ×10000. Returns `C[row][col]` ×10000.
+**Since:** 2.0.0
 
-Each term of the dot product is divided by 10000 to maintain the ×10000 fixed-point scale: `C[r][c] = Σ A[r][k] × B[k][c] / 10000`.
+Compute element `C[row][col]` of the 3×3 matrix product `A × B`.
 
-**Example:**
-```rs
-import "stdlib/matrix.mcrs";
-// Identity × Identity → element (0,0) should be 10000 (= 1.0)
-let v: int = mat3_mul_elem(
-    10000, 0, 0,
-    0, 10000, 0,
-    0, 0, 10000,
-    10000, 0, 0,
-    0, 10000, 0,
-    0, 0, 10000,
-    0, 0
-);  // 10000
+All matrix values are ×10000 fixed-point. Pass all 18 components of A and B
+individually. `row` and `col` are each in {0, 1, 2}.
+
+```redscript
+fn mat3_mul_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: int, a20: int, a21: int, a22: int, b00: int, b01: int, b02: int, b10: int, b11: int, b12: int,
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a00` | A[0,0] … a22  A[2,2]  (9 elements, row-major) |
+| `b00` | B[0,0] … b22  B[2,2]  (9 elements, row-major) |
+| `row` | Target row index (0–2) |
+| `col` | Target column index (0–2) |
+
+**Returns:** `C[row][col]` in ×10000
 
 ---
 
-### `mat3_mul_vec3_elem(a00…a22: int, vx: int, vy: int, vz: int, comp: int): int`
+## `mat3_mul_vec3_elem`
 
-Multiply a 3×3 matrix by column vector `(vx, vy, vz)` ×10000, returning one component of the result. `comp`: 0 = x, 1 = y, 2 = z. All values ×10000.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import "stdlib/matrix.mcrs";
-// Scale matrix 2× applied to vector (10000, 0, 0) → x component = 20000
-let x: int = mat3_mul_vec3_elem(
-    20000, 0, 0,
-    0, 20000, 0,
-    0, 0, 20000,
-    10000, 0, 0,
-    0
-);  // 20000
+Compute one component of the 3×3 matrix–vector product `A × v`.
+
+```redscript
+fn mat3_mul_vec3_elem( a00: int, a01: int, a02: int, a10: int, a11: int, a12: int, a20: int, a21: int, a22: int, vx: int, vy: int, vz: int, comp: int
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a00` | A[0,0] … a22  A[2,2]  (9 elements, row-major, ×10000) |
+| `vx` | Vector X ×10000   @param vy  Vector Y ×10000   @param vz  Vector Z ×10000 |
+| `comp` | Output component index (0=x, 1=y, 2=z) |
+
+**Returns:** `(A × v)[comp]` in ×10000
 
 ---
 
-### `mat4_mul_elem(a00…a33: int, b00…b33: int, row: int, col: int): int`
+## `mat4_mul_elem`
 
-Compute one element `C[row][col]` of the product of two 4×4 matrices **A** and **B**. All 32 components passed individually, all ×10000. Returns `C[row][col]` ×10000. Useful for composing MC Display Entity TRS transforms.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import "stdlib/matrix.mcrs";
-// Identity × Identity → element (1,1) = 10000
-let v: int = mat4_mul_elem(
-    10000, 0, 0, 0,
-    0, 10000, 0, 0,
-    0, 0, 10000, 0,
-    0, 0, 0, 10000,
-    10000, 0, 0, 0,
-    0, 10000, 0, 0,
-    0, 0, 10000, 0,
-    0, 0, 0, 10000,
-    1, 1
-);  // 10000
+Compute element `C[row][col]` of the 4×4 matrix product `A × B`.
+
+Row-major layout, all values ×10000. `row` and `col` are each in {0, 1, 2, 3}.
+
+```redscript
+fn mat4_mul_elem( a00: int, a01: int, a02: int, a03: int, a10: int, a11: int, a12: int, a13: int, a20: int, a21: int, a22: int, a23: int, a30: int, a31: int, a32: int, a33: int, b00: int, b01: int, b02: int, b03: int,
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a00` | A[0,0] … a33  A[3,3]  (16 elements, row-major, ×10000) |
+| `b00` | B[0,0] … b33  B[3,3]  (16 elements, row-major, ×10000) |
+| `row` | Target row index (0–3) |
+| `col` | Target column index (0–3) |
+
+**Returns:** `C[row][col]` in ×10000
 
 ---
 
-### `mat4_mul_vec4_elem(a00…a33: int, vx: int, vy: int, vz: int, vw: int, comp: int): int`
+## `mat4_mul_vec4_elem`
 
-Multiply a 4×4 matrix by a homogeneous column vector `(vx, vy, vz, vw)` ×10000, returning one component of the result. `comp`: 0 = x, 1 = y, 2 = z, 3 = w. All values ×10000.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-import "stdlib/matrix.mcrs";
-// Translation matrix: translate by (5.0, 0, 0). Apply to point (1.0, 0, 0, 1.0).
-// Result x = 1.0 + 5.0 = 6.0 → 60000
-let x: int = mat4_mul_vec4_elem(
-    10000, 0, 0, 50000,
-    0, 10000, 0, 0,
-    0, 0, 10000, 0,
-    0, 0, 0, 10000,
-    10000, 0, 0, 10000,
-    0
-);  // 60000
+Compute one component of the 4×4 matrix–homogeneous-vector product `A × v`.
+
+```redscript
+fn mat4_mul_vec4_elem( a00: int, a01: int, a02: int, a03: int, a10: int, a11: int, a12: int, a13: int, a20: int, a21: int, a22: int, a23: int, a30: int, a31: int, a32: int, a33: int, vx: int, vy: int, vz: int, vw: int,
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a00` | A[0,0] … a33  A[3,3]  (16 elements, row-major, ×10000) |
+| `vx` | Vector X ×10000   @param vy  Y   @param vz  Z   @param vw  W |
+| `comp` | Output component index (0=x, 1=y, 2=z, 3=w) |
+
+**Returns:** `(A × v)[comp]` in ×10000
+
+---

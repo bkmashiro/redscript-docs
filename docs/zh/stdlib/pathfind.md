@@ -1,104 +1,275 @@
-# `pathfind` — 16×16 网格 BFS 寻路
+# Pathfind
 
-导入：`import "stdlib/pathfind.mcrs"`
+> 本文档由 `src/stdlib/pathfind.mcrs` 自动生成，请勿手动编辑。
 
-在固定 **16×16** XZ 网格上执行广度优先寻路。障碍物保存在一个 256 元素的 `int[]` 中，路径结果则以压缩坐标数组的形式返回。
+## API 列表
 
-## 坐标压缩
+- [pf_pack](#pf-pack)
+- [pf_unpack_x](#pf-unpack-x)
+- [pf_unpack_z](#pf-unpack-z)
+- [pf_new_map](#pf-new-map)
+- [pf_set_blocked](#pf-set-blocked)
+- [pf_set_open](#pf-set-open)
+- [pf_is_blocked](#pf-is-blocked)
+- [pf_heuristic](#pf-heuristic)
+- [pathfind_bfs](#pathfind-bfs)
+- [pf_noop](#pf-noop)
 
-单元格编码方式：
+---
 
-```text
-packed = x * 16 + z
+## `pf_pack`
+
+**版本：** 1.0.0
+
+将 (x, z) 网格坐标编码为单个打包整数
+
+```redscript
+fn pf_pack(x: int, z: int): int
 ```
 
-对应辅助函数：
+**参数**
 
-- `pf_unpack_x(packed) = packed / 16`
-- `pf_unpack_z(packed) = packed % 16`
+| 参数 | 说明 |
+|------|------|
+| `x` | 网格 X 坐标 [0, 15] |
+| `z` | 网格 Z 坐标 [0, 15] |
 
-## 快速示例
+**返回：** x * 16 + z（范围 [0, 255] 内的唯一索引）
 
-```rs
-import "stdlib/pathfind.mcrs";
+**示例**
 
-let map: int[] = pf_new_map();
-pf_set_blocked(map, 3, 5);
-pf_set_blocked(map, 3, 6);
-
-let path: int[] = pathfind_bfs(map, 0, 0, 7, 7);
-let first_x: int = pf_unpack_x(path[0]);
-let first_z: int = pf_unpack_z(path[0]);
+```redscript
+let p: int = pf_pack(3, 7)  // result: 55
 ```
 
-## 地图辅助
+---
 
-### `pf_pack(x: int, z: int): int`
+## `pf_unpack_x`
 
-将网格坐标压缩为一个整数。
+**版本：** 1.0.0
 
-### `pf_unpack_x(packed: int): int`
+从打包网格索引中提取 X 坐标
 
-从压缩坐标中取回 X。
+```redscript
+fn pf_unpack_x(packed: int): int
+```
 
-### `pf_unpack_z(packed: int): int`
+**参数**
 
-从压缩坐标中取回 Z。
+| 参数 | 说明 |
+|------|------|
+| `packed` | 来自 pf_pack 的打包坐标 |
 
-### `pf_new_map(): int[]`
+**返回：** X 分量：packed / 16
 
-创建一个 256 元素的障碍图，初始时所有单元都可通行。
+**示例**
 
-### `pf_set_blocked(map: int[], x: int, z: int)`
+```redscript
+let x: int = pf_unpack_x(55)  // result: 3
+```
 
-把 `(x, z)` 标记为阻塞，写入 `1`。
+---
 
-### `pf_set_open(map: int[], x: int, z: int)`
+## `pf_unpack_z`
 
-把 `(x, z)` 标记为可通行，写入 `0`。
+**版本：** 1.0.0
 
-### `pf_is_blocked(map: int[], x: int, z: int): int`
+从打包网格索引中提取 Z 坐标
 
-若单元阻塞或越界则返回 `1`，否则返回 `0`。
+```redscript
+fn pf_unpack_z(packed: int): int
+```
 
-## 启发式辅助
+**参数**
 
-### `pf_heuristic(x1: int, z1: int, x2: int, z2: int): int`
+| 参数 | 说明 |
+|------|------|
+| `packed` | 来自 pf_pack 的打包坐标 |
 
-返回 ×10000 缩放的曼哈顿距离。
+**返回：** Z 分量：packed % 16
 
-当前模块里这个函数主要是信息性辅助，`pathfind_bfs()` 本身并不会使用它；如果你要在同样的数据结构上扩展 A*，它会很有用。
+**示例**
 
-## 同步寻路
+```redscript
+let z: int = pf_unpack_z(55)  // result: 7
+```
 
-### `pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]`
+---
 
-寻找从起点到终点的最短四方向路径。
+## `pf_new_map`
 
-- 返回从起点到终点的压缩坐标数组，包含两端。
-- 无路可走时返回 `[]`。
-- 扩展邻居的顺序为 North、South、West、East。
+**版本：** 1.0.0
 
-因为这是统一代价网格上的 BFS，所以返回路径在步数意义下是最短的。
+分配一个新的 16×16 网格障碍物地图，所有格子初始可通行
 
-## 协程寻路
+```redscript
+fn pf_new_map(): int[]
+```
 
-### `pathfind_bfs_coro(map: int[], sx: int, sz: int, gx: int, gz: int, out: int[])`
+**返回：** 包含 256 个零的 int[]；0=可通行，1=阻塞
 
-BFS 的协程版本：
+**示例**
 
-- 带有 `@coroutine(batch=16, onDone=pf_noop)` 注解。
-- 每个 tick 最多处理 16 次 BFS 迭代。
-- 不能直接返回值，因此会把完成后的路径 push 到 `out`。
+```redscript
+let map: int[] = pf_new_map()
+```
 
-当你不想把一次同步搜索的开销集中在单个 tick 内时，用这个版本更合适。
+---
 
-### `pf_noop()`
+## `pf_set_blocked`
 
-协程版本默认的空 `onDone` 回调。
+**版本：** 1.0.0
 
-## 说明
+将网格格子标记为不可通行（阻塞）
 
-- 网格范围固定为两个轴的 `0..15`。
-- 起点和终点不会在索引前做显式边界校验，因此调用方应保证坐标有效。
-- `pf_is_blocked()` 会把越界位置视为阻塞，从而保证 BFS 不会走出地图。
+```redscript
+fn pf_set_blocked(map: int[], x: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `map` | 来自 pf_new_map 的障碍物地图 |
+| `x` | 格子 X 坐标 [0, 15] |
+| `z` | 格子 Z 坐标 [0, 15] |
+
+**返回：** void — 设置 map[pf_pack(x,z)] = 1
+
+**示例**
+
+```redscript
+pf_set_blocked(map, 5, 3)  // block cell (5, 3)
+```
+
+---
+
+## `pf_set_open`
+
+**版本：** 1.0.0
+
+将网格格子标记为可通行（开放）
+
+```redscript
+fn pf_set_open(map: int[], x: int, z: int)
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `map` | 来自 pf_new_map 的障碍物地图 |
+| `x` | 格子 X 坐标 [0, 15] |
+| `z` | 格子 Z 坐标 [0, 15] |
+
+**返回：** void — 设置 map[pf_pack(x,z)] = 0
+
+**示例**
+
+```redscript
+pf_set_open(map, 5, 3)  // re-open previously blocked cell (5, 3)
+```
+
+---
+
+## `pf_is_blocked`
+
+**版本：** 1.0.0
+
+检查网格格子是否被阻塞或超出边界
+
+```redscript
+fn pf_is_blocked(map: int[], x: int, z: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `map` | 来自 pf_new_map 的障碍物地图 |
+| `x` | 格子 X 坐标 |
+| `z` | 格子 Z 坐标 |
+
+**返回：** 超出边界或不可通行返回 1，可通行返回 0
+
+**示例**
+
+```redscript
+let blocked: int = pf_is_blocked(map, 5, 3)
+```
+
+---
+
+## `pf_heuristic`
+
+**版本：** 1.0.0
+
+计算两个网格格子之间的曼哈顿距离（×10000 精度）
+
+```redscript
+fn pf_heuristic(x1: int, z1: int, x2: int, z2: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `x1` | 第一个格子 X |
+| `z1` | 第一个格子 Z |
+| `x2` | 第二个格子 X |
+| `z2` | 第二个格子 Z |
+
+**返回：** (|x1-x2| + |z1-z2|) × 10000，可用作 A* 启发函数
+
+**示例**
+
+```redscript
+let h: int = pf_heuristic(0, 0, 3, 4)  // result: 70000 (7 Manhattan steps × 10000)
+```
+
+---
+
+## `pathfind_bfs`
+
+**版本：** 1.0.0
+
+使用 BFS 在 16×16 网格上寻找两格子之间的最短路径
+
+```redscript
+fn pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `map` | 来自 pf_new_map 的障碍物地图（已设置阻塞） |
+| `sx` | 起始格子 X [0, 15] |
+| `sz` | 起始格子 Z [0, 15] |
+| `gx` | 目标格子 X [0, 15] |
+| `gz` | 目标格子 Z [0, 15] |
+
+**返回：** 从起点到终点（含）的打包坐标 int[]，无路径时返回空数组
+
+**示例**
+
+```redscript
+let map: int[] = pf_new_map()
+pf_set_blocked(map, 3, 5)
+let path: int[] = pathfind_bfs(map, 0, 0, 7, 7)
+let x0: int = pf_unpack_x(path[0])
+```
+
+---
+
+## `pf_noop`
+
+**版本：** 1.0.0
+
+Default no-op onDone callback for pathfind_bfs_coro. Replace with your own handler.
+
+```redscript
+fn pf_noop()
+```
+
+---

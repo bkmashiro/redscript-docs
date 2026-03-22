@@ -1,104 +1,275 @@
-# `pathfind` — 16×16 Grid BFS Pathfinding
+# Pathfind
 
-Import: `import "stdlib/pathfind.mcrs"`
+> Auto-generated from `src/stdlib/pathfind.mcrs` — do not edit manually.
 
-Breadth-first pathfinding on a fixed **16×16** XZ grid. Obstacles are stored in a 256-element `int[]`, and paths are returned as packed grid coordinates.
+## API
 
-## Coordinate Packing
+- [pf_pack](#pf-pack)
+- [pf_unpack_x](#pf-unpack-x)
+- [pf_unpack_z](#pf-unpack-z)
+- [pf_new_map](#pf-new-map)
+- [pf_set_blocked](#pf-set-blocked)
+- [pf_set_open](#pf-set-open)
+- [pf_is_blocked](#pf-is-blocked)
+- [pf_heuristic](#pf-heuristic)
+- [pathfind_bfs](#pathfind-bfs)
+- [pf_noop](#pf-noop)
 
-Cells are encoded as:
+---
 
-```text
-packed = x * 16 + z
+## `pf_pack`
+
+**Since:** 1.0.0
+
+Encode a (x, z) grid coordinate pair as a single packed integer.
+
+```redscript
+fn pf_pack(x: int, z: int): int
 ```
 
-Helpers:
+**Parameters**
 
-- `pf_unpack_x(packed) = packed / 16`
-- `pf_unpack_z(packed) = packed % 16`
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Grid X coordinate [0, 15] |
+| `z` | Grid Z coordinate [0, 15] |
 
-## Quick Example
+**Returns:** x * 16 + z (unique index in [0, 255])
 
-```rs
-import "stdlib/pathfind.mcrs";
+**Example**
 
-let map: int[] = pf_new_map();
-pf_set_blocked(map, 3, 5);
-pf_set_blocked(map, 3, 6);
-
-let path: int[] = pathfind_bfs(map, 0, 0, 7, 7);
-let first_x: int = pf_unpack_x(path[0]);
-let first_z: int = pf_unpack_z(path[0]);
+```redscript
+let p: int = pf_pack(3, 7)  // result: 55
 ```
 
-## Map Helpers
+---
 
-### `pf_pack(x: int, z: int): int`
+## `pf_unpack_x`
 
-Pack a grid coordinate into one integer.
+**Since:** 1.0.0
 
-### `pf_unpack_x(packed: int): int`
+Extract the X coordinate from a packed grid index.
 
-Recover the X coordinate from a packed cell id.
+```redscript
+fn pf_unpack_x(packed: int): int
+```
 
-### `pf_unpack_z(packed: int): int`
+**Parameters**
 
-Recover the Z coordinate from a packed cell id.
+| Parameter | Description |
+|-----------|-------------|
+| `packed` | Packed coordinate from pf_pack |
 
-### `pf_new_map(): int[]`
+**Returns:** X component: packed / 16
 
-Allocate a 256-element obstacle map with all cells open.
+**Example**
 
-### `pf_set_blocked(map: int[], x: int, z: int)`
+```redscript
+let x: int = pf_unpack_x(55)  // result: 3
+```
 
-Mark `(x, z)` as blocked by writing `1`.
+---
 
-### `pf_set_open(map: int[], x: int, z: int)`
+## `pf_unpack_z`
 
-Mark `(x, z)` as open by writing `0`.
+**Since:** 1.0.0
 
-### `pf_is_blocked(map: int[], x: int, z: int): int`
+Extract the Z coordinate from a packed grid index.
 
-Return `1` if the cell is blocked or out of bounds, otherwise `0`.
+```redscript
+fn pf_unpack_z(packed: int): int
+```
 
-## Heuristic Helper
+**Parameters**
 
-### `pf_heuristic(x1: int, z1: int, x2: int, z2: int): int`
+| Parameter | Description |
+|-----------|-------------|
+| `packed` | Packed coordinate from pf_pack |
 
-Return Manhattan distance in ×10000 fixed-point form.
+**Returns:** Z component: packed % 16
 
-This function is informational in the current module. `pathfind_bfs()` does not use it, but it is useful if you build A* on top of the same map representation.
+**Example**
 
-## Synchronous Pathfinding
+```redscript
+let z: int = pf_unpack_z(55)  // result: 7
+```
 
-### `pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]`
+---
 
-Find the shortest 4-direction path from start to goal.
+## `pf_new_map`
 
-- Returns packed coordinates from start to goal, inclusive.
-- Returns `[]` when no path exists.
-- Expansion order is North, South, West, East.
+**Since:** 1.0.0
 
-Because this is BFS on a uniform-cost grid, the returned path is shortest in number of steps.
+Allocate a new 16×16 grid obstacle map with all cells passable.
 
-## Coroutine Pathfinding
+```redscript
+fn pf_new_map(): int[]
+```
 
-### `pathfind_bfs_coro(map: int[], sx: int, sz: int, gx: int, gz: int, out: int[])`
+**Returns:** int[] of 256 zeros; index = pf_pack(x, z), 0=passable, 1=blocked
 
-Coroutine version of BFS:
+**Example**
 
-- Decorated with `@coroutine(batch=16, onDone=pf_noop)`.
-- Processes up to 16 BFS iterations per tick.
-- Cannot return a value directly, so it pushes the finished path into `out`.
+```redscript
+let map: int[] = pf_new_map()
+```
 
-Use this when a synchronous search would be too expensive in one tick.
+---
 
-### `pf_noop()`
+## `pf_set_blocked`
 
-Default empty `onDone` callback for the coroutine variant.
+**Since:** 1.0.0
 
-## Notes
+Mark a grid cell as impassable (blocked).
 
-- The grid is hard-coded to `0..15` on both axes.
-- Start and goal cells are not validated explicitly before indexing, so callers should pass valid coordinates.
-- `pf_is_blocked()` treats out-of-bounds cells as blocked, which keeps BFS inside the grid.
+```redscript
+fn pf_set_blocked(map: int[], x: int, z: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `map` | Obstacle map from pf_new_map |
+| `x` | Cell X coordinate [0, 15] |
+| `z` | Cell Z coordinate [0, 15] |
+
+**Returns:** void — sets map[pf_pack(x,z)] = 1
+
+**Example**
+
+```redscript
+pf_set_blocked(map, 5, 3)  // block cell (5, 3)
+```
+
+---
+
+## `pf_set_open`
+
+**Since:** 1.0.0
+
+Mark a grid cell as passable (open).
+
+```redscript
+fn pf_set_open(map: int[], x: int, z: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `map` | Obstacle map from pf_new_map |
+| `x` | Cell X coordinate [0, 15] |
+| `z` | Cell Z coordinate [0, 15] |
+
+**Returns:** void — sets map[pf_pack(x,z)] = 0
+
+**Example**
+
+```redscript
+pf_set_open(map, 5, 3)  // re-open previously blocked cell (5, 3)
+```
+
+---
+
+## `pf_is_blocked`
+
+**Since:** 1.0.0
+
+Check whether a grid cell is blocked or out of bounds.
+
+```redscript
+fn pf_is_blocked(map: int[], x: int, z: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `map` | Obstacle map from pf_new_map |
+| `x` | Cell X coordinate |
+| `z` | Cell Z coordinate |
+
+**Returns:** 1 if out of bounds (x or z outside [0,15]) or cell is blocked, 0 if passable
+
+**Example**
+
+```redscript
+let blocked: int = pf_is_blocked(map, 5, 3)
+```
+
+---
+
+## `pf_heuristic`
+
+**Since:** 1.0.0
+
+Compute Manhattan distance between two grid cells, scaled ×10000.
+
+```redscript
+fn pf_heuristic(x1: int, z1: int, x2: int, z2: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x1` | First cell X |
+| `z1` | First cell Z |
+| `x2` | Second cell X |
+| `z2` | Second cell Z |
+
+**Returns:** (|x1-x2| + |z1-z2|) * 10000 — useful as A* heuristic
+
+**Example**
+
+```redscript
+let h: int = pf_heuristic(0, 0, 3, 4)  // result: 70000 (7 Manhattan steps × 10000)
+```
+
+---
+
+## `pathfind_bfs`
+
+**Since:** 1.0.0
+
+Find the shortest path between two cells on a 16×16 grid using BFS.
+
+```redscript
+fn pathfind_bfs(map: int[], sx: int, sz: int, gx: int, gz: int): int[]
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `map` | Obstacle map from pf_new_map (with pf_set_blocked applied) |
+| `sx` | Start cell X [0, 15] |
+| `sz` | Start cell Z [0, 15] |
+| `gx` | Goal cell X [0, 15] |
+| `gz` | Goal cell Z [0, 15] |
+
+**Returns:** int[] of packed coords (pf_pack) from start to goal inclusive, or [] if no path
+
+**Example**
+
+```redscript
+let map: int[] = pf_new_map()
+pf_set_blocked(map, 3, 5)
+let path: int[] = pathfind_bfs(map, 0, 0, 7, 7)
+let x0: int = pf_unpack_x(path[0])
+```
+
+---
+
+## `pf_noop`
+
+**Since:** 1.0.0
+
+Default no-op onDone callback for pathfind_bfs_coro. Replace with your own handler.
+
+```redscript
+fn pf_noop()
+```
+
+---

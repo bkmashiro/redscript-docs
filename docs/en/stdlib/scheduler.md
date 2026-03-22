@@ -1,159 +1,197 @@
-# `scheduler` — Per-entity and global task scheduling
+# Scheduler
 
-Import: `import scheduler;`
+> Auto-generated from `src/stdlib/scheduler.mcrs` — do not edit manually.
 
-Lightweight tick-based scheduler for delaying and recurring tasks. Supports up to 8 independent per-entity task slots (IDs 0–7) and equivalent global task slots. Built on scoreboard counters; no NBT required.
+## API
 
-## Setup
-
-Call `scheduler_tick()` from a `@tick` function so the scheduler advances every game tick:
-
-```rs
-import scheduler;
-
-@tick
-fn tick() {
-    scheduler_tick();
-}
-```
-
-## Per-entity functions
-
-### `task_schedule(p: selector, task_id: int, delay: int)`
-
-Schedule a task for entity `p`. After `delay` ticks, `task_ready` will return `1` for that `task_id`. `task_id` must be 0–7.
-
-**Example:**
-```rs
-import scheduler;
-// Fire task 0 in 40 ticks (2 seconds)
-task_schedule(@s, 0, 40);
-```
+- [task_schedule](#task-schedule)
+- [task_cancel](#task-cancel)
+- [task_ready](#task-ready)
+- [gtask_schedule](#gtask-schedule)
+- [gtask_cancel](#gtask-cancel)
+- [gtask_ready](#gtask-ready)
+- [scheduler_tick](#scheduler-tick)
 
 ---
 
-### `task_cancel(p: selector, task_id: int)`
+## `task_schedule`
 
-Cancel a pending task. After cancellation `task_ready` returns `0` until the task is scheduled again.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import scheduler;
-task_cancel(@s, 0);
+Schedule slot `task_id` (0–7) to fire after `delay` ticks for player `p`.
+
+```redscript
+fn task_schedule(p: selector, task_id: int, delay: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient player or entity selector |
+| `task_id` | Slot index in range [0, 7] |
+| `delay` | Number of ticks to wait before firing |
+
+**Example**
+
+```redscript
+task_schedule(@s, 0, 40)
 ```
 
 ---
 
-### `task_ready(p: selector, task_id: int): int`
+## `task_cancel`
 
-Returns `1` if the scheduled delay has elapsed (task is ready to fire), `0` otherwise. Automatically resets to `0` after returning `1` — each task fires exactly once per schedule call.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import scheduler;
-if (task_ready(@s, 0) == 1) {
-    say("Delayed action triggered!");
-}
+Cancel slot `task_id` for player `p` (zeroes the counter).
+
+```redscript
+fn task_cancel(p: selector, task_id: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Recipient player or entity selector |
+| `task_id` | Slot index in range [0, 7] |
+
+**Example**
+
+```redscript
+task_cancel(@s, 0)
 ```
 
 ---
 
-## Global task functions
+## `task_ready`
 
-Global tasks use the same interface but are not tied to a specific entity — useful for server-wide timers.
+**Since:** 1.0.0
 
-### `gtask_schedule(task_id: int, delay: int)`
+Returns `1` if slot `task_id` fired on this tick (counter reached 1), `0` otherwise.
 
-Schedule a global task. `task_id` must be 0–7.
+Automatically clears the slot once it fires so subsequent calls return `0`.
 
----
-
-### `gtask_cancel(task_id: int)`
-
-Cancel a pending global task.
-
----
-
-### `gtask_ready(task_id: int): int`
-
-Returns `1` if the global task delay has elapsed, `0` otherwise. Auto-resets after firing.
-
----
-
-## `scheduler_tick()`
-
-Advance all scheduler counters by one tick. **Must** be called from a `@tick` function for the scheduler to work.
-
----
-
-## Examples
-
-### Delayed execution
-
-```rs
-import scheduler;
-
-@tick
-fn tick() {
-    scheduler_tick();
-    check_delayed();
-}
-
-fn trigger_explosion() {
-    // Explode 3 seconds from now
-    task_schedule(@s, 0, 60);
-}
-
-fn check_delayed() {
-    foreach (e in @e[tag=bomb]) {
-        if (task_ready(e, 0) == 1) {
-            // Boom!
-            execute as e run {
-                particle("explosion", ~ ~1 ~, 0.5, 0.5, 0.5, 0, 20);
-            }
-        }
-    }
-}
+```redscript
+fn task_ready(p: selector, task_id: int) -> int
 ```
 
-### Periodic check (recurring timer)
+**Parameters**
 
-```rs
-import scheduler;
+| Parameter | Description |
+|-----------|-------------|
+| `p` | Player or entity selector to check |
+| `task_id` | Slot index in range [0, 7] |
 
-@load
-fn on_load() {
-    // First check in 100 ticks
-    gtask_schedule(0, 100);
-}
+**Returns:** `1` when the task is ready, `0` otherwise
 
-@tick
-fn tick() {
-    scheduler_tick();
+**Example**
 
-    if (gtask_ready(0) == 1) {
-        // Do periodic work
-        dialog_broadcast("Server check passed.");
-        // Reschedule for next 100 ticks
-        gtask_schedule(0, 100);
-    }
-}
+```redscript
+if (task_ready(@s, 0) == 1) { /* handle event */ }
 ```
 
-### Multiple independent timers per entity
+---
 
-```rs
-import scheduler;
+## `gtask_schedule`
 
-fn start_entity_timers() {
-    task_schedule(@s, 0, 20);   // task 0: fire in 1s
-    task_schedule(@s, 1, 100);  // task 1: fire in 5s
-    task_schedule(@s, 2, 200);  // task 2: fire in 10s
-}
+**Since:** 1.0.0
 
-fn check_entity_timers() {
-    if (task_ready(@s, 0) == 1) { /* 1s action */ }
-    if (task_ready(@s, 1) == 1) { /* 5s action */ }
-    if (task_ready(@s, 2) == 1) { /* 10s action */ }
-}
+Schedule global slot `task_id` (0–7) to fire after `delay` ticks.
+
+Global tasks are stored on the `#rs` fake-player and are not bound to any
+specific player entity.
+
+```redscript
+fn gtask_schedule(task_id: int, delay: int)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `task_id` | Slot index in range [0, 7] |
+| `delay` | Number of ticks to wait before firing |
+
+**Example**
+
+```redscript
+gtask_schedule(0, 200)
+```
+
+---
+
+## `gtask_cancel`
+
+**Since:** 1.0.0
+
+Cancel global slot `task_id` by zeroing its counter.
+
+```redscript
+fn gtask_cancel(task_id: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `task_id` | Slot index in range [0, 7] |
+
+**Example**
+
+```redscript
+gtask_cancel(0)
+```
+
+---
+
+## `gtask_ready`
+
+**Since:** 1.0.0
+
+Returns `1` if global slot `task_id` fired this tick, `0` otherwise.
+
+Automatically clears the slot once it fires.
+
+```redscript
+fn gtask_ready(task_id: int) -> int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `task_id` | Slot index in range [0, 7] |
+
+**Returns:** `1` when the task is ready, `0` otherwise
+
+**Example**
+
+```redscript
+if (gtask_ready(0) == 1) { /* handle global event */ }
+```
+
+---
+
+## `scheduler_tick`
+
+**Since:** 1.0.0
+
+Decrement all active per-player and global timers by 1 each tick.
+
+Call this inside your `@tick` function (executed as `@a`). Counters are
+clamped to 0 so they never go negative.
+
+```redscript
+fn scheduler_tick()
+```
+
+**Example**
+
+```redscript
+// In your @tick mcfunction:
+scheduler_tick()
+```
+
+---

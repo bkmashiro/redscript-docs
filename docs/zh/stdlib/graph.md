@@ -1,104 +1,279 @@
-# `graph` — 有向与无向加权图
+# Graph
 
-导入：`import "stdlib/graph.mcrs"`
+> 本文档由 `src/stdlib/graph.mcrs` 自动生成，请勿手动编辑。
 
-RedScript datapack 的固定容量图工具。图存储在单个扁平 `int[]` 中，支持最多 **64 个节点**与 **256 条有向边**，并提供遍历与最短路径辅助函数，无需额外的图对象类型。
+## API 列表
 
-## 数据布局
+- [graph_is_valid_node](#graph-is-valid-node)
+- [graph_new](#graph-new)
+- [graph_add_edge](#graph-add-edge)
+- [graph_add_undirected](#graph-add-undirected)
+- [graph_node_count](#graph-node-count)
+- [graph_edge_count](#graph-edge-count)
+- [graph_bfs](#graph-bfs)
+- [graph_dfs](#graph-dfs)
+- [graph_has_path](#graph-has-path)
+- [graph_shortest_path](#graph-shortest-path)
 
-`graph_new()` 会分配一个 770 元素的 `int[]`，布局如下：
+---
 
-| 索引 | 含义 |
-|------|------|
-| `g[0]` | 当前有向边数量 |
-| `g[1]` | 节点数量 |
-| `g[2 + i * 3]` | 第 `i` 条边的起点 |
-| `g[2 + i * 3 + 1]` | 第 `i` 条边的终点 |
-| `g[2 + i * 3 + 2]` | 第 `i` 条边的权重 |
+## `graph_is_valid_node`
 
-节点使用从 `0` 开始的整数编号，范围为 `[0, graph_node_count(g))`。
+**版本：** 1.0.0
 
-## 快速示例
+Check whether a node index is valid for this graph.
 
-```rs
-import "stdlib/graph.mcrs";
-
-let g: int[] = graph_new(5);
-g = graph_add_edge(g, 0, 1, 1);
-g = graph_add_edge(g, 0, 2, 4);
-g = graph_add_undirected(g, 2, 3, 2);
-g = graph_add_edge(g, 1, 3, 2);
-g = graph_add_edge(g, 3, 4, 1);
-
-let vis: int[] = [0, 0, 0, 0, 0];
-let bfs_order: int[] = graph_bfs(g, 0, vis);
-
-let dist: int[] = [0, 0, 0, 0, 0];
-let shortest: int = graph_shortest_path(g, 0, 4, dist);
-// shortest = 4，对应 0 -> 1 -> 3 -> 4
+```redscript
+fn graph_is_valid_node(g: int[], node: int): int
 ```
 
-## 函数
+**参数**
 
-### `graph_new(n: int): int[]`
+| 参数 | 说明 |
+|------|------|
+| `g` | Graph array (from graph_new) |
+| `node` | Node index to validate |
 
-创建一个包含 `n` 个节点、初始无边的新图。`n` 会被限制到 `[0, 64]`。
+**返回：** 1 if node is in [0, node_count), 0 otherwise
 
-### `graph_add_edge(g: int[], src: int, dst: int, weight: int): int[]`
+---
 
-追加一条 `src -> dst` 的有向边。若 `src` 或 `dst` 非法，或者图中已经有 256 条有向边，则原样返回输入图。
+## `graph_new`
 
-### `graph_add_undirected(g: int[], a: int, b: int, weight: int): int[]`
+**版本：** 1.0.0
 
-追加 `a -> b` 与 `b -> a` 两条同权重边，相当于加入一条无向边。会消耗两个有向边槽位。
+创建含 n 个节点、最多 256 条有向边的新空图
 
-### `graph_node_count(g: int[]): int`
+```redscript
+fn graph_new(n: int): int[]
+```
 
-返回图配置的节点数。
+**参数**
 
-### `graph_edge_count(g: int[]): int`
+| 参数 | 说明 |
+|------|------|
+| `n` | 节点数量（限制在 [0, 64]） |
 
-返回当前有向边数量。
+**返回：** 初始化的图 int[]，g[0]=0（边数），g[1]=n（节点数）
 
-### `graph_bfs(g: int[], start: int, out_visited: int[]): int[]`
+**示例**
 
-从 `start` 开始执行广度优先搜索。
+```redscript
+let g: int[] = graph_new(5)  // graph with 5 nodes, no edges
+```
 
-- 返回按 BFS 顺序访问的节点索引数组。
-- 对每个可达节点，把 `out_visited[i]` 写成 `1`。
-- 如果 `start` 非法，则返回 `[]`。
+---
 
-`out_visited` 至少需要有 `graph_node_count(g)` 个槽位，并且应由调用方先初始化为全 0。
+## `graph_add_edge`
 
-### `graph_dfs(g: int[], start: int, out_visited: int[]): int[]`
+**版本：** 1.0.0
 
-从 `start` 开始执行深度优先搜索。
+向图中添加一条有向加权边
 
-- 返回按 DFS 顺序访问的节点索引数组。
-- 对每个可达节点，把 `out_visited[i]` 写成 `1`。
-- 如果 `start` 非法，则返回 `[]`。
+```redscript
+fn graph_add_edge(g: int[], src: int, dst: int, weight: int): int[]
+```
 
-与 `graph_bfs()` 一样，输出数组的大小由调用方保证。
+**参数**
 
-### `graph_has_path(g: int[], src: int, dst: int): int`
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `src` | 源节点索引 |
+| `dst` | 目标节点索引 |
+| `weight` | 边权重（无权图使用 1） |
 
-若从 `src` 到 `dst` 存在有向路径则返回 `1`，否则返回 `0`。
+**返回：** 更新后的图数组；节点无效或边数已满时静默忽略
 
-- 端点非法时同样返回 `0`。
-- 实现上会对存储的有向边做一次 BFS。
+**示例**
 
-### `graph_shortest_path(g: int[], src: int, dst: int, out_dist: int[]): int`
+```redscript
+g = graph_add_edge(g, 0, 1, 5)  // edge from 0 to 1 with weight 5
+```
 
-从 `src` 运行 Dijkstra，并把最短距离写入 `out_dist`。
+---
 
-- `out_dist[i]` 会变成从 `src` 到节点 `i` 的最短距离。
-- 不可达节点会写成 `-1`。
-- 函数返回 `out_dist[dst]`。
-- `src` 或 `dst` 非法时返回 `-1`。
+## `graph_add_undirected`
 
-## 说明
+**版本：** 1.0.0
 
-- 边权重是普通整数。
-- 不安全支持负权重，因为这里使用的是 Dijkstra。
-- `graph_bfs()` 与 `graph_dfs()` 的内部工作数组按 64 个节点固定分配。
-- `graph_shortest_path()` 内部使用 `999999` 作为无穷大哨兵值。
+添加无向加权边（同时添加 a→b 和 b→a 两条有向边）
+
+```redscript
+fn graph_add_undirected(g: int[], a: int, b: int, weight: int): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `a` | 第一个节点索引 |
+| `b` | 第二个节点索引 |
+| `weight` | 边权重 |
+
+**返回：** 添加了两条有向边的更新图数组
+
+**示例**
+
+```redscript
+g = graph_add_undirected(g, 2, 3, 2)  // bidirectional edge between 2 and 3
+```
+
+---
+
+## `graph_node_count`
+
+**版本：** 1.0.0
+
+Return the number of nodes in the graph.
+
+```redscript
+fn graph_node_count(g: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | Graph array |
+
+**返回：** Node count (g[1])
+
+---
+
+## `graph_edge_count`
+
+**版本：** 1.0.0
+
+Return the number of directed edges in the graph.
+
+```redscript
+fn graph_edge_count(g: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | Graph array |
+
+**返回：** Edge count (g[0])
+
+---
+
+## `graph_bfs`
+
+**版本：** 1.0.0
+
+从起始节点广度优先搜索，返回访问顺序
+
+```redscript
+fn graph_bfs(g: int[], start: int, out_visited: int[]): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `start` | 起始节点索引 |
+| `out_visited` | 长度 >= node_count 的 int[]；已访问节点对应格设为 1 |
+
+**返回：** BFS 访问顺序的节点索引 int[]；起始节点无效时返回空数组
+
+**示例**
+
+```redscript
+let vis: int[] = [0, 0, 0, 0, 0]
+let order: int[] = graph_bfs(g, 0, vis)
+```
+
+---
+
+## `graph_dfs`
+
+**版本：** 1.0.0
+
+从起始节点深度优先搜索，返回访问顺序（迭代实现，基于栈）
+
+```redscript
+fn graph_dfs(g: int[], start: int, out_visited: int[]): int[]
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `start` | 起始节点索引 |
+| `out_visited` | 长度 >= node_count 的 int[] |
+
+**返回：** DFS 访问顺序的节点索引 int[]
+
+**示例**
+
+```redscript
+let vis: int[] = [0, 0, 0, 0, 0]
+let order: int[] = graph_dfs(g, 0, vis)
+```
+
+---
+
+## `graph_has_path`
+
+**版本：** 1.0.0
+
+使用 BFS 检测两节点之间是否存在有向路径
+
+```redscript
+fn graph_has_path(g: int[], src: int, dst: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `src` | 源节点索引 |
+| `dst` | 目标节点索引 |
+
+**返回：** 存在从 src 到 dst 的有向路径返回 1，否则返回 0
+
+**示例**
+
+```redscript
+let reachable: int = graph_has_path(g, 0, 3)
+```
+
+---
+
+## `graph_shortest_path`
+
+**版本：** 1.0.0
+
+使用 Dijkstra 算法计算从源节点到所有节点的最短加权路径
+
+```redscript
+fn graph_shortest_path(g: int[], src: int, dst: int, out_dist: int[]): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `g` | 图数组 |
+| `src` | 源节点索引 |
+| `dst` | 目标节点索引（用于返回值） |
+| `out_dist` | 长度 >= node_count 的 int[]；填入最短距离（不可达为 -1） |
+
+**返回：** src 到 dst 的最短距离，不可达返回 -1
+
+**示例**
+
+```redscript
+let dist: int[] = [0, 0, 0, 0, 0]
+let d: int = graph_shortest_path(g, 0, 3, dist)
+```
+
+---

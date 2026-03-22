@@ -1,101 +1,348 @@
-# `effects` — Potion effect helpers
+# Effects
 
-Import: `import effects;`
+> Auto-generated from `src/stdlib/effects.mcrs` — do not edit manually.
 
-Named wrappers around the built-in `effect()` and `effect_clear()` commands for common potion effects, plus a convenience "full buff" package.
+## API
 
-## Functions
+- [speed](#speed)
+- [jump](#jump)
+- [regen](#regen)
+- [resistance](#resistance)
+- [strength](#strength)
+- [invisible](#invisible)
+- [night_vision](#night-vision)
+- [slow_fall](#slow-fall)
+- [glow](#glow)
+- [clear_effects](#clear-effects)
+- [clear_effect](#clear-effect)
+- [buff_all](#buff-all)
 
-### `speed(target: selector, duration: int, level: int)`
+---
 
-Apply `minecraft:speed` effect to target.
+## `speed`
 
-**Example:**
-```rs
-import effects;
-speed(@s, 200, 1);  // speed II for 10 seconds
+**Since:** 1.0.0
+
+Give a speed boost to the target entity.
+
+```redscript
+fn speed(target: selector, duration: int, level: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector (e.g. @p, @a, @e[...]) |
+| `duration` | Effect duration in ticks (20 ticks = 1 second) |
+| `level` | Amplifier level (0 = Speed I, 1 = Speed II, ...) |
+
+**Returns:** void — applies minecraft:speed effect
+
+**Example**
+
+```redscript
+speed(@p, 200, 1)  // Speed II for 10 seconds
 ```
 
 ---
 
-### `jump(target: selector, duration: int, level: int)`
+## `jump`
 
-Apply `minecraft:jump_boost` effect to target.
+**Since:** 1.0.0
 
----
+Give a jump boost to the target entity.
 
-### `regen(target: selector, duration: int, level: int)`
+```redscript
+fn jump(target: selector, duration: int, level: int)
+```
 
-Apply `minecraft:regeneration` effect to target.
+**Parameters**
 
----
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+| `level` | Amplifier level (0 = Jump Boost I, 1 = Jump Boost II, ...) |
 
-### `resistance(target: selector, duration: int, level: int)`
+**Returns:** void — applies minecraft:jump_boost effect
 
-Apply `minecraft:resistance` effect to target.
+**Example**
 
----
-
-### `strength(target: selector, duration: int, level: int)`
-
-Apply `minecraft:strength` effect to target.
-
----
-
-### `invisible(target: selector, duration: int)`
-
-Apply `minecraft:invisibility` effect (amplifier 0) to target.
-
----
-
-### `night_vision(target: selector, duration: int)`
-
-Apply `minecraft:night_vision` effect (amplifier 0) to target.
-
----
-
-### `slow_fall(target: selector, duration: int)`
-
-Apply `minecraft:slow_falling` effect (amplifier 0) to target.
-
----
-
-### `glow(target: selector, duration: int)`
-
-Apply `minecraft:glowing` effect (amplifier 0) to target.
-
----
-
-### `clear_effects(target: selector)`
-
-Clear all effects from target.
-
-**Example:**
-```rs
-import effects;
-clear_effects(@a);
+```redscript
+jump(@p, 100, 0)  // Jump Boost I for 5 seconds
 ```
 
 ---
 
-### `clear_effect(target: selector, eff: string)`
+## `regen`
 
-Clear a specific effect from target.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import effects;
-clear_effect(@s, "minecraft:poison");
+Give regeneration to the target entity.
+
+```redscript
+fn regen(target: selector, duration: int, level: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+| `level` | Amplifier level (0 = Regeneration I, ...) |
+
+**Returns:** void — applies minecraft:regeneration effect
+
+**Example**
+
+```redscript
+regen(@p, 60, 0)  // Regeneration I for 3 seconds
 ```
 
 ---
 
-### `buff_all(target: selector, duration: int)`
+## `resistance`
 
-Apply a full buff package: speed I, strength I, regen I, resistance 0.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import effects;
-buff_all(@a, 600);  // 30-second buff for all players
+Give damage resistance to the target entity.
+
+```redscript
+fn resistance(target: selector, duration: int, level: int)
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+| `level` | Amplifier level (0 = Resistance I, ...) |
+
+**Returns:** void — applies minecraft:resistance effect
+
+**Example**
+
+```redscript
+resistance(@p, 400, 0)  // Resistance I for 20 seconds
+```
+
+---
+
+## `strength`
+
+**Since:** 1.0.0
+
+Give strength to the target entity.
+
+```redscript
+fn strength(target: selector, duration: int, level: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+| `level` | Amplifier level (0 = Strength I, 1 = Strength II, ...) |
+
+**Returns:** void — applies minecraft:strength effect
+
+**Example**
+
+```redscript
+strength(@p, 200, 1)  // Strength II for 10 seconds
+```
+
+---
+
+## `invisible`
+
+**Since:** 1.0.0
+
+Make the target entity invisible.
+
+```redscript
+fn invisible(target: selector, duration: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+
+**Returns:** void — applies minecraft:invisibility at amplifier 0
+
+**Example**
+
+```redscript
+invisible(@p, 300)  // invisibility for 15 seconds
+```
+
+---
+
+## `night_vision`
+
+**Since:** 1.0.0
+
+Give night vision to the target entity.
+
+```redscript
+fn night_vision(target: selector, duration: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+
+**Returns:** void — applies minecraft:night_vision at amplifier 0
+
+**Example**
+
+```redscript
+night_vision(@p, 6000)  // night vision for 5 minutes
+```
+
+---
+
+## `slow_fall`
+
+**Since:** 1.0.0
+
+Give slow falling to the target entity.
+
+```redscript
+fn slow_fall(target: selector, duration: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+
+**Returns:** void — applies minecraft:slow_falling at amplifier 0
+
+**Example**
+
+```redscript
+slow_fall(@p, 200)  // slow falling for 10 seconds
+```
+
+---
+
+## `glow`
+
+**Since:** 1.0.0
+
+Give the glowing outline effect to the target entity.
+
+```redscript
+fn glow(target: selector, duration: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Effect duration in ticks |
+
+**Returns:** void — applies minecraft:glowing at amplifier 0
+
+**Example**
+
+```redscript
+glow(@e[type=zombie], 100)  // make all zombies glow for 5 seconds
+```
+
+---
+
+## `clear_effects`
+
+**Since:** 1.0.0
+
+Clear all active effects from the target entity.
+
+```redscript
+fn clear_effects(target: selector)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+
+**Returns:** void — removes all potion effects via effect_clear
+
+**Example**
+
+```redscript
+clear_effects(@p)  // remove all effects from nearest player
+```
+
+---
+
+## `clear_effect`
+
+**Since:** 1.0.0
+
+Clear a specific effect from the target entity.
+
+```redscript
+fn clear_effect(target: selector, eff: string)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `eff` | Effect resource location string (e.g. "minecraft:speed") |
+
+**Returns:** void — removes the specified potion effect
+
+**Example**
+
+```redscript
+clear_effect(@p, "minecraft:poison")  // cure poison
+```
+
+---
+
+## `buff_all`
+
+**Since:** 1.0.0
+
+Apply a full buff package (Speed I, Strength I, Regeneration I, Resistance I).
+
+```redscript
+fn buff_all(target: selector, duration: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `target` | Entity selector |
+| `duration` | Duration in ticks for all four effects |
+
+**Returns:** void — applies speed, strength, regen, and resistance at level 1 (or 0 for resistance)
+
+**Example**
+
+```redscript
+buff_all(@p, 600)  // full buff for 30 seconds
+```
+
+---

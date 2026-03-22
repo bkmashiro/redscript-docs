@@ -1,159 +1,314 @@
-# `bits` — Bitwise operations
+# Bits
 
-Import: `import bits;`
+> Auto-generated from `src/stdlib/bits.mcrs` — do not edit manually.
 
-Bitwise operations simulated with integer arithmetic (multiply/divide/modulo), since MC scoreboard has no native bitwise ops. Performance is O(32) per operation — fast enough for most game logic. For hot paths (>1000 calls/tick), consider lookup tables or restructuring the algorithm.
+## API
 
-## Functions
+- [bit_get](#bit-get)
+- [bit_set](#bit-set)
+- [bit_clear](#bit-clear)
+- [bit_toggle](#bit-toggle)
+- [bit_shl](#bit-shl)
+- [bit_shr](#bit-shr)
+- [bit_and](#bit-and)
+- [bit_or](#bit-or)
+- [bit_xor](#bit-xor)
+- [bit_not](#bit-not)
+- [popcount](#popcount)
 
-### `bit_get(x: int, n: int): int`
+---
 
-> **Cost:** O(n) — n up to 30 iterations
+## `bit_get`
 
-Return 1 if bit `n` is set in `x`, 0 otherwise. `n ∈ [0, 30]`.
+**Since:** 1.0.0
 
-**Example:**
-```rs
-import bits;
-let flag: int = bit_get(0b1010, 1);  // 1
+Test whether bit n of x is set.
+
+```redscript
+fn bit_get(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer value to test |
+| `n` | Bit index (0 = least significant), range [0, 30] |
+
+**Returns:** 1 if bit n is set, 0 otherwise
+
+**Example**
+
+```redscript
+let b: int = bit_get(0b1010, 1)  // result: 1 (bit 1 of 10 is set)
 ```
 
 ---
 
-### `bit_set(x: int, n: int): int`
+## `bit_set`
 
-> **Cost:** O(n)
+**Since:** 1.0.0
 
-Set bit `n` to 1. `n ∈ [0, 30]`. Returns updated value.
+Set bit n of x to 1 (idempotent if already set).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_set(0, 3);  // 8
+```redscript
+fn bit_set(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer value to modify |
+| `n` | Bit index to set, range [0, 30] |
+
+**Returns:** x with bit n set to 1
+
+**Example**
+
+```redscript
+let v: int = bit_set(0b0100, 0)  // result: 0b0101 = 5
 ```
 
 ---
 
-### `bit_clear(x: int, n: int): int`
+## `bit_clear`
 
-> **Cost:** O(n)
+**Since:** 1.0.0
 
-Clear bit `n` to 0. `n ∈ [0, 30]`. Returns updated value.
+Clear bit n of x to 0 (idempotent if already clear).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_clear(15, 0);  // 14
+```redscript
+fn bit_clear(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer value to modify |
+| `n` | Bit index to clear, range [0, 30] |
+
+**Returns:** x with bit n set to 0
+
+**Example**
+
+```redscript
+let v: int = bit_clear(0b0111, 1)  // result: 0b0101 = 5
 ```
 
 ---
 
-### `bit_toggle(x: int, n: int): int`
+## `bit_toggle`
 
-> **Cost:** O(n)
+**Since:** 1.0.0
 
-Toggle bit `n`. `n ∈ [0, 30]`. Returns updated value.
+Toggle bit n of x (flip 0→1 or 1→0).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_toggle(5, 1);  // 7  (101 → 111)
+```redscript
+fn bit_toggle(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer value to modify |
+| `n` | Bit index to toggle, range [0, 30] |
+
+**Returns:** x with bit n flipped
+
+**Example**
+
+```redscript
+let v: int = bit_toggle(0b0101, 1)  // result: 0b0111 = 7
 ```
 
 ---
 
-### `bit_shl(x: int, n: int): int`
+## `bit_shl`
 
-> **Cost:** O(n)
+**Since:** 1.0.0
 
-Left shift `x` by `n` bits (`x << n`). `n ∈ [0, 30]`.
+Left-shift x by n bits (equivalent to x * 2^n).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_shl(1, 4);  // 16
+```redscript
+fn bit_shl(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer to shift |
+| `n` | Number of bit positions to shift left, range [0, 30] |
+
+**Returns:** x << n
+
+**Example**
+
+```redscript
+let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 ```
 
 ---
 
-### `bit_shr(x: int, n: int): int`
+## `bit_shr`
 
-> **Cost:** O(n)
+**Since:** 1.0.0
 
-Logical right shift `x` by `n` bits (`x >> n`). Divides by 2^n, truncating toward zero. `n ∈ [0, 30]`.
+Logical right-shift x by n bits (equivalent to x / 2^n, truncating toward zero).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_shr(16, 2);  // 4
+```redscript
+fn bit_shr(x: int, n: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer to shift |
+| `n` | Number of bit positions to shift right, range [0, 30] |
+
+**Returns:** x >> n (logical, not arithmetic for positive values)
+
+**Example**
+
+```redscript
+let v: int = bit_shr(256, 3)  // result: 32 (256 >> 3)
 ```
 
 ---
 
-### `bit_and(a: int, b: int): int`
+## `bit_and`
 
-> **Cost:** O(31) — iterates over 31 bits
+**Since:** 1.0.0
 
-Bitwise AND of `a` and `b`. Operates on bits 0–30 (sign bit excluded).
+Bitwise AND of two integers (all 31 non-sign bits).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_and(12, 10);  // 8  (1100 & 1010 = 1000)
+```redscript
+fn bit_and(a: int, b: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | First operand |
+| `b` | Second operand |
+
+**Returns:** a & b (bits set in both a and b)
+
+**Example**
+
+```redscript
+let v: int = bit_and(0b1100, 0b1010)  // result: 0b1000 = 8
 ```
 
 ---
 
-### `bit_or(a: int, b: int): int`
+## `bit_or`
 
-> **Cost:** O(31)
+**Since:** 1.0.0
 
-Bitwise OR of `a` and `b`. Operates on bits 0–30.
+Bitwise OR of two integers (all 31 non-sign bits).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_or(12, 10);  // 14  (1100 | 1010 = 1110)
+```redscript
+fn bit_or(a: int, b: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | First operand |
+| `b` | Second operand |
+
+**Returns:** a | b (bits set in either a or b)
+
+**Example**
+
+```redscript
+let v: int = bit_or(0b1100, 0b1010)  // result: 0b1110 = 14
 ```
 
 ---
 
-### `bit_xor(a: int, b: int): int`
+## `bit_xor`
 
-> **Cost:** O(31)
+**Since:** 1.0.0
 
-Bitwise XOR of `a` and `b`. Operates on bits 0–30.
+Bitwise XOR of two integers (all 31 non-sign bits).
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_xor(12, 10);  // 6  (1100 ^ 1010 = 0110)
+```redscript
+fn bit_xor(a: int, b: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | First operand |
+| `b` | Second operand |
+
+**Returns:** a ^ b (bits set in exactly one of a or b)
+
+**Example**
+
+```redscript
+let v: int = bit_xor(0b1100, 0b1010)  // result: 0b0110 = 6
 ```
 
 ---
 
-### `bit_not(x: int): int`
+## `bit_not`
 
-> **Cost:** O(31)
+**Since:** 1.0.0
 
-Bitwise NOT of `x`. Inverts all 31 bits (sign bit excluded).
+Bitwise NOT — inverts all 31 non-sign bits of x.
 
-**Example:**
-```rs
-import bits;
-let v: int = bit_not(0);  // 2147483647  (all 31 bits set)
+```redscript
+fn bit_not(x: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer to invert |
+
+**Returns:** ~x (all 31 lower bits flipped; sign bit excluded)
+
+**Example**
+
+```redscript
+let v: int = bit_not(0)  // result: 2147483647 (all 31 bits set)
 ```
 
 ---
 
-### `popcount(x: int): int`
+## `popcount`
 
-> **Cost:** O(31)
+**Since:** 1.0.0
 
-Count the number of set bits in `x`. Returns a value in `[0, 31]`.
+Count the number of set bits in x (population count / Hamming weight).
 
-**Example:**
-```rs
-import bits;
-let count: int = popcount(255);  // 8
+```redscript
+fn popcount(x: int): int
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `x` | Integer value (uses 31 lower bits; sign bit excluded) |
+
+**Returns:** Number of bits set to 1, in [0, 31]
+
+**Example**
+
+```redscript
+let n: int = popcount(255)  // result: 8 (0xFF has 8 bits set)
+```
+
+---

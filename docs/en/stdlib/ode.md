@@ -1,166 +1,279 @@
-# `ode` — Runge-Kutta ODE Solver
+# Ode
 
-Import: `import "stdlib/ode.mcrs"`
+> Auto-generated from `src/stdlib/ode.mcrs` — do not edit manually.
 
-Numerical solver for Ordinary Differential Equations (ODEs) using the **4th-order Runge-Kutta (RK4)** method. RK4 achieves O(h⁴) accuracy per step — far more precise than Euler integration for the same step size — making it the standard choice for smooth physical simulations in datapacks.
+## API
 
-State is persisted in the NBT storage namespace `rs:ode` so it survives function call boundaries. All values use a **fixed-point scale of ×10000**: the integer `10000` represents the real value `1.0`, `3679` represents `0.3679`, etc.
-
-## Built-in Systems
-
-| ID | Constant | Equation | Description |
-|----|----------|----------|-------------|
-| `1` | `ODE_SYSTEM_DECAY` | dy/dt = −k·y | Exponential decay |
-| `2` | `ODE_SYSTEM_GROWTH` | dy/dt = +k·y | Exponential growth |
-| `3` | *(harmonic)* | y′ = y₂, y₂′ = −k·y − extra·y₂ | Damped harmonic oscillator |
-
-## Quick Example — Exponential Decay
-
-Simulate **dy/dt = −y** (k = 1) with y(0) = 1 and step size h = 0.1 for 10 steps:
-
-```rs
-import "stdlib/ode.mcrs";
-
-// system=1 (DECAY), t0=0, y0=1.0, h=0.1, steps=10, k=1.0
-// All values in ×10000 fixed-point
-ode_run(1, 0, 10000, 1000, 10, 10000);
-
-let t_fx: int = ode_get_t();    // 10000  → t = 1.0
-let y_fx: int = ode_get_y();    // ≈ 3679 → y ≈ 0.3679  (exact: e⁻¹ ≈ 0.36788)
-```
-
-The exact solution y(t) = e^(−t) gives y(1) ≈ 0.3679. RK4 with h = 0.1 over 10 steps matches to 4+ significant figures.
-
-## API Reference
+- [ode_mul_fx](#ode-mul-fx)
+- [ode_weighted_increment](#ode-weighted-increment)
+- [ode_reset](#ode-reset)
+- [ode_get_system](#ode-get-system)
+- [ode_get_t](#ode-get-t)
+- [ode_get_y](#ode-get-y)
+- [ode_get_y2](#ode-get-y2)
+- [ode_get_k](#ode-get-k)
+- [ode_get_extra](#ode-get-extra)
+- [ode_get_steps](#ode-get-steps)
+- [ode_step](#ode-step)
+- [ode_run](#ode-run)
+- [ode_run2](#ode-run2)
 
 ---
 
-### `ode_run(system_id: int, t0_fx: int, y0_fx: int, h_fx: int, steps: int, k_fx: int)`
+## `ode_mul_fx`
 
-Run a scalar ODE system from scratch. Internally calls `ode_reset` then iterates `steps` times with `ode_step`. Designed for single-variable systems (1 and 2).
+**Since:** 2.0.0
 
-| Param | Type | Description |
-|-------|------|-------------|
-| `system_id` | `int` | System identifier (1 = decay, 2 = growth) |
-| `t0_fx` | `int` | Initial time in ×10000 fixed-point (e.g. `0` for t=0) |
-| `y0_fx` | `int` | Initial y value in ×10000 fixed-point (e.g. `10000` for y=1.0) |
-| `h_fx` | `int` | Step size in ×10000 fixed-point (e.g. `1000` for h=0.1) |
-| `steps` | `int` | Number of RK4 steps to take |
-| `k_fx` | `int` | Rate constant k in ×10000 fixed-point |
+Fixed-point multiplication: `a_fx * b_fx / 10000`.
 
-**Example:**
-```rs
-// Decay: dy/dt = -0.5*y, y(0)=2.0, h=0.05, 20 steps → t=1.0
-ode_run(1, 0, 20000, 500, 20, 5000);
+```redscript
+fn ode_mul_fx(a_fx: int, b_fx: int): int
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a_fx` | First operand ×10000 |
+| `b_fx` | Second operand ×10000 |
+
+**Returns:** Product in ×10000 scale
 
 ---
 
-### `ode_init(system_id: int, t0_fx: int, y0_fx: int, y20_fx: int, k_fx: int, extra_fx: int)`
+## `ode_weighted_increment`
 
-Alias for `ode_reset`. Initialize the solver state without running any steps. Use this when you want to step manually with `ode_eval`.
+**Since:** 2.0.0
 
-| Param | Type | Description |
-|-------|------|-------------|
-| `system_id` | `int` | System identifier |
-| `t0_fx` | `int` | Initial time (×10000) |
-| `y0_fx` | `int` | Initial y (×10000) |
-| `y20_fx` | `int` | Initial y₂ (×10000); use `0` for scalar systems |
-| `k_fx` | `int` | Rate constant k (×10000) |
-| `extra_fx` | `int` | Secondary parameter (×10000); damping coefficient for system 3, unused otherwise |
+Compute the RK4 weighted increment: `h * (k1 + 2k2 + 2k3 + k4) / 6`.
 
-**Example:**
-```rs
-// Set up harmonic oscillator: k=4, extra (damping)=0, y(0)=1, y'(0)=0
-ode_init(3, 0, 10000, 0, 40000, 0);
+All values are ×10000. The divisor 60000 = 6 × 10000.
+
+```redscript
+fn ode_weighted_increment(h_fx: int, deriv_sum_fx: int): int
 ```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h_fx` | Step size ×10000 |
+| `deriv_sum_fx` | `k1 + 2k2 + 2k3 + k4` in ×10000 |
+
+**Returns:** Weighted increment in ×10000
 
 ---
 
-### `ode_eval(h_fx: int)`
+## `ode_reset`
 
-Advance the solver by one RK4 step of size `h_fx`. Must be called after `ode_init` or `ode_reset`. For system 3, both y and y₂ are updated simultaneously.
+**Since:** 2.0.0
 
-| Param | Type | Description |
-|-------|------|-------------|
-| `h_fx` | `int` | Step size in ×10000 fixed-point |
+Initialise the ODE module state in `storage rs:ode`.
 
-**Example:**
-```rs
-ode_init(1, 0, 10000, 0, 10000, 0);
-let i: int = 0;
-while (i < 5) {
-    ode_eval(1000);   // h = 0.1 per step
-    i = i + 1;
-}
-let y: int = ode_get_y();
+```redscript
+fn ode_reset(system_id: int, t_fx: int, y_fx: int, y2_fx: int, k_fx: int, extra_fx: int)
 ```
 
-> **Note:** `ode_eval` is the low-level stepping function. In the source it is implemented as `ode_step`. Use `ode_run` for one-shot simulations.
+**Parameters**
 
----
+| Parameter | Description |
+|-----------|-------------|
+| `system_id` | Built-in system constant (1=decay, 2=growth, 3=oscillator) |
+| `t_fx` | Initial time ×10000 |
+| `y_fx` | Initial primary variable y(0) ×10000 |
+| `y2_fx` | Initial secondary variable y'(0) ×10000 (for system 3) |
+| `k_fx` | Rate/spring constant ×10000 |
+| `extra_fx` | Damping coefficient ×10000 (for system 3) |
 
-### `ode_get_t(): int`
+**Example**
 
-Return the current time `t` in ×10000 fixed-point.
-
-**Example:**
-```rs
-let t: int = ode_get_t();   // e.g. 10000 → t = 1.0
+```redscript
+ode_reset(1, 0, 10000, 0, 10000, 0)
 ```
 
 ---
 
-### `ode_get_y(): int`
+## `ode_get_system`
 
-Return the current primary state variable `y` in ×10000 fixed-point.
+**Since:** 2.0.0
 
-**Example:**
-```rs
-let y: int = ode_get_y();   // e.g. 3679 → y ≈ 0.3679
+Return the current system ID from ODE state.
+
+```redscript
+fn ode_get_system(): int
+```
+
+**Returns:** System ID stored in slot 0
+
+---
+
+## `ode_get_t`
+
+**Since:** 2.0.0
+
+Return the current time `t` from ODE state (×10000).
+
+```redscript
+fn ode_get_t(): int
+```
+
+**Returns:** Current time ×10000
+
+---
+
+## `ode_get_y`
+
+**Since:** 2.0.0
+
+Return the current primary variable `y` from ODE state (×10000).
+
+```redscript
+fn ode_get_y(): int
+```
+
+**Returns:** Current y value ×10000
+
+---
+
+## `ode_get_y2`
+
+**Since:** 2.0.0
+
+Return the current secondary variable `y'` from ODE state (×10000).
+
+```redscript
+fn ode_get_y2(): int
+```
+
+**Returns:** Current y' value ×10000 (meaningful for system 3 only)
+
+---
+
+## `ode_get_k`
+
+**Since:** 2.0.0
+
+Return the rate constant `k` from ODE state (×10000).
+
+```redscript
+fn ode_get_k(): int
+```
+
+**Returns:** Rate constant ×10000
+
+---
+
+## `ode_get_extra`
+
+**Since:** 2.0.0
+
+Return the extra parameter from ODE state (×10000).
+
+```redscript
+fn ode_get_extra(): int
+```
+
+**Returns:** Extra parameter ×10000 (damping for system 3)
+
+---
+
+## `ode_get_steps`
+
+**Since:** 2.0.0
+
+Return the number of steps taken so far.
+
+```redscript
+fn ode_get_steps(): int
+```
+
+**Returns:** Step count (plain integer)
+
+---
+
+## `ode_step`
+
+**Since:** 2.0.0
+
+Advance the ODE state by one RK4 step of size `h_fx`.
+
+Updates time `t`, primary variable `y` (and `y2` for system 3), and
+increments the step counter in `storage rs:ode`.
+
+```redscript
+fn ode_step(h_fx: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `h_fx` | Step size ×10000 (e.g. `1000` = 0.1 time unit) |
+
+---
+
+## `ode_run`
+
+**Since:** 2.0.0
+
+Run `steps` RK4 steps of a scalar ODE system and store results in module state.
+
+Built-in systems: `1` = exponential decay (`dy/dt = -k·y`),
+`2` = exponential growth (`dy/dt = k·y`).
+
+```redscript
+fn ode_run(system_id: int, t0_fx: int, y0_fx: int, h_fx: int, steps: int, k_fx: int)
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `system_id` | Built-in system constant (1 or 2 for scalar systems) |
+| `t0_fx` | Initial time ×10000 |
+| `y0_fx` | Initial y value ×10000 |
+| `h_fx` | Step size ×10000 |
+| `steps` | Number of RK4 steps to execute |
+| `k_fx` | Rate constant ×10000 |
+
+**Example**
+
+```redscript
+ode_run(1, 0, 10000, 1000, 10, 10000)
+let y: int = ode_get_y()
 ```
 
 ---
 
-### `ode_deriv(system_id: int, t_fx: int, y_fx: int, y2_fx: int, k_fx: int, extra_fx: int): int`
+## `ode_run2`
 
-Evaluate the derivative dy/dt for the given system at the given point, without advancing the solver state. Useful for checking derivatives or building custom integrators.
+**Since:** 2.0.0
 
-Maps to `ode_eval_y` in the source.
+Run `steps` RK4 steps of a 2D ODE system (e.g. harmonic oscillator).
 
-| Param | Type | Description |
-|-------|------|-------------|
-| `system_id` | `int` | System identifier |
-| `t_fx` | `int` | Time (×10000) |
-| `y_fx` | `int` | Primary variable y (×10000) |
-| `y2_fx` | `int` | Secondary variable y₂ (×10000); use `0` for scalar systems |
-| `k_fx` | `int` | Rate constant (×10000) |
-| `extra_fx` | `int` | Extra parameter (×10000) |
+Built-in system 3: `y' = y2`, `y2' = -k·y - extra·y2`.
 
-**Returns:** dy/dt in ×10000 fixed-point.
+```redscript
+fn ode_run2(system_id: int, t0_fx: int, y0_fx: int, y20_fx: int, h_fx: int, steps: int, k_fx: int, extra_fx: int)
+```
 
-**Example:**
-```rs
-// At t=0, y=10000 (=1.0), k=10000 (=1.0): dy/dt = -1.0 → -10000
-let deriv: int = ode_deriv(1, 0, 10000, 0, 10000, 0);
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `system_id` | Built-in system constant (use `3` for harmonic oscillator) |
+| `t0_fx` | Initial time ×10000 |
+| `y0_fx` | Initial y value ×10000 |
+| `y20_fx` | Initial y' value ×10000 |
+| `h_fx` | Step size ×10000 |
+| `steps` | Number of RK4 steps to execute |
+| `k_fx` | Spring constant ×10000 |
+| `extra_fx` | Damping coefficient ×10000 |
+
+**Example**
+
+```redscript
+ode_run2(3, 0, 10000, 0, 1000, 20, 10000, 500)
 ```
 
 ---
-
-## Additional Functions
-
-| Function | Description |
-|----------|-------------|
-| `ode_get_y2(): int` | Secondary state variable y₂ (e.g. velocity in system 3) |
-| `ode_get_steps(): int` | Total number of steps taken since last reset |
-| `ode_run2(system_id, t0, y0, y20, h, steps, k, extra)` | Two-variable variant of `ode_run` (for system 3) |
-
----
-
-## Notes & Limitations
-
-- **Fixed-point scale:** All inputs and outputs use ×10000. Real value `v` becomes integer `v * 10000`. Forgetting this will give wildly wrong results.
-- **Global state:** There is a single solver state in `rs:ode` storage. Concurrent simulations are not possible — save and restore state manually if needed.
-- **System 3 only via `ode_run2`:** `ode_run` zeroes y₂ and `extra`. For a damped oscillator, use `ode_run2` or `ode_init` + `ode_eval`.
-- **Step size accuracy:** Smaller h gives higher accuracy at the cost of more steps. h = 0.1 (1000 fx) is typically a good default.
-- **Integer overflow:** Very large values of y, k, or many steps can overflow the ×10000 arithmetic. Keep intermediate values well within the `int` range.
