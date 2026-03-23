@@ -133,7 +133,7 @@ Handles a static event. The supported event types are:
 
 ```rs
 @on(PlayerDeath)
-fn handle_death() {
+fn handle_death(player: selector) {
     say("A player has died!");
 }
 

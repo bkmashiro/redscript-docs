@@ -310,6 +310,154 @@ fn on_done() {
 - Spreading heavy map generation over multiple ticks
 - Chunked bulk operations (inventory scans, world edits)
 
+## @inline
+
+Hints the compiler to inline this function at call sites.
+
+**Syntax:** `@inline`
+
+```rs
+@inline
+fn add(a: int, b: int): int {
+    return a + b;
+}
+```
+
+**Use cases:**
+- Performance-critical small functions
+- Avoiding function call overhead
+
+## @deprecated
+
+Marks a function as deprecated. Compiler emits a warning when called.
+
+**Syntax:** `@deprecated` or `@deprecated("message")`
+
+```rs
+@deprecated("Use new_api() instead")
+fn old_api() { }
+```
+
+## @singleton
+
+Ensures only one instance of this function's state exists globally.
+
+**Syntax:** `@singleton`
+
+```rs
+@singleton
+fn get_game_state(): int {
+    // State is shared across all calls
+}
+```
+
+## @watch
+
+Runs the function when a scoreboard value changes.
+
+**Syntax:** `@watch("objective")`
+
+```rs
+@watch("score")
+fn on_score_change() {
+    say("Score changed!");
+}
+```
+
+## @config
+
+Injects compile-time configuration values.
+
+**Syntax:** `@config("key")`
+
+```rs
+@config("MAX_PLAYERS")
+const MAX_PLAYERS: int = 16;  // Default, can be overridden
+```
+
+## @profile
+
+Enables performance profiling for this function.
+
+**Syntax:** `@profile`
+
+```rs
+@profile
+fn expensive_calculation() {
+    // Timing data emitted to game output
+}
+```
+
+## @throttle
+
+Rate-limits function execution to once per N ticks.
+
+**Syntax:** `@throttle(N)`
+
+```rs
+@throttle(20)
+fn rate_limited() {
+    // Only runs once per second, even if called more often
+}
+```
+
+## @retry
+
+Auto-retries the function on failure up to N times.
+
+**Syntax:** `@retry(N)`
+
+```rs
+@retry(3)
+fn unstable_operation() {
+    // Retries up to 3 times if scoreboard check fails
+}
+```
+
+## @memoize
+
+Caches function results for single-arg int functions (LRU-1).
+
+**Syntax:** `@memoize`
+
+```rs
+@memoize
+fn fibonacci(n: int): int {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+## @benchmark
+
+Enables tick-level benchmarking, outputs timing stats.
+
+**Syntax:** `@benchmark`
+
+```rs
+@benchmark
+fn heavy_work() {
+    // Timing stats logged to game output
+}
+```
+
+## @test
+
+Marks a function as a test. Run with `redscript test`.
+
+**Syntax:** `@test`
+
+```rs
+@test
+fn test_addition() {
+    assert(1 + 1 == 2);
+}
+```
+
+**Use cases:**
+- Unit testing datapack logic
+- CI/CD validation
+
 ## Decorator Summary
 
 | Decorator | Trigger | `@s` Context |
@@ -327,3 +475,14 @@ fn on_done() {
 | `@schedule(delay=N)` | Runs function once N ticks after datapack load | Server |
 | `@keep` | (Optimizer hint, no runtime effect) | — |
 | `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |
+| `@inline` | Inline at call sites | — |
+| `@deprecated` | Emit warning on use | — |
+| `@singleton` | Single global instance | — |
+| `@watch` | Scoreboard change | — |
+| `@config` | Compile-time config | — |
+| `@profile` | Performance timing | — |
+| `@throttle(N)` | Rate limit to 1/N ticks | — |
+| `@retry(N)` | Auto-retry N times | — |
+| `@memoize` | Cache results | — |
+| `@benchmark` | Tick-level timing | — |
+| `@test` | Test function | — |

@@ -9,10 +9,12 @@ Complete list of all built-in functions available in RedScript.
 | `say(message)` | Broadcast message to all players |
 | `tell(target, message)` | Send a plain-text private message to target (whisper) |
 | `tellraw(target, message)` | Send formatted message to target |
+| `announce(message)` | Broadcast to all players (@a) |
 | `raw(command)` | Emit a raw Minecraft command string verbatim |
 | `title(target, text)` | Show title on screen |
 | `subtitle(target, text)` | Show subtitle on screen |
 | `actionbar(target, text)` | Show text in action bar |
+| `title_times(target, fadeIn, stay, fadeOut)` | Set title display timing (ticks) |
 
 ```rs
 say("Hello everyone!");
@@ -48,6 +50,8 @@ actionbar(@a, f"Score: {score}");
 | `kill(target)` | Kill entities |
 | `tp(target, x, y, z)` | Teleport entities |
 | `tp(target, destination)` | Teleport to entity |
+| `tp_to(target, destination)` | Teleport target to another entity |
+| `kick(target, reason)` | Kick player from server |
 
 ```rs
 summon("zombie", ~0, ~5, ~0);
@@ -135,6 +139,7 @@ For example, `scoreboard_add_objective("kills", "dummy")` in namespace `minigame
 | `team_join(name, target)` | Add to team |
 | `team_leave(target)` | Remove from team |
 | `team_modify(name, option, value)` | Modify team option |
+| `team_option(name, option, value)` | Alias for team_modify |
 
 ```rs
 team_add("red");
@@ -152,6 +157,7 @@ team_join("red", @s);
 | `clone(x1, y1, z1, x2, y2, z2, dx, dy, dz)` | Clone blocks |
 | `weather(type)` | Set weather |
 | `time_set(value)` | Set time |
+| `time_add(value)` | Add to current time |
 | `difficulty(level)` | Set difficulty |
 | `gamerule(rule, value)` | Set game rule |
 
@@ -255,6 +261,50 @@ heap_free(h);
 
 > **Implementation note:** `heap_new` stores data in Minecraft's `storage` NBT under the datapack namespace. Each handle is a numeric ID tracked in a scoreboard. Do not use handles after calling `heap_free` — behaviour is undefined.
 
+## Bossbar
+
+| Function | Description |
+|----------|-------------|
+| `bossbar_add(id, name)` | Create a new bossbar |
+| `bossbar_remove(id)` | Remove a bossbar |
+| `bossbar_set_value(id, value)` | Set current value |
+| `bossbar_set_max(id, max)` | Set max value |
+| `bossbar_set_color(id, color)` | Set color (blue/green/pink/purple/red/white/yellow) |
+| `bossbar_set_style(id, style)` | Set style (progress/notched_6/10/12/20) |
+| `bossbar_set_visible(id, visible)` | Show/hide bossbar |
+| `bossbar_set_players(id, target)` | Set who can see the bossbar |
+| `bossbar_get_value(id)` | Get current value |
+
+```rs
+bossbar_add("boss_hp", "Boss Health");
+bossbar_set_max("boss_hp", 100);
+bossbar_set_value("boss_hp", 75);
+bossbar_set_color("boss_hp", "red");
+bossbar_set_players("boss_hp", @a);
+bossbar_set_visible("boss_hp", true);
+```
+
+## Sets
+
+Runtime set data structure for efficient membership testing.
+
+| Function | Description |
+|----------|-------------|
+| `set_new(name)` | Create a new named set |
+| `set_add(name, value)` | Add value to set |
+| `set_contains(name, value)` | Check if set contains value |
+| `set_remove(name, value)` | Remove value from set |
+| `set_clear(name)` | Clear all values from set |
+
+```rs
+set_new("visited");
+set_add("visited", 42);
+if (set_contains("visited", 42)) {
+    say("Already visited!");
+}
+set_remove("visited", 42);
+```
+
 ## Advancement
 
 | Function | Description |
@@ -276,6 +326,8 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | Transform array |
 | `filter(array, lambda)` | Filter array |
 | `random(min, max)` | Random integer |
+| `random_native(min, max)` | Random using MC 1.20+ native random |
+| `random_sequence(name, min, max)` | Random from named sequence |
 
 ## Scheduling
 
