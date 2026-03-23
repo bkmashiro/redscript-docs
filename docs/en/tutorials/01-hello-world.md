@@ -1,7 +1,10 @@
 # Tutorial: Hello World — Your First Datapack
 
-**Difficulty:** Beginner  
-**Time:** ~20 minutes  
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ ~20 minutes</span>
+</div>
+
 **Prerequisites:** [Getting Started](../guide/getting-started)
 
 ## What You'll Build
@@ -59,9 +62,11 @@ fn init() {
 | `scoreboard_set(target, obj, value)` | Writes a value; `#total` is a fake player used as a global counter |
 | `say(...)` | Broadcasts a server-level message to all players |
 
-**Output when the world loads:**
+<Tip type="mc" title="Output when the world loads">
 
 ![Load message](./images/hello-world-load.png)
+
+</Tip>
 
 ---
 
@@ -218,8 +223,40 @@ Then run `/reload` in-game. You should see the load message in chat.
 
 ---
 
+## Full Source Code
+
+<CodePreview title="hello_world/main.mcrs" github="https://github.com/bkmashiro/redscript/blob/main/examples/readme-demo.mcrs">
+
+The complete code for this tutorial is available in the RedScript examples repository.
+
+</CodePreview>
+
+---
+
 ## What's Next?
 
-- [Tutorial 02: Game Mechanics](./02-game-mechanics) — scoreboards, teams, and events
-- [Tutorial 03: Optimization](./03-optimization) — using the optimizer and decorators for performance
+<div class="tutorial-grid">
+
+<TutorialCard
+  title="Game Mechanics"
+  description="Learn scoreboards, teams, and player events"
+  difficulty="beginner"
+  time="25 min"
+  href="./02-game-mechanics"
+  icon="🎮"
+/>
+
+<TutorialCard
+  title="Optimization"
+  description="Use the optimizer and decorators for performance"
+  difficulty="intermediate"
+  time="20 min"
+  href="./03-optimization"
+  icon="⚡"
+/>
+
+</div>
+
+**Further Reading:**
 - [Guide: Functions](../guide/functions) — deeper dive into function declarations
+- [Reference: Decorators](../reference/decorators) — all available decorators

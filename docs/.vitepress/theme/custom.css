@@ -1,0 +1,161 @@
+/* Custom theme styles for RedScript docs */
+
+/* Minecraft-inspired accents */
+:root {
+  --mc-green: #55cc55;
+  --mc-red: #ff5555;
+  --mc-gold: #ffaa00;
+  --mc-aqua: #55ffff;
+  --mc-blue: #5555ff;
+}
+
+/* Better code block styling */
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+}
+
+/* Tutorial cards grid */
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* Feature comparison table */
+.feature-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.feature-table th,
+.feature-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.feature-table th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.feature-table tr:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+/* Inline code in headings */
+h1 code, h2 code, h3 code {
+  font-size: 0.9em;
+  background: var(--vp-c-bg-soft);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* Step indicators */
+.step-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--vp-c-brand-1);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+/* Keyboard shortcuts */
+kbd {
+  display: inline-block;
+  padding: 0.15em 0.4em;
+  font-family: monospace;
+  font-size: 0.85em;
+  line-height: 1;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 var(--vp-c-divider);
+}
+
+/* MC color classes for inline use */
+.mc-red { color: #ff5555; }
+.mc-green { color: #55cc55; }
+.mc-gold { color: #ffaa00; }
+.mc-aqua { color: #55ffff; }
+.mc-blue { color: #5555ff; }
+.mc-white { color: #ffffff; }
+.mc-gray { color: #aaaaaa; }
+
+/* Command output styling */
+.command-output {
+  background: #1a1a1a;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Progress bars for tutorials */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--vp-c-bg-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--vp-c-brand-1);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Better badge styling */
+.VPBadge {
+  font-size: 0.7rem !important;
+}
+
+/* Tutorial metadata */
+.tutorial-meta {
+  display: flex;
+  gap: 1rem;
+  margin: -0.5rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.tutorial-meta .difficulty {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.tutorial-meta .difficulty.beginner {
+  background: rgba(85, 204, 85, 0.15);
+  color: #55cc55;
+}
+
+.tutorial-meta .difficulty.intermediate {
+  background: rgba(255, 170, 0, 0.15);
+  color: #ffaa00;
+}
+
+.tutorial-meta .difficulty.advanced {
+  background: rgba(255, 85, 85, 0.15);
+  color: #ff5555;
+}
+
+.tutorial-meta .time {
+  color: var(--vp-c-text-2);
+}
+</style>
