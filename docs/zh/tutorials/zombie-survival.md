@@ -17,10 +17,10 @@
 ## 第一步：项目设置
 
 ```mcrs
-import "stdlib/effects.mcrs"
-import "stdlib/world.mcrs"
-import "stdlib/inventory.mcrs"
-import "stdlib/bossbar.mcrs"
+import effects::*
+import world::*
+import inventory::*
+import bossbar::*
 
 const ARENA_X: int = 0;
 const ARENA_Y: int = 64;

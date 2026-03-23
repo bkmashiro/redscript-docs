@@ -16,8 +16,8 @@
 ## 第一步：设置
 
 ```mcrs
-import "stdlib/teams.mcrs"
-import "stdlib/effects.mcrs"
+import teams::*
+import effects::*
 
 const RED_BASE_X: int = -50;
 const BLUE_BASE_X: int = 50;

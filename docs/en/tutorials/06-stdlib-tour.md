@@ -13,9 +13,9 @@ Build a mental map of the standard library so you know where to look before writ
 Stdlib modules are imported at the top of the file:
 
 ```rs
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
-import "stdlib/particles.mcrs"
+import math::*
+import random::*
+import particles::*
 ```
 
 If you call a stdlib function without importing its module first, the compiler will report an error.
@@ -31,7 +31,7 @@ Typical use cases:
 - simple numeric helpers for gameplay logic
 
 ```rs
-import "stdlib/math.mcrs"
+import math::*
 
 fn scale_damage(base: fixed, multiplier: fixed) -> fixed {
     return mulfix(base, multiplier)
@@ -49,7 +49,7 @@ Typical use cases:
 - modules that depend on `double` APIs
 
 ```rs
-import "stdlib/math_hp.mcrs"
+import math_hp::*
 ```
 
 Reach for it only when `int` or simpler fixed-point math is not enough.
@@ -65,7 +65,7 @@ Typical use cases:
 - light unpredictability in events
 
 ```rs
-import "stdlib/random.mcrs"
+import random::*
 ```
 
 ## `particles`
@@ -79,7 +79,7 @@ Typical use cases:
 - reward feedback
 
 ```rs
-import "stdlib/particles.mcrs"
+import particles::*
 ```
 
 ## `timer`
@@ -93,7 +93,7 @@ Typical use cases:
 - timed objectives
 
 ```rs
-import "stdlib/timer.mcrs"
+import timer::*
 ```
 
 ## `state`
@@ -120,9 +120,9 @@ These are practical modules for Minecraft-facing systems:
 ```rs
 namespace tutorial06
 
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
-import "stdlib/particles.mcrs"
+import math::*
+import random::*
+import particles::*
 
 let bonus_multiplier: fixed = 1.5
 

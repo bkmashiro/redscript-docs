@@ -10,10 +10,10 @@
 
 ## 你将学到什么
 
-- `import "stdlib/random.mcrs"` —— 基于 LCG 的伪随机数
+- `import random::*` —— 基于 LCG 的伪随机数
 - `next_lcg`、`random_range`、`random_bool`
 - `binomial_sample` —— 概率试验计数
-- `import "stdlib/noise.mcrs"` —— 平滑程序化噪声
+- `import noise::*` —— 平滑程序化噪声
 - `value_noise_1d`、`fbm_1d`、`terrain_height`
 
 ## 第一步：LCG 种子模式
@@ -21,7 +21,7 @@
 RedScript 的 `random` 模块使用**线性同余生成器（LCG）**。你需要维护一个种子变量，用 `next_lcg` 推进它，并从中提取随机值：
 
 ```rs
-import "stdlib/random.mcrs"
+import random::*
 
 @load
 fn setup() {
@@ -65,7 +65,7 @@ fn pick_loot_item(seed: int) -> string {
 `random_range` 给出独立随机值，而 `value_noise_1d` 给出**平滑**过渡的值 —— 非常适合自然感的奖励：
 
 ```rs
-import "stdlib/noise.mcrs"
+import noise::*
 
 // value_noise_1d(x_fx) → [0, 10000]
 // x_fx 是定点坐标（×10000）

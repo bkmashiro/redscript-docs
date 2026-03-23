@@ -13,8 +13,8 @@
 到这里你已经见过 import：
 
 ```rs
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
+import math::*
+import random::*
 ```
 
 它的重要性在于：
@@ -123,7 +123,7 @@ fn clamp_zero(x: int) -> int {
 ```rs
 namespace tutorial08
 
-import "stdlib/random.mcrs"
+import random::*
 
 let running: bool = false
 let processed: int = 0

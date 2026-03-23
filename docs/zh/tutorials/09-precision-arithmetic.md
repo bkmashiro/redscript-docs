@@ -13,7 +13,7 @@
 - `fixed` 类型：×10000 整数，存储在 scoreboard 中
 - `double` 类型：IEEE 754，存储在 NBT（`rs:d`）中
 - `as fixed`、`as int`、`as double` 类型转换
-- `import "stdlib/math_hp.mcrs"` —— 高精度函数
+- `import math_hp::*` —— 高精度函数
 - `pow_real(base, exp)` —— 实数幂运算
 - 何时使用 `fixed` vs `double`
 
@@ -43,11 +43,11 @@ let base: double = 1.05d    // d 后缀 = double 字面量
 
 // ~15 位有效数字
 // 比 fixed 慢（需要实体/存储操作）
-// 需要 import "stdlib/math_hp.mcrs"
+// 需要 import math_hp::*
 ```
 
 **优点：** ~15 位有效数字，可表示非常大和非常小的值。
-**局限：** 比 `fixed` 慢；算术运算需要 `import "stdlib/math_hp.mcrs"`。
+**局限：** 比 `fixed` 慢；算术运算需要 `import math_hp::*`。
 
 ## 第一步：fixed 运算
 
@@ -93,7 +93,7 @@ fn compound_interest() {
 ## 第三步：复利（double）
 
 ```rs
-import "stdlib/math_hp.mcrs"
+import math_hp::*
 
 @load
 fn on_load() {

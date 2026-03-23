@@ -16,8 +16,8 @@ Players race through a parkour course, checkpoints save progress, and best times
 ## Step 1: Setup
 
 ```mcrs
-import "stdlib/effects.mcrs"
-import "stdlib/particles.mcrs"
+import effects::*
+import particles::*
 
 const START_X: int = 0;
 const START_Y: int = 64;

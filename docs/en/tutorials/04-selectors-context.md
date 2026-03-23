@@ -56,7 +56,7 @@ foreach (p in @a) {
 ## Step 3: The Zone Detector
 
 ```rs
-import "stdlib/effects.mcrs"
+import effects::*
 
 @tick(rate=20)
 fn check_zone() {

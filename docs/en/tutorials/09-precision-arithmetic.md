@@ -13,7 +13,7 @@ A compound interest calculator that computes A = P × 1.05^t two ways: once usin
 - `fixed` type: ×10000 integer stored in scoreboard
 - `double` type: IEEE 754 stored in NBT (`rs:d`)
 - `as fixed`, `as int`, `as double` casts
-- `import "stdlib/math_hp.mcrs"` — high-precision functions
+- `import math_hp::*` — high-precision functions
 - `pow_real(base, exp)` — real-valued power
 - When to use `fixed` vs `double`
 
@@ -43,11 +43,11 @@ let base: double = 1.05d    // d suffix = double literal
 
 // ~15 significant digits
 // Slower (requires entity/storage manipulation)
-// Needs import "stdlib/math_hp.mcrs"
+// Needs import math_hp::*
 ```
 
 **Advantages:** ~15 significant digits, can represent very large and very small values.  
-**Limitations:** Slower than `fixed`; requires `import "stdlib/math_hp.mcrs"` for arithmetic.
+**Limitations:** Slower than `fixed`; requires `import math_hp::*` for arithmetic.
 
 ## Step 1: fixed Arithmetic
 
@@ -93,7 +93,7 @@ fn compound_interest() {
 ## Step 3: Compound Interest (double)
 
 ```rs
-import "stdlib/math_hp.mcrs"
+import math_hp::*
 
 @load
 fn on_load() {

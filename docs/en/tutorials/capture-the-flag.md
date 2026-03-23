@@ -16,9 +16,9 @@ Two teams compete to steal the enemy flag and bring it back to their base.
 ## Step 1: Setup
 
 ```mcrs
-import "stdlib/teams.mcrs"
-import "stdlib/effects.mcrs"
-import "stdlib/particles.mcrs"
+import teams::*
+import effects::*
+import particles::*
 
 // Base positions
 const RED_BASE_X: int = -50;

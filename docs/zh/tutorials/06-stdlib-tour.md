@@ -13,9 +13,9 @@
 标准库模块在文件顶部导入：
 
 ```rs
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
-import "stdlib/particles.mcrs"
+import math::*
+import random::*
+import particles::*
 ```
 
 如果没导入就直接调用 stdlib 函数，编译器会报错。
@@ -31,7 +31,7 @@ import "stdlib/particles.mcrs"
 - 写基础玩法数值逻辑
 
 ```rs
-import "stdlib/math.mcrs"
+import math::*
 
 fn scale_damage(base: fixed, multiplier: fixed) -> fixed {
     return mulfix(base, multiplier)
@@ -49,7 +49,7 @@ fn scale_damage(base: fixed, multiplier: fixed) -> fixed {
 - 依赖 `double` API 的模块
 
 ```rs
-import "stdlib/math_hp.mcrs"
+import math_hp::*
 ```
 
 只有在 `int` 或普通 fixed-point 不够时再上它。
@@ -65,7 +65,7 @@ import "stdlib/math_hp.mcrs"
 - 事件中的轻度随机性
 
 ```rs
-import "stdlib/random.mcrs"
+import random::*
 ```
 
 ## `particles`
@@ -79,7 +79,7 @@ import "stdlib/random.mcrs"
 - 奖励反馈
 
 ```rs
-import "stdlib/particles.mcrs"
+import particles::*
 ```
 
 ## `timer`
@@ -93,7 +93,7 @@ import "stdlib/particles.mcrs"
 - 限时目标
 
 ```rs
-import "stdlib/timer.mcrs"
+import timer::*
 ```
 
 ## `state`
@@ -120,9 +120,9 @@ import "stdlib/timer.mcrs"
 ```rs
 namespace tutorial06
 
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
-import "stdlib/particles.mcrs"
+import math::*
+import random::*
+import particles::*
 
 let bonus_multiplier: fixed = 1.5
 

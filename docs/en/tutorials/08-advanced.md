@@ -13,8 +13,8 @@ Get comfortable with the features that matter once your datapack grows: module i
 By now you have already seen imports:
 
 ```rs
-import "stdlib/math.mcrs"
-import "stdlib/random.mcrs"
+import math::*
+import random::*
 ```
 
 They matter for three reasons:
@@ -119,7 +119,7 @@ If your current compiler build does not support `@inline`, keep the same design 
 ```rs
 namespace tutorial08
 
-import "stdlib/random.mcrs"
+import random::*
 
 let running: bool = false
 let processed: int = 0

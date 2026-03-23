@@ -72,7 +72,7 @@ fn kit() {
 
 ```rs
 @on(PlayerJoin)
-fn welcome() {
+fn welcome(player: Player) {
     title(@s, "Welcome!")
 }
 ```
@@ -110,7 +110,7 @@ fn give_kit() {
 }
 
 @on(PlayerJoin)
-fn on_join() {
+fn on_join(player: Player) {
     online_count = online_count + 1
     title(@s, "Welcome to the server")
 }

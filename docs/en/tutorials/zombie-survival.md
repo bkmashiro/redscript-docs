@@ -17,10 +17,10 @@ Players survive waves of zombies, earn coins for kills, and buy upgrades between
 ## Step 1: Project Setup
 
 ```mcrs
-import "stdlib/effects.mcrs"
-import "stdlib/world.mcrs"
-import "stdlib/inventory.mcrs"
-import "stdlib/bossbar.mcrs"
+import effects::*
+import world::*
+import inventory::*
+import bossbar::*
 
 const ARENA_X: int = 0;
 const ARENA_Y: int = 64;

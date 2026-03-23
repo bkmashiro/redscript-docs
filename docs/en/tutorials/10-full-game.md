@@ -29,10 +29,10 @@ A complete, playable mini-game where players compete to get the most kills in 3 
 
 namespace tutorial10
 
-import "stdlib/effects.mcrs"
-import "stdlib/bossbar.mcrs"
-import "stdlib/teams.mcrs"
-import "stdlib/random.mcrs"
+import effects::*
+import bossbar::*
+import teams::*
+import random::*
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -316,10 +316,10 @@ fn cleanup_game() {
 ### Step 1 — Imports and Constants
 
 ```mcrs
-import "stdlib/effects.mcrs"
-import "stdlib/bossbar.mcrs"
-import "stdlib/teams.mcrs"
-import "stdlib/random.mcrs"
+import effects::*
+import bossbar::*
+import teams::*
+import random::*
 ```
 
 This game uses **four stdlib modules**:

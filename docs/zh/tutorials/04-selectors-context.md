@@ -56,7 +56,7 @@ foreach (p in @a) {
 ## 第三步：区域检测器
 
 ```rs
-import "stdlib/effects.mcrs"
+import effects::*
 
 @tick(rate=20)
 fn check_zone() {
