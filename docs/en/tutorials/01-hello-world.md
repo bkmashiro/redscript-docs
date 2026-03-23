@@ -59,6 +59,10 @@ fn init() {
 | `scoreboard_set(target, obj, value)` | Writes a value; `#total` is a fake player used as a global counter |
 | `say(...)` | Broadcasts a server-level message to all players |
 
+**Output when the world loads:**
+
+![Load message](./images/hello-world-load.png)
+
 ---
 
 ## Step 2: Welcoming Players with Events
@@ -94,6 +98,10 @@ fn greet_player(player: Player) {
 - `f"..."` — **f-strings** let you embed expressions directly in strings
 - `%` — the modulo operator (remainder after division)
 
+**What the player sees when they join:**
+
+![Join message](./images/hello-world-join.png)
+
 ---
 
 ## Step 3: A Trigger Command
@@ -118,6 +126,10 @@ Players run `/trigger hello` in chat to activate this.
 
 - `@s` — the entity running the function (here: the trigger activator)
 - `effect(target, effect_id, duration_ticks, amplifier)` — applies a potion effect
+
+**What the player sees after `/trigger hello`:**
+
+![Trigger output](./images/hello-world-trigger.png)
 
 ---
 
