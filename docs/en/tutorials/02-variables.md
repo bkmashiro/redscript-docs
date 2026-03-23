@@ -1,5 +1,11 @@
 # Tutorial 02: Variables & Control Flow
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~20 minutes  
 **Prerequisites:** [Tutorial 01: Hello World](./01-hello-world)

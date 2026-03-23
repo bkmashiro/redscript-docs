@@ -1,5 +1,11 @@
 # 教程 02：变量与类型
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 初级  
 **预计时间：** ~25 分钟  
 **前置要求：** [教程 01](./01-getting-started)

@@ -1,5 +1,11 @@
 # 教程：Hello World — 你的第一个 Datapack
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 入门  
 **时长：** ~20 分钟  
 **前置条件：** [快速上手](../guide/getting-started)

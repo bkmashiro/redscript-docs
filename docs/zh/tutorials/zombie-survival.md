@@ -1,5 +1,11 @@
 # 教程：僵尸生存
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 40 min</span>
+</div>
+
+
 构建一个带商店系统的波次僵尸生存游戏。
 
 ## 你将学到

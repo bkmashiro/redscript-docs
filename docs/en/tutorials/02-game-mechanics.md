@@ -1,5 +1,11 @@
 # Tutorial: Game Mechanics — Scoreboards, Teams & Events
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~30 minutes  
 **Prerequisites:** [Hello World](./01-hello-world)

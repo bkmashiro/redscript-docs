@@ -1,5 +1,11 @@
 # 教程：夺旗战
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 40 min</span>
+</div>
+
+
 构建两队对抗的夺旗游戏。
 
 ## 你将学到

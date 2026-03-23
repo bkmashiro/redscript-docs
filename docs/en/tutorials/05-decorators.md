@@ -1,5 +1,11 @@
 # Tutorial 05: Decorators & Scheduling
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Intermediate  
 **Time:** ~20 minutes  
 **Prerequisites:** [Tutorial 04: Selectors & Execute Context](./04-selectors-context)

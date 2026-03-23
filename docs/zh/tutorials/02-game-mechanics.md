@@ -1,5 +1,11 @@
 # 教程：游戏机制 — 计分板、队伍与事件
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 入门  
 **时长：** ~30 分钟  
 **前置条件：** [Hello World](./01-hello-world)

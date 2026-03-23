@@ -1,5 +1,11 @@
 # 教程 03：控制流
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 初级  
 **预计时间：** ~30 分钟  
 **前置要求：** [教程 02](./02-variables-and-types)

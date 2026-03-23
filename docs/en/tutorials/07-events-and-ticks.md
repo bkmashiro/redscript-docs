@@ -1,5 +1,11 @@
 # Tutorial 07: Events and Ticks
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Intermediate  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 06](./06-stdlib-tour)

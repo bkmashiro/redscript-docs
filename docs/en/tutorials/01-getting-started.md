@@ -1,5 +1,11 @@
 # Tutorial 01: Getting Started
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~20 minutes  
 **Prerequisites:** None

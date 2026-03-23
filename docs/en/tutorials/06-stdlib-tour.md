@@ -1,5 +1,11 @@
 # Tutorial 06: Stdlib Tour
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **Difficulty:** Beginner to Intermediate  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 05](./05-structs-and-enums)

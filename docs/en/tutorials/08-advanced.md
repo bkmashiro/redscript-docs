@@ -1,5 +1,11 @@
 # Tutorial 08: Advanced
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 30 min</span>
+</div>
+
+
 **Difficulty:** Intermediate to Advanced  
 **Time:** ~35 minutes  
 **Prerequisites:** [Tutorial 07](./07-events-and-ticks)

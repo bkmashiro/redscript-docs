@@ -1,5 +1,11 @@
 # 教程 04：selector 与执行上下文
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 入门
 **时长：** ~20 分钟
 **前置条件：** [教程 03：函数与 struct](./03-functions-structs)

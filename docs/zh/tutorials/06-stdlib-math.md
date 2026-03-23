@@ -1,5 +1,11 @@
 # 教程 06：标准库 —— 数学与粒子
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 中级
 **时长：** ~25 分钟
 **前置条件：** [教程 05：decorator 与调度](./05-decorators)

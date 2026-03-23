@@ -1,5 +1,11 @@
 # 教程：跑酷竞速
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 35 min</span>
+</div>
+
+
 构建带检查点和记录系统的计时跑酷。
 
 ## 你将学到

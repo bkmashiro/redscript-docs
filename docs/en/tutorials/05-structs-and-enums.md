@@ -1,5 +1,11 @@
 # Tutorial 05: Structs and Enums
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~35 minutes  
 **Prerequisites:** [Tutorial 04](./04-functions)

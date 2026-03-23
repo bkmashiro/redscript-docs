@@ -1,5 +1,11 @@
 # 教程 08：进阶主题
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 30 min</span>
+</div>
+
+
 **难度：** 中级到高级  
 **预计时间：** ~35 分钟  
 **前置要求：** [教程 07](./07-events-and-ticks)

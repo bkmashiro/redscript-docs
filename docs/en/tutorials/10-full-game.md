@@ -1,5 +1,11 @@
 # Tutorial 10: Full Game — Kill Race
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 45 min</span>
+</div>
+
+
 **Difficulty:** Advanced  
 **Time:** ~30 minutes  
 **Prerequisites:** All previous tutorials (01–09)

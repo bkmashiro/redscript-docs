@@ -1,5 +1,11 @@
 # 教程 03：函数与 struct
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 入门
 **时长：** ~25 分钟
 **前置条件：** [教程 02：变量与控制流](./02-variables)

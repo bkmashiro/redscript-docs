@@ -1,5 +1,11 @@
 # 教程 05：decorator 与调度
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 中级
 **时长：** ~20 分钟
 **前置条件：** [教程 04：selector 与执行上下文](./04-selectors-context)

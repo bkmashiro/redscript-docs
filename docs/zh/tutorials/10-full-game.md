@@ -1,5 +1,11 @@
 # 教程 10：完整游戏 —— 击杀竞速
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 45 min</span>
+</div>
+
+
 **难度：** 高级
 **时长：** ~30 分钟
 **前置条件：** 所有前置教程（01–09）

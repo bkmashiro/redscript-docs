@@ -1,5 +1,11 @@
 # Tutorial 04: Selectors & Execute Context
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~20 minutes  
 **Prerequisites:** [Tutorial 03: Functions & Structs](./03-functions-structs)

@@ -1,5 +1,11 @@
 # 教程 05：结构体与枚举
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 初级  
 **预计时间：** ~35 分钟  
 **前置要求：** [教程 04](./04-functions)

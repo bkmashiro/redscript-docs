@@ -1,5 +1,11 @@
 # Tutorial 03: Control Flow
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 02](./02-variables-and-types)

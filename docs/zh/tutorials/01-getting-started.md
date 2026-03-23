@@ -1,5 +1,11 @@
 # 教程 01：快速开始
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **难度：** 初级  
 **预计时间：** ~20 分钟  
 **前置要求：** 无

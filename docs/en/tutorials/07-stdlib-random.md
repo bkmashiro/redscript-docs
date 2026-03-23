@@ -1,5 +1,11 @@
 # Tutorial 07: Standard Library — Random & Noise
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Intermediate  
 **Time:** ~25 minutes  
 **Prerequisites:** [Tutorial 06: Math & Particles](./06-stdlib-math)

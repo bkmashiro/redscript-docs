@@ -1,5 +1,11 @@
 # Tutorial 08: Coroutines — Spread Heavy Work
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 30 min</span>
+</div>
+
+
 **Difficulty:** Advanced  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 07: Random & Noise](./07-stdlib-random)

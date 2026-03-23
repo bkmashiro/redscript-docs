@@ -1,5 +1,11 @@
 # Tutorial 02: Variables and Types
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~25 minutes  
 **Prerequisites:** [Tutorial 01](./01-getting-started)

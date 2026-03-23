@@ -1,5 +1,11 @@
 # Tutorial: Zombie Survival
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 40 min</span>
+</div>
+
+
 Build a wave-based zombie survival game with shop system.
 
 ## What You'll Learn

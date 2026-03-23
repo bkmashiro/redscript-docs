@@ -1,5 +1,11 @@
 # 教程 06：标准库速览
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **难度：** 初级到中级  
 **预计时间：** ~30 分钟  
 **前置要求：** [教程 05](./05-structs-and-enums)

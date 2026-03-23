@@ -1,5 +1,11 @@
 # Tutorial 09: Precision Arithmetic — fixed & double
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Advanced  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 08: Coroutines](./08-coroutines)

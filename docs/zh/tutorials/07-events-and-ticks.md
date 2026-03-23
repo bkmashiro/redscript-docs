@@ -1,5 +1,11 @@
 # 教程 07：事件与 Tick
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 中级  
 **预计时间：** ~30 分钟  
 **前置要求：** [教程 06](./06-stdlib-tour)

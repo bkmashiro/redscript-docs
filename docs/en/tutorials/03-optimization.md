@@ -1,5 +1,11 @@
 # Tutorial: Optimization — Optimizer & Decorators
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~25 minutes  
 **Prerequisites:** [Hello World](./01-hello-world), [Game Mechanics](./02-game-mechanics)

@@ -1,5 +1,11 @@
 # Tutorial: Parkour Race
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 35 min</span>
+</div>
+
+
 Build a timed parkour course with checkpoints and records.
 
 ## What You'll Learn

@@ -1,5 +1,11 @@
 # Tutorial 04: Functions
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~25 minutes  
 **Prerequisites:** [Tutorial 03](./03-control-flow)

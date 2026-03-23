@@ -1,5 +1,11 @@
 # 教程 04：函数
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 初级  
 **预计时间：** ~25 分钟  
 **前置要求：** [教程 03](./03-control-flow)

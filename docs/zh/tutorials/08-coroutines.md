@@ -1,5 +1,11 @@
 # 教程 08：coroutine —— 分散繁重工作
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 30 min</span>
+</div>
+
+
 **难度：** 高级
 **时长：** ~30 分钟
 **前置条件：** [教程 07：随机数与噪声](./07-stdlib-random)

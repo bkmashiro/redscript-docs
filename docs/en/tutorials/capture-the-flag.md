@@ -1,5 +1,11 @@
 # Tutorial: Capture the Flag
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 40 min</span>
+</div>
+
+
 Build a two-team CTF game with flag mechanics.
 
 ## What You'll Learn

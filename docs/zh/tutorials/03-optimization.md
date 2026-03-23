@@ -1,5 +1,11 @@
 # 教程：优化 — 优化器与装饰器
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **难度：** 入门  
 **时长：** ~25 分钟  
 **前置条件：** [Hello World](./01-hello-world)、[游戏机制](./02-game-mechanics)

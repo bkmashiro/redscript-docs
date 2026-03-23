@@ -1,5 +1,11 @@
 # Tutorial 06: Standard Library — Math & Particles
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 20 min</span>
+</div>
+
+
 **Difficulty:** Intermediate  
 **Time:** ~25 minutes  
 **Prerequisites:** [Tutorial 05: Decorators & Scheduling](./05-decorators)

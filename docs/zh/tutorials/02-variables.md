@@ -1,5 +1,11 @@
 # 教程 02：变量与控制流
 
+<div class="tutorial-meta">
+  <span class="difficulty beginner">🟢 Beginner</span>
+  <span class="time">⏱️ 15 min</span>
+</div>
+
+
 **难度：** 入门
 **时长：** ~20 分钟
 **前置条件：** [教程 01：Hello World](./01-hello-world)

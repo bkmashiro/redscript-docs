@@ -1,5 +1,11 @@
 # 教程 09：精度运算 —— fixed 与 double
 
+<div class="tutorial-meta">
+  <span class="difficulty advanced">🔴 Advanced</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **难度：** 高级
 **时长：** ~30 分钟
 **前置条件：** [教程 08：coroutine](./08-coroutines)

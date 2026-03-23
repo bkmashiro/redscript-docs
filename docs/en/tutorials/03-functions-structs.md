@@ -1,5 +1,11 @@
 # Tutorial 03: Functions & Structs
 
+<div class="tutorial-meta">
+  <span class="difficulty intermediate">🟡 Intermediate</span>
+  <span class="time">⏱️ 25 min</span>
+</div>
+
+
 **Difficulty:** Beginner  
 **Time:** ~25 minutes  
 **Prerequisites:** [Tutorial 02: Variables & Control Flow](./02-variables)
