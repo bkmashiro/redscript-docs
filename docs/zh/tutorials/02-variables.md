@@ -2,7 +2,7 @@
 
 **难度：** 入门
 **时长：** ~20 分钟
-**前置条件：** [教程 01：Hello Datapack](./01-hello-datapack)
+**前置条件：** [教程 01：Hello World](./01-hello-world)
 
 ## 你将构建什么
 

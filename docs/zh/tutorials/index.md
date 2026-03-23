@@ -29,16 +29,10 @@
 
 | 教程 | 难度 | 主线内容 |
 |------|------|----------|
-| [Hello 数据包](./01-hello-datapack) | 初级 | 加载钩子、触发器、起始物资 |
-| [变量与控制流](./02-variables) | 初级 | 可变状态、循环、简单玩法逻辑 |
-| [函数与结构体](./03-functions-structs) | 初级 | 逻辑复用与数据建模 |
-| [选择器与上下文](./04-selectors-context) | 中级 | `foreach`、`execute`、选择器驱动逻辑 |
-| [装饰器与调度](./05-decorators) | 中级 | 定时系统与玩法钩子 |
-| [数学与粒子](./06-stdlib-math) | 中级 | 用 stdlib 做可视化效果 |
-| [随机数与噪声](./07-stdlib-random) | 中级 | 程序化变化 |
-| [协程](./08-coroutines) | 高级 | 把重计算摊到多个 tick |
-| [精确算术](./09-precision-arithmetic) | 高级 | `double`、`math_hp` |
-| [完整游戏：击杀竞赛](./10-full-game) | 高级 | 综合实战 |
+| [Hello World](./01-hello-world) | 初级 | 玩家问候、计分板、标题 |
+| [僵尸生存](./zombie-survival) | 中级 | 波次、刷怪、难度递增 |
+| [跑酷竞速](./parkour-race) | 中级 | 检查点、计时器、排行榜 |
+| [夺旗模式](./capture-the-flag) | 高级 | 队伍、计分、重生 |
 
 ## 相关指南
 

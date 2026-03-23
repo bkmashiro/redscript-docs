@@ -128,7 +128,7 @@ export default defineConfig({
             {
               text: 'Project Tutorials',
               items: [
-                { text: '01 — Hello Datapack', link: '/en/tutorials/01-hello-datapack' },
+                { text: '01 — Hello World', link: '/en/tutorials/01-hello-world' },
                 { text: '02 — Variables & Control Flow', link: '/en/tutorials/02-variables' },
                 { text: '03 — Functions & Structs', link: '/en/tutorials/03-functions-structs' },
                 { text: '04 — Selectors & Execute Context', link: '/en/tutorials/04-selectors-context' },
@@ -310,7 +310,7 @@ export default defineConfig({
             {
               text: '项目型教程',
               items: [
-                { text: '01 — Hello 数据包', link: '/zh/tutorials/01-hello-datapack' },
+                { text: '01 — Hello World', link: '/zh/tutorials/01-hello-world' },
                 { text: '02 — 变量与控制流', link: '/zh/tutorials/02-variables' },
                 { text: '03 — 函数与结构体', link: '/zh/tutorials/03-functions-structs' },
                 { text: '04 — 选择器与上下文', link: '/zh/tutorials/04-selectors-context' },

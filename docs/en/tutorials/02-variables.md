@@ -2,7 +2,7 @@
 
 **Difficulty:** Beginner  
 **Time:** ~20 minutes  
-**Prerequisites:** [Tutorial 01: Hello Datapack](./01-hello-datapack)
+**Prerequisites:** [Tutorial 01: Hello World](./01-hello-world)
 
 ## What You'll Build
 
