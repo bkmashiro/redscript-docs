@@ -1,5 +1,14 @@
 /* Custom theme styles for RedScript docs */
 
+/* Minecraft font */
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/fonts/Minecraft-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Minecraft-inspired accents */
 :root {
   --mc-green: #55cc55;
@@ -7,6 +16,7 @@
   --mc-gold: #ffaa00;
   --mc-aqua: #55ffff;
   --mc-blue: #5555ff;
+  --mc-font: 'Minecraft', 'Courier New', monospace;
 }
 
 /* Better code block styling */
@@ -130,7 +140,7 @@ kbd {
 .tutorial-meta {
   display: flex;
   gap: 1rem;
-  margin: -0.5rem 0 1.5rem;
+  margin: 1rem 0 1.5rem;
   font-size: 0.9rem;
 }
 
@@ -158,4 +168,3 @@ kbd {
 .tutorial-meta .time {
   color: var(--vp-c-text-2);
 }
-</style>

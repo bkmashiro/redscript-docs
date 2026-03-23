@@ -62,11 +62,10 @@ fn init() {
 | `scoreboard_set(target, obj, value)` | Writes a value; `#total` is a fake player used as a global counter |
 | `say(...)` | Broadcasts a server-level message to all players |
 
-<Tip type="mc" title="Output when the world loads">
-
-![Load message](./images/hello-world-load.png)
-
-</Tip>
+<McChat 
+  title="Output when the world loads"
+  :messages="['[Server] Hello World datapack loaded! 🎉']"
+/>
 
 ---
 
@@ -103,9 +102,10 @@ fn greet_player(player: Player) {
 - `f"..."` — **f-strings** let you embed expressions directly in strings
 - `%` — the modulo operator (remainder after division)
 
-**What the player sees when they join:**
-
-![Join message](./images/hello-world-join.png)
+<McChat 
+  title="What the player sees when they join"
+  :messages="['Welcome to the server! Type /trigger hello to say hi.']"
+/>
 
 ---
 
@@ -132,9 +132,13 @@ Players run `/trigger hello` in chat to activate this.
 - `@s` — the entity running the function (here: the trigger activator)
 - `effect(target, effect_id, duration_ticks, amplifier)` — applies a potion effect
 
-**What the player sees after `/trigger hello`:**
-
-![Trigger output](./images/hello-world-trigger.png)
+<McChat 
+  title="What the player sees after /trigger hello"
+  :messages="[
+    '[Server] PlayerName says hello!',
+    '§aYou have said hello 5 times total!'
+  ]"
+/>
 
 ---
 
