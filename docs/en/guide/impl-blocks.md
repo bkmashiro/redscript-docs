@@ -40,7 +40,7 @@ struct Counter { value: int; }
 
 impl Counter {
     fn show(self) {
-        say("Value: ${self.value}");
+        say(f"Value: {self.value}");
     }
 }
 

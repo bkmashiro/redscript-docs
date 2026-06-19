@@ -82,7 +82,8 @@ fn name() { }
 | `@on_advancement("id")` | 玩家获得进度时运行 |
 | `@on_craft("item")` | 玩家合成物品时运行 |
 | `@on_join_team("team")` | 玩家加入队伍时运行 |
-| `@on(EventType)` | 静态事件触发时运行（PlayerDeath、PlayerJoin、BlockBreak、EntityKill、ItemUse） |
+| `@function_tag("namespace:path")` | 将函数注册到 Minecraft function tag |
+| `@on(EventType)` | runtime 支撑的事件触发时运行（PlayerDeath、PlayerJoin、EntityKill、ItemUse） |
 | `@keep` | 阻止 DCE 移除该函数 |
 
 ## 控制流
@@ -147,7 +148,7 @@ repeat(count) {
 
 ```rs
 for i in 0..10 {
-    say("${i}");   // 0 到 9
+    say(f"{i}");   // 0 到 9
 }
 
 let count: int = get_score(@s, #rounds);
@@ -165,7 +166,7 @@ for i in 0..count {
 ```rs
 let names: string[] = ["Alice", "Bob", "Carol"];
 for name in names {
-    tell(@a, "你好，${name}！");
+    tell(@a, f"你好，{name}！");
 }
 
 let scores: int[] = [10, 20, 30];
@@ -278,25 +279,25 @@ execute store result score @s #points run {
 
 ```rs
 let s: string = "hello";
-let interpolated: string = "Hello, ${name}!";
+let interpolated: string = f"Hello, {name}!";
 ```
 
 ### F-Strings（插值字符串）
 
-RedScript 支持在字符串字面量中使用 `${expr}` 进行 f-string 插值，花括号内可以写任意表达式。
+RedScript 的标准插值写法是 `f"...{expr}..."`。花括号内可以写任意表达式；普通字符串（`"..."`）不会插值。
 
 ```rs
 let player: string = "Steve";
 let score: int = 42;
 
 // 简单变量插值
-let msg: string = "Hello, ${player}!";
+let msg: string = f"Hello, {player}!";
 
 // 表达式插值
-let info: string = "Score: ${score * 2} points";
+let info: string = f"Score: {score * 2} points";
 
 // 嵌套计算
-let desc: string = "Lives: ${max_lives - used_lives}";
+let desc: string = f"Lives: {max_lives - used_lives}";
 ```
 
 > **v2.6.0：** 使用 `"string" + var` 进行字符串拼接现在是**编译错误**，请改用 f-string：
@@ -305,7 +306,7 @@ let desc: string = "Lives: ${max_lives - used_lives}";
 > let bad: string = "Hello " + name;
 >
 > // ✅ 正确写法
-> let good: string = "Hello ${name}";
+> let good: string = f"Hello {name}";
 > ```
 
 #### F-Strings 在聊天命令中的用法
@@ -313,9 +314,9 @@ let desc: string = "Lives: ${max_lives - used_lives}";
 当 f-string 用于 `tell`、`title`、`subtitle`、`actionbar` 或 `announce` 时，编译器会生成正确的 Minecraft JSON 文本组件，使动态值在游戏内正确显示：
 
 ```rs
-tell(@a, "Your score is ${score(@s, #points)}!");
-title(@s, "Round ${round} of ${max_rounds}");
-actionbar(@a, "HP: ${score(@s, #hp)} / ${score(@s, #max_hp)}");
+tell(@a, f"Your score is {score(@s, #points)}!");
+title(@s, f"Round {round} of {max_rounds}");
+actionbar(@a, f"HP: {score(@s, #hp)} / {score(@s, #max_hp)}");
 ```
 
 这些会编译为 MC JSON 文本格式，如 `["", "Your score is ", {"score": {"name": "@s", "objective": "points"}}, "!"]`。
@@ -397,7 +398,7 @@ let empty: Option<int> = None
 
 // 用 if let 解包（唯一支持的解包语法）
 if let Some(v) = maybe {
-    say("Got ${v}")
+    say(f"Got {v}")
 }
 ```
 
@@ -414,7 +415,7 @@ fn find_score(target: selector) -> Option<int> {
 
 let result: Option<int> = find_score(@p)
 if let Some(pts) = result {
-    tell(@s, "Points: ${pts}")
+    tell(@s, f"Points: {pts}")
 }
 ```
 
@@ -436,7 +437,7 @@ let s: string = first<string>(["a", "b"]); // "a"
 
 // 多个类型参数
 fn zip<A, B>(a: A, b: B): string {
-    return "${a} / ${b}";
+    return f"{a} / {b}";
 }
 
 // 泛型结构体

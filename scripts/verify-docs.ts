@@ -70,7 +70,7 @@ function getStdlibModules(): string[] {
 function getDecorators(): string[] {
   // Known decorators from lexer/parser
   return [
-    'tick', 'load', 'on', 'on_trigger', 'inline', 'deprecated',
+    'tick', 'load', 'on', 'function_tag', 'on_trigger', 'inline', 'deprecated',
     'singleton', 'watch', 'config', 'profile', 'throttle', 'retry',
     'memoize', 'benchmark', 'test', 'coroutine', 'schedule', 'keep'
   ];

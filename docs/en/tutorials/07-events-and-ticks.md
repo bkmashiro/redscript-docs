@@ -87,7 +87,6 @@ Examples of event kinds already documented in the reference include:
 
 - `PlayerJoin`
 - `PlayerDeath`
-- `BlockBreak`
 - `EntityKill`
 - `ItemUse`
 
@@ -145,6 +144,6 @@ fn on_death() {
 
 1. Add a second trigger such as `@on_trigger("rules")`.
 2. Change the heartbeat rate from 20 to 100 ticks.
-3. Add one more static event handler such as `@on(BlockBreak)`.
+3. Add one more static event handler such as `@on(ItemUse)`.
 
 Next: [Tutorial 08: Advanced](./08-advanced)

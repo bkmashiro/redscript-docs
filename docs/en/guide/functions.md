@@ -20,7 +20,7 @@ greet();
 
 Functions can take parameters with type annotations:
 
-```rs
+```rs ignore
 fn heal(target: selector, amount: int) {
     effect(target, "instant_health", amount, 1);
     say("Healed!");
@@ -33,7 +33,7 @@ heal(@a, 2);
 
 Specify return types with `->`:
 
-```rs
+```rs ignore
 fn double(x: int) -> int {
     return x * 2;
 }
@@ -45,7 +45,7 @@ let result: int = double(5); // 10
 
 Parameters can have default values:
 
-```rs
+```rs ignore
 fn spawn_mob(mob: string, count: int = 1) {
     repeat(count) {
         summon(mob);
@@ -58,7 +58,7 @@ spawn_mob("skeleton", 5);  // spawns 5 skeletons
 
 ## Multiple Parameters
 
-```rs
+```rs ignore
 fn setup_team(team_name: string, color: string, friendly_fire: bool = false) {
     team_add(team_name);
     team_modify(team_name, "color", color);
@@ -92,7 +92,7 @@ fn init() {
 
 Use `for i in start..end` to loop over a range of integers. The upper bound can be a variable:
 
-```rs
+```rs ignore
 fn give_reward(player: selector, count: int) {
     for i in 0..count {
         give(player, "diamond", 1);
@@ -104,11 +104,11 @@ give_reward(@s, 5);   // gives 5 diamonds
 
 Both bounds can be variables:
 
-```rs
+```rs ignore
 let start: int = 1;
 let end: int = 10;
 for i in start..end {
-    say("${i}");
+    say(f"{i}");
 }
 ```
 

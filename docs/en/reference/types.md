@@ -209,7 +209,7 @@ let c: Color = Color::RGB(r: 255, g: 128, b: 0);
 
 // Destructure in match
 match c {
-    Color::RGB(r, g, b) => { tell(@s, "r=${r} g=${g} b=${b}"); },
+    Color::RGB(r, g, b) => { tell(@s, f"r={r} g={g} b={b}"); },
     Color::Red           => { say("red"); },
     _                    => { },
 }
@@ -234,7 +234,7 @@ let b: Option<int> = None;
 
 ```rs
 if let Some(v) = a {
-    tell(@s, "Got ${v}");
+    tell(@s, f"Got {v}");
 }
 ```
 
@@ -250,7 +250,7 @@ while let Some(item) = next_item() {
 
 ```rs
 match a {
-    Some(v) => { tell(@s, "Value: ${v}"); },
+    Some(v) => { tell(@s, f"Value: {v}"); },
     None    => { say("nothing"); },
 }
 ```

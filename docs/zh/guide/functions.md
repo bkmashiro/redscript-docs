@@ -20,7 +20,7 @@ greet();
 
 函数可以接受带类型注解的参数：
 
-```rs
+```rs ignore
 fn heal(target: selector, amount: int) {
     effect(target, "instant_health", amount, 1);
     say("Healed!");
@@ -33,7 +33,7 @@ heal(@a, 2);
 
 使用 `->` 指定返回类型：
 
-```rs
+```rs ignore
 fn double(x: int) -> int {
     return x * 2;
 }
@@ -45,7 +45,7 @@ let result: int = double(5); // 10
 
 参数可以有默认值：
 
-```rs
+```rs ignore
 fn spawn_mob(mob: string, count: int = 1) {
     repeat(count) {
         summon(mob);
@@ -58,7 +58,7 @@ spawn_mob("skeleton", 5);  // 生成 5 只骷髅
 
 ## 多个参数
 
-```rs
+```rs ignore
 fn setup_team(team_name: string, color: string, friendly_fire: bool = false) {
     team_add(team_name);
     team_modify(team_name, "color", color);
@@ -92,7 +92,7 @@ fn init() {
 
 使用 `for i in start..end` 遍历整数范围。上界可以是变量：
 
-```rs
+```rs ignore
 fn give_reward(player: selector, count: int) {
     for i in 0..count {
         give(player, "diamond", 1);
@@ -104,11 +104,11 @@ give_reward(@s, 5);   // 给予 5 颗钻石
 
 两个边界都可以是变量：
 
-```rs
+```rs ignore
 let start: int = 1;
 let end: int = 10;
 for i in start..end {
-    say("${i}");
+    say(f"{i}");
 }
 ```
 

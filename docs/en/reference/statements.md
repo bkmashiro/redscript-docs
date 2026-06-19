@@ -73,7 +73,7 @@ Executes the body repeatedly as long as `condition` is `true`.
 ```rs
 let i: int = 0;
 while (i < 10) {
-    say("${i}");
+    say(f"{i}");
     i = i + 1;
 }
 ```
@@ -102,7 +102,7 @@ Iterate over an integer range. The upper bound is **exclusive**.
 
 ```rs
 for i in 0..10 {
-    say("${i}");   // 0, 1, …, 9
+    say(f"{i}");   // 0, 1, …, 9
 }
 ```
 
@@ -124,7 +124,7 @@ Iterate over every element of an array:
 ```rs
 let names: string[] = ["Alice", "Bob", "Carol"];
 for name in names {
-    tell(@a, "Hello, ${name}!");
+    tell(@a, f"Hello, {name}!");
 }
 ```
 
@@ -168,7 +168,7 @@ Exit a function, optionally returning a value:
 
 ```rs
 fn greet(name: string) {
-    say("Hello, ${name}!");
+    say(f"Hello, {name}!");
     return;
 }
 
@@ -226,7 +226,7 @@ Unwrap an `Option<T>` conditionally:
 let maybe: Option<int> = find_score(@p);
 
 if let Some(pts) = maybe {
-    tell(@s, "Points: ${pts}");
+    tell(@s, f"Points: {pts}");
 }
 ```
 

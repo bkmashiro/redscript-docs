@@ -127,7 +127,6 @@ Handles a static event. The supported event types are:
 |-------|-------------|
 | `PlayerDeath` | A player dies |
 | `PlayerJoin` | A player joins the server |
-| `BlockBreak` | A player breaks a block |
 | `EntityKill` | A player kills an entity |
 | `ItemUse` | A player uses an item |
 

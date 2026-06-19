@@ -111,11 +111,11 @@ let f2: fixed = n;           // compiler error: expected fixed, got int
 
 ### Strings
 
-Strings support interpolation with `${}`:
+Use canonical f-strings (`f"...{expr}..."`) for interpolation:
 
 ```rs
 let player: string = "Alex";
-let msg: string = "Hello, ${player}!";
+let msg: string = f"Hello, {player}!";
 say(msg); // Hello, Alex!
 ```
 
@@ -172,7 +172,7 @@ let score: int = 0;
 @tick(rate=20)
 fn update() {
     score = score + 1;
-    actionbar(@a, "Score: ${score}");
+    actionbar(@a, f"Score: {score}");
 }
 
 fn reset() {

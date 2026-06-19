@@ -87,7 +87,6 @@ fn welcome(player: Player) {
 
 - `PlayerJoin`
 - `PlayerDeath`
-- `BlockBreak`
 - `EntityKill`
 - `ItemUse`
 
@@ -145,6 +144,6 @@ fn on_death() {
 
 1. 再加一个 `@on_trigger("rules")`。
 2. 把 heartbeat 频率从 20 tick 改成 100 tick。
-3. 再加一个 `@on(BlockBreak)` 处理器。
+3. 再加一个 `@on(ItemUse)` 处理器。
 
 下一篇：[教程 08：进阶主题](./08-advanced)

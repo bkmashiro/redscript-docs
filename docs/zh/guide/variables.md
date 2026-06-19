@@ -103,11 +103,11 @@ let f2: fixed = n;           // 编译错误：期望 fixed，得到 int
 
 ### 字符串
 
-字符串支持 `${}` 插值：
+字符串插值使用标准 f-string（`f"...{expr}..."`）：
 
 ```rs
 let player: string = "Alex";
-let msg: string = "Hello, ${player}!";
+let msg: string = f"Hello, {player}!";
 say(msg); // Hello, Alex!
 ```
 
@@ -164,7 +164,7 @@ let score: int = 0;
 @tick(rate=20)
 fn update() {
     score = score + 1;
-    actionbar(@a, "Score: ${score}");
+    actionbar(@a, f"Score: {score}");
 }
 
 fn reset() {

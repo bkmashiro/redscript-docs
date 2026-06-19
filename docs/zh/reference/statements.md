@@ -73,7 +73,7 @@ while (condition) {
 ```rs
 let i: int = 0;
 while (i < 10) {
-    say("${i}");
+    say(f"{i}");
     i = i + 1;
 }
 ```
@@ -102,7 +102,7 @@ while let Some(item) = next_item() {
 
 ```rs
 for i in 0..10 {
-    say("${i}");   // 0, 1, …, 9
+    say(f"{i}");   // 0, 1, …, 9
 }
 ```
 
@@ -124,7 +124,7 @@ for i in 0..count {
 ```rs
 let names: string[] = ["Alice", "Bob", "Carol"];
 for name in names {
-    tell(@a, "你好，${name}！");
+    tell(@a, f"你好，{name}！");
 }
 ```
 
@@ -168,7 +168,7 @@ repeat(5) {
 
 ```rs
 fn greet(name: string) {
-    say("你好，${name}！");
+    say(f"你好，{name}！");
     return;
 }
 
@@ -226,7 +226,7 @@ kill(@e[type=zombie]);
 let maybe: Option<int> = find_score(@p);
 
 if let Some(pts) = maybe {
-    tell(@s, "积分：${pts}");
+    tell(@s, f"积分：{pts}");
 }
 ```
 

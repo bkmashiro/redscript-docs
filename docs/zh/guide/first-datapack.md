@@ -58,7 +58,7 @@ fn grant_reward(player: selector) {
     scoreboard_set(player, "kills", 0);
 
     // 广播
-    tellraw(@a, "${player} leveled up!");
+    tellraw(@a, "A player leveled up!");
 }
 ```
 
@@ -114,7 +114,7 @@ fn grant_reward(player: selector) {
     title(player, "Level Up!");
     scoreboard_add(player, "level", 1);
     scoreboard_set(player, "kills", 0);
-    tellraw(@a, "${player} leveled up!");
+    tellraw(@a, "A player leveled up!");
 }
 
 @on_login

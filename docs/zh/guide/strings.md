@@ -1,41 +1,41 @@
 # 字符串
 
-RedScript 支持带插值的编译期字符串，以及用于输出的运行时 f-string。
+RedScript 支持普通编译期字符串，以及用于动态输出的标准 f-string。
 
 ## 字符串字面量
 
-```mcrs
+```mcrs ignore
 let name: string = "Alex";
 let greeting: string = "Hello, World!";
 ```
 
 字符串是**编译期常量**。所有字符串值都必须在编译时确定。
 
-## 字符串插值 `${}`
+## F-string 插值
 
-使用 `${}` 将编译期常量嵌入字符串中：
+使用 `f"...{expr}..."` 在输出字符串中嵌入值：
 
-```mcrs
+```mcrs ignore
 const GAME_NAME: string = "MiniGame";
-let msg: string = "Welcome to ${GAME_NAME}!";
-// 编译后为: "Welcome to MiniGame!"
+say(f"Welcome to {GAME_NAME}!");
+// 输出：Welcome to MiniGame!
 ```
 
-**注意**：插值的值必须是编译期常量（`const` 或字面量）。
+**注意**：普通字符串不会插值；需要占位符时请使用 `f"..."`。
 
-```mcrs
+```mcrs ignore
 const VERSION: string = "1.0";
-let info: string = "Version: ${VERSION}";  // OK
+say(f"Version: {VERSION}");  // OK
 
 let x: int = scoreboard_get(@s, #score);
-let msg: string = "Score: ${x}";           // 错误：x 是运行时值
+actionbar(@s, f"Score: {x}");  // 运行时输出 OK
 ```
 
 ## f-string（格式字符串）
 
 对于输出中的运行时值，请使用 f-string：
 
-```mcrs
+```mcrs ignore
 let score: int = scoreboard_get(@s, #kills);
 let player: Player = @s;
 say(f"You have {score} kills!");
@@ -64,7 +64,7 @@ tellraw @a [{"text":"You have "},{"score":{"name":"$t0","objective":"rs"}},{"tex
 - 不能把 f-string 的结果存入变量
 - 占位符可以是运行时记分板值，也可以是 `Player` 这类受支持的显示类型
 
-```mcrs
+```mcrs ignore
 // OK
 say(f"Score: {score}");
 
@@ -77,5 +77,5 @@ let msg: string = f"Score: {score}";
 | 语法 | 类型 | 用途 |
 |------|------|------|
 | `"text"` | `string` | 编译期字符串 |
-| `"${const}"` | `string` | 编译期插值 |
+| `f"{const}"` | `string` | 编译期插值 |
 | `f"{runtime}"` | `format_string` | 仅用于运行时输出 |

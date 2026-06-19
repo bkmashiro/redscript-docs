@@ -1,6 +1,6 @@
 # 命令行参考
 
-RedScript 命令行工具，用于将 `.mcrs` 文件编译为数据包。
+RedScript 命令行工具用于将 `.mcrs` 文件编译为 Minecraft 数据包，并提供项目初始化、测试、lint、格式化和文档辅助命令。
 
 ## 安装
 
@@ -12,6 +12,8 @@ npm install -g redscript-mc
 
 ```bash
 redscript --version
+# 或
+redscript version
 ```
 
 ## 命令
@@ -29,14 +31,16 @@ redscript compile <file> [options]
 | 选项 | 描述 | 默认值 |
 |-----|------|-------|
 | `-o, --output <path>` | 输出目录 | `./out` |
-| `--namespace <ns>` | 数据包命名空间 | 文件名 |
-| `--target <target>` | 输出目标：`datapack`、`cmdblock`、`structure` | `datapack` |
-| `--output-nbt <file>` | 输出 .nbt 文件路径（structure 目标用） | — |
-| `--no-dce` | 禁用死代码消除 | `false` |
-| `-O0` | 关闭优化 | `off` |
-| `-O1` | 开启标准优化 | `on` |
-| `-O2` | 开启激进优化 | `off` |
-| `--stats` | 打印优化器统计信息 | `false` |
+| `--namespace <ns>` | 数据包命名空间 | 从文件名推导 |
+| `--source-map` | 在 `.mcfunction` 旁生成 `.sourcemap.json` | `false` |
+| `--snapshot-stages <stages>` | 要记录快照的编译阶段，逗号分隔；也可用 `all` | — |
+| `--snapshot-output <path>` | 将选中的编译阶段快照写入 JSON 文件 | — |
+| `--mc-version <ver>` | 目标 Minecraft 版本，会影响代码生成特性 | `1.21` |
+| `--lenient` | 将类型错误降级为 warning，不阻塞编译 | `false` |
+| `--include <dir>` | 添加 import 搜索路径；可重复传入 | — |
+| `--incremental` | 启用文件级增量编译缓存 | `false` |
+
+**可快照阶段：** `preprocess`、`parse`、`typecheck`、`runtimeMetadata`、`lowerToHIR`、`lowerAndOptimize`、`runtimeAssets`、`finalizeRuntimeLIR`、`emitDatapack`，或 `all`。
 
 **示例：**
 
@@ -44,28 +48,42 @@ redscript compile <file> [options]
 # 基本编译
 redscript compile hello.mcrs
 
-# 指定输出目录
-redscript compile hello.mcrs -o ./my-datapack
+# 指定输出目录和命名空间
+redscript compile game.mcrs -o ./my-datapack --namespace minigame
 
-# 设置命名空间
-redscript compile game.mcrs --namespace minigame
+# 针对旧 Minecraft 版本编译
+redscript compile game.mcrs --mc-version 1.20.2
 
-# 生成命令方块结构
-redscript compile game.mcrs --target structure --output-nbt game.nbt
+# 添加 import 搜索路径
+redscript compile src/main.mcrs --include src/lib --include vendor/redscript
 
-# 调试生成结果时关闭优化
-redscript compile game.mcrs -O0
+# 生成 source map
+redscript compile game.mcrs --source-map
 
-# 使用标准优化并打印统计信息
-redscript compile game.mcrs -O1 --stats
+# 为调试/工具导出指定编译阶段摘要
+redscript compile game.mcrs \
+  --snapshot-stages parse,typecheck,runtimeAssets,emitDatapack \
+  --snapshot-output .redscript/stages.json
 
-# 保留其他优化，但关闭 DCE
-redscript compile game.mcrs -O2 --no-dce
+# 导出所有可用阶段摘要
+redscript compile game.mcrs --snapshot-stages all --snapshot-output stages.json
+```
+
+### publish
+
+编译并打包为可直接放入 Minecraft 的 `.zip` 数据包。
+
+```bash
+redscript publish <file> [-o <out.zip>] [--namespace <ns>] [--mc-version <ver>]
+```
+
+```bash
+redscript publish game.mcrs -o game.zip --namespace minigame
 ```
 
 ### watch
 
-监听文件变化，自动重新编译。
+监听目录中的 `.mcrs` 文件变化，自动重新编译，并可选热重载测试服务器。
 
 ```bash
 redscript watch <dir> [options]
@@ -77,29 +95,66 @@ redscript watch <dir> [options]
 |-----|------|
 | `-o, --output <path>` | 输出目录 |
 | `--namespace <ns>` | 数据包命名空间 |
-| `--hot-reload <url>` | 编译后 POST 到 `<url>/reload` |
-
-**示例：**
+| `--hot-reload <url>` | 编译成功后 POST 到 `<url>/reload` |
+| `--include <dir>` | 添加 import 搜索路径；可重复传入 |
+| `--incremental` | 启用文件级增量编译缓存 |
 
 ```bash
-# 监听并重新编译
 redscript watch ./src -o ./server/world/datapacks/my-game
-
-# 带热重载（需要 redscript-testharness）
 redscript watch ./src -o ./datapacks/game --hot-reload http://localhost:25561
+```
+
+### test
+
+编译并运行带 `@test` 标记的函数。
+
+```bash
+redscript test <file> [--dry-run] [--mc-url <url>]
+```
+
+```bash
+# 只验证测试能否编译
+redscript test tests/main.mcrs --dry-run
+
+# 连接 TestHarness HTTP API 运行 live 测试
+redscript test tests/main.mcrs --mc-url http://localhost:25561
 ```
 
 ### check
 
-只检查类型错误，不生成输出。
+只检查错误，不生成数据包输出。
 
 ```bash
-redscript check <file>
+redscript check <file> [--fix]
 ```
 
 ```bash
 redscript check game.mcrs
-# ✓ 无错误
+redscript check game.mcrs --fix
+```
+
+### lint
+
+静态分析 RedScript 文件并报告 warning。
+
+```bash
+redscript lint <file> [--max-function-lines <n>]
+```
+
+```bash
+redscript lint src/main.mcrs --max-function-lines 80
+```
+
+### init
+
+创建新的 RedScript 数据包项目骨架。
+
+```bash
+redscript init [project-name]
+```
+
+```bash
+redscript init my-minigame
 ```
 
 ### fmt
@@ -111,11 +166,31 @@ redscript fmt <file.mcrs> [file2.mcrs ...]
 ```
 
 ```bash
-# 格式化单个文件
 redscript fmt main.mcrs
-
-# 格式化多个文件
 redscript fmt src/*.mcrs
+```
+
+### generate-dts
+
+生成 `builtins.d.mcrs` 声明文件，列出所有内置函数及其类型签名。可用作参考或工具集成。
+
+```bash
+redscript generate-dts [--output <file>]
+# 也支持短参数：
+redscript generate-dts -o builtins.d.mcrs
+```
+
+### docs
+
+在浏览器中打开在线标准库文档。
+
+```bash
+redscript docs [module] [--list]
+```
+
+```bash
+redscript docs --list
+redscript docs math
 ```
 
 ### repl
@@ -129,9 +204,17 @@ redscript repl
 ```
 RedScript REPL
 > let x = 5;
-> say("Hello ${x}");
+> say(f"Hello {x}");
 say Hello 5
-> 
+```
+
+### version
+
+显示版本信息。
+
+```bash
+redscript --version
+redscript version
 ```
 
 ### upgrade
@@ -142,53 +225,9 @@ say Hello 5
 redscript upgrade
 ```
 
-```bash
-redscript upgrade
-# Upgrading redscript-mc to latest...
-# ✓ Upgraded to 0.9.2
-```
-
-### generate-dts
-
-生成 `builtins.d.mcrs` 声明文件，列出所有内置函数及其类型签名。可用作参考或工具集成。
-
-```bash
-redscript generate-dts [--output <file>]
-```
-
-```bash
-# 输出到标准输出
-redscript generate-dts
-
-# 写入文件
-redscript generate-dts --output builtins.d.mcrs
-```
-
-### version
-
-显示版本信息。
-
-```bash
-redscript --version
-```
-
-## 自动更新检查
-
-运行 `compile` 或 `check` 时，RedScript 会在后台检查是否有新版本。如果有更新，编译完成后会显示提示：
-
-```
-✓ Compiled successfully
-
-💡 New version available: 0.9.2 (you have 0.9.1). Run `redscript upgrade` to update.
-```
-
-此检查在后台运行，不会影响编译速度。
-
 ## 输出目标
 
-### datapack（默认）
-
-生成完整的 Minecraft 数据包：
+CLI 的主要输出是 Minecraft 数据包目录或 zip 包。典型数据包输出如下：
 
 ```
 my-datapack/
@@ -205,22 +244,11 @@ my-datapack/
 └── pack.mcmeta
 ```
 
-### cmdblock
-
-生成命令方块放置工具用的 JSON。
-
-### structure
-
-生成包含命令方块的 Minecraft `.nbt` 结构文件。
-
-```bash
-redscript compile game.mcrs --target structure --output-nbt game.nbt
-```
+如果需要可直接复制到世界 `datapacks/` 目录的 zip，请使用 `publish`。
 
 ## 退出码
 
-| 退出码 | 含义 |
-|-------|------|
+| 代码 | 含义 |
+|------|------|
 | `0` | 成功 |
-| `1` | 编译错误 |
-| `2` | 文件未找到 |
+| `1` | 编译、检查、lint、测试失败，或 CLI 参数无效 |

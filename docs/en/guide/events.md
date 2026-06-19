@@ -16,7 +16,7 @@ fn handle_join(player: Player) {
 }
 ```
 
-The parameter type should match the event payload. For player events, that is usually `Player`.
+The event runtime injects the executor context. Prefer zero-argument handlers and use `@s` for the triggering player; a single `Player` parameter is still accepted for legacy compatibility.
 
 ## Available Events
 
@@ -24,8 +24,7 @@ The parameter type should match the event payload. For player events, that is us
 |-------|---------|----------------|
 | `PlayerDeath` | `Player` | A player dies |
 | `PlayerJoin` | `Player` | A player joins |
-| `BlockBreak` | `Player` | A player breaks a block |
-| `EntityKill` | `entity` | An entity is killed |
+| `EntityKill` | `Player` | A player kills an entity |
 | `ItemUse` | `Player` | A player uses an item |
 
 Multiple handlers can subscribe to the same event. RedScript generates one dispatcher per event kind and invokes each matching handler.
@@ -38,9 +37,9 @@ fn welcome(player: Player) {
     say(f"Welcome {player}!");
 }
 
-@on(BlockBreak)
-fn reward_mining(player: Player) {
-    scoreboard_add(player, "blocks", 1);
+@on(EntityKill)
+fn reward_kill() {
+    scoreboard_add(@s, "kills", 1);
 }
 
 @on(ItemUse)
@@ -55,7 +54,7 @@ RedScript generates dispatcher functions for each subscribed event and wires you
 
 - Your event handlers stay as normal typed functions
 - The compiler emits the Minecraft detection logic
-- Matching entities or players are passed into the generated dispatcher calls
+- Matching entities or players run the generated handler through the event executor context
 
 This keeps event code concise while still compiling to regular datapack functions.
 

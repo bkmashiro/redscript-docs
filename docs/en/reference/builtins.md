@@ -23,7 +23,7 @@ tell(@a[tag=vip], "Welcome back, VIP!");
 tellraw(@a, "Welcome to the server!");
 title(@p, "You Win!");
 subtitle(@p, "Congratulations!");
-actionbar(@a, "Score: ${score}");
+actionbar(@a, f"Score: {score}");
 
 // Emit a raw command when no typed builtin exists
 raw("weather thunder 600");

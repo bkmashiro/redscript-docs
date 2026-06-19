@@ -18,7 +18,7 @@ Multi-line lambdas use braces:
 
 ```rs
 let greet = (name: string) => {
-    say("Hello, ${name}!");
+    say(f"Hello, {name}!");
     say("Welcome to the server!");
 };
 ```
@@ -46,7 +46,7 @@ let teams: string[] = ["red", "blue", "green"];
 
 for_each(teams, (team: string) => {
     team_add(team);
-    say("Created team: ${team}");
+    say(f"Created team: {team}");
 });
 ```
 
@@ -89,7 +89,7 @@ More practical example:
 fn create_reward(base_xp: int) {
     let give_reward = (player: selector) => {
         xp_add(player, base_xp);
-        say("Rewarded ${base_xp} XP!");
+        say(f"Rewarded {base_xp} XP!");
     };
 
     give_reward(@a[tag=winner]);

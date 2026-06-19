@@ -82,7 +82,8 @@ fn name() { }
 | `@on_advancement("id")` | Run when player earns advancement |
 | `@on_craft("item")` | Run when player crafts item |
 | `@on_join_team("team")` | Run when player joins a team |
-| `@on(EventType)` | Run on static event (PlayerDeath, PlayerJoin, BlockBreak, EntityKill, ItemUse) |
+| `@function_tag("namespace:path")` | Register a function in a Minecraft function tag |
+| `@on(EventType)` | Run on runtime-backed event (PlayerDeath, PlayerJoin, EntityKill, ItemUse) |
 | `@keep` | Prevent DCE from removing the function |
 
 ## Control Flow
@@ -147,7 +148,7 @@ Iterate over an integer range. The upper bound can be a literal **or a variable*
 
 ```rs
 for i in 0..10 {
-    say("${i}");   // 0 through 9
+    say(f"{i}");   // 0 through 9
 }
 
 let count: int = get_score(@s, #rounds);
@@ -165,7 +166,7 @@ Iterate over every element of an array. The loop variable takes the value of eac
 ```rs
 let names: string[] = ["Alice", "Bob", "Carol"];
 for name in names {
-    tell(@a, "Hello, ${name}!");
+    tell(@a, f"Hello, {name}!");
 }
 
 let scores: int[] = [10, 20, 30];
@@ -278,25 +279,25 @@ execute store result score @s #points run {
 
 ```rs
 let s: string = "hello";
-let interpolated: string = "Hello, ${name}!";
+let interpolated: string = f"Hello, {name}!";
 ```
 
 ### F-Strings (Interpolated Strings)
 
-RedScript supports f-string interpolation using `${expr}` inside any string literal. Any expression can appear inside the braces.
+RedScript supports f-string interpolation with the canonical `f"...{expr}..."` syntax. Any expression can appear inside the braces. Plain strings (`"..."`) are not interpolated.
 
 ```rs
 let player: string = "Steve";
 let score: int = 42;
 
 // Simple variable interpolation
-let msg: string = "Hello, ${player}!";
+let msg: string = f"Hello, {player}!";
 
 // Expression interpolation
-let info: string = "Score: ${score * 2} points";
+let info: string = f"Score: {score * 2} points";
 
 // Nested computation
-let desc: string = "Lives: ${max_lives - used_lives}";
+let desc: string = f"Lives: {max_lives - used_lives}";
 ```
 
 > **v2.6.0:** Using `"string" + var` for concatenation is now a **compile error**. Use f-strings instead:
@@ -305,7 +306,7 @@ let desc: string = "Lives: ${max_lives - used_lives}";
 > let bad: string = "Hello " + name;
 >
 > // ✅ correct
-> let good: string = "Hello ${name}";
+> let good: string = f"Hello {name}";
 > ```
 
 #### F-Strings in Chat Commands
@@ -313,9 +314,9 @@ let desc: string = "Lives: ${max_lives - used_lives}";
 When f-strings are used inside `tell`, `title`, `subtitle`, `actionbar`, or `announce`, the compiler emits proper Minecraft JSON text components so dynamic values render correctly in-game:
 
 ```rs
-tell(@a, "Your score is ${score(@s, #points)}!");
-title(@s, "Round ${round} of ${max_rounds}");
-actionbar(@a, "HP: ${score(@s, #hp)} / ${score(@s, #max_hp)}");
+tell(@a, f"Your score is {score(@s, #points)}!");
+title(@s, f"Round {round} of {max_rounds}");
+actionbar(@a, f"HP: {score(@s, #hp)} / {score(@s, #max_hp)}");
 ```
 
 These compile to MC JSON text like `["", "Your score is ", {"score": {"name": "@s", "objective": "points"}}, "!"]`.
@@ -397,7 +398,7 @@ let empty: Option<int> = None
 
 // Unwrap with if let (the only supported unwrap syntax)
 if let Some(v) = maybe {
-    say("Got ${v}")
+    say(f"Got {v}")
 }
 ```
 
@@ -414,7 +415,7 @@ fn find_score(target: selector) -> Option<int> {
 
 let result: Option<int> = find_score(@p)
 if let Some(pts) = result {
-    tell(@s, "Points: ${pts}")
+    tell(@s, f"Points: {pts}")
 }
 ```
 
@@ -437,7 +438,7 @@ let s: string = first<string>(["a", "b"]); // "a"
 
 // Multiple type parameters
 fn zip<A, B>(a: A, b: B): string {
-    return "${a} / ${b}";
+    return f"{a} / {b}";
 }
 
 // Generic struct

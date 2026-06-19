@@ -37,12 +37,12 @@ p.score = p.score + 1;
 
 ```rs
 fn announce(p: Player) {
-    say("${p.name} has ${p.score} points");
+    say(f"{p.name} has {p.score} points");
 }
 
 fn kill(p: Player) {
     p.alive = false;
-    say("${p.name} was eliminated");
+    say(f"{p.name} was eliminated");
 }
 ```
 

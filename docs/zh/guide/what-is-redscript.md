@@ -21,7 +21,7 @@ let countdown: int = 60;
 @tick(rate=20)
 fn every_second() {
     countdown = countdown - 1;
-    actionbar(@a, "Time: ${countdown}s");
+    actionbar(@a, f"Time: {countdown}s");
 
     if (countdown <= 0) {
         end_game();

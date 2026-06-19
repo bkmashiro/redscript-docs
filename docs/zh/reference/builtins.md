@@ -21,7 +21,7 @@ tell(@a[tag=vip], "Welcome back, VIP!");
 tellraw(@a, "Welcome to the server!");
 title(@p, "You Win!");
 subtitle(@p, "Congratulations!");
-actionbar(@a, "Score: ${score}");
+actionbar(@a, f"Score: {score}");
 
 // 当没有对应内置函数时，输出原始命令
 raw("weather thunder 600");

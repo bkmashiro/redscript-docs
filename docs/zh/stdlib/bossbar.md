@@ -20,7 +20,7 @@
 创建一个对所有玩家可见的计时器 Bossbar，并以秒数初始化最大值和当前值
 
 ```redscript
-fn create_timer_bar(id: string, name: string, max_seconds: int)
+fn create_timer_bar(id: string, name: string, max_ticks: int)
 ```
 
 **参数**
@@ -29,7 +29,7 @@ fn create_timer_bar(id: string, name: string, max_seconds: int)
 |------|------|
 | `id` | Bossbar 标识符，通常使用 `<namespace>:<name>` |
 | `name` | Bossbar 显示名称 |
-| `max_seconds` | 持续秒数，内部会转换为游戏刻 |
+| `max_ticks` | Duration in game ticks |
 
 **示例**
 

@@ -70,6 +70,28 @@ fn every_minute() {
 
 **Compiles to:** Uses `schedule` command with the specified interval.
 
+## @function_tag
+
+Registers the function in a Minecraft function tag. This is the generic primitive behind tag-based entry points.
+
+**Syntax:** `@function_tag("namespace:path")`
+
+```rs
+@function_tag("minecraft:load")
+fn init() {
+    say("Loaded through a function tag");
+}
+
+@function_tag("rs:on_player_death")
+fn on_player_death() {
+    scoreboard_add(@s, "deaths", 1);
+}
+```
+
+**Compiles to:** Adds the function reference to `data/<namespace>/tags/function/<path>.json`.
+
+`@load` is equivalent to `@function_tag("minecraft:load")`, and `@tick` is equivalent to `@function_tag("minecraft:tick")`. If both forms target the same tag, the compiler merges and de-duplicates the tag entries.
+
 ## @on_trigger
 
 Runs when a player activates a trigger scoreboard.
@@ -188,58 +210,52 @@ fn joined_red_team() {
 
 ## @on(EventType)
 
-Handles a static event type. The event handler is polled every tick via tag detection.
+Handles a compiler-known runtime event type. The event runtime injects the executor context, so a zero-argument handler should normally use `@s` for the triggering player/entity. A legacy single `Player` parameter is still accepted for compatibility, but it should be treated as an alias for the event executor rather than a normal function argument.
 
 **Syntax:** `@on(EventType)`
 
 **Supported event types:**
 
-| Event | Description | Detection |
-|-------|-------------|-----------|
-| `PlayerDeath` | A player dies | Score-based |
-| `PlayerJoin` | A player joins | Tag-based |
-| `BlockBreak` | A player breaks a block | Advancement |
-| `EntityKill` | A player kills an entity | Score-based |
-| `ItemUse` | A player uses an item | Score-based |
+| Event | Description | Detection | `@s` context |
+|-------|-------------|-----------|--------------|
+| `PlayerDeath` | A player dies | Scoreboard/runtime asset | `Player` |
+| `PlayerJoin` | A player joins | Tag/runtime asset | `Player` |
+| `EntityKill` | A player kills an entity | Scoreboard/runtime asset | `Player` |
+| `ItemUse` | A player uses an item | Scoreboard/runtime asset | `Player` |
 
 ```rs
 @on(PlayerDeath)
 fn handle_player_death() {
-    say("A player has died!");
     scoreboard_add(@s, "deaths", 1);
 }
 
+// Legacy-compatible form: the parameter is lowered as the event executor.
 @on(PlayerJoin)
-fn handle_player_join() {
-    title(@s, "Welcome to the Server!");
-}
-
-@on(BlockBreak)
-fn handle_block_break() {
-    scoreboard_add(@s, "blocks_broken", 1);
+fn handle_player_join(player: Player) {
+    title(player, "Welcome to the Server!");
 }
 ```
 
-**Compiles to:** Per-tick tag checking on `@a` using the event's internal tag (e.g., `rs.just_died`).
+**Compiles to:** Adds the handler to the event's function tag (for example `rs:on_player_death`) and automatically includes the required event runtime asset from the standard library. For unsupported events, use `@function_tag` plus an explicit stdlib/runtime dispatcher.
 
 ## @schedule
 
 Schedules a function to run once after a fixed delay (in ticks) from the moment the datapack loads or after the decorated function is otherwise triggered.
 
-**Syntax:** `@schedule(delay=N)`
+**Syntax:** `@schedule(ticks=N)`
 
 | Parameter | Description |
 |-----------|-------------|
-| `delay=N` | Number of ticks to wait before executing the function. |
+| `ticks=N` | Number of ticks to wait before executing the function. |
 
 ```rs
-@schedule(delay=100)
+@schedule(ticks=100)
 fn delayed_start() {
     // Runs 5 seconds (100 ticks) after datapack load
     say("Game starting!");
 }
 
-@schedule(delay=1200)
+@schedule(ticks=1200)
 fn end_game() {
     // Runs 60 seconds (1200 ticks) after datapack load
     say("Time's up!");
@@ -247,7 +263,7 @@ fn end_game() {
 }
 ```
 
-**Compiles to:** `schedule function <ns>:<name> <delay>t` in the `@load` setup function.
+**Compiles to:** a compiler-generated scheduling wrapper that runs `schedule function <ns>:<name> <ticks>t` from the startup path.
 
 ::: tip
 For recurring scheduled tasks, use `@tick(rate=N)`. Use `@schedule` only for one-shot startup delays.
@@ -465,14 +481,15 @@ fn test_addition() {
 | `@load` | Datapack load / `/reload` | Server |
 | `@tick` | Every tick (20/sec) | Server |
 | `@tick(rate=N)` | Every N ticks | Server |
+| `@function_tag("namespace:path")` | Function tag registration | Caller / tag runtime |
 | `@on_trigger("x")` | Player runs `/trigger x` | Triggering player |
 | `@on_death` | Entity death | Dying entity |
 | `@on_login` | Player joins server | Joining player |
 | `@on_advancement("id")` | Player earns advancement | Player |
 | `@on_craft("item")` | Player crafts item | Crafting player |
 | `@on_join_team("team")` | Player joins team | Player |
-| `@on(EventType)` | Static event fires | Event player |
-| `@schedule(delay=N)` | Runs function once N ticks after datapack load | Server |
+| `@on(EventType)` | Runtime-backed event fires | Event executor (`Player` for built-in events) |
+| `@schedule(ticks=N)` | Runs function once N ticks after datapack load | Server |
 | `@keep` | (Optimizer hint, no runtime effect) | — |
 | `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |
 | `@inline` | Inline at call sites | — |

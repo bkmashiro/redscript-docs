@@ -1,6 +1,6 @@
 # CLI Reference
 
-The RedScript command-line interface for compiling `.mcrs` files to datapacks.
+The RedScript command-line interface compiles `.mcrs` files to Minecraft datapacks and provides project, testing, linting, formatting, and documentation helpers.
 
 ## Installation
 
@@ -12,6 +12,8 @@ Verify installation:
 
 ```bash
 redscript --version
+# or
+redscript version
 ```
 
 ## Commands
@@ -29,14 +31,16 @@ redscript compile <file> [options]
 | Option | Description | Default |
 |--------|-------------|---------|
 | `-o, --output <path>` | Output directory | `./out` |
-| `--namespace <ns>` | Datapack namespace | File name |
-| `--target <target>` | Output target: `datapack`, `cmdblock`, `structure` | `datapack` |
-| `--output-nbt <file>` | Output .nbt file path (for structure target) | — |
-| `--no-dce` | Disable dead code elimination | `false` |
-| `-O0` | Disable optimization passes | `off` |
-| `-O1` | Enable standard optimizations | `on` |
-| `-O2` | Enable aggressive optimizations | `off` |
-| `--stats` | Print optimizer statistics | `false` |
+| `--namespace <ns>` | Datapack namespace | Derived from filename |
+| `--source-map` | Generate `.sourcemap.json` files next to `.mcfunction` output | `false` |
+| `--snapshot-stages <stages>` | Comma-separated compile stages to snapshot, or `all` | — |
+| `--snapshot-output <path>` | Write selected compile stage snapshots to a JSON file | — |
+| `--mc-version <ver>` | Target Minecraft version; affects codegen features | `1.21` |
+| `--lenient` | Treat type errors as warnings instead of blocking compilation | `false` |
+| `--include <dir>` | Add an import search path; repeatable | — |
+| `--incremental` | Enable file-level incremental compilation cache | `false` |
+
+**Snapshot stages:** `preprocess`, `parse`, `typecheck`, `runtimeMetadata`, `lowerToHIR`, `lowerAndOptimize`, `runtimeAssets`, `finalizeRuntimeLIR`, `emitDatapack`, or `all`.
 
 **Examples:**
 
@@ -44,28 +48,42 @@ redscript compile <file> [options]
 # Basic compilation
 redscript compile hello.mcrs
 
-# Specify output directory
-redscript compile hello.mcrs -o ./my-datapack
+# Specify output directory and namespace
+redscript compile game.mcrs -o ./my-datapack --namespace minigame
 
-# Set namespace
-redscript compile game.mcrs --namespace minigame
+# Compile for an older Minecraft target
+redscript compile game.mcrs --mc-version 1.20.2
 
-# Generate command block structure
-redscript compile game.mcrs --target structure --output-nbt game.nbt
+# Add import search paths
+redscript compile src/main.mcrs --include src/lib --include vendor/redscript
 
-# Disable optimizations for debugging
-redscript compile game.mcrs -O0
+# Generate source maps
+redscript compile game.mcrs --source-map
 
-# Compile with standard optimizations and stats
-redscript compile game.mcrs -O1 --stats
+# Dump selected compiler-stage summaries for debugging/tooling
+redscript compile game.mcrs \
+  --snapshot-stages parse,typecheck,runtimeAssets,emitDatapack \
+  --snapshot-output .redscript/stages.json
 
-# Keep other optimizations, but disable DCE
-redscript compile game.mcrs -O2 --no-dce
+# Dump all available stage summaries
+redscript compile game.mcrs --snapshot-stages all --snapshot-output stages.json
+```
+
+### publish
+
+Compile and package a datapack as a `.zip` ready to install in Minecraft.
+
+```bash
+redscript publish <file> [-o <out.zip>] [--namespace <ns>] [--mc-version <ver>]
+```
+
+```bash
+redscript publish game.mcrs -o game.zip --namespace minigame
 ```
 
 ### watch
 
-Watch for file changes and recompile automatically.
+Watch a directory for `.mcrs` changes, recompile, and optionally hot reload a running test harness.
 
 ```bash
 redscript watch <dir> [options]
@@ -77,29 +95,66 @@ redscript watch <dir> [options]
 |--------|-------------|
 | `-o, --output <path>` | Output directory |
 | `--namespace <ns>` | Datapack namespace |
-| `--hot-reload <url>` | POST to `<url>/reload` after each compile |
-
-**Examples:**
+| `--hot-reload <url>` | After successful compile, POST to `<url>/reload` |
+| `--include <dir>` | Add an import search path; repeatable |
+| `--incremental` | Enable file-level incremental compilation cache |
 
 ```bash
-# Watch and recompile
 redscript watch ./src -o ./server/world/datapacks/my-game
-
-# With hot reload (requires redscript-testharness)
 redscript watch ./src -o ./datapacks/game --hot-reload http://localhost:25561
+```
+
+### test
+
+Compile and run functions annotated with `@test`.
+
+```bash
+redscript test <file> [--dry-run] [--mc-url <url>]
+```
+
+```bash
+# Verify test compilation only
+redscript test tests/main.mcrs --dry-run
+
+# Run tests against a live TestHarness HTTP API
+redscript test tests/main.mcrs --mc-url http://localhost:25561
 ```
 
 ### check
 
-Type-check a file without producing output.
+Check a file for errors without producing datapack output.
 
 ```bash
-redscript check <file>
+redscript check <file> [--fix]
 ```
 
 ```bash
 redscript check game.mcrs
-# ✓ No errors
+redscript check game.mcrs --fix
+```
+
+### lint
+
+Statically analyze a RedScript file and report warnings.
+
+```bash
+redscript lint <file> [--max-function-lines <n>]
+```
+
+```bash
+redscript lint src/main.mcrs --max-function-lines 80
+```
+
+### init
+
+Scaffold a new RedScript datapack project.
+
+```bash
+redscript init [project-name]
+```
+
+```bash
+redscript init my-minigame
 ```
 
 ### fmt
@@ -111,11 +166,31 @@ redscript fmt <file.mcrs> [file2.mcrs ...]
 ```
 
 ```bash
-# Format a single file
 redscript fmt main.mcrs
-
-# Format multiple files
 redscript fmt src/*.mcrs
+```
+
+### generate-dts
+
+Generate a `builtins.d.mcrs` declaration file listing all built-in functions with their type signatures. Useful as a reference or for tooling.
+
+```bash
+redscript generate-dts [--output <file>]
+# short form also works:
+redscript generate-dts -o builtins.d.mcrs
+```
+
+### docs
+
+Open the hosted standard-library documentation website in your browser.
+
+```bash
+redscript docs [module] [--list]
+```
+
+```bash
+redscript docs --list
+redscript docs math
 ```
 
 ### repl
@@ -129,39 +204,8 @@ redscript repl
 ```
 RedScript REPL
 > let x = 5;
-> say("Hello ${x}");
+> say(f"Hello {x}");
 say Hello 5
-> 
-```
-
-### upgrade
-
-Upgrade the RedScript CLI to the latest version from npm.
-
-```bash
-redscript upgrade
-```
-
-```bash
-redscript upgrade
-# Upgrading redscript-mc to latest...
-# ✓ Upgraded to 0.9.2
-```
-
-### generate-dts
-
-Generate a `builtins.d.mcrs` declaration file listing all built-in functions with their type signatures. Useful as a reference or for tooling.
-
-```bash
-redscript generate-dts [--output <file>]
-```
-
-```bash
-# Write to stdout
-redscript generate-dts
-
-# Write to a file
-redscript generate-dts --output builtins.d.mcrs
 ```
 
 ### version
@@ -170,25 +214,20 @@ Show version information.
 
 ```bash
 redscript --version
+redscript version
 ```
 
-## Auto Update Check
+### upgrade
 
-When you run `compile` or `check`, RedScript performs a background check for newer versions. If a newer version is available, a notice is printed after compilation:
+Upgrade the RedScript CLI to the latest npm release.
 
+```bash
+redscript upgrade
 ```
-✓ Compiled successfully
-
-💡 New version available: 0.9.2 (you have 0.9.1). Run `redscript upgrade` to update.
-```
-
-This check runs in the background and never delays compilation.
 
 ## Output Targets
 
-### datapack (default)
-
-Generates a full Minecraft datapack:
+The CLI's main supported output is a Minecraft datapack directory or zip package. A typical datapack output looks like:
 
 ```
 my-datapack/
@@ -205,22 +244,11 @@ my-datapack/
 └── pack.mcmeta
 ```
 
-### cmdblock
-
-Generates JSON for command block placement tools.
-
-### structure
-
-Generates a Minecraft `.nbt` structure file containing command blocks.
-
-```bash
-redscript compile game.mcrs --target structure --output-nbt game.nbt
-```
+Use `publish` when you want a zipped package ready to copy into a world's `datapacks/` directory.
 
 ## Exit Codes
 
 | Code | Meaning |
 |------|---------|
 | `0` | Success |
-| `1` | Compilation error |
-| `2` | File not found |
+| `1` | Compile/check/lint/test failure or invalid CLI usage |

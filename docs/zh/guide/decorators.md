@@ -127,7 +127,6 @@ fn joined_red() {
 |------|------|
 | `PlayerDeath` | 玩家死亡 |
 | `PlayerJoin` | 玩家加入服务器 |
-| `BlockBreak` | 玩家破坏方块 |
 | `EntityKill` | 玩家击杀实体 |
 | `ItemUse` | 玩家使用物品 |
 

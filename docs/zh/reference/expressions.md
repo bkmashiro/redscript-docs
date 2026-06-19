@@ -31,10 +31,10 @@
 
 ```rs
 "hello"
-"Score: ${score}"   // 使用 ${expr} 的 f-string 插值
+f"Score: {score}"   // 使用 {expr} 的 f-string 插值
 ```
 
-字符串是不可变的文本值。在字符串字面量中使用 `${expr}` 可插入任意表达式。
+字符串是不可变的文本值。标准插值写法是 f-string：`f"...{expr}..."`。普通字符串（`"..."`）不会插值。
 
 ### 布尔字面量
 
@@ -118,7 +118,7 @@ let x: int = (2 + 3) * 4;   // 20，而不是 14
 say("Hello, world!");
 
 // 带参数
-tell(@a, "你有 ${score} 分");
+tell(@a, f"你有 {score} 分");
 give(@s, "diamond", 3);
 ```
 
@@ -263,7 +263,7 @@ match phase {
 
 ```rs
 match color {
-    Color::RGB(r, g, b) => { tell(@s, "r=${r} g=${g} b=${b}"); },
+    Color::RGB(r, g, b) => { tell(@s, f"r={r} g={g} b={b}"); },
     Color::Red           => { say("纯红"); },
     _                    => { },
 }
@@ -275,7 +275,7 @@ match color {
 let maybe: Option<int> = find_score(@p);
 
 match maybe {
-    Some(v) => { tell(@s, "分数：${v}"); },
+    Some(v) => { tell(@s, f"分数：{v}"); },
     None    => { say("未找到分数"); },
 }
 ```

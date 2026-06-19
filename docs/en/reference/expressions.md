@@ -31,10 +31,10 @@ Bare decimal literals are `fixed` (×10000 storage). To get a `double`, cast exp
 
 ```rs
 "hello"
-"Score: ${score}"   // f-string interpolation with ${expr}
+f"Score: {score}"   // f-string interpolation with {expr}
 ```
 
-Strings are immutable text values. Use `${expr}` inside any string literal to interpolate any expression.
+Strings are immutable text values. Use canonical f-strings (`f"...{expr}..."`) to interpolate expressions. Plain strings (`"..."`) are not interpolated.
 
 ### Boolean literals
 
@@ -118,7 +118,7 @@ let x: int = (2 + 3) * 4;   // 20, not 14
 say("Hello, world!");
 
 // With arguments
-tell(@a, "You have ${score} points");
+tell(@a, f"You have {score} points");
 give(@s, "diamond", 3);
 ```
 
@@ -263,7 +263,7 @@ match phase {
 
 ```rs
 match color {
-    Color::RGB(r, g, b) => { tell(@s, "r=${r} g=${g} b=${b}"); },
+    Color::RGB(r, g, b) => { tell(@s, f"r={r} g={g} b={b}"); },
     Color::Red           => { say("plain red"); },
     _                    => { },
 }
@@ -275,7 +275,7 @@ match color {
 let maybe: Option<int> = find_score(@p);
 
 match maybe {
-    Some(v) => { tell(@s, "Score: ${v}"); },
+    Some(v) => { tell(@s, f"Score: {v}"); },
     None    => { say("No score found"); },
 }
 ```

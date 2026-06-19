@@ -70,6 +70,28 @@ fn every_minute() {
 
 **编译为：** 使用 `schedule` 命令和指定间隔。
 
+## @function_tag
+
+将函数注册到 Minecraft function tag。这是标签式入口点的通用 primitive。
+
+**语法：** `@function_tag("namespace:path")`
+
+```rs
+@function_tag("minecraft:load")
+fn init() {
+    say("Loaded through a function tag");
+}
+
+@function_tag("rs:on_player_death")
+fn on_player_death() {
+    scoreboard_add(@s, "deaths", 1);
+}
+```
+
+**编译为：** 将函数引用加入 `data/<namespace>/tags/function/<path>.json`。
+
+`@load` 等价于 `@function_tag("minecraft:load")`，`@tick` 等价于 `@function_tag("minecraft:tick")`。如果两种写法指向同一个 tag，编译器会合并并去重。
+
 ## @on_trigger
 
 当玩家激活触发器记分板时运行。
@@ -188,58 +210,52 @@ fn joined_red_team() {
 
 ## @on(EventType)
 
-处理静态事件类型。事件处理器每 tick 通过标签检测轮询。
+处理编译器已知的运行时事件类型。事件 runtime 会注入执行上下文，因此推荐写零参数 handler，并在函数体内用 `@s` 表示触发事件的玩家/实体。旧版单个 `Player` 参数仍兼容，但它应理解为事件执行者的 alias，而不是普通函数参数。
 
 **语法：** `@on(EventType)`
 
 **支持的事件类型：**
 
-| 事件 | 描述 | 检测方式 |
-|------|------|----------|
-| `PlayerDeath` | 玩家死亡 | 基于分数 |
-| `PlayerJoin` | 玩家加入服务器 | 基于标签 |
-| `BlockBreak` | 玩家破坏方块 | 基于进度 |
-| `EntityKill` | 玩家击杀实体 | 基于分数 |
-| `ItemUse` | 玩家使用物品 | 基于分数 |
+| 事件 | 描述 | 检测方式 | `@s` 上下文 |
+|------|------|----------|-------------|
+| `PlayerDeath` | 玩家死亡 | 记分板 / runtime asset | `Player` |
+| `PlayerJoin` | 玩家加入服务器 | 标签 / runtime asset | `Player` |
+| `EntityKill` | 玩家击杀实体 | 记分板 / runtime asset | `Player` |
+| `ItemUse` | 玩家使用物品 | 记分板 / runtime asset | `Player` |
 
 ```rs
 @on(PlayerDeath)
 fn handle_player_death() {
-    say("A player has died!");
     scoreboard_add(@s, "deaths", 1);
 }
 
+// 兼容旧写法：参数会被降低为事件执行者。
 @on(PlayerJoin)
-fn handle_player_join() {
-    title(@s, "Welcome to the Server!");
-}
-
-@on(BlockBreak)
-fn handle_block_break() {
-    scoreboard_add(@s, "blocks_broken", 1);
+fn handle_player_join(player: Player) {
+    title(player, "Welcome to the Server!");
 }
 ```
 
-**编译为：** 每 tick 使用事件内部标签（如 `rs.just_died`）对 `@a` 进行标签检查。
+**编译为：** 将 handler 加入该事件的 function tag（例如 `rs:on_player_death`），并自动包含标准库中需要的事件 runtime asset。不支持的事件请用 `@function_tag` 加显式 stdlib/runtime dispatcher 组合。
 
 ## @schedule
 
 在数据包加载后经过固定延迟（以 tick 为单位）后，调度函数执行一次。
 
-**语法：** `@schedule(delay=N)`
+**语法：** `@schedule(ticks=N)`
 
 | 参数 | 描述 |
 |------|------|
-| `delay=N` | 函数执行前等待的 tick 数。 |
+| `ticks=N` | 函数执行前等待的 tick 数。 |
 
 ```rs
-@schedule(delay=100)
+@schedule(ticks=100)
 fn delayed_start() {
     // 在数据包加载后 5 秒（100 tick）运行
     say("Game starting!");
 }
 
-@schedule(delay=1200)
+@schedule(ticks=1200)
 fn end_game() {
     // 在数据包加载后 60 秒（1200 tick）运行
     say("Time's up!");
@@ -247,7 +263,7 @@ fn end_game() {
 }
 ```
 
-**编译为：** 在 `@load` 初始化函数中生成 `schedule function <ns>:<name> <delay>t`。
+**编译为：** 编译器生成调度包装入口，并从启动路径执行 `schedule function <ns>:<name> <ticks>t`。
 
 ::: tip
 对于重复性调度任务，请使用 `@tick(rate=N)`。`@schedule` 仅用于一次性的启动延迟。
@@ -317,13 +333,14 @@ fn on_done() {
 | `@load` | 数据包加载 / `/reload` | 服务器 |
 | `@tick` | 每个游戏刻（20次/秒） | 服务器 |
 | `@tick(rate=N)` | 每 N 个游戏刻 | 服务器 |
+| `@function_tag("namespace:path")` | Function tag 注册 | 调用方 / tag runtime |
 | `@on_trigger("x")` | 玩家运行 `/trigger x` | 触发的玩家 |
 | `@on_death` | 实体死亡 | 死亡的实体 |
 | `@on_login` | 玩家加入服务器 | 加入的玩家 |
 | `@on_advancement("id")` | 玩家获得进度 | 玩家 |
 | `@on_craft("item")` | 玩家合成物品 | 合成的玩家 |
 | `@on_join_team("team")` | 玩家加入队伍 | 玩家 |
-| `@on(EventType)` | 静态事件触发 | 事件玩家 |
-| `@schedule(delay=N)` | 数据包加载后 N 个 tick 运行一次函数 | 服务器 |
+| `@on(EventType)` | runtime 支撑的事件触发 | 事件执行者（内置事件为 `Player`） |
+| `@schedule(ticks=N)` | 数据包加载后 N 个 tick 运行一次函数 | 服务器 |
 | `@keep` | （优化器提示，无运行时效果） | — |
 | `@coroutine` | 将函数标记为协程（在循环回边处让出控制权） | — |

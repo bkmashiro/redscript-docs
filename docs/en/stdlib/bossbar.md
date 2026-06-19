@@ -18,11 +18,11 @@
 ## `create_timer_bar`
 
 Creates a visible timer bossbar for all players.
-The bossbar max and current value are initialized to `max_seconds * 20`
-so callers can update it directly in game ticks.
+The bossbar max and current value are initialized to `max_ticks`.
+Callers can pass seconds * 20 if they need second-based durations at the call site.
 
 ```redscript
-fn create_timer_bar(id: string, name: string, max_seconds: int)
+fn create_timer_bar(id: string, name: string, max_ticks: int)
 ```
 
 **Parameters**
@@ -31,7 +31,7 @@ fn create_timer_bar(id: string, name: string, max_seconds: int)
 |-----------|-------------|
 | `id` | Bossbar identifier, usually `<namespace>:<name>` |
 | `name` | Display name shown on the bossbar |
-| `max_seconds` | Duration in seconds; converted to ticks internally |
+| `max_ticks` | Duration in game ticks |
 
 **Example**
 

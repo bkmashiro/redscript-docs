@@ -24,8 +24,7 @@ fn handle_join(player: Player) {
 |------|------|----------|
 | `PlayerDeath` | `Player` | 玩家死亡时 |
 | `PlayerJoin` | `Player` | 玩家加入时 |
-| `BlockBreak` | `Player` | 玩家破坏方块时 |
-| `EntityKill` | `entity` | 实体被击杀时 |
+| `EntityKill` | `Player` | 玩家击杀实体时 |
 | `ItemUse` | `Player` | 玩家使用物品时 |
 
 同一个事件可以注册多个处理函数。RedScript 会为每种事件生成一个分发器，并依次调用匹配的处理函数。
@@ -38,9 +37,9 @@ fn welcome(player: Player) {
     say(f"Welcome {player}!");
 }
 
-@on(BlockBreak)
-fn reward_mining(player: Player) {
-    scoreboard_add(player, "blocks", 1);
+@on(EntityKill)
+fn reward_kill() {
+    scoreboard_add(@s, "kills", 1);
 }
 
 @on(ItemUse)
