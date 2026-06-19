@@ -10,7 +10,13 @@
 - [max](#max)
 - [clamp](#clamp)
 - [lerp](#lerp)
+- [lerp_t1000](#lerp-t1000)
 - [sqrt_fixed](#sqrt-fixed)
+- [sqrt_fx1000](#sqrt-fx1000)
+- [mul_fx1000](#mul-fx1000)
+- [div_fx1000](#div-fx1000)
+- [smoothstep_t1000](#smoothstep-t1000)
+- [smootherstep_t1000](#smootherstep-t1000)
 
 ---
 
@@ -167,6 +173,18 @@ let w = lerp(100, 200, 750)   // result: 175
 
 ---
 
+## `lerp_t1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 interpolation.
+Prefer this name in new code when the `t` parameter is a ×1000 fraction.
+`lerp` remains available for compatibility.
+
+```redscript
+fn lerp_t1000(a: int, b: int, t: int) -> int
+```
+
+---
+
 ## `sqrt_fixed` <Badge type="info" text="v1.0.0" />
 
 定点数平方根（精度 ×1000）
@@ -188,6 +206,62 @@ fn sqrt_fixed(x: int) -> int
 ```redscript
 let s = sqrt_fixed(2000)  // result: ~1414  (√2 × 1000)
 let t = sqrt_fixed(1000)  // result: 1000   (√1 × 1000)
+```
+
+---
+
+## `sqrt_fx1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 square root.
+Prefer this name in new code to avoid confusing it with language `fixed` (×10000).
+`sqrt_fixed` remains available for compatibility.
+
+```redscript
+fn sqrt_fx1000(x: int) -> int
+```
+
+---
+
+## `mul_fx1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 fixed-point multiply.
+`mulfix` remains available for compatibility.
+
+```redscript
+fn mul_fx1000(a: int, b: int) -> int
+```
+
+---
+
+## `div_fx1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 fixed-point divide.
+`divfix` remains available for compatibility.
+
+```redscript
+fn div_fx1000(a: int, b: int) -> int
+```
+
+---
+
+## `smoothstep_t1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 smoothstep output.
+`smoothstep` remains available for compatibility.
+
+```redscript
+fn smoothstep_t1000(lo: int, hi: int, x: int) -> int
+```
+
+---
+
+## `smootherstep_t1000` <Badge type="info" text="v3.1.0" />
+
+Explicit alias for legacy ×1000 smootherstep output.
+`smootherstep` remains available for compatibility.
+
+```redscript
+fn smootherstep_t1000(lo: int, hi: int, x: int) -> int
 ```
 
 ---
