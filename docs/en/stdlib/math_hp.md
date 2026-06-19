@@ -41,8 +41,7 @@ let r: double = double_mul_fixed(3.14d, 20000); // 6.28  (3.14 × 2.0)
 
 ## `double_mul` <Badge type="info" text="v1.3.0" />
 
-Multiply two doubles via scoreboard integer approximation (~4 decimal digits).
-⚠ Overflows for |a| × |b| > ~21474. Use `double_mul_fixed` for higher precision.
+Multiply two doubles via macro-scale double path, avoiding int32 scoreboard products.
 
 ```redscript
 fn double_mul(a: double, b: double): double
@@ -52,10 +51,10 @@ fn double_mul(a: double, b: double): double
 
 | Parameter | Description |
 |-----------|-------------|
-| `a` | First factor (double) |
-| `b` | Second factor (double) |
+| `a` | First factor (double, stored in `__dp0`) |
+| `b` | Second factor (double, stored in `__dp1`, rounded to ×10000 for macro scale) |
 
-**Returns:** a × b (scoreboard approximation, ~4 sig. figs.)
+**Returns:** a × b through the shared `__dmul_apply_scale` macro helper
 
 ---
 
