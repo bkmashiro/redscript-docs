@@ -356,39 +356,47 @@ fn old_api() { }
 
 ## @singleton
 
-Ensures only one instance of this function's state exists globally.
+Marks a struct as global scoreboard-backed state and exposes synthetic `StructName::get()` / `StructName::set(value)` helpers.
 
-**Syntax:** `@singleton`
+**Syntax:** `@singleton` on a `struct`
 
 ```rs
 @singleton
-fn get_game_state(): int {
-    // State is shared across all calls
+struct GameState {
+    phase: int,
+    tick_count: int,
+}
+
+@keep
+fn update_state() {
+    let state = GameState::get()
+    state.tick_count = state.tick_count + 1
+    GameState::set(state)
 }
 ```
 
 ## @watch
 
-Runs the function when a scoreboard value changes.
+Runs a parameterless handler when a player's value in a watched scoreboard objective changes.
 
 **Syntax:** `@watch("objective")`
 
 ```rs
-@watch("score")
+@watch("rs.kills")
 fn on_score_change() {
-    say("Score changed!");
+    say("Score changed!")
 }
 ```
 
 ## @config
 
-Injects compile-time configuration values.
+Injects numeric compile-time configuration values into global `let` declarations.
 
-**Syntax:** `@config("key")`
+**Syntax:** `@config("key", default: N)`
 
 ```rs
-@config("MAX_PLAYERS")
-const MAX_PLAYERS: int = 16;  // Default, can be overridden
+@config("max_players", default: 16)
+let MAX_PLAYERS: int
 ```
 
 ## @profile
@@ -494,9 +502,9 @@ fn test_addition() {
 | `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |
 | `@inline` | Inline at call sites | — |
 | `@deprecated` | Emit warning on use | — |
-| `@singleton` | Single global instance | — |
-| `@watch` | Scoreboard change | — |
-| `@config` | Compile-time config | — |
+| `@singleton` | Struct-backed global state | — |
+| `@watch` | Per-player scoreboard change | Player (`@s`) |
+| `@config` | Numeric compile-time config | — |
 | `@profile` | Performance timing | — |
 | `@throttle(N)` | Rate limit to 1/N ticks | — |
 | `@retry(N)` | Auto-retry N times | — |

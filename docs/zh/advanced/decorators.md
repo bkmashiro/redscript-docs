@@ -89,54 +89,61 @@ fn grant_reward() {
 
 ## `@watch`
 
-**语法：** `@watch("target")`
+**语法：** `@watch("scoreboard_objective")`
 
-**编译行为：** 把被装饰的 handler 注册到编译器生成的 watch 系统中。底层存储与检查实现会因 target build 而异，但稳定契约是一样的：这个函数不再只是普通手动调用函数，而是被接入自动生成的变更检测胶水代码。
+**编译行为：** 把无参数 handler 注册到编译器生成的 watch dispatcher。编译器会创建一个保存上次值的 objective，并生成 tick 入口；当某个玩家在被监听的 scoreboard objective 上的值发生变化时，调用对应 handler。
 
 ```rs
-let phase: int = 0
-
-@watch("phase")
-fn on_phase_changed() {
-    say(f"Phase changed to {phase}")
+@watch("rs.kills")
+fn on_kills_changed() {
+    let kills: int = scoreboard_get("@s", "rs.kills")
+    if (kills >= 10) {
+        title("@s", "Achievement Unlocked!")
+    }
 }
 ```
 
-适合做响应式调试面板、状态切换和低频变化处理。
+适合对低频 scoreboard 变化做响应。它监听的是 Minecraft scoreboard objective，不是任意 RedScript 全局变量。
 
 ## `@singleton`
 
-**语法：** `@singleton`
+**语法：** 在 `struct` 上使用 `@singleton`
 
-**编译行为：** 把被装饰的类型或工厂 lowering 成唯一共享实例。所有使用方都会落到同一份后端状态，而不是各自创建新副本。
+**编译行为：** 把 struct 标记为全局 scoreboard-backed 状态。类型检查器会暴露合成的静态方法 `StructName::get()` 和 `StructName::set(value)`；编译器会为每个字段生成 scoreboard objective 和辅助函数。
 
 ```rs
 @singleton
 struct MatchState {
-    round: int
-    running: bool
+    round: int,
+    running: int,
+}
+
+@keep
+fn advance_round() {
+    let state = MatchState::get()
+    state.round = state.round + 1
+    MatchState::set(state)
 }
 ```
 
-它适合全局游戏状态、管理器和必须全局唯一的注册表对象。
+它适合少量全局游戏状态。目前这是 struct 特性，不是通用的函数/工厂 singleton。
 
 ## `@config`
 
-**语法：** `@config("key.path")`
+**语法：** 在全局 `let` 上使用 `@config("key", default: N)`
 
-**编译行为：** 把声明绑定到具名配置项。编译器会生成加载期初始化胶水，让该值从配置数据中读取；如果没有提供外部值，则回落到源码里的默认值。
+**编译行为：** 把被装饰的全局变量替换成整数编译期常量。值来自 `CompileOptions.config`；缺少 key 时使用声明里的数字 `default`，没有 default 时为 `0`。它不会生成运行时/加载期读取配置的胶水代码。
 
 ```rs
-@config("game.welcome")
-let welcome_message: string = "Welcome!"
+@config("max_players", default: 20)
+let MAX_PLAYERS: int
 
-@load
-fn greet() {
-    say(welcome_message)
+fn get_max_players(): int {
+    return MAX_PLAYERS
 }
 ```
 
-一旦其他模块或存档开始依赖某个配置键，就应尽量保持它稳定。
+一旦构建脚本或下游项目开始依赖某个配置键，就应尽量保持它稳定。
 
 ## `@on(EventType)`
 

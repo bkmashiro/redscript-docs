@@ -89,54 +89,61 @@ Deprecation is a migration tool, not a removal mechanism.
 
 ## `@watch`
 
-**Syntax:** `@watch("target")`
+**Syntax:** `@watch("scoreboard_objective")`
 
-**Compile behaviour:** Registers the decorated handler with the compiler-generated watch system. The exact storage backend depends on the target build, but the contract is stable: the handler is wired into generated change-detection glue instead of being treated as a normal manually called function.
+**Compile behaviour:** Registers a parameterless handler with the generated watch dispatcher. The compiler creates a previous-value objective and a tick entry that runs the handler for players whose value in the watched scoreboard objective changed.
 
 ```rs
-let phase: int = 0
-
-@watch("phase")
-fn on_phase_changed() {
-    say("Phase changed")
+@watch("rs.kills")
+fn on_kills_changed() {
+    let kills: int = scoreboard_get("@s", "rs.kills")
+    if (kills >= 10) {
+        title("@s", "Achievement Unlocked!")
+    }
 }
 ```
 
-Use `@watch` for reactive debug panels, state transitions, and low-frequency change handlers.
+Use `@watch` for low-frequency reactions to scoreboard changes. It watches Minecraft scoreboard objectives, not arbitrary RedScript globals.
 
 ## `@singleton`
 
-**Syntax:** `@singleton`
+**Syntax:** `@singleton` on a `struct`
 
-**Compile behaviour:** Lowers the decorated type or factory to one shared instance in generated storage. All consumers talk to the same backing state instead of creating fresh copies.
+**Compile behaviour:** Marks a struct as global scoreboard-backed state. The typechecker exposes synthetic static `StructName::get()` and `StructName::set(value)` methods, and the compiler emits per-field scoreboard objectives and helper functions.
 
 ```rs
 @singleton
 struct MatchState {
-    round: int
-    running: bool
+    round: int,
+    running: int,
+}
+
+@keep
+fn advance_round() {
+    let state = MatchState::get()
+    state.round = state.round + 1
+    MatchState::set(state)
 }
 ```
 
-This is useful for global game state, managers, and registries that must exist exactly once.
+This is useful for small pieces of global game state. It is currently a struct feature, not a general function or factory singleton.
 
 ## `@config`
 
-**Syntax:** `@config("key.path")`
+**Syntax:** `@config("key", default: N)` on a global `let`
 
-**Compile behaviour:** Binds the declaration to a named configuration entry. The compiler emits load-time glue so the value is initialized from configuration data with the declared default as fallback.
+**Compile behaviour:** Replaces the decorated global with an integer compile-time constant. Values come from `CompileOptions.config`; if a key is missing, the declared numeric `default` is used, or `0` if no default is provided. It does not generate load-time config-reading glue.
 
 ```rs
-@config("game.welcome")
-let welcome_message: string = "Welcome!"
+@config("max_players", default: 20)
+let MAX_PLAYERS: int
 
-@load
-fn greet() {
-    say("Welcome!")
+fn get_max_players(): int {
+    return MAX_PLAYERS
 }
 ```
 
-Keep config keys stable once other modules or worlds depend on them.
+Keep config keys stable once build scripts or consuming projects depend on them.
 
 ## `@on(EventType)`
 
