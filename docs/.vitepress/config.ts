@@ -87,6 +87,7 @@ export default defineConfig({
               items: [
                 { text: 'Syntax', link: '/en/reference/syntax' },
                 { text: 'Type System Guide', link: '/en/reference/types' },
+                { text: 'Numerics & Precision', link: '/en/reference/numerics' },
                 { text: 'Error Messages Guide', link: '/en/reference/errors' },
                 { text: 'Built-in Functions', link: '/en/reference/builtins' },
                 { text: 'Standard Library', link: '/en/reference/stdlib' },
@@ -274,6 +275,7 @@ export default defineConfig({
               items: [
                 { text: '语法', link: '/zh/reference/syntax' },
                 { text: '类型系统指南', link: '/zh/reference/types' },
+                { text: '数值与精度', link: '/zh/reference/numerics' },
                 { text: '错误信息指南', link: '/zh/reference/errors' },
                 { text: '内置函数', link: '/zh/reference/builtins' },
                 { text: '标准库', link: '/zh/reference/stdlib' },
