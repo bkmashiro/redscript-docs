@@ -5,71 +5,74 @@
   <span class="time">⏱️ 25 min</span>
 </div>
 
-
 **Difficulty:** Advanced  
 **Time:** ~30 minutes  
 **Prerequisites:** [Tutorial 08: Coroutines](./08-coroutines)
 
 ## What You'll Build
 
-A compound interest calculator that computes A = P × 1.05^t two ways: once using `fixed`-point arithmetic (4 decimal places) and once using `double`-precision IEEE 754 (8+ decimal places). Results are displayed on a scoreboard.
+A compound interest calculator that computes A = P × 1.05^t two ways:
+
+- using language `fixed` (canonical ×10000)
+- using `double` (NBT-backed IEEE 754)
+
+Results are displayed on a scoreboard.
 
 ## What You'll Learn
 
-- `fixed` type: ×10000 integer stored in scoreboard
-- `double` type: IEEE 754 stored in NBT (`rs:d`)
+- Language `fixed`: `×10000` scale and cast semantics
+- `double`: NBT-backed `rs:d` type and precision tradeoffs
 - `as fixed`, `as int`, `as double` casts
-- `import math_hp::*` — high-precision functions
-- `pow_real(base, exp)` — real-valued power
-- When to use `fixed` vs `double`
+- When and how to use low-level scale-specific stdlib helpers (`fx1000`/`fx10000` APIs)
 
 ## The Two Precision Types
 
-### fixed — 4 Decimal Places
+### fixed — 4 decimal places (×10000)
 
-`fixed` is just a regular integer stored with an implicit ×10000 scale:
-
-```rs
-// 1.5 stored as 15000
-let a: fixed = 15000 as fixed
-
-// The "real" value is always: stored_int / 10000
-// 15000 / 10000 = 1.5  ✓
-```
-
-**Advantages:** Fast, uses scoreboard, works with all MC versions.  
-**Limitations:** Only 4 decimal places; overflow at ±214748 (×10000 → ±21.4748 billion as raw int).
-
-### double — IEEE 754 Full Precision
-
-`double` uses MC's NBT storage (`rs:d`) for true IEEE 754 64-bit floating point:
+`fixed` is a regular integer type with an implicit ×10000 representation:
 
 ```rs
-let base: double = 1.05d    // d suffix = double literal
-
-// ~15 significant digits
-// Slower (requires entity/storage manipulation)
-// Needs import math_hp::*
+let a: fixed = 1.5;     // stored as 15000
+let b: fixed = 2.5;     // stored as 25000
+let i: int = 5;
+let c: fixed = i as fixed; // 5 as fixed -> 50000 (integer ×10000)
 ```
 
-**Advantages:** ~15 significant digits, can represent very large and very small values.  
-**Limitations:** Slower than `fixed`; requires `import math_hp::*` for arithmetic.
+- **Pros:** fast, pure scoreboard math, works on all supported Minecraft versions
+- **Cons:** 4 decimal places, and intermediate values should be bounded to avoid int32 overflow
 
-## Step 1: fixed Arithmetic
+### double — IEEE 754 full precision
+
+`double` values are stored as Java doubles in NBT (`rs:d`):
+
+```rs
+let pi: double = 3.14159265d;
+```
+
+- **Pros:** higher precision and larger exponent range for advanced math
+- **Cons:** slower than fixed-point paths; conversion back to scoreboard/int crosses helper boundaries and may truncate/round at ×10000
+
+## Step 1: Language fixed Arithmetic
+
+Use ordinary operators for normal fixed-point math:
 
 ```rs
 fn fixed_demo() {
-    // Addition/subtraction: just add the raw integers
-    let a: fixed = 15000 as fixed   // 1.5
-    let b: fixed = 25000 as fixed   // 2.5
-    let sum: int = (a as int) + (b as int)   // 40000 = 4.0  ✓
+    let a: fixed = 1.5;
+    let b: fixed = 2.5;
 
-    // Multiplication: multiply then divide by 10000 to stay in scale
-    let product: int = (a as int) * (b as int) / 10000  // 37500 = 3.75  ✓
+    let sum: fixed = a + b;   // 4.0
+    let diff: fixed = b - a;  // 1.0
 
-    // Percentage: score * 10000 / max
-    let score: int = 750
-    let pct: fixed = (score * 10000 / 1000) as fixed   // 7500 = 75.00%
+    // The compiler restores ×10000 scale automatically for fixed×fixed math
+    let product: fixed = a * b;      // 3.75
+    let ratio: fixed = a / b;        // 0.6
+
+    let score: fixed = 750 as fixed;
+    let max_score: fixed = 1000 as fixed;
+    let pct: fixed = score / max_score;   // 0.75
+
+    tell(@s, f"sum={sum as int}, product={product as int}, pct(raw)={pct as int}");
 }
 ```
 
@@ -78,105 +81,109 @@ fn fixed_demo() {
 ```rs
 @on_trigger("compound_interest")
 fn compound_interest() {
-    let principal: int = 1000
-    let base_fx: int = 10500   // 1.05 × 10000
+    let principal: fixed = 1000 as fixed;
+    let growth: fixed = 1.05;
 
-    let amount: int = principal
-    let t: int = 0
+    let amount: fixed = principal;
+    let t: int = 0;
     while (t < 10) {
-        // A = A * 1.05  →  A = A * 10500 / 10000
-        amount = amount * base_fx / 10000
-        t = t + 1
+        // fixed math path: amount = amount * 1.05, scale stays ×10000
+        amount = amount * growth;
+        t = t + 1;
     }
 
-    // Expected: 1000 * 1.05^10 ≈ 1628.89
-    // Fixed result: 1628 (truncation each step accumulates small errors)
-    tell(@s, f"Fixed result: {amount} (expected ~1629)")
-    scoreboard_set("#result_fx", "result_display", amount)
+    // 1000 × 1.05^10 ≈ 1628.89
+    // `as int` displays the whole-unit part after truncation.
+    // expected truncated whole part ≈ 1628
+    tell(@s, f"Fixed result (whole units): {amount as int}");
+    scoreboard_set("#result_fx", "result_display", amount as int);
 }
 ```
 
 ## Step 3: Compound Interest (double)
 
 ```rs
-import math_hp::*
+import "stdlib/math_hp::*"
 
 @load
 fn on_load() {
-    init_trig()   // required by math_hp
+    init_trig();   // required by math_hp
 }
 
 @on_trigger("compound_double")
 fn compound_double() {
-    // pow_real(base, exp) = base^exp using ln/exp method
-    let base: double = 1.05d
-    let exp_val: double = 10.0d
+    // pow_real(base, exp) uses the high-precision helper path
+    let base: double = 1.05d;
+    let exp_val: double = 10.0d;
 
-    let result: double = pow_real(base, exp_val) as double
-    // result ≈ 1.6289 (IEEE 754 precision)
+    let result: double = pow_real(base, exp_val);
+    // 1.6289...
 
-    // Convert to ×10000 int for display
-    let result_int: int = result as int   // 16289
-    scoreboard_set("#result_dbl", "result_display", result_int)
-    tell(@s, f"Double result (×10000): {result_int} = 1.6289")
+    // Convert to an integer display value; this truncates the fractional part
+    let result_int: int = result as int; // 1
+    scoreboard_set("#result_dbl", "result_display", result_int);
+    tell(@s, f"Double result (whole units): {result_int}; true value ≈ 1.6289");
 }
 ```
 
-## Step 4: Casting
+## Step 4: Casts
 
 ```rs
 fn cast_demo() {
-    // int → fixed: mark as fixed (no conversion, just type annotation)
-    let i: int = 42
-    let f: fixed = i as fixed         // still stores 42 (represents 0.0042!)
+    let i: int = 42;
+    let from_int: fixed = i as fixed;     // 420000 raw => 42.0
 
-    // To represent 4.2: store 42000
-    let four_two: fixed = 42000 as fixed   // represents 4.2
+    let from_literal: fixed = 4.2;        // 42000 raw => 4.2
+    let trunc_to_int: int = from_literal as int;  // 4
 
-    // fixed → int: drops the type, keeps the raw number
-    let raw: int = four_two as int         // 42000
-
-    // Extract real parts:
-    let integer_part: int = raw / 10000     // 4
-    let decimal_part: int = raw % 10000     // 2000 (= 0.2 × 10000)
-
-    // double → int: reads value × 10000
-    let d: double = 3.14d
-    let d_int: int = d as int    // 31400  (3.14 × 10000)
+    let back_to_double: double = from_literal as double;
+    let d_int: int = 3.14d as int;       // 3
 }
 ```
 
-## Step 5: When to Use Each
+- `int as fixed` multiplies by 10000
+- `fixed as int` divides by 10000 (truncates)
+- `fixed as double` passes through the fixed boundary helper path
 
-| Situation | Use |
-|-----------|-----|
-| Percentages, ratios, fractions | `fixed` |
-| Simple game math (HP %, timers) | `fixed` |
-| Needs > 4 decimal places | `double` |
-| Scientific/financial calculations | `double` |
-| Compound interest, logarithms | `double` + `math_hp` |
-| Must work MC 1.16+ without entity tricks | `fixed` |
+## Step 5: Low-level stdlib helpers (scale-specific)
 
-## Complete Code
+For interoperability with legacy/typed-integer helpers, import explicit helpers and pass scaled integers directly.
 
-Full example: [tutorial_09_precision.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/tutorial_09_precision.mcrs)
+```rs
+import "stdlib/math"
 
-## Try It Out
+fn legacy_helper_demo() {
+    // Legacy trig helpers are ×1000 raw-int APIs
+    let angle: int = 45000;      // 45.0° × 1000
+    let sin45: int = sin_fx1000(angle);  // 500
+    let cos45: int = cos_fx1000(angle);  // 707 (approx)
 
-1. Install and `/reload`
-2. `/trigger fixed_demo` — see fixed-point arithmetic results in chat
-3. `/trigger compound_interest` — fixed-point compound interest
-4. `/trigger compound_double` — double-precision compound interest
-5. Compare the two results in the sidebar scoreboard
-6. `/trigger cast_demo` — see how casts work
+    // Explicit ×1000 helper names are preferred in new code
+    let blend: int = lerp_t1000(0, 1000, 500); // 500
+    let mul: int = mul_fx1000(500, 707);        // 353
+
+    // ×10000 fixed helper
+    let sqrt2: int = sqrt_fx10000(20000);       // ≈ 14142 (√2 × 10000)
+}
+```
+
+These helper names are explicit about scale, while the old names without `fx` remain available for compatibility.
 
 ## Precision Comparison
 
 | Method | 1000 × 1.05^10 | Error |
 |--------|----------------|-------|
 | True value | 1628.8946... | — |
-| `fixed` (step-by-step) | 1628 | ~0.89 |
-| `double` (pow_real) | 1628.89... | <0.001 |
+| `fixed` (step-by-step) | ~1628 (truncated to int display) | ~0.89 |
+| `double` (`pow_real`) | 1628.89... | <0.001 |
+
+## Try It Out
+
+1. Install and `/reload`
+2. `/trigger compound_interest` — fixed-point compound interest
+3. `/trigger compound_double` — double-precision compound interest
+4. Compare both results in the sidebar scoreboard
+5. `/trigger cast_demo` — see how casts behave
 
 ## Next Steps
 

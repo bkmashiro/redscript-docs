@@ -1,63 +1,59 @@
 # 优化器
 
-RedScript 会在写出最终 datapack 之前执行多轮编译期优化。目标很直接：减少命令数量、删掉不可达 helper、并在不改变语义的前提下压缩热路径。
+RedScript 使用一套**固定、生产安全**的优化流水线。
 
-## 优化等级
+CLI 中当前没有公开的优化等级开关（`-O0`、`-O1`、`-O2`、`--stats`、`--no-dce`）。每次编译都会运行同一套保守的默认流水线。
 
-可以用下面这些 CLI 参数控制优化器强度：
+## 固定优化流水线
 
-| 参数 | 含义 |
-|------|------|
-| `--no-dce` | 只关闭死代码消除。其他仍然启用的优化照常运行。 |
-| `-O0` | 关闭优化。最适合调试生成结果。 |
-| `-O1` | 开启标准、安全的优化集合。开发期的默认推荐。 |
-| `-O2` | 开启完整优化流水线，包括更激进的内联与循环清理。 |
+流水线分阶段执行：
 
-典型用法：
+1. **MIR 优化**（`src/optimizer/pipeline.ts`）
+   - `autoInlineSmallFunctions`、`inlinePass` 在 MIR 级别函数内联前先做计划。
+   - 每个函数按定点迭代进行以下安全 pass：
+     `loopUnroll` → `licm` → `nbtBatchRead` → `nbtCoalesce` → `scoreboardBatchRead` → `constantFold` → `strengthReduction` → `cse` → `copyProp` → `branchSimplify` → `dce` → `blockMerge`。
+   - 每个函数优化结束后再执行 `interproceduralConstProp`（模块级）。
+2. **LIR 优化**（`src/optimizer/lir/pipeline.ts`）
+   - 生产默认 pass：`deadSlotElimModule` → `execStorePeephole` → `constImmFold` → `deadSlotElimModule`。
+   - `scoreboardRmwPassModule`（局部副本重写）默认**关闭**。
 
-```bash
-redscript compile main.mcrs -O0
-redscript compile main.mcrs -O1 --stats
-redscript compile main.mcrs -O2 --no-dce
-```
+`scoreboardRmwPassModule` 是独立的可选优化模式，不在默认流水线中开启。
 
 ## DCE
 
-死代码消除会移除从任何公共入口都无法到达的函数。
+优化完成后，RedScript 会移除不可达函数。它基于可达入口与运行时装饰器，再结合装饰器根节点做可达性推导。
 
-高层规则：
+常用规则：
 
-- 名称不以下划线 `_` 开头的函数会被视为 public，并生成到输出中。
-- 以下划线开头的函数会被视为 private helper；如果不可达就可能被删除。
-- `@load`、`@tick`、`@on(...)`、`@coroutine` 等装饰过的函数会自动保留。
-- `@keep` 可以覆盖 DCE，强制保留函数。
+- `@load`、`@tick`、`@on(...)`、`@coroutine` 等运行时装饰器入口函数会保留。
+- 不可达的内部 helper 会被移除，以减小输出。
+- `@keep` 可以显式保留函数，即使它在可达性上本应被删。
 
 ```rs
-fn start() {
-    _helper()
+@load
+fn init() {
+    helper()
 }
 
-fn _helper() {
+fn helper() {
     say("reachable")
 }
 
-fn _dead() {
-    say("removed by DCE")
+fn dead_helper() {
+    say("unreachable 时会被移除")
 }
 
 @keep
 fn _manual_entry() {
-    say("kept for manual /function use")
+    say("保留为手动 /function 调用")
 }
 ```
 
-当你想检查所有 helper 是否被输出，或在调试可达性问题时，可以使用 `--no-dce`。
+因为 DCE 是固定流水线的一部分，所以可通过编译后检查 `data/<ns>/function` 目录来观察实际移除结果。
 
 ## 常量折叠
 
-常量折叠会在所有输入都已知时，于编译期直接计算表达式。
-
-典型例子：
+常量折叠会在编译期计算已知输入表达式。
 
 ```rs
 let ticks_per_minute: int = 20 * 60
@@ -65,18 +61,18 @@ let doubled: int = 8 + 8
 let ready: bool = 3 > 1
 ```
 
-折叠后，生成代码会直接使用计算好的常量，而不是在运行时重复计算。
+生成代码会直接使用计算后的常量值，避免等价的运行时运算。
 
 它最适合：
 
 - 字面量算术
 - 简单布尔条件
-- 固定大小的循环边界
-- 编译期可确定的配置值
+- 固定大小循环边界
+- 可在编译期确定的配置值
 
 ## `@inline`
 
-`@inline` 是给热路径上极小 helper 的性能提示。
+`@inline` 是面向高频路径的小 helper 的性能提示。
 
 ```rs
 @inline
@@ -88,17 +84,17 @@ fn clamp_zero(x: int) -> int {
 }
 ```
 
-当优化器接受这个提示时，它会在后续清理阶段之前把函数体直接替换到调用点。这样通常能进一步触发常量折叠、复制传播和死分支删除。
+当优化器接受该提示后，会在调用点直接替换函数体，再执行后续清理 pass，通常能触发更多常量折叠、复制传播和控制流简化。
 
 使用建议：
 
-- 只给很小的 helper 用
-- 主要用于热循环
-- 不要拿它替代清晰的结构
+- 只给非常小的 helper 使用
+- 热循环中效果更明显
+- 不要拿它替代清晰结构
 
 ## 复制传播
 
-复制传播会在安全时，用原值替换临时别名。
+复制传播在安全时将临时别名替换为原值。
 
 ```rs
 fn award(points: int) {
@@ -108,13 +104,11 @@ fn award(points: int) {
 }
 ```
 
-传播完成后，优化器通常能把这串别名折叠掉，让生成代码直接使用 `points`。
-
-这很重要，因为 RedScript 把高层表达式 lowering 成命令时，经常会产生短生命周期临时值。先把这些副本传播掉，后续优化会更容易。
+这样生成代码可直接使用 `points`，减少额外临时变量。
 
 ## 循环展开
 
-循环展开会把小而固定次数的循环复制成直线代码，让运行时不必每轮都付出分支成本。
+循环展开会把小且固定次数的循环展开为直线代码，避免每次迭代都进行分支。
 
 ```rs
 let i: int = 0
@@ -124,41 +118,49 @@ while (i < 4) {
 }
 ```
 
-在 `-O2` 下，如果循环次数是很小的编译期常量，优化器可能会直接展开循环体。它最适合：
+它最适合：
 
-- 循环上界是很小的常量
-- 循环体本身很短
-- 去掉循环控制开销后，后续优化会更简单
+- 循环上界是小的编译期常量
+- 循环体本身非常短
+- 去掉循环控制后可让后续 pass 更顺利
 
-很大或依赖运行时数据的循环一般不会展开。
+大循环或运行时相关的循环通常保持循环形态。
 
 ## 基本块合并
 
-基本块合并会在控制流是线性的情况下，把相邻基本块拼接起来，不再保留多余的跳转边界。
+基本块合并会在控制流线性、无需保留分支边界时合并相邻块。
 
-实际效果通常是：
+通常会带来：
 
-- 生成 helper 之间的跳转更少
-- 内联后的控制流链更短
-- 常量条件折叠后，输出更干净
+- 更少的函数内跳转
+- 内联后更短的控制流链
+- 在条件收敛后输出更干净
 
-这个 pass 一般会在常量折叠、复制传播之后收益最大，因为前面的简化很容易制造出只有单一路径的 trivial block。
+## 实验性局部副本重写
+
+有一个手动启用、且默认关闭的实验性优化标志：
+
+```bash
+redscript compile main.mcrs --experimental-lir-local-copy-rewrite
+```
+
+它会在 LIR 阶段开启 `scoreboardRmwPassModule`。该开关属于**实验性/证据导向**用途；当前文档将其定位为手动验证路径，不作为生产默认行为。现有门禁报告偏向离线基准与 typed 证据，不等同于全量生产证明。
 
 ## 这些 Pass 如何配合
 
-从高层看，优化器流水线大致会这样工作：
+高层上，流水线表现为：
 
-1. 先简化常量和复制
-2. 再按条件内联热路径小函数
-3. 清理循环，并合并直线型 block
-4. 最后用 DCE 删除不可达代码
+1. MIR 阶段的死代码清理与标量简化
+2. 函数级 MIR pass 组合折叠常量、传播值并清理结构
+3. 内联与 DCE 缩减热路径
+4. LIR 的 dead slot 清理与 peephole 折叠
 
-你通常不需要记住精确顺序。真正重要的是：写小而清晰的 helper、谨慎使用装饰器，并为当前任务选对优化等级。
+通常无需记忆精确顺序，关键是保持 helper 细粒度、合理使用装饰器、明确热路径。
 
 ## 实用建议
 
-- 对照源码和生成结果时，用 `-O0`。
-- 日常开发用 `-O1`。
-- 发布大型 datapack 或热路径密集逻辑前，用 `-O2`。
-- 需要保留所有 helper 以便检查时，用 `--no-dce`。
-- 想快速评估优化器效果时，用 `--stats`。
+- 编译命令不再提供 `-O*` 优化级别。
+- 直接使用 `redscript compile <file>` 来触发默认流水线。
+- 通过查看 `data/<namespace>/function` 输出验证 DCE 效果。
+- 若需调试阶段信息，使用 `--snapshot-stages`/`--snapshot-output`。
+- 仅在需要时、并配合证据化验证开启 `--experimental-lir-local-copy-rewrite`。

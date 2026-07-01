@@ -16,37 +16,35 @@ Minecraft 服务器以每秒 20 tick 的速度运行。datapack 中每个在 tic
 
 RedScript 的优化器会自动消除死代码、折叠常量并简化循环——但当你有意识地编写高性能代码并使用正确的装饰器时，它的效果最佳。
 
-本教程介绍：
+## 本教程介绍：
 
-- 选择正确的优化等级（`-O0`、`-O1`、`-O2`）
+- 了解固定优化流水线
 - `@tick(rate=N)` — 将工作分散到不同时间
 - `@inline` — 消除小函数的调用开销
 - `@keep` — 防止 DCE 移除需要的函数
 - `@coroutine` — 处理耗时操作而不冻结服务器
-- 读懂 `--stats` 输出以了解优化器做了什么
+- 使用快照参数观察编译阶段
 
 ---
 
-## 第一步：优化等级
+## 第一步：默认优化流水线（无 CLI 等级）
 
-| 参数 | 适用场景 |
-|------|---------|
-| `-O0` | 调试——查看原始生成的 `.mcfunction` 文件 |
-| `-O1` | 开发——安全优化，编译快 |
-| `-O2` | 发布——激进的内联、循环展开、完整 DCE |
+当前 RedScript 不再向外暴露 `-O0` / `-O1` / `-O2` 优化级别。每次编译都会运行固定的安全流水线。
+
+你可以用快照参数观察优化阶段边界：
 
 ```bash
-# 调试：不修改地查看所有生成文件
-redscript compile src/main.mcrs -O0
+# 只快照部分阶段
+redscript compile src/main.mcrs \
+  --snapshot-stages parse,typecheck,runtimeAssets,emitDatapack \
+  --snapshot-output .redscript/stages.json
 
-# 开发（默认推荐）
-redscript compile src/main.mcrs -O1 --stats
-
-# 发布构建
-redscript compile src/main.mcrs -O2 --stats
+# 快照全部阶段
+redscript compile src/main.mcrs \
+  --snapshot-stages all --snapshot-output .redscript/stages.json
 ```
 
-`--stats` 参数会打印被移除的函数数量、折叠的表达式数量以及输出函数总数。
+当前 CLI 并没有 `--stats` 输出开关。
 
 ---
 
@@ -224,15 +222,29 @@ fn scan_all_entities() {
 fn scan_complete() {
     say("实体扫描已完成，分散在 10 个 tick 中执行！")
 }
+
 ```
 
 `batch=50` 时，编译器将 500 次迭代的循环拆分为 10 个可恢复的 50 次迭代块。每块在单独的 tick 中运行，全部完成后调用 `scan_complete`。
 
 ---
 
+## 手动实验选项：`--experimental-lir-local-copy-rewrite`
+
+仅用于显式优化实验：
+
+```bash
+redscript compile src/main.mcrs --experimental-lir-local-copy-rewrite
+```
+
+该开关默认关闭，会开启额外的 LIR 局部副本重写 pass。当前结论按报告应按“证据导向、手动验证”方式看待，不应作为默认生产路径。
+
+---
+
 ## 整合示例
 
 以下是教程 02 击杀排行榜的优化版本：
+
 
 ```rs
 namespace killboard_optimized
@@ -312,37 +324,35 @@ fn _debug_stats() {
 
 ---
 
-## 构建并查看 Stats
+## 构建并查看输出
 
 ```bash
-redscript compile src/main.mcrs -O2 --stats
+redscript compile src/main.mcrs -o out
 ```
 
 示例输出：
 
 ```
-[redscript] compile ok  • 9 functions  • -O2
-[redscript] dce         : 0 removed  (1 @keep preserved)
-[redscript] const-fold  : 6 expressions folded
-[redscript] inlined     : safe_kd  → 2 call sites
-[redscript] output      : 9 functions  (↓ 0 vs -O1)
+✓ Compiled src/main.mcrs to out/
+  Namespace:  killboard
+  Files:     9
 ```
 
-`inlined` 行确认 `safe_kd` 已在 2 个调用处展开。
+如需机器可读阶段信息，请使用第一步中的 `--snapshot-stages` 和 `--snapshot-output`。
 
 ---
 
 ## 小结
 
-| 技术 | 何时使用 |
-|------|---------|
-| `-O1` | 开发期间始终使用 |
-| `-O2` | 发布前使用 |
-| `@tick(rate=N)` | 不需要每 tick 精度的 tick 函数 |
-| `@inline` | 循环中调用的小型纯辅助函数 |
-| `@keep` | 通过 `/function` 外部调用的函数 |
-| `@coroutine` | 遍历大量实体或耗时的多步骤计算 |
-| 常量 | 在多处使用的魔法数字 |
+|| 技术 | 何时使用 |
+||------|---------|
+|| 固定编译默认设置 | 始终使用 `redscript compile`，它会执行固定安全流水线 |
+|| `@tick(rate=N)` | 不需要每 tick 精度的 tick 函数 |
+|| `@inline` | 循环中调用的小型纯辅助函数 |
+|| `@keep` | 需要通过 `/function` 外部调用的函数 |
+|| `@coroutine` | 遍历大量实体或多步骤耗时计算 |
+|| `--experimental-lir-local-copy-rewrite` | 明确目标为手动优化实验，并配合证据导向验证 |
+|| 常量 | 在多个地方使用的魔法数字 |
 
 ---
 

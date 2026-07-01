@@ -57,7 +57,7 @@ fn _manual_entry() {
 }
 ```
 
-Use `redscript compile ... --stats` when you want to inspect optimizer output at a high level.
+Use `redscript compile ... --snapshot-stages all --snapshot-output ./snapshots` when you want to inspect compiler stages at a high level.
 
 ## `@coroutine`
 

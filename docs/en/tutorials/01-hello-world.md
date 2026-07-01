@@ -216,8 +216,8 @@ fn periodic_announcement() {
 ## Build and Deploy
 
 ```bash
-# Compile with standard optimizations
-redscript compile src/main.mcrs -O1
+# Compile with the default fixed optimization pipeline
+redscript compile src/main.mcrs
 
 # Copy to your Minecraft world
 cp -r out/ ~/.minecraft/saves/MyWorld/datapacks/hello_world/

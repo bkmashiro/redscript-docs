@@ -57,10 +57,10 @@ fn _manual_entry() {
 }
 ```
 
-当你想粗看优化器效果时，可以编译时加：
+需要粗看编译阶段时，可以编译时打开 snapshot：
 
 ```bash
-redscript compile main.mcrs -o ./out --stats
+redscript compile main.mcrs -o ./out --snapshot-stages all --snapshot-output ./snapshots
 ```
 
 ## `@coroutine`
@@ -172,7 +172,7 @@ fn finish_job() {
 2. 热路径 helper 要小而明确。
 3. 需要保留给手动 `/function` 调用的函数，用 `@keep`。
 4. 大循环优先改成 `@coroutine`。
-5. 项目一大就打开 `--stats` 看优化器输出。
+5. 项目一大就用 `--snapshot-stages all --snapshot-output ./snapshots` 查看编译阶段输出。
 
 ## 下一步
 

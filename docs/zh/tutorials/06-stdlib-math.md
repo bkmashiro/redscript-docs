@@ -20,7 +20,7 @@
 - `sin_fixed`、`cos_fixed` —— 角度制三角函数，结果 ×1000
 - `sqrt_fixed`、`sqrt_fx` —— 平方根
 - `lerp`、`clamp`、`abs`、`min`、`max`
-- `mulfix` —— 两个定点数相乘
+- `mulfix` / `mul_fx1000` —— 两个遗留 ×1000 整数值相乘
 - particles 标准库中的 `draw_circle`、`draw_helix`、`particle_dot`
 
 ## 第一步：导入
@@ -145,6 +145,8 @@ fn draw_sine_wave() {
 5. `/trigger draw_sine` —— Z=0 处出现末地烛正弦波
 
 ## math 标准库速查表
+
+> 这些 helper 是固定比例的整数 API，和语言级 `fixed`（×10000）算术不同；普通 `fixed` 算术请直接使用 `*` / `/`。
 
 | 函数 | 输入 | 输出 | 说明 |
 |----------|-------|--------|-------|

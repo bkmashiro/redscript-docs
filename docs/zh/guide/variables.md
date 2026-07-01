@@ -13,7 +13,7 @@ const MAX_PLAYERS: int = 16;
 `const` 的值不能重新赋值：
 
 ```rs
-const PI: float = 3.14;
+const PI: fixed = 3.14;
 PI = 3.15; // 错误：不能重新赋值常量
 ```
 
@@ -48,7 +48,7 @@ score = score + 1;
 
 ### 定点数（`fixed`）
 
-`fixed` 将小数表示为 ×10000 缩放的整数。这是在数据包中进行分数运算而无需浮点硬件的标准方法。
+`fixed` 将小数表示为 ×10000 缩放的整数。这是语言级的定点表示，用于在数据包中进行分数运算。
 
 ```rs
 let speed: fixed = 15000;   // 1.5 — 存储为整数 15000
@@ -58,7 +58,7 @@ let one: fixed   = 10000;   // 1.0
 
 **关键规则：**
 - `10000` = 1.0，`15000` = 1.5，`0` = 0.0
-- 两个 `fixed` 值相乘用 `mulfix(a, b)` — 内部除以 1000 重新缩放：`mulfix(15000, 20000)` = `30000`（1.5 × 2.0 = 3.0）
+- `fixed` 运算是按比例感知的：`a * b` 与 `a / b` 会由编译器自动补偿 `×10000`。
 - 用 `as fixed` 从 `int` 或 `double` 转换
 
 ```rs
@@ -69,7 +69,8 @@ let d: double = 3 as double;
 let df: fixed = d as fixed;   // floor(3.0 * 10000) = 30000
 ```
 
-> **警告：** 直接对两个 `fixed` 值做乘法（如 `a * b`）不会自动重新缩放。编译器会发出 lint 警告。乘法用 `mulfix`，除法用 `divfix`。
+> **说明：** `stdlib/math.mcrs` 仍然保留一些 `×1000` 的历史帮助函数，如 `sin_fixed`、`cos_fixed`、`sqrt_fixed`、`mulfix`、`divfix`。
+> 这类函数用于兼容性场景，不等同于语言级 `fixed` 运算。
 
 ### 双精度（`double`）
 
@@ -141,7 +142,7 @@ let first: int = scores[0]; // 10
 let health = 20;        // 推断为 int
 let name = "Steve";     // 推断为 string
 let alive = true;       // 推断为 bool
-let speed = 1.5;        // 推断为 float
+let speed = 1.5;        // 推断为 fixed
 ```
 
 `const` 也支持类型推断 — 类型注解是可选的：
@@ -149,7 +150,7 @@ let speed = 1.5;        // 推断为 float
 ```rs
 const MAX_PLAYERS = 16;     // 推断为 int
 const PREFIX = "[Game]";    // 推断为 string
-const RATE = 0.5;           // 推断为 float
+const RATE = 0.5;           // 推断为 fixed
 ```
 
 显式类型声明更清晰，但不是必须的。

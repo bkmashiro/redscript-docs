@@ -1,48 +1,46 @@
 # Optimization
 
-RedScript performs several compile-time optimization passes before writing the final datapack. The goal is simple: emit fewer commands, remove unreachable helpers, and simplify hot paths without changing program behaviour.
+RedScript uses a **fixed, production-safe optimization pipeline**.
 
-## Optimization Levels
+There is no public optimization-level switch in the CLI (`-O0`, `-O1`, `-O2`, `--stats`, `--no-dce`). Every compile runs the same pipeline, which is designed to stay conservative by default.
 
-Use the CLI flags below to control how aggressive the optimizer should be:
+## Optimizer pipeline (fixed)
 
-| Flag | Meaning |
-|------|---------|
-| `--no-dce` | Disable dead code elimination only. Other enabled optimizations still run. |
-| `-O0` | Disable optimization passes. Best for debugging generated output. |
-| `-O1` | Enable the standard safe optimization set. Good default during development. |
-| `-O2` | Enable the full optimization pipeline, including more aggressive inlining and loop cleanup. |
+The pipeline runs in stages:
 
-Typical usage:
+1. **MIR optimization** (`src/optimizer/pipeline.ts`)
+   - Inline planning (`autoInlineSmallFunctions`, `inlinePass`) runs before MIR per-function optimization.
+   - Each function is optimized with a safe pass sequence to a fixpoint:
+     `loopUnroll` → `licm` → `nbtBatchRead` → `nbtCoalesce` → `scoreboardBatchRead` → `constantFold` → `strengthReduction` → `cse` → `copyProp` → `branchSimplify` → `dce` → `blockMerge`.
+   - Interprocedural constant propagation runs after per-function passes.
+2. **LIR optimization** (`src/optimizer/lir/pipeline.ts`)
+   - Baseline production passes: `deadSlotElimModule` → `execStorePeephole` → `constImmFold` → `deadSlotElimModule`.
+   - `scoreboardRmwPassModule` (local-copy rewrite) is **off by default**.
 
-```bash
-redscript compile main.mcrs -O0
-redscript compile main.mcrs -O1 --stats
-redscript compile main.mcrs -O2 --no-dce
-```
+`scoreboardRmwPassModule` is a separate optimization mode and is not part of the default pipeline.
 
 ## DCE
 
-Dead code elimination removes functions that cannot be reached from any public entrypoint.
+RedScript removes unreachable functions after optimization. The rules are based on reachable entrypoints and runtime decorators, then refined by reachability from decorated roots.
 
-High-level rules:
+Useful guide:
 
-- Functions whose names do not start with `_` are treated as public and are emitted.
-- Functions starting with `_` are treated as private helpers and may be removed if unreachable.
-- Decorated functions such as `@load`, `@tick`, `@on(...)`, and `@coroutine` are kept automatically.
-- `@keep` overrides DCE and forces retention.
+- Root entrypoints such as `@load`, `@tick`, `@on(...)`, and `@coroutine` are preserved.
+- Unreachable private helpers are removed to reduce output size.
+- `@keep` explicitly preserves a function even when it is otherwise unreachable.
 
 ```rs
-fn start() {
-    _helper()
+@load
+fn init() {
+    helper()
 }
 
-fn _helper() {
+fn helper() {
     say("reachable")
 }
 
-fn _dead() {
-    say("removed by DCE")
+fn dead_helper() {
+    say("removed when unreachable")
 }
 
 @keep
@@ -51,13 +49,11 @@ fn _manual_entry() {
 }
 ```
 
-Use `--no-dce` when you want to inspect every helper in the generated datapack or when debugging reachability issues.
+Because DCE is part of the fixed pipeline, you can inspect its effect by compiling and reading the resulting `data/<ns>/function` output.
 
 ## Constant Folding
 
-Constant folding evaluates expressions at compile time when all inputs are known.
-
-Typical examples:
+Constant folding evaluates compile-time-known expressions.
 
 ```rs
 let ticks_per_minute: int = 20 * 60
@@ -65,7 +61,7 @@ let doubled: int = 8 + 8
 let ready: bool = 3 > 1
 ```
 
-After folding, the generated code uses the computed constants directly instead of recomputing them at runtime.
+The generated code uses constants directly, avoiding equivalent runtime arithmetic.
 
 This is most effective for:
 
@@ -76,7 +72,7 @@ This is most effective for:
 
 ## `@inline`
 
-`@inline` is a performance hint for very small helpers on hot paths.
+`@inline` is a performance hint for small helpers on hot paths.
 
 ```rs
 @inline
@@ -88,7 +84,7 @@ fn clamp_zero(x: int) -> int {
 }
 ```
 
-When the optimizer accepts the hint, it substitutes the function body directly at call sites before later cleanup passes run. That can unlock more constant folding, copy propagation, and dead block removal.
+When the optimizer accepts the hint, it substitutes the function body at call sites before later cleanup passes, which can unlock more constant folding, copy propagation, and control-flow cleanup.
 
 Use `@inline` conservatively:
 
@@ -98,7 +94,7 @@ Use `@inline` conservatively:
 
 ## Copy Propagation
 
-Copy propagation replaces temporary aliases with their original values when it is safe to do so.
+Copy propagation replaces temporary aliases with their original values when it is safe.
 
 ```rs
 fn award(points: int) {
@@ -108,13 +104,11 @@ fn award(points: int) {
 }
 ```
 
-After propagation, the optimizer can often collapse the chain so the generated code uses `points` directly.
-
-This matters because RedScript lowers many high-level expressions into short-lived temporaries. Propagating those copies gives later passes less work.
+The generated output can then use `points` directly instead of carrying extra aliases.
 
 ## Loop Unrolling
 
-Loop unrolling duplicates small fixed-count loops so the runtime no longer needs to branch on every iteration.
+Loop unrolling duplicates small fixed-count loops so runtime doesn’t branch on every iteration.
 
 ```rs
 let i: int = 0
@@ -124,41 +118,49 @@ while (i < 4) {
 }
 ```
 
-For very small constant trip counts, `-O2` may expand the body into repeated straight-line code. This is most useful when:
+This is most useful when:
 
-- the loop bound is a small compile-time constant
-- the body is tiny
-- removing the loop control overhead makes later passes simpler
+- the bound is a small compile-time constant
+- the loop body is tiny
+- removing control overhead helps later passes
 
-Large or data-dependent loops are not good candidates and are usually left as loops.
+Large or data-dependent loops are usually left as loops.
 
 ## Block Merge
 
 Block merge combines adjacent basic blocks when control flow is linear and there is no reason to keep a branch boundary.
 
-In practice this means:
+Practically this can mean:
 
-- fewer jumps between generated helper functions
+- fewer function-local jumps
 - shorter control-flow chains after inlining
-- cleaner output after constant conditions collapse
+- cleaner output after trivial conditions collapse
 
-This pass usually runs after simplification passes such as constant folding and copy propagation, because those passes often create trivial one-way blocks that can then be merged.
+## Experimental local-copy rewrite
+
+There is a manual/off-by-default optimization flag:
+
+```bash
+redscript compile main.mcrs --experimental-lir-local-copy-rewrite
+```
+
+This enables `scoreboardRmwPassModule` in LIR. It is intentionally documented as **manual experimental evidence-only**: recommended status is not production-default, and existing reports describe benchmark/typed-gate evidence rather than a proven broad production rollout.
 
 ## How the Passes Work Together
 
-At a high level, the optimizer pipeline looks like this:
+At a high level, the pipeline is:
 
-1. simplify easy constants and copies
-2. inline tiny hot-path helpers when allowed
-3. clean up loops and merge straight-line blocks
-4. remove unreachable code with DCE
+1. MIR dead-code cleanup and scalar simplification
+2. Function-local MIR passes to fold constants and expose cleaner structure
+3. Inlining and dead-code removal to shrink hot paths
+4. LIR dead-slot cleanup and peephole folding
 
-You do not usually need to think about the exact pass order. What matters is writing small helpers, using decorators intentionally, and choosing the right optimization level for the job.
+You usually do not need exact pass order; you do need small helpers, deliberate decorators, and clear hot-path boundaries.
 
 ## Practical Advice
 
-- Use `-O0` when comparing source to generated output.
-- Use `-O1` as the normal development setting.
-- Use `-O2` before shipping large datapacks or hot-path-heavy logic.
-- Use `--no-dce` when you need every helper preserved for inspection.
-- Use `--stats` when you want a quick summary of optimizer impact.
+- Compile commands do not take `-O*` level flags.
+- Start with `redscript compile <file>` to use the fixed default pipeline.
+- Inspect generated output in `data/<namespace>/function` for DCE effects.
+- Add `--snapshot-stages`/`--snapshot-output` when you need stage-by-stage compiler snapshots for debugging.
+- Use `--experimental-lir-local-copy-rewrite` only for explicit experimentation with evidence-focused validation.

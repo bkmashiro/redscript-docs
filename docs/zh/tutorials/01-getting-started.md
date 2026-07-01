@@ -78,10 +78,10 @@ redscript compile hello.mcrs -o ./my-datapack
 - `data/getting_started/functions/...`
 - 为 `#minecraft:load` 等标签生成的辅助文件
 
-学习阶段可以顺手打开优化统计：
+学习阶段如果想查看编译阶段，可以打开 snapshot：
 
 ```bash
-redscript compile hello.mcrs -o ./my-datapack --stats
+redscript compile hello.mcrs -o ./my-datapack --snapshot-stages all --snapshot-output ./snapshots
 ```
 
 ## 第四步：安装到世界里

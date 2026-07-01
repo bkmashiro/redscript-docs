@@ -30,7 +30,7 @@ let name = value;             // 类型推断
 | 类型 | 描述 | 示例 |
 |------|------|------|
 | `int` | 整数（记分板，32 位有符号） | `42` |
-| `fixed` | 定点数 ×10000（v2.5.0 中 `float` 重命名） | `10000`（= 1.0） |
+| `fixed` | 定点数 ×10000（语言层面标准表示） | `1.5` |
 | `double` | IEEE 754 双精度，NBT 存储（v2.5.0 新增） | `x as double` |
 | `string` | 字符串 | `"hello"` |
 | `bool` | 布尔值 | `true`、`false` |
@@ -39,7 +39,7 @@ let name = value;             // 类型推断
 | `selector` | 实体选择器 | `@a`、`@e[type=zombie]` |
 | `nbt` | NBT 数据 | `{Health: 20f}` |
 
-> **v2.5.0：** `float` 已废弃并重命名为 `fixed`。v2.5.0 起数值转换必须使用显式 `as` 转换，不再支持隐式转换。对 `fixed` 值做乘法但未使用 `mulfix`/`divfix` 时会触发 lint 警告。
+> **说明：** `float` 是已废弃的遗留别名，保留用于兼容。新代码请使用 `fixed`。`fixed` 与 `double` 仍需显式转换（`as fixed`、`as int`、`as double`），不允许隐式混合数值。标准的语言级算术直接使用 `fixed * fixed` 与 `fixed / fixed`，编译器会处理 ×10000 缩放修正。
 
 ## 函数
 

@@ -122,18 +122,24 @@ fn compute(a: float): float {
 
 ### 修复方法
 
-将所有 `float` 替换为 `fixed`。乘法使用 `stdlib/math` 中的 `mulfix()`：
+将 `float` 替换为 `fixed`。语言级 `fixed` 运算由编译器处理自带缩放修正：
+
+```rs
+let x: fixed = 1.5;
+let y: fixed = 2.0;
+let z: fixed = x * y;   // ✅ = 3.0
+let r: fixed = x / y;   // ✅ = 0.75
+```
+
+如果你确实需要底层 stdlib 辅助函数（多为遗留 API），请显式 `import` 并传入原始比例整数。此类函数是有明确比例的低层工具，不是语言级 `fixed` 常规运算的替代方案：
 
 ```rs
 import "stdlib/math"
 
-let x: fixed = 1.5;
-let y: fixed = 2.0;
-let z: fixed = mulfix(x, y);   // ✅ = 3.0
+let angle_fx1000: int = 45000;      // 45.0° 的 legacy ×1000 表示
+let sin_45: int = sin_fx1000(angle_fx1000);  // ✅ 500
 
-fn compute(a: fixed): fixed {
-    return mulfix(a, 2.0);     // ✅
-}
+let p: int = mul_fx1000(500, 707);   // ✅ = 353（≈0.5 × 0.707）
 ```
 
 ---
@@ -148,12 +154,13 @@ fn compute(a: fixed): fixed {
 1. 忘记 `import` 标准库模块
 2. 函数名拼写错误
 3. 调用了 `module library` 中的函数但没有 import
-
 ### 触发代码
 
 ```rs
-// ❌ mulfix 来自 stdlib/math —— 需要 import
-let result: fixed = mulfix(1.5, 2.0);
+// ❌ legacy 的 stdlib 辅助函数是按比例整数 API
+let angle_fx1000: int = 45000;   // 45° × 1000
+let s: int = sin_fx1000(angle_fx1000);
+// TypeError: (无显式 "FunctionNotFound" 标签，但会编译失败)
 ```
 
 ```rs
@@ -172,12 +179,13 @@ let s: int = sin_hp(450000);   // sin_hp 在 stdlib/math_hp 中
 在文件顶部添加正确的 `import` 语句：
 
 ```rs
-import "stdlib/math"       // mulfix, divfix, abs_fixed, clamp_fixed, …
+import "stdlib/math"       // mul_fx1000, div_fx1000, sin_fx1000, cos_fx1000, sqrt_fx1000, sqrt_fx10000 …
 import "stdlib/math_hp"    // sin_hp, cos_hp, ln_hp, init_trig
 import "stdlib/random"     // rand, rand_range
 import "stdlib/list"       // list_sort, list_filter, …
 
-let result: fixed = mulfix(1.5, 2.0);   // ✅
+let sin_45: int = sin_fx1000(45000);   // ✅
+let fixed_mul: int = mul_fx1000(15000, 20000); // ✅
 ```
 
 注意大小写——函数名区分大小写。
@@ -315,7 +323,7 @@ fn setup_timers() {
 |---------|------|---------|
 | `TypeError: cannot implicitly convert X to Y` | 混用了不同数值类型 | 添加 `as Y` 转换 |
 | `[StringConcat]` | 对字符串使用了 `+` | 改用 `f"...{var}..."` f-string |
-| `[FloatArithmetic]` | 在算术中使用了废弃的 `float` | 改用 `fixed`，使用 `mulfix()` |
+| `[FloatArithmetic]` | 在算术中使用了废弃的 `float` | 改用 `fixed`，如需底层比例函数可使用 `sin_fx1000` / `mul_fx1000` |
 | `Function 'X' expects N arguments, got M` | 参数数量错误 | 检查函数签名 |
 | `Return type mismatch` | 返回值类型与声明不匹配 | 对返回值进行转换 |
 | `Cannot assign to const` | 对 const 变量重新赋值 | 改用 `let` |

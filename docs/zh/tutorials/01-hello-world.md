@@ -201,8 +201,8 @@ fn periodic_announcement() {
 ## 构建与部署
 
 ```bash
-# 使用标准优化等级编译
-redscript compile src/main.mcrs -O1
+# 使用默认的固定优化流水线编译
+redscript compile src/main.mcrs
 
 # 复制到你的 Minecraft 存档
 cp -r out/ ~/.minecraft/saves/MyWorld/datapacks/hello_world/

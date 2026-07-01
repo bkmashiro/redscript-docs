@@ -319,15 +319,21 @@ fn reset_all_stats() {
 ## Build and Test
 
 ```bash
-redscript compile src/main.mcrs -O1 --stats
+redscript compile src/main.mcrs
 ```
 
-The `--stats` flag prints a short summary of what the optimizer removed. Expected output:
+Current RedScript uses a fixed safe optimization pipeline by default. If you need to inspect compiler stages, capture snapshots instead:
+
+```bash
+redscript compile src/main.mcrs --snapshot-stages all --snapshot-output ./snapshots
+```
+
+Typical compile output looks like:
 
 ```
-[redscript] compile ok  • 8 functions  • -O1
-[redscript] dce         : 0 removed
-[redscript] const-fold  : 3 expressions folded
+✓ Compiled src/main.mcrs to out/
+Namespace: my_pack
+Files: ...
 ```
 
 ---

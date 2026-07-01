@@ -37,9 +37,9 @@ let has_voted: bool = false
 // fixed: decimal numbers stored as integer × 10000
 // 1.5  → stored as 15000
 // 0.75 → stored as 7500
-// Requires explicit cast when assigning from an int literal:
-let percentage: fixed = 7500 as fixed   // represents 75.00%
-let half: fixed = 5000 as fixed         // represents 0.5
+// Decimal literals lower directly to ×10000 fixed values:
+let percentage: fixed = 0.75   // represents 75.00%, stored as 7500
+let half: fixed = 0.5          // represents 0.5, stored as 5000
 
 // string: text labels
 let winner: string = "yes"
@@ -108,9 +108,9 @@ fn tally() {
         }
     }
 
-    // Fixed-point percentage: multiply before dividing to keep precision
-    let yes_pct: fixed = (yes_count * 10000 / total) as fixed
-    announce(f"YES percentage (×10000): {yes_pct}")
+    // Fixed-point percentage: cast both sides and divide with language fixed arithmetic
+    let yes_pct: fixed = (yes_count as fixed) / (total as fixed)
+    announce(f"YES percentage: {yes_pct}")
 }
 ```
 
@@ -164,7 +164,7 @@ Full example: [tutorial_02_variables.mcrs](https://github.com/bkmashiro/redscrip
 |------|---------|-------|
 | `int` | `let x: int = 42` | Integer, scoreboard-backed |
 | `bool` | `let b: bool = true` | Boolean |
-| `fixed` | `let f: fixed = 5000 as fixed` | Decimal ×10000, needs `as fixed` cast |
+| `fixed` | `let f: fixed = 0.5` | Decimal ×10000; use `as fixed` only when converting an `int` value |
 | `string` | `let s: string = "hello"` | Text |
 
 ## Next Steps

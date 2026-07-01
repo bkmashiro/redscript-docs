@@ -18,35 +18,34 @@ RedScript's optimizer automatically eliminates dead code, folds constants, and s
 
 This tutorial teaches:
 
-- Choosing the right optimization level (`-O0`, `-O1`, `-O2`)
+- Understanding the fixed optimization pipeline
 - `@tick(rate=N)` — spreading work over time
 - `@inline` — eliminating small function call overhead
 - `@keep` — preventing DCE from removing needed functions
 - `@coroutine` — handling expensive work without freezing the server
-- Reading `--stats` output to understand what the optimizer did
+- Using snapshot flags to inspect compile stages
 
 ---
 
-## Step 1: Optimization Levels
+## Step 1: Optimizer defaults (no CLI levels)
 
-| Flag | Use When |
-|------|----------|
-| `-O0` | Debugging — see the raw generated `.mcfunction` files |
-| `-O1` | Development — safe optimizations, fast rebuilds |
-| `-O2` | Release — aggressive inlining, loop unrolling, full DCE |
+Current RedScript does not expose public `-O0` / `-O1` / `-O2` levels. The optimizer runs a fixed safe pipeline every time you compile.
+
+Use snapshot flags when you want to inspect optimizer-stage boundaries:
 
 ```bash
-# Debug: see every generated file unmodified
-redscript compile src/main.mcrs -O0
+# Snapshot selected stages for analysis
+redscript compile src/main.mcrs \
+  --snapshot-stages parse,typecheck,runtimeAssets,emitDatapack \
+  --snapshot-output .redscript/stages.json
 
-# Development (default)
-redscript compile src/main.mcrs -O1 --stats
-
-# Release build
-redscript compile src/main.mcrs -O2 --stats
+# Snapshot all stages
+redscript compile src/main.mcrs \
+  --snapshot-stages all --snapshot-output .redscript/stages.json
 ```
 
-The `--stats` flag prints how many functions were removed, how many expressions were folded, and the output function count.
+`--stats` is not a compile option in current CLI output.
+
 
 ---
 
@@ -197,6 +196,18 @@ Without `@keep`, DCE would remove `_debug_dump` because nothing calls it. With `
 
 ---
 
+## Manual Experimental Option: `--experimental-lir-local-copy-rewrite`
+
+This flag is available for explicit optimization experimentation only:
+
+```bash
+redscript compile src/main.mcrs --experimental-lir-local-copy-rewrite
+```
+
+It enables an additional LIR local-copy rewrite pass and is intentionally off by default. Current reports describe this as benchmarked evidence that should be treated as manual/experimental; it is not a general production default.
+
+---
+
 ## Step 6: `@coroutine` for Expensive Work
 
 Some operations need to touch many entities or run complex calculations. Doing them all in one tick stalls the server. Use `@coroutine` to spread the work across multiple ticks automatically.
@@ -312,23 +323,21 @@ fn _debug_stats() {
 
 ---
 
-## Build and Read the Stats
+## Build and read output
 
 ```bash
-redscript compile src/main.mcrs -O2 --stats
+redscript compile src/main.mcrs -o out
 ```
 
-Example output:
+Typical output:
 
 ```
-[redscript] compile ok  • 9 functions  • -O2
-[redscript] dce         : 0 removed  (1 @keep preserved)
-[redscript] const-fold  : 6 expressions folded
-[redscript] inlined     : safe_kd  → 2 call sites
-[redscript] output      : 9 functions  (↓ 0 vs -O1)
+✓ Compiled src/main.mcrs to out/
+  Namespace:  killboard
+  Files:     9
 ```
 
-The `inlined` line confirms `safe_kd` was expanded inline at both call sites.
+If you need machine-readable stage boundaries, pass `--snapshot-stages` and `--snapshot-output` as shown in Step 1.
 
 ---
 
@@ -336,12 +345,12 @@ The `inlined` line confirms `safe_kd` was expanded inline at both call sites.
 
 | Technique | When to use |
 |-----------|-------------|
-| `-O1` | Always during development |
-| `-O2` | Before shipping |
-| `@tick(rate=N)` | Any tick function that doesn't need every-tick precision |
+| Compile defaults | Always use `redscript compile` for the fixed default optimizer |
+| `@tick(rate=N)` | Any tick function that doesn’t need every-tick precision |
 | `@inline` | Small pure helpers called in loops |
 | `@keep` | Functions you call via `/function` externally |
 | `@coroutine` | Loops over hundreds of entities or expensive multi-step calculations |
+| `--experimental-lir-local-copy-rewrite` | Manual optimization experiments, with evidence-focused validation |
 | Constants | Any magic numbers used in multiple places |
 
 ---

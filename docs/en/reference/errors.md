@@ -122,18 +122,24 @@ fn compute(a: float): float {
 
 ### Fix
 
-Replace all uses of `float` with `fixed`. Use `mulfix()` from `stdlib/math` for multiplication:
+Use `fixed` for regular arithmetic. The compiler rescales `fixed` operations itself, including `fixed * fixed` and `fixed / fixed`:
+
+```rs
+let x: fixed = 1.5;
+let y: fixed = 2.0;
+let z: fixed = x * y;   // ✅ = 3.0
+let r: fixed = x / y;   // ✅ = 0.75
+```
+
+If you need lower-level stdlib helpers (for legacy APIs), import and pass explicit raw scaled integers. Those APIs are scale-specific and are **not** replacements for normal fixed-point expression arithmetic:
 
 ```rs
 import "stdlib/math"
 
-let x: fixed = 1.5;
-let y: fixed = 2.0;
-let z: fixed = mulfix(x, y);   // ✅ = 3.0
+let angle_fx1000: int = 45000;     // 45.0° as legacy ×1000
+let sin_45: int = sin_fx1000(angle_fx1000); // ✅ 500
 
-fn compute(a: fixed): fixed {
-    return mulfix(a, 2.0);     // ✅
-}
+let p: int = mul_fx1000(500, 707);  // ✅ = 353 (≈0.5 × 0.707)
 ```
 
 ---
@@ -152,8 +158,9 @@ Calling a function that hasn't been declared in scope. Usually caused by:
 ### Triggered by
 
 ```rs
-// ❌ mulfix is from stdlib/math — needs an import
-let result: fixed = mulfix(1.5, 2.0);
+// ❌ legacy stdlib helpers are scale-specific and are from stdlib/math
+let angle_fx1000: int = 45000;   // 45° × 1000
+let s: int = sin_fx1000(angle_fx1000);
 // TypeError: (no explicit "FunctionNotFound" tag, but will fail to compile)
 ```
 
@@ -173,12 +180,13 @@ let s: int = sin_hp(450000);   // sin_hp is in stdlib/math_hp
 Add the correct `import` statement at the top of your file:
 
 ```rs
-import "stdlib/math"       // mulfix, divfix, abs_fixed, clamp_fixed, …
+import "stdlib/math"       // mul_fx1000, div_fx1000, sin_fx1000, cos_fx1000, sqrt_fx1000, sqrt_fx10000 …
 import "stdlib/math_hp"    // sin_hp, cos_hp, ln_hp, init_trig
 import "stdlib/random"     // rand, rand_range
 import "stdlib/list"       // list_sort, list_filter, …
 
-let result: fixed = mulfix(1.5, 2.0);   // ✅
+let sin_45: int = sin_fx1000(45000);   // ✅
+let fixed_mul: int = mul_fx1000(15000, 20000); // ✅
 ```
 
 Check spelling carefully — function names are case-sensitive.
@@ -316,7 +324,7 @@ fn setup_timers() {
 |-----------|---------|-----------|
 | `TypeError: cannot implicitly convert X to Y` | Mixed numeric types | Add `as Y` cast |
 | `[StringConcat]` | Used `+` on strings | Use `f"...{var}..."` f-string |
-| `[FloatArithmetic]` | Used deprecated `float` in math | Change to `fixed`, use `mulfix()` |
+| `[FloatArithmetic]` | Used deprecated `float` in math | Replace with `fixed`, or call explicit scale helpers like `sin_fx1000` / `mul_fx1000` when needed |
 | `Function 'X' expects N arguments, got M` | Wrong arg count | Check function signature |
 | `Return type mismatch` | Return type doesn't match declaration | Cast return value |
 | `Cannot assign to const` | Reassigned a `const` | Use `let` instead |

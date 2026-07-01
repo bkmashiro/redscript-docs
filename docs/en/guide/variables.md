@@ -13,7 +13,7 @@ const MAX_PLAYERS: int = 16;
 `const` values cannot be reassigned:
 
 ```rs
-const PI: float = 3.14;
+const PI: fixed = 3.14;
 PI = 3.15; // Error: cannot reassign constant
 ```
 
@@ -48,7 +48,7 @@ score = score + 1;
 
 ### Fixed-point (`fixed`)
 
-`fixed` represents decimal values as integers scaled by ×10000. This is the standard way to do fractional math in datapacks without floating-point hardware.
+`fixed` represents decimal values as integers scaled by ×10000. This is the language-level fixed-point representation for fractional math in datapacks.
 
 ```rs
 let speed: fixed = 15000;   // 1.5 — stored as int 15000
@@ -58,8 +58,8 @@ let one: fixed   = 10000;   // 1.0
 
 **Key rules:**
 - `10000` = 1.0, `15000` = 1.5, `0` = 0.0
-- Use `mulfix(a, b)` to multiply two `fixed` values — it divides by 1000 to re-scale: `mulfix(15000, 20000)` = `30000` (1.5 × 2.0 = 3.0)
-- Use `as fixed` to convert from `int` or `double`
+- `fixed` arithmetic is scale-aware: `a * b` and `a / b` are lowered by the compiler with `×10000` compensation.
+- Use `as fixed` to convert from `int` or `double`.
 
 ```rs
 let x: int = 5;
@@ -69,7 +69,8 @@ let d: double = 3.14 as double;
 let df: fixed = d as fixed;   // floor(3.14 * 10000) = 31400
 ```
 
-> **Warning:** Direct arithmetic on two `fixed` values (e.g. `a * b`) does NOT automatically rescale. The compiler will emit a lint warning. Use `mulfix` for multiplication and `divfix` for division.
+> **Note:** `stdlib/math.mcrs` still exposes legacy scale-specific helpers such as `sin_fixed`, `cos_fixed`, `sqrt_fixed`, `mulfix`, and `divfix`, which are `×1000` integer helpers.
+> These are not replacements for language `fixed` operators.
 
 ### Double (`double`)
 
@@ -149,7 +150,7 @@ RedScript can infer the type when the value is obvious:
 let health = 20;        // inferred as int
 let name = "Steve";     // inferred as string
 let alive = true;       // inferred as bool
-let speed = 1.5;        // inferred as float
+let speed = 1.5;        // inferred as fixed
 ```
 
 This also works for `const` — the type annotation is optional:
@@ -157,7 +158,7 @@ This also works for `const` — the type annotation is optional:
 ```rs
 const MAX_PLAYERS = 16;     // inferred as int
 const PREFIX = "[Game]";    // inferred as string
-const RATE = 0.5;           // inferred as float
+const RATE = 0.5;           // inferred as fixed
 ```
 
 Explicit types are recommended for clarity, but optional.

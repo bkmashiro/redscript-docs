@@ -33,14 +33,14 @@ import particles::*
 典型场景：
 
 - 限制数值范围
-- 用 `mulfix` 做 fixed-point 乘法
+- 使用 `mul_fx1000` 这类显式比例的整数 helper
 - 写基础玩法数值逻辑
 
 ```rs
 import math::*
 
 fn scale_damage(base: fixed, multiplier: fixed) -> fixed {
-    return mulfix(base, multiplier)
+    return base * multiplier
 }
 ```
 
@@ -142,7 +142,7 @@ fn loot() {
         give(@s, "minecraft:iron_ingot", 4)
     }
 
-    tell(@s, f"Adjusted score preview: {mulfix(10.0, bonus_multiplier)}")
+    tell(@s, f"Adjusted score preview: {10.0 * bonus_multiplier}")
 }
 ```
 

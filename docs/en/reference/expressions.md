@@ -70,7 +70,8 @@ None            // the empty Option
 | `%`      | Modulo (remainder) | `a % b`         |
 | `-` (unary) | Negation        | `-a`            |
 
-> **fixed multiplication:** Multiplying two `fixed` values directly double-scales. Use `mulfix(a, b)` from `stdlib/math` instead.
+> **fixed arithmetic:** `fixed` operators are scale-correct by construction. Use normal `*` and `/`; the compiler lowers them with `×10000` compensation.
+> Legacy helpers in `math.mcrs` may still use `×1000` scales (`mulfix`, `divfix`, `sin_fixed`, etc.) and are not language-level `fixed`.
 
 ### Comparison
 

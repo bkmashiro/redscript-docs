@@ -9,7 +9,7 @@ RedScript has four numeric types. Choosing the right one is important — mixing
 | `int` | Scoreboard (32-bit signed) | ±2,147,483,647 | No | Default for most values |
 | `fixed` | Scoreboard × 10000 | ±214,748 | 4 decimal places | Fractional math |
 | `double` | NBT IEEE 754 double | ±1.8 × 10³⁰⁸ | Full precision | High-precision / scientific |
-| `float` | *(deprecated)* | same as `fixed` | less precise | **Avoid — use `fixed` instead** |
+| `float` | *(deprecated alias)* | same as `fixed` | same | **Avoid — use `fixed` instead** |
 
 ### `int`
 
@@ -33,16 +33,19 @@ Use `fixed` whenever you need fractional values for in-game math — velocity, p
 let speed: fixed = 1.5;       // stored as 15000 internally
 let ratio: fixed = 0.25;      // stored as 2500 internally
 
-// After multiplying two fixed values, divide by 10000 to compensate for double-scaling
 let a: fixed = 0.5;   // 5000
 let b: fixed = 0.4;   // 4000
-// naive: a * b = 20000000, which represents 2000.0 — WRONG
-// correct: use mulfix() from stdlib
-import "stdlib/math"
-let result: fixed = mulfix(a, b);   // = 0.2 (2000)
+let result: fixed = a * b;   // = 0.2 (2000)
+let inv: fixed = a / b;      // = 1.25 (12500)
 ```
 
-> **Multiplication compensation:** When multiplying two `fixed` values directly, the result is scaled by 10000². Use the `mulfix(a, b)` stdlib function which automatically divides by 10000 after multiplying.
+> **Language fixed arithmetic:** `fixed * fixed` and `fixed / fixed` are lowered in the compiler with `×10000` compensation; no `mulfix`/`divfix` call is needed for ordinary language arithmetic.
+
+### Legacy `math.mcrs` helpers (`×1000` scale)
+
+Some helpers in `math.mcrs` use scale-specific integer semantics and are named for compatibility (for example `sin_fixed`, `cos_fixed`, `sqrt_fixed`, `mulfix`, `divfix`, `smoothstep`, and `smootherstep`).
+
+These are **not** language-level `fixed` operations. Prefer explicit scale-aware forms such as `sin_fx1000`, `cos_fx1000`, `sqrt_fx1000`, `mul_fx1000`, `div_fx1000`, `smoothstep_t1000`, and `smootherstep_t1000` when using that family.
 
 ### `double`
 
@@ -58,7 +61,7 @@ let s: int = sin_hp(450000);   // sin_hp works with int (degrees × 10000), retu
 
 ### `float` (Deprecated)
 
-`float` is an alias for `fixed` left over from older versions. It is less precise and will trigger a `[FloatArithmetic]` warning. **Do not use `float` in new code.**
+`float` is a deprecated alias for `fixed` retained for backward compatibility. New examples should use `fixed`.
 
 ---
 
@@ -116,17 +119,19 @@ let result: int = score + multiplier;
 let result: int = (score as fixed + multiplier) as int;
 ```
 
-### Forgetting to compensate after `fixed` multiplication
+### Legacy `×1000` helper confusion
 
 ```rs
-// ❌ Wrong: direct multiplication double-scales
+// ⚠️ This is *not* language-level fixed-point math.
+// These helpers use integer ×1000 conventions and scale at helper boundaries.
+import "stdlib/math"
+let trig_component: int = sin_fx1000(500);      // 0.5 ×1000 input
+let legacy_interp: int = mul_fx1000(500, 250);  // = 125 (0.125 ×1000)
+
+// For language `fixed`, use normal operators:
 let a: fixed = 2.0;   // 20000
 let b: fixed = 3.0;   // 30000
-let bad: fixed = a * b;   // 600000000 — represents 60000.0, not 6.0
-
-// ✅ Correct: use mulfix
-import "stdlib/math"
-let good: fixed = mulfix(a, b);   // 60000 — represents 6.0
+let good: fixed = a * b;   // 60000 — represents 6.0
 ```
 
 ### Using `float` in arithmetic
@@ -138,7 +143,7 @@ let y: float = x * 2.0;
 
 // ✅ Use fixed instead
 let x: fixed = 1.5;
-let y: fixed = mulfix(x, 2.0);
+let y: fixed = x * 2.0;
 ```
 
 ### String concatenation with `+`
@@ -157,12 +162,10 @@ tell(@s, f"Your health: {health}");
 ## Full Example: Velocity Calculation
 
 ```rs
-import "stdlib/math"
-
 fn tick_physics(vx: fixed, vy: fixed, drag: fixed): (fixed, fixed) {
     // Apply drag: multiply velocity by drag coefficient
-    let new_vx: fixed = mulfix(vx, drag);
-    let new_vy: fixed = mulfix(vy, drag);
+    let new_vx: fixed = vx * drag;
+    let new_vy: fixed = vy * drag;
     return (new_vx, new_vy);
 }
 

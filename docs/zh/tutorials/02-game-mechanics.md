@@ -300,15 +300,21 @@ fn reset_all_stats() {
 ## 构建与测试
 
 ```bash
-redscript compile src/main.mcrs -O1 --stats
+redscript compile src/main.mcrs
 ```
 
-`--stats` 参数会打印优化器移除了多少内容。预期输出：
+当前 RedScript 默认使用固定的安全优化流水线。如果需要查看编译阶段，请改用 snapshot：
+
+```bash
+redscript compile src/main.mcrs --snapshot-stages all --snapshot-output ./snapshots
+```
+
+典型输出类似：
 
 ```
-[redscript] compile ok  • 8 functions  • -O1
-[redscript] dce         : 0 removed
-[redscript] const-fold  : 3 expressions folded
+✓ Compiled src/main.mcrs to out/
+Namespace: my_pack
+Files: ...
 ```
 
 ---

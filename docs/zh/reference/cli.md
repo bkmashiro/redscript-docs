@@ -29,7 +29,7 @@ redscript compile <file> [options]
 **选项：**
 
 | 选项 | 描述 | 默认值 |
-|-----|------|-------|
+|------|------|-------|
 | `-o, --output <path>` | 输出目录 | `./out` |
 | `--namespace <ns>` | 数据包命名空间 | 从文件名推导 |
 | `--source-map` | 在 `.mcfunction` 旁生成 `.sourcemap.json` | `false` |
@@ -39,6 +39,7 @@ redscript compile <file> [options]
 | `--lenient` | 将类型错误降级为 warning，不阻塞编译 | `false` |
 | `--include <dir>` | 添加 import 搜索路径；可重复传入 | — |
 | `--incremental` | 启用文件级增量编译缓存 | `false` |
+| `--experimental-lir-local-copy-rewrite` | 手动开启额外 LIR 局部副本重写（默认关闭；用于证据导向实验） | `false` |
 
 **可快照阶段：** `preprocess`、`parse`、`typecheck`、`runtimeMetadata`、`lowerToHIR`、`lowerAndOptimize`、`runtimeAssets`、`finalizeRuntimeLIR`、`emitDatapack`，或 `all`。
 

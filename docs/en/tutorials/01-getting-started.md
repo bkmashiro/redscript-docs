@@ -76,10 +76,10 @@ This produces a datapack directory. The exact layout may vary by compiler versio
 - `data/getting_started/functions/...`
 - generated tags for `#minecraft:load` when decorators require them
 
-If you want optimizer statistics while learning, add `--stats`:
+If you want to inspect compiler stages while learning, use snapshots:
 
 ```bash
-redscript compile hello.mcrs -o ./my-datapack --stats
+redscript compile hello.mcrs -o ./my-datapack --snapshot-stages all --snapshot-output ./snapshots
 ```
 
 ## Step 4: Install the Datapack

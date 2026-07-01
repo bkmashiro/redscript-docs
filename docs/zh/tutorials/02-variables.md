@@ -37,9 +37,9 @@ let has_voted: bool = false
 // fixed：十进制数，以整数 × 10000 的形式存储
 // 1.5  → 存储为 15000
 // 0.75 → 存储为 7500
-// 从整数字面量赋值时需要显式类型转换：
-let percentage: fixed = 7500 as fixed   // 表示 75.00%
-let half: fixed = 5000 as fixed         // 表示 0.5
+// 小数字面量会直接 lowering 为 ×10000 的 fixed 值：
+let percentage: fixed = 0.75   // 表示 75.00%，内部存为 7500
+let half: fixed = 0.5          // 表示 0.5，内部存为 5000
 
 // string：文本标签
 let winner: string = "yes"
@@ -108,9 +108,9 @@ fn tally() {
         }
     }
 
-    // 定点数百分比：先乘后除以保留精度
-    let yes_pct: fixed = (yes_count * 10000 / total) as fixed
-    announce(f"YES percentage (×10000): {yes_pct}")
+    // 固定小数百分比：两边先转成 fixed，再使用语言级 fixed 除法
+    let yes_pct: fixed = (yes_count as fixed) / (total as fixed)
+    announce(f"YES percentage: {yes_pct}")
 }
 ```
 
@@ -164,7 +164,7 @@ fn count_down() {
 |------|---------|-------|
 | `int` | `let x: int = 42` | 整数，以 scoreboard 为后端 |
 | `bool` | `let b: bool = true` | 布尔值 |
-| `fixed` | `let f: fixed = 5000 as fixed` | 十进制数 ×10000，需要 `as fixed` 转换 |
+| `fixed` | `let f: fixed = 0.5` | 十进制数 ×10000；只有把 `int` 值转换成 fixed 时才用 `as fixed` |
 | `string` | `let s: string = "hello"` | 文本 |
 
 ## 下一步

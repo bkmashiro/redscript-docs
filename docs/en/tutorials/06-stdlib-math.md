@@ -20,7 +20,7 @@ A collection of visual effects: a circle of flame particles, a helix of enchant 
 - `sin_fixed`, `cos_fixed` — trig in degrees, result ×1000
 - `sqrt_fixed`, `sqrt_fx` — square roots
 - `lerp`, `clamp`, `abs`, `min`, `max`
-- `mulfix` — multiply two fixed-point values
+- `mulfix` / `mul_fx1000` — multiply two legacy ×1000 integer values
 - `draw_circle`, `draw_helix`, `particle_dot` from particles stdlib
 
 ## Step 1: Importing
@@ -145,6 +145,8 @@ Full example: [tutorial_06_math_particles.mcrs](https://github.com/bkmashiro/red
 5. `/trigger draw_sine` — end_rod sine wave at Z=0
 
 ## Math Stdlib Quick Reference
+
+> These helpers are scale-specific integer APIs. They are separate from language-level `fixed` (`×10000`) arithmetic, where normal `*` and `/` operators are scale-aware.
 
 | Function | Input | Output | Notes |
 |----------|-------|--------|-------|

@@ -39,6 +39,7 @@ redscript compile <file> [options]
 | `--lenient` | Treat type errors as warnings instead of blocking compilation | `false` |
 | `--include <dir>` | Add an import search path; repeatable | — |
 | `--incremental` | Enable file-level incremental compilation cache | `false` |
+| `--experimental-lir-local-copy-rewrite` | Manually enable extra LIR local copy rewrite (off by default; evidence-only) | `false` |
 
 **Snapshot stages:** `preprocess`, `parse`, `typecheck`, `runtimeMetadata`, `lowerToHIR`, `lowerAndOptimize`, `runtimeAssets`, `finalizeRuntimeLIR`, `emitDatapack`, or `all`.
 

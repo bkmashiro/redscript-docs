@@ -33,14 +33,14 @@ Use `stdlib/math` for fixed-point helpers and common numeric utilities.
 Typical use cases:
 
 - clamping values
-- multiplying fixed-point numbers with `mulfix`
+- using explicit scale-specific integer helpers such as `mul_fx1000`
 - simple numeric helpers for gameplay logic
 
 ```rs
 import math::*
 
 fn scale_damage(base: fixed, multiplier: fixed) -> fixed {
-    return mulfix(base, multiplier)
+    return base * multiplier
 }
 ```
 
@@ -142,7 +142,7 @@ fn loot() {
         give(@s, "minecraft:iron_ingot", 4)
     }
 
-    tell(@s, f"Adjusted score preview: {mulfix(10.0, bonus_multiplier)}")
+    tell(@s, f"Adjusted score preview: {10.0 * bonus_multiplier}")
 }
 ```
 

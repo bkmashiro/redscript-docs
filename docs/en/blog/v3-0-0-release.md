@@ -20,10 +20,10 @@ The compiler now includes 15 optimization passes:
 | **Scoreboard Read Batching** | Deduplicates redundant reads |
 | **NBT Write Coalescing** | Removes overwritten writes |
 
-Enable with `-O2` for full optimization:
+Current RedScript uses a fixed conservative optimizer pipeline by default:
 
 ```bash
-redscript build main.mcrs -O2
+redscript compile main.mcrs
 ```
 
 ### 🆕 Language Features
