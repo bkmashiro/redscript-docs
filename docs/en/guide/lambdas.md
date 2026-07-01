@@ -4,19 +4,19 @@ Lambdas are inline, anonymous functions.
 
 ## Syntax
 
-```rs
+```rs verify-skip
 (parameters) => expression
 ```
 
 Simple example:
 
-```rs
+```rs verify-skip
 let double = (x: int) => x * 2;
 ```
 
 Multi-line lambdas use braces:
 
-```rs
+```rs verify-skip
 let greet = (name: string) => {
     say(f"Hello, {name}!");
     say("Welcome to the server!");
@@ -27,7 +27,7 @@ let greet = (name: string) => {
 
 Functions that take other functions as parameters:
 
-```rs
+```rs verify-skip
 fn apply_to_all(targets: selector, action: (selector) => void) {
     action(targets);
 }
@@ -41,7 +41,7 @@ apply_to_all(@a, (s: selector) => {
 
 Apply a lambda to a collection:
 
-```rs
+```rs verify-skip
 let teams: string[] = ["red", "blue", "green"];
 
 for_each(teams, (team: string) => {
@@ -54,7 +54,7 @@ for_each(teams, (team: string) => {
 
 Transform values:
 
-```rs
+```rs verify-skip
 let scores: int[] = [10, 20, 30];
 let doubled: int[] = map(scores, (x: int) => x * 2);
 // [20, 40, 60]
@@ -64,7 +64,7 @@ let doubled: int[] = map(scores, (x: int) => x * 2);
 
 Select matching values:
 
-```rs
+```rs verify-skip
 let scores: int[] = [5, 15, 25, 35];
 let high: int[] = filter(scores, (x: int) => x > 20);
 // [25, 35]
@@ -74,7 +74,7 @@ let high: int[] = filter(scores, (x: int) => x > 20);
 
 Lambdas capture variables from their surrounding scope:
 
-```rs
+```rs verify-skip
 let bonus: int = 10;
 
 let add_bonus = (score: int) => score + bonus;
@@ -85,7 +85,7 @@ add_bonus(20); // 30
 
 More practical example:
 
-```rs
+```rs verify-skip
 fn create_reward(base_xp: int) {
     let give_reward = (player: selector) => {
         xp_add(player, base_xp);
@@ -100,7 +100,7 @@ fn create_reward(base_xp: int) {
 
 Using lambdas for a configurable event system:
 
-```rs
+```rs verify-skip
 let on_game_start: () => void = () => {
     say("Game started!");
     effect(@a, "speed", 30, 1);

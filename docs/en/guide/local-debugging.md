@@ -110,7 +110,7 @@ fn my_function() {
     say("[DEBUG] my_function called");
     
     let value: int = calculate_something();
-    say("[DEBUG] value = " + value);
+    say(f"[DEBUG] value = {value}");
     
     // ... rest of function
 }

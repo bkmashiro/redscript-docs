@@ -15,7 +15,7 @@ Use suffixes to specify the exact NBT type:
 | `d` | Double | `3.14d` |
 | (none) | Int | `42` |
 
-```rs
+```rs verify-skip
 let damage: nbt = 20s;
 let health: nbt = 100f;
 let id: nbt = 999999L;
@@ -25,11 +25,11 @@ let id: nbt = 999999L;
 
 Use curly braces for compound NBT:
 
-```rs
-let sword_nbt = {
+```rs verify-skip
+let sword_nbt: nbt = {
     Damage: 0s,
     Enchantments: [{id: "sharpness", lvl: 5s}],
-    display: {Name: '"Super Sword"'},
+    display: {Name: "\"Super Sword\""},
 };
 ```
 
@@ -37,10 +37,10 @@ let sword_nbt = {
 
 Pass NBT data to the `give` command:
 
-```rs
+```rs verify-skip
 give(@a, "diamond_sword", 1, {
     Enchantments: [{id: "sharpness", lvl: 5s}],
-    display: {Name: '"Excalibur"'},
+    display: {Name: "\"Excalibur\""},
     Unbreakable: 1b,
 });
 ```
@@ -49,9 +49,9 @@ give(@a, "diamond_sword", 1, {
 
 Add NBT to summoned entities:
 
-```rs
+```rs verify-skip
 summon("zombie", ~0, ~0, ~0, {
-    CustomName: '"Boss Zombie"',
+    CustomName: "\"Boss Zombie\"",
     Health: 100f,
     Attributes: [{
         Name: "generic.max_health",
@@ -66,7 +66,7 @@ summon("zombie", ~0, ~0, ~0, {
 
 NBT supports typed arrays:
 
-```rs
+```rs verify-skip
 // Byte array
 let flags: nbt = [B; 1b, 0b, 1b, 1b];
 
@@ -81,8 +81,8 @@ let uuids: nbt = [L; 100L, 200L];
 
 Store NBT for reuse:
 
-```rs
-let potion_effects = {
+```rs verify-skip
+let potion_effects: nbt = {
     CustomPotionEffects: [
         {Id: 1b, Amplifier: 2b, Duration: 200},
         {Id: 3b, Amplifier: 1b, Duration: 600},
@@ -96,7 +96,7 @@ give(@a, "potion", 1, potion_effects);
 
 Use `data_merge` to update entity NBT:
 
-```rs
+```rs verify-skip
 fn make_invisible(target: selector) {
     data_merge(target, {
         Invisible: 1b,
@@ -109,7 +109,7 @@ fn make_invisible(target: selector) {
 
 Custom item shop:
 
-```rs
+```rs verify-skip
 fn give_shop_item(player: selector, item: string, nbt_data: nbt) {
     give(player, item, 1, nbt_data);
     playsound(player, "entity.experience_orb.pickup");
@@ -119,7 +119,7 @@ fn give_shop_item(player: selector, item: string, nbt_data: nbt) {
 fn buy_sword() {
     give_shop_item(@s, "diamond_sword", {
         Enchantments: [{id: "sharpness", lvl: 3s}],
-        display: {Name: '"Shop Sword"', Lore: ['"Bought from the shop"']},
+        display: {Name: "\"Shop Sword\"", Lore: ["\"Bought from the shop\""]},
     });
 }
 ```

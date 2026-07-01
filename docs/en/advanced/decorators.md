@@ -98,7 +98,7 @@ let phase: int = 0
 
 @watch("phase")
 fn on_phase_changed() {
-    say(f"Phase changed to {phase}")
+    say("Phase changed")
 }
 ```
 
@@ -132,7 +132,7 @@ let welcome_message: string = "Welcome!"
 
 @load
 fn greet() {
-    say(welcome_message)
+    say("Welcome!")
 }
 ```
 

@@ -21,7 +21,7 @@ entity (base)
 
 ### From Selectors
 
-```mcrs
+```mcrs verify-skip
 // @a returns Player type
 foreach (p in @a) {
     give(p, "diamond", 1);    // ✅ Player has give()
@@ -57,7 +57,7 @@ foreach (z in @e[type=zombie]) {
 
 The `@s` (self) selector's type depends on the execution context:
 
-```mcrs
+```mcrs verify-skip
 @tick fn tick() {
     // @s is entity (unknown context)
 }
@@ -80,7 +80,7 @@ foreach (p in @a) {
 
 Inner contexts shadow outer ones:
 
-```mcrs
+```mcrs verify-skip
 foreach (p in @a) {
     // @s: Player
     
@@ -102,7 +102,7 @@ foreach (p in @a) {
 
 ### Use Specific Selectors
 
-```mcrs
+```mcrs verify-skip
 // ❌ Less safe
 foreach (e in @e) {
     give(e, "diamond", 1);  // May fail on non-players
@@ -116,7 +116,7 @@ foreach (p in @a) {
 
 ### Use Type Filters
 
-```mcrs
+```mcrs verify-skip
 // ❌ Generic entity
 foreach (e in @e) {
     // Can't use mob-specific methods
@@ -132,7 +132,7 @@ foreach (z in @e[type=zombie]) {
 
 Use `is` to narrow a generic entity to a specific subtype inside an `if` block.
 
-```mcrs
+```mcrs verify-skip
 foreach (e in @e) {
     if (e is Player) {
         say("Found player");

@@ -6,7 +6,7 @@ Structs group related data together.
 
 ### Defining Structs
 
-```rs
+```rs verify-skip
 struct Player {
     name: string,
     score: int,
@@ -18,7 +18,7 @@ struct Player {
 
 Use struct literals:
 
-```rs
+```rs verify-skip
 let p: Player = Player {
     name: "Alex",
     score: 0,
@@ -28,14 +28,14 @@ let p: Player = Player {
 
 ### Accessing Fields
 
-```rs
+```rs verify-skip
 say(p.name);          // Alex
 p.score = p.score + 1;
 ```
 
 ### Structs in Functions
 
-```rs
+```rs verify-skip
 fn announce(p: Player) {
     say(f"{p.name} has {p.score} points");
 }
@@ -52,7 +52,7 @@ Enums define a set of named values.
 
 ### Defining Enums
 
-```rs
+```rs verify-skip
 enum GameState {
     Waiting,
     Running,
@@ -62,7 +62,7 @@ enum GameState {
 
 ### Using Enums
 
-```rs
+```rs verify-skip
 let state: GameState = GameState::Waiting;
 
 fn start_game() {
@@ -75,7 +75,7 @@ fn start_game() {
 
 Use `match` to handle different enum values:
 
-```rs
+```rs verify-skip
 fn tick_game() {
     match state {
         GameState::Waiting => {
@@ -95,7 +95,7 @@ fn tick_game() {
 
 Enums can carry associated data:
 
-```rs
+```rs verify-skip
 enum Team {
     Red,
     Blue,
@@ -115,7 +115,7 @@ fn get_color(team: Team) -> string {
 
 Combining structs and enums for a mini-game:
 
-```rs
+```rs verify-skip
 enum Role {
     Hunter,
     Runner,

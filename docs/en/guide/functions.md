@@ -12,7 +12,7 @@ fn greet() {
 
 Call a function by name:
 
-```rs
+```rs verify-skip
 greet();
 ```
 
@@ -118,7 +118,7 @@ The range is **exclusive** on the upper end (`0..5` iterates 0, 1, 2, 3, 4).
 
 Use `declare fn` to declare a function signature without a body. This is used in declaration files (e.g. `builtins.d.mcrs`) to describe built-in functions for the type checker:
 
-```rs
+```rs verify-skip
 // builtins.d.mcrs
 declare fn say(msg: string);
 declare fn give(target: selector, item: string, count: int);

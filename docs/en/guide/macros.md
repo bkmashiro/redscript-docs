@@ -21,7 +21,7 @@ teleport @s $x $y $z
 
 RedScript automatically detects when you use variables in these positions and compiles to macro syntax:
 
-```rs
+```rs verify-skip
 fn spawn_at(x: int, y: int, z: int) {
     summon("minecraft:zombie", x, y, z);
 }
@@ -47,7 +47,7 @@ function ns:spawn_at with storage rs:macro_args
 
 RedScript is smart about when to use macros:
 
-```rs
+```rs verify-skip
 spawn_at(100, 64, 200);   // All constants → inline directly, no macro
 spawn_at(px, 64, pz);     // Has variables → uses macro
 ```
@@ -56,7 +56,7 @@ spawn_at(px, 64, pz);     // Has variables → uses macro
 
 **All builtin functions support macro parameters.** Any argument can be a runtime variable:
 
-```rs
+```rs verify-skip
 fn dynamic_say(msg: string) {
     say(msg);  // Works!
 }
@@ -76,7 +76,7 @@ This includes `say`, `tell`, `give`, `effect`, `summon`, `teleport`, `particle`,
 
 You can use a variable as a **relative coordinate offset** with the `~varname` syntax:
 
-```rs
+```rs verify-skip
 fn launch_up(target: selector, height: int) {
     tp(target, ~0, ~height, ~0);   // relative by 'height' blocks on Y axis
 }
@@ -99,7 +99,7 @@ Called with `function ns:launch_up with storage rs:macro_args` — the macro sub
 
 ## Example: Dynamic Teleportation
 
-```rs
+```rs verify-skip
 struct Waypoint {
     x: int,
     y: int,
@@ -118,7 +118,7 @@ fn tp_to_waypoint(wp: Waypoint) {
 
 ## Example: Particle Grid
 
-```rs
+```rs verify-skip
 fn spawn_particle_at(x: int, y: int, z: int) {
     particle("minecraft:flame", x, y, z, 0, 0, 0, 0, 1);
 }

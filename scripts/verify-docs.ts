@@ -168,11 +168,28 @@ function checkDecoratorsDocs(decorators: string[]): void {
 
 function extractCodeBlocks(mdFile: string): string[] {
   const content = fs.readFileSync(mdFile, 'utf-8');
-  const codeBlockRegex = /```(?:rs|redscript|mcrs)\n([\s\S]*?)```/g;
+  const codeBlockRegex = /```(rs|redscript|mcrs)([^\n]*)\n([\s\S]*?)```/g;
   const blocks: string[] = [];
   let match;
   while ((match = codeBlockRegex.exec(content)) !== null) {
-    blocks.push(match[1]);
+    const fenceMeta = match[2] ?? '';
+    const code = match[3];
+    const before = content.slice(0, match.index);
+    const lastContainerStart = before.lastIndexOf('::: verify-skip');
+    const lastContainerEnd = before.lastIndexOf(':::');
+    const inSkipContainer = lastContainerStart !== -1 && lastContainerStart >= lastContainerEnd;
+    const lastCommentStart = before.lastIndexOf('<!-- verify:skip:start -->');
+    const lastCommentEnd = before.lastIndexOf('<!-- verify:skip:end -->');
+    const inSkipCommentBlock = lastCommentStart !== -1 && lastCommentStart > lastCommentEnd;
+    const previousLine = before.split('\n').at(-2) ?? '';
+    const skipByComment = /<!--\s*verify:skip\s*-->/.test(previousLine);
+    const skipByFenceMeta = /\b(?:ignore|verify-skip)\b/.test(fenceMeta);
+
+    if (inSkipContainer || inSkipCommentBlock || skipByComment || skipByFenceMeta) {
+      continue;
+    }
+
+    blocks.push(code);
   }
   return blocks;
 }

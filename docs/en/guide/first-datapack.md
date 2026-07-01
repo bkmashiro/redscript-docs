@@ -37,6 +37,8 @@ fn init() {
 Use `@tick` to check scores and give rewards:
 
 ```rs
+const REWARD_THRESHOLD: int = 10;
+
 @tick(rate=20)
 fn check_rewards() {
     // Check if any player reached the threshold

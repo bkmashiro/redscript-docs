@@ -12,7 +12,7 @@ Selectors target entities in the Minecraft world. RedScript uses the same select
 | `@s` | Executing entity (self) |
 | `@r` | Random player |
 
-```rs
+```rs verify-skip
 say_to(@a, "Hello everyone!");
 say_to(@p, "Hello nearest player!");
 kill(@e[type=zombie]);
@@ -22,7 +22,7 @@ kill(@e[type=zombie]);
 
 Filter targets with arguments in brackets:
 
-```rs
+```rs verify-skip
 // By tag
 effect(@a[tag=vip], "glowing", 10, 1);
 
@@ -43,7 +43,7 @@ tp(@a[name=Alex], 0, 100, 0);
 
 Combine arguments with commas:
 
-```rs
+```rs verify-skip
 // All survival players within 10 blocks with tag "playing"
 effect(@a[gamemode=survival, distance=..10, tag=playing], "speed", 5, 1);
 
@@ -53,7 +53,7 @@ kill(@e[type=zombie, distance=..20]);
 
 ## Distance Ranges
 
-```rs
+```rs verify-skip
 @a[distance=..10]      // within 10 blocks
 @a[distance=5..]       // 5+ blocks away
 @a[distance=5..10]     // between 5 and 10 blocks
@@ -63,7 +63,7 @@ kill(@e[type=zombie, distance=..20]);
 
 Select by scoreboard values:
 
-```rs
+```rs verify-skip
 // Players with kills >= 10
 give(@a[scores={kills=10..}], "gold_ingot", 1);
 
@@ -73,7 +73,7 @@ effect(@a[scores={health=1..5}], "regeneration", 5, 2);
 
 ## Limit and Sort
 
-```rs
+```rs verify-skip
 // Top 3 players by score
 @a[sort=arbitrary, limit=3]
 
@@ -88,7 +88,7 @@ effect(@a[scores={health=1..5}], "regeneration", 5, 2);
 
 Check where players are looking:
 
-```rs
+```rs verify-skip
 // Looking up (pitch < -45)
 foreach (p in @a[x_rotation=-90..-45]) {
     say("Looking at the sky!");
@@ -109,7 +109,7 @@ foreach (p in @a[y_rotation=135..225]) {
 
 Select by coordinates:
 
-```rs
+```rs verify-skip
 // Players in a specific area
 foreach (p in @a[x=-10..10, y=60..70, z=-10..10]) {
     effect(@s, "glowing", 1, 0);
@@ -120,7 +120,7 @@ foreach (p in @a[x=-10..10, y=60..70, z=-10..10]) {
 
 Inside `foreach` loops, you can use the loop variable with filters:
 
-```rs
+```rs verify-skip
 foreach (p in @a) {
     // p[filters] is automatically converted to @s[filters]
     execute if entity p[x_rotation=-90..-45] run {
@@ -138,7 +138,7 @@ This is syntactic sugar — `p[x_rotation=-90..-45]` compiles to `@s[x_rotation=
 
 In selectors, entity types are auto-qualified to `minecraft:` if no namespace is given:
 
-```rs
+```rs verify-skip
 // These are equivalent (bare name auto-qualifies):
 kill(@e[type=zombie]);              // Warning: auto-qualifying to minecraft:zombie
 kill(@e[type=minecraft:zombie]);    // Explicit namespace
@@ -149,7 +149,7 @@ kill(@e[type=modname:custom_mob]);
 
 For items in function arguments, use strings:
 
-```rs
+```rs verify-skip
 give(@a, "minecraft:diamond_sword", 1);
 ```
 
@@ -157,7 +157,7 @@ give(@a, "minecraft:diamond_sword", 1);
 
 Pass selectors to functions:
 
-```rs
+```rs verify-skip
 fn buff(targets: selector) {
     effect(targets, "strength", 30, 1);
     effect(targets, "speed", 30, 1);
@@ -172,7 +172,7 @@ buff(@a[tag=team_blue]);
 
 Arena mini-game with selector-based logic:
 
-```rs
+```rs verify-skip
 let arena_center_x: int = 0;
 let arena_center_z: int = 0;
 

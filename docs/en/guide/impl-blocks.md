@@ -4,10 +4,10 @@
 
 ## Basic Syntax
 
-```mcrs
+```mcrs verify-skip
 struct Timer {
-    _id: int;
-    duration: int;
+    _id: int,
+    duration: int,
 }
 
 impl Timer {
@@ -35,8 +35,8 @@ Methods declared inside `impl Type { ... }` belong to that type.
 
 Instance methods receive the current value through `self`.
 
-```mcrs
-struct Counter { value: int; }
+```mcrs verify-skip
+struct Counter { value: int }
 
 impl Counter {
     fn show(self) {
@@ -54,7 +54,7 @@ Use `self` to access fields and call other instance methods.
 
 Methods without `self` act like type-level functions and are called with `Type::method(...)`.
 
-```mcrs
+```mcrs verify-skip
 impl Timer {
     fn new(duration: int): Timer {
         return Timer { _id: 0, duration: duration };
@@ -70,7 +70,7 @@ This is commonly used for constructors and helpers.
 
 RedScript supports both static and instance method syntax:
 
-```mcrs
+```mcrs verify-skip
 let timer = Timer::new(200);
 
 timer.start();

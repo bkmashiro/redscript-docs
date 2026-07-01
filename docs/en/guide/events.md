@@ -34,7 +34,7 @@ Multiple handlers can subscribe to the same event. RedScript generates one dispa
 ```mcrs
 @on(PlayerJoin)
 fn welcome(player: Player) {
-    say(f"Welcome {player}!");
+    tell(player, "Welcome!");
 }
 
 @on(EntityKill)
