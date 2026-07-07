@@ -51,7 +51,7 @@ These are **not** language-level `fixed` operations. Prefer explicit scale-aware
 
 An IEEE 754 double-precision float backed by NBT. Full precision (~15 significant digits). Heavier than `fixed` because it reads/writes NBT instead of scoreboards.
 
-Use `double` only when you need scientific precision or are using `stdlib/math_hp` (high-precision trig/log).
+Use `double` only when you need scientific precision or are using `stdlib/math_hp` (high-precision trig/log). `double` values live in NBT, but not every helper keeps every step in pure IEEE arithmetic: some `math_hp` helpers intentionally cross a `×10000` scoreboard boundary. Check the helper docs when rounding matters.
 
 ```rs
 let angle: double = 45.0 as double;
@@ -125,7 +125,7 @@ let result: int = (score as fixed + multiplier) as int;
 // ⚠️ This is *not* language-level fixed-point math.
 // These helpers use integer ×1000 conventions and scale at helper boundaries.
 import "stdlib/math"
-let trig_component: int = sin_fx1000(500);      // 0.5 ×1000 input
+let trig_component: int = sin_fx1000(30);       // = 500 (sin 30° ×1000)
 let legacy_interp: int = mul_fx1000(500, 250);  // = 125 (0.125 ×1000)
 
 // For language `fixed`, use normal operators:

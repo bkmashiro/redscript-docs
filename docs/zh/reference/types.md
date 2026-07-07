@@ -51,7 +51,7 @@ let inv: fixed = a / b;      // = 1.25（内部值 12500）
 
 IEEE 754 双精度浮点数，由 NBT 支撑。完整精度（约 15 位有效数字）。比 `fixed` 更重，因为它读写 NBT 而不是计分板。
 
-只有在需要科学精度或使用 `stdlib/math_hp`（高精度三角/对数函数）时才使用 `double`。
+只有在需要科学精度或使用 `stdlib/math_hp`（高精度三角/对数函数）时才使用 `double`。`double` 值存放在 NBT 中，但不是每个辅助函数的每一步都保持纯 IEEE 运算：部分 `math_hp` 辅助函数会有意经过 `×10000` 计分板边界。对舍入敏感时请查看对应函数文档。
 
 ```rs
 let angle: double = 45.0 as double;
@@ -125,7 +125,7 @@ let result: int = (score as fixed + multiplier) as int;
 // ⚠️ 这不是语言级 fixed 运算。
 // 这些辅助函数使用整数 ×1000 约定。
 import "stdlib/math"
-let trig_component: int = sin_fx1000(500);      // 0.5 ×1000 的输入
+let trig_component: int = sin_fx1000(30);       // = 500（sin 30° ×1000）
 let legacy_interp: int = mul_fx1000(500, 250);  // = 125（0.125 ×1000）
 
 // 语言级 `fixed` 直接使用普通 `*`。
