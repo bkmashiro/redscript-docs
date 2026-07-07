@@ -117,6 +117,47 @@ let enabled = true
 
 但在教程和学习阶段，显式写类型通常更清楚。
 
+## 数组、选择器与可选值
+
+前面几个标量类型足够写简单脚本，但真实数据包里还经常会遇到三个边界类型。
+
+### 数组
+
+数组保存同一种类型的一组值：
+
+```rs
+let rewards: int[] = [5, 10, 20]
+let names: string[] = ["Lobby", "Arena", "Finale"]
+
+let first_reward: int = rewards[0]
+let reward_count: int = rewards.len
+```
+
+当值集合较小、已知，或者后面需要循环遍历一组配置时，可以用数组。
+
+### 选择器
+
+选择器表示 Minecraft 实体目标，比如所有玩家、当前执行者、或筛选后的实体：
+
+```rs
+let everyone: selector = @a
+let self: selector = @s
+let nearby_zombies: selector = @e[type=zombie,distance=..10]
+```
+
+它们会在后面的 `foreach` 和 execute 上下文教程里更常用。
+
+### `Option<T>`
+
+当一个值可能不存在时，用 `Option<T>`：
+
+```rs
+let found_score: Option<int> = Some(42)
+let missing_score: Option<int> = None
+```
+
+下一篇控制流里会用 `if let Some(x) = value` 处理这种值。
+
 ## 一个小状态示例
 
 ```rs

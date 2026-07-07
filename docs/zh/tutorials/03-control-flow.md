@@ -72,6 +72,33 @@ for i in 0..5 {
 
 上界是排他的，所以 `0..5` 实际跑 `0, 1, 2, 3, 4`。
 
+也可以直接遍历数组里的值：
+
+```rs
+let rewards: int[] = [5, 10, 20]
+for reward in rewards {
+    say(f"Reward: {reward}")
+}
+```
+
+需要下标时用范围循环；只关心值时用数组循环。
+
+## 遍历 Minecraft 选择器：`foreach`
+
+当数据源是 Minecraft 选择器，而不是 RedScript 数组时，用 `foreach`：
+
+```rs
+foreach (player in @a[tag=joined]) {
+    tell(player, "Round starting")
+}
+
+foreach (zombie in @e[type=zombie,distance=..12]) {
+    kill(zombie)
+}
+```
+
+选择器循环里的变量是一个实体目标；这和 `for reward in rewards` 里拿到普通 RedScript 值不同。
+
 ## `break`
 
 立即退出最近一层循环：
@@ -117,6 +144,35 @@ fn show_phase() {
     }
 }
 ```
+
+`match` 也可以匹配整数范围和通配分支：
+
+```rs
+let score: int = 86
+match score {
+    90..100 => { say("A") },
+    80..89 => { say("B") },
+    _ => { say("Keep practicing") },
+}
+```
+
+`match` 里的范围两端都是包含的。
+
+## `if let Some(...)`
+
+`Option<T>` 用 `if let Some(name) = value` 处理：
+
+```rs
+let maybe_kills: Option<int> = Some(3)
+
+if let Some(kills) = maybe_kills {
+    say(f"Kills: {kills}")
+} else {
+    say("No kill count yet")
+}
+```
+
+当 helper 可能返回值、也可能没有值时，用这个形式。`Some(...)` 里的变量只在这个分支里可用。
 
 ## 组合起来看
 

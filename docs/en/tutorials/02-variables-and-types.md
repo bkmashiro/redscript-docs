@@ -111,6 +111,47 @@ let enabled = true
 
 For tutorials and early learning, explicit annotations are often clearer.
 
+## Arrays, Selectors, and Optional Values
+
+The first four scalar types are enough for simple scripts, but most real datapacks also use three container/boundary types.
+
+### Arrays
+
+Arrays hold repeated values of one type:
+
+```rs
+let rewards: int[] = [5, 10, 20]
+let names: string[] = ["Lobby", "Arena", "Finale"]
+
+let first_reward: int = rewards[0]
+let reward_count: int = rewards.len
+```
+
+Use arrays when the set is small and known, or when you want to loop over a table of values later.
+
+### Selectors
+
+Selectors represent Minecraft entity targets such as all players, the current executor, or filtered entities:
+
+```rs
+let everyone: selector = @a
+let self: selector = @s
+let nearby_zombies: selector = @e[type=zombie,distance=..10]
+```
+
+They become most useful with `foreach` and execute context in later tutorials.
+
+### `Option<T>`
+
+Use `Option<T>` when a value may be absent:
+
+```rs
+let found_score: Option<int> = Some(42)
+let missing_score: Option<int> = None
+```
+
+You will handle options with `if let Some(x) = value` in the control-flow tutorial.
+
 ## Small State Example
 
 ```rs

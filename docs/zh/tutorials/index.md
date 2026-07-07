@@ -18,6 +18,23 @@
 | 7 | [事件与 Tick](./07-events-and-ticks) | `@load`、`@tick`、`@on_trigger`、`@on(...)` |
 | 8 | [进阶主题](./08-advanced) | `@coroutine`、`@inline`、优化器、模块导入 |
 
+## 语言细节覆盖表
+
+入门系列现在会分层带到主要语言面，而不是把关键细节都丢到参考文档里：
+
+| 特性区域 | 第一次出现的位置 | 完整参考 |
+|----------|------------------|----------|
+| `let`、`const`、类型推断 | [02 — 变量与类型](./02-variables-and-types) | [语法](/zh/reference/syntax#variables) |
+| `int`、`fixed`、`double`、`string`、`bool` | [02 — 变量与类型](./02-variables-and-types)、[09 — 精确算术](./09-precision-arithmetic) | [类型](/zh/reference/types) |
+| 数组与动态下标 | [02 — 变量与类型](./02-variables-and-types)、[03 — 控制流](./03-control-flow) | [表达式](/zh/reference/expressions#array-index) |
+| `if`、`while`、范围 `for`、数组 `for`、`foreach` | [03 — 控制流](./03-control-flow) | [语法](/zh/reference/syntax#control-flow) |
+| `match`、`_`、整数范围、枚举分支 | [03 — 控制流](./03-control-flow)、[05 — 结构体与枚举](./05-structs-and-enums) | [表达式](/zh/reference/expressions#match-expressions) |
+| `Option<T>`、`Some`、`None`、`if let` | [03 — 控制流](./03-control-flow) | [表达式](/zh/reference/expressions#option-constructors) |
+| `struct`、`enum`、`impl` | [05 — 结构体与枚举](./05-structs-and-enums) | [类型](/zh/reference/types#structs) |
+| 选择器、`@s`、execute 上下文 | [04 — 函数](./04-functions)、[04 — 选择器与上下文](./04-selectors-context) | [语法](/zh/reference/syntax#execute) |
+| 装饰器、load/tick/trigger 钩子 | [07 — 事件与 Tick](./07-events-and-ticks) | [装饰器](/zh/reference/decorators) |
+| 导入、保留输出、协程、优化器 | [08 — 进阶主题](./08-advanced) | [CLI](/zh/reference/cli) |
+
 ## 建议学习顺序
 
 1. 先按顺序读完 1 到 5。

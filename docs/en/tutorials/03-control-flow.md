@@ -72,6 +72,33 @@ for i in 0..5 {
 
 The upper bound is exclusive, so `0..5` runs `0, 1, 2, 3, 4`.
 
+You can also loop over array values directly:
+
+```rs
+let rewards: int[] = [5, 10, 20]
+for reward in rewards {
+    say(f"Reward: {reward}")
+}
+```
+
+Use a range when you need the index, and an array loop when you only need the value.
+
+## `foreach` over Minecraft selectors
+
+Use `foreach` when the source is a Minecraft selector, not a RedScript array:
+
+```rs
+foreach (player in @a[tag=joined]) {
+    tell(player, "Round starting")
+}
+
+foreach (zombie in @e[type=zombie,distance=..12]) {
+    kill(zombie)
+}
+```
+
+Inside a selector loop, the loop variable is an entity target. This is different from `for reward in rewards`, where the variable is a normal RedScript value.
+
 ## `break`
 
 Exit the nearest loop immediately:
@@ -119,6 +146,35 @@ fn show_phase() {
 ```
 
 This reads better than a long chain of `if` statements when you are handling named states.
+
+`match` can also use integer ranges and a wildcard arm:
+
+```rs
+let score: int = 86
+match score {
+    90..100 => { say("A") },
+    80..89 => { say("B") },
+    _ => { say("Keep practicing") },
+}
+```
+
+Range patterns in `match` are inclusive on both ends.
+
+## `if let Some(...)`
+
+`Option<T>` values are handled with `if let Some(name) = value`:
+
+```rs
+let maybe_kills: Option<int> = Some(3)
+
+if let Some(kills) = maybe_kills {
+    say(f"Kills: {kills}")
+} else {
+    say("No kill count yet")
+}
+```
+
+Use this when a helper may or may not return a value. The variable inside `Some(...)` is only available in that branch.
 
 ## Putting It Together
 
