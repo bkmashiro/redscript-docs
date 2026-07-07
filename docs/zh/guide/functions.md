@@ -16,6 +16,17 @@ fn greet() {
 greet();
 ```
 
+## 心智模型
+
+RedScript 的函数仍然面向 datapack：它会编译成一个或多个 `.mcfunction` 文件，通常会读写记分板或 NBT 状态，并由 `@load`、`@tick`、事件或其他函数调用触发。
+
+几个核心区别：
+
+- 普通函数用于复用逻辑。
+- 带装饰器的函数是 Minecraft 进入 RedScript 逻辑的入口。
+- 名字以 `_` 开头的函数是私有 helper；如果没有被触达，可能会被死代码消除移除。
+- `target: selector` 这类参数携带 Minecraft 目标上下文；`@s` 表示当前 execute 主体，不是某个固定玩家。
+
 ## 参数
 
 函数可以接受带类型注解的参数：
@@ -39,6 +50,16 @@ fn double(x: int) -> int {
 }
 
 let result: int = double(5); // 10
+```
+
+编译器同时接受 `fn f() -> T` 和旧的 `fn f(): T` 返回类型写法。新的 guide 示例优先使用 `->`，因为它更容易和参数类型注解区分。
+
+没有返回值的函数不需要写 `-> void`：
+
+```rs
+fn announce(msg: string) {
+    say(msg);
+}
 ```
 
 ## 默认参数

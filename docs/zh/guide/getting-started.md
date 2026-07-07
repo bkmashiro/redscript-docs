@@ -74,13 +74,13 @@ hello-redscript/
 
 ```rs
 @load
-fn setup(): void {
+fn setup() {
     say("Hello from RedScript!")
     say("Run /trigger welcome_kit")
 }
 
 @on_trigger("welcome_kit")
-fn give_welcome_kit(): void {
+fn give_welcome_kit() {
     tell(@s, "Starter items incoming.")
     give(@s, "minecraft:bread", 16)
     give(@s, "minecraft:torch", 8)

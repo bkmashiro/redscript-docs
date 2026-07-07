@@ -16,6 +16,17 @@ Call a function by name:
 greet();
 ```
 
+## Mental Model
+
+A RedScript function is still datapack-oriented: it compiles to one or more `.mcfunction` files, may read/write scoreboard or NBT state, and is usually triggered by `@load`, `@tick`, events, or another function call.
+
+Keep this split in mind:
+
+- Normal functions are reusable logic.
+- Decorated functions are entry points from Minecraft.
+- Functions whose names start with `_` are private helpers and may be removed by dead-code elimination if nothing reaches them.
+- Selector parameters (`target: selector`) carry Minecraft target context; `@s` means the current execute subject, not a global player.
+
 ## Parameters
 
 Functions can take parameters with type annotations:
@@ -39,6 +50,16 @@ fn double(x: int) -> int {
 }
 
 let result: int = double(5); // 10
+```
+
+Both `fn f() -> T` and older `fn f(): T` return-type syntax are accepted by the compiler. New guide examples prefer `->` because it is easier to distinguish from parameter annotations.
+
+Functions without a return value do not need `-> void`:
+
+```rs
+fn announce(msg: string) {
+    say(msg);
+}
 ```
 
 ## Default Arguments

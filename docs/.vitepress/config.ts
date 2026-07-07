@@ -58,6 +58,8 @@ export default defineConfig({
                 { text: 'Strings', link: '/en/guide/strings' },
                 { text: 'Functions', link: '/en/guide/functions' },
                 { text: 'Decorators', link: '/en/guide/decorators' },
+                { text: 'Selectors', link: '/en/guide/selectors' },
+                { text: 'Static Events', link: '/en/guide/events' },
                 { text: 'Structs & Enums', link: '/en/guide/structs-enums' },
                 { text: 'Impl Blocks', link: '/en/guide/impl-blocks' },
               ]
@@ -68,9 +70,7 @@ export default defineConfig({
                 { text: 'Lambdas', link: '/en/guide/lambdas' },
                 { text: 'Macro Functions', link: '/en/guide/macros' },
                 { text: 'NBT Data', link: '/en/guide/nbt' },
-                { text: 'Selectors', link: '/en/guide/selectors' },
                 { text: 'Entity Types', link: '/en/guide/entity-types' },
-                { text: 'Static Events', link: '/en/guide/events' },
               ]
             },
             {
@@ -246,6 +246,8 @@ export default defineConfig({
                 { text: '字符串', link: '/zh/guide/strings' },
                 { text: '函数', link: '/zh/guide/functions' },
                 { text: '装饰器', link: '/zh/guide/decorators' },
+                { text: '选择器', link: '/zh/guide/selectors' },
+                { text: '静态事件', link: '/zh/guide/events' },
                 { text: '结构体与枚举', link: '/zh/guide/structs-enums' },
                 { text: 'impl 块', link: '/zh/guide/impl-blocks' },
               ]
@@ -256,9 +258,7 @@ export default defineConfig({
                 { text: 'Lambda 表达式', link: '/zh/guide/lambdas' },
                 { text: '宏函数', link: '/zh/guide/macros' },
                 { text: 'NBT 数据', link: '/zh/guide/nbt' },
-                { text: '选择器', link: '/zh/guide/selectors' },
                 { text: '实体类型', link: '/zh/guide/entity-types' },
-                { text: '静态事件', link: '/zh/guide/events' },
               ]
             },
             {

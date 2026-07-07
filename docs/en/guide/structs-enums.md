@@ -1,5 +1,7 @@
 # Structs & Enums
 
+Structs and enums are RedScript's main tools for naming game state. Use them to make scoreboard/NBT-heavy logic readable without hiding the fact that the compiler still emits datapack commands.
+
 ## Structs
 
 Structs group related data together.
@@ -7,7 +9,7 @@ Structs group related data together.
 ### Defining Structs
 
 ```rs verify-skip
-struct Player {
+struct PlayerState {
     name: string,
     score: int,
     alive: bool,
@@ -16,12 +18,18 @@ struct Player {
 
 ### Creating Struct Instances
 
-Use struct literals:
+Use struct literals. The type name is accepted, and in typed positions the shorter `{ ... }` form is also common in generated/stdlib code.
 
 ```rs verify-skip
-let p: Player = Player {
+let p: PlayerState = PlayerState {
     name: "Alex",
     score: 0,
+    alive: true,
+};
+
+let p2: PlayerState = {
+    name: "Steve",
+    score: 10,
     alive: true,
 };
 ```
@@ -36,37 +44,52 @@ p.score = p.score + 1;
 ### Structs in Functions
 
 ```rs verify-skip
-fn announce(p: Player) {
+fn announce(p: PlayerState) {
     say(f"{p.name} has {p.score} points");
 }
 
-fn kill(p: Player) {
-    p.alive = false;
-    say(f"{p.name} was eliminated");
+fn mark_dead(p: PlayerState) -> PlayerState {
+    return PlayerState { name: p.name, score: p.score, alive: false };
 }
 ```
 
+Structs are best for values that travel together: positions, player snapshots, timer config, or a mini-game state record.
+
 ## Enums
 
-Enums define a set of named values.
+Enums define a named set of states. They are useful when an `int` would otherwise have undocumented magic values.
 
 ### Defining Enums
 
 ```rs verify-skip
-enum GameState {
-    Waiting,
+enum GamePhase {
+    Lobby,
+    Starting,
     Running,
     Ended,
 }
 ```
 
-### Using Enums
+You can also assign explicit integer values:
 
 ```rs verify-skip
-let state: GameState = GameState::Waiting;
+enum Rank {
+    Bronze = 1,
+    Silver = 2,
+    Gold = 3,
+    Diamond = 10,
+}
+```
+
+### Using Enums
+
+Use `Type::Variant` in guide code. Some older examples and tests may show `Type.Variant`; both are accepted, but `::` is the current style in the reference docs.
+
+```rs verify-skip
+let phase: GamePhase = GamePhase::Lobby;
 
 fn start_game() {
-    state = GameState::Running;
+    phase = GamePhase::Running;
     say("Game started!");
 }
 ```
@@ -77,39 +100,52 @@ Use `match` to handle different enum values:
 
 ```rs verify-skip
 fn tick_game() {
-    match state {
-        GameState::Waiting => {
+    match phase {
+        GamePhase::Lobby => {
             actionbar(@a, "Waiting for players...");
         },
-        GameState::Running => {
+        GamePhase::Running => {
             update_scoreboard();
         },
-        GameState::Ended => {
+        GamePhase::Ended => {
             actionbar(@a, "Game over!");
+        },
+        _ => {},
+    }
+}
+```
+
+Add `_` when you intentionally do not handle every variant in the guide example.
+
+### Payload Variants
+
+Enum variants can carry named fields. Construct them with `Type::Variant(field: value)` and bind the fields in `match` with `Type::Variant(name, ...)`.
+
+```rs verify-skip
+enum Reward {
+    None,
+    Coins(amount: int),
+    Item(id: string, count: int),
+}
+
+fn describe_reward(reward: Reward) {
+    match reward {
+        Reward::Coins(amount) => {
+            say(f"Coins: {amount}");
+        },
+        Reward::Item(id, count) => {
+            say(f"Item: {id} x{count}");
+        },
+        Reward::None => {
+            say("No reward");
         },
     }
 }
+
+let reward: Reward = Reward::Coins(amount: 25);
 ```
 
-### Enums with Values
-
-Enums can carry associated data:
-
-```rs verify-skip
-enum Team {
-    Red,
-    Blue,
-    Spectator,
-}
-
-fn get_color(team: Team) -> string {
-    match team {
-        Team::Red => return "red",
-        Team::Blue => return "blue",
-        Team::Spectator => return "gray",
-    }
-}
-```
+Payload enums are backed by generated scoreboard/NBT storage, so prefer them for clear state modeling rather than tiny hot-loop data structures.
 
 ## Practical Example
 
@@ -126,12 +162,12 @@ struct GamePlayer {
     catches: int,
 }
 
-let game_state: GameState = GameState::Waiting;
+let game_phase: GamePhase = GamePhase::Lobby;
 
 @tick(rate=20)
 fn game_loop() {
-    match game_state {
-        GameState::Running => {
+    match game_phase {
+        GamePhase::Running => {
             check_catches();
             update_timer();
         },
@@ -142,5 +178,5 @@ fn game_loop() {
 
 ## Next Steps
 
-- [Lambdas](/en/guide/lambdas) — Inline function expressions
+- [Impl Blocks](/en/guide/impl-blocks) — Attach methods to custom types
 - [Syntax Reference](/en/reference/syntax) — Full syntax details

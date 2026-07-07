@@ -26,7 +26,7 @@ const DEPTH: int = -64;      // e.g. Minecraft bedrock level
 
 ## Types
 
-RedScript has five primitive types:
+RedScript has a small set of primitive types plus a few Minecraft-facing value categories that show up constantly in real datapacks:
 
 | Type | Description | Example |
 |------|-------------|---------|
@@ -35,6 +35,9 @@ RedScript has five primitive types:
 | `double` | IEEE 754 double (NBT-backed) | `x as double` |
 | `string` | Text | `"hello"`, `"Steve"` |
 | `bool` | Boolean | `true`, `false` |
+| `selector` | Minecraft entity/player selector | `@s`, `@a[tag=runner]` |
+| `T[]` | Array of one element type | `int[]`, `string[]` |
+| `Option<T>` | Value that may be absent | `Some(42)`, `None` |
 
 > **v2.5.0 note:** `float` has been renamed to `fixed`. Any existing code using `float` will trigger a deprecation warning and should be migrated to `fixed`. The `double` type is new.
 
@@ -127,6 +130,21 @@ let alive: bool = true;
 let creative: bool = false;
 ```
 
+### Selectors
+
+`selector` is the type used by commands that target entities or players. It is not stored like an `int`; it compiles into Minecraft selector syntax and execute context.
+
+```rs verify-skip
+let nearest: selector = @p;
+give(nearest, "minecraft:apple", 1);
+
+foreach (player in @a[tag=runner]) {
+    actionbar(player, "Keep running!");
+}
+```
+
+Use `@s` when the current execute context matters, especially inside trigger/event handlers and `foreach` loops.
+
 ## Arrays
 
 Arrays hold multiple values of the same type:
@@ -141,6 +159,23 @@ Access elements by index:
 ```rs
 let first: int = scores[0]; // 10
 ```
+
+Arrays are homogeneous: every element must have the same type. Use `for value in array` to iterate values, or `for i in 0..array.len` when you need indexes.
+
+## Optional Values
+
+`Option<T>` represents a value that might be missing. Use `Some(value)` when the value exists and `None` when it does not.
+
+```rs verify-skip
+let maybe_score: Option<int> = Some(10);
+let missing_score: Option<int> = None;
+
+if let Some(score) = maybe_score {
+    say(f"Score: {score}");
+}
+```
+
+`if let Some(x) = option { ... }` is the supported unwrap pattern. Do not assume Rust-style helpers like `.unwrap()` or `.unwrap_or()` exist.
 
 ## Type Inference
 

@@ -26,7 +26,7 @@ const DEPTH: int = -64;      // 例如 Minecraft 基岩层高度
 
 ## 类型
 
-RedScript 有五种基本类型：
+RedScript 有一组较小的基本类型，外加几个实际写 datapack 时经常出现的 Minecraft 相关值类别：
 
 | 类型 | 描述 | 示例 |
 |------|------|------|
@@ -35,6 +35,9 @@ RedScript 有五种基本类型：
 | `double` | IEEE 754 双精度，NBT 存储（v2.5.0 新增） | `x as double` |
 | `string` | 字符串 | `"hello"`、`"Steve"` |
 | `bool` | 布尔值 | `true`、`false` |
+| `selector` | Minecraft 实体/玩家选择器 | `@s`、`@a[tag=runner]` |
+| `T[]` | 某一种元素类型的数组 | `int[]`、`string[]` |
+| `Option<T>` | 可能不存在的值 | `Some(42)`、`None` |
 
 > **v2.5.0 说明：** `float` 已重命名为 `fixed`。现有代码使用 `float` 会触发废弃警告，应迁移至 `fixed`。`double` 类型为全新类型。
 
@@ -119,6 +122,21 @@ let alive: bool = true;
 let creative: bool = false;
 ```
 
+### 选择器
+
+`selector` 是命令定位实体或玩家时使用的类型。它不像 `int` 那样存储在记分板里，而是编译成 Minecraft 选择器语法和 execute 上下文。
+
+```rs verify-skip
+let nearest: selector = @p;
+give(nearest, "minecraft:apple", 1);
+
+foreach (player in @a[tag=runner]) {
+    actionbar(player, "Keep running!");
+}
+```
+
+当逻辑依赖当前执行上下文时使用 `@s`，尤其是在 trigger / event handler 和 `foreach` 循环内部。
+
 ## 数组
 
 数组存储多个相同类型的值：
@@ -133,6 +151,23 @@ let names: string[] = ["Alice", "Bob"];
 ```rs
 let first: int = scores[0]; // 10
 ```
+
+数组是同质的：所有元素必须是同一种类型。遍历值时用 `for value in array`；如果需要索引，用 `for i in 0..array.len`。
+
+## 可选值
+
+`Option<T>` 表示一个值可能存在，也可能不存在。有值时用 `Some(value)`，没有值时用 `None`。
+
+```rs verify-skip
+let maybe_score: Option<int> = Some(10);
+let missing_score: Option<int> = None;
+
+if let Some(score) = maybe_score {
+    say(f"Score: {score}");
+}
+```
+
+`if let Some(x) = option { ... }` 是当前支持的解包方式。不要假设存在 Rust 风格的 `.unwrap()` 或 `.unwrap_or()`。
 
 ## 类型推断
 
