@@ -39,9 +39,9 @@ RedScript compiles this to optimized `.mcfunction` files automatically.
 
 | Feature | Description |
 |---------|-------------|
-| **Types** | `int`, `string`, `bool`, `float`, arrays, structs, enums |
+| **Types** | `int`, `fixed`, `double`, `string`, `bool`, selectors, arrays, structs, enums |
 | **Functions** | Parameters, return values, default arguments |
-| **Decorators** | `@tick`, `@load`, `@on_trigger`, `@on_death` |
+| **Decorators** | `@tick`, `@load`, `@on_trigger`, `@on(EventType)` |
 | **Selectors** | Full MC selector support: `@a[tag=vip,distance=..10]` |
 | **NBT** | Structured NBT parameters for give/summon |
 | **Lambda** | Higher-order functions and closures |

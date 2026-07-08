@@ -118,95 +118,22 @@ fn open_menu() {
 - Voting systems
 - Custom commands
 
-## @on_death
+## Legacy specialized event decorators
 
-Runs when an entity dies.
+The parser still recognizes the older specialized event decorator names:
 
-**Syntax:** `@on_death`
+- `@on_death`
+- `@on_login`
+- `@on_advancement("advancement_id")`
+- `@on_craft("item_id")`
+- `@on_join_team("team_name")`
 
-```rs
-@on_death
-fn handle_death() {
-    tellraw(@s, "You died!");
-    scoreboard_add(@s, "deaths", 1);
-}
-```
+These names are kept for compatibility and tooling, but they are **not** the current runtime-backed event API. Do not use them for new event logic or assume that they generate death/login/advancement/craft/team detection assets.
 
-**Compiles to:** Uses advancement-based death detection.
+Use one of these instead:
 
-**Context:** `@s` refers to the player who died.
-
-## @on_login
-
-Runs when a player logs in (joins) the server.
-
-**Syntax:** `@on_login`
-
-```rs
-@on_login
-fn welcome() {
-    title(@s, "Welcome!");
-    tag_add(@s, "joined");
-}
-```
-
-**Compiles to:** Tag-based detection — checks for players without the join tag each tick.
-
-**Context:** `@s` refers to the joining player.
-
-## @on_advancement
-
-Runs when a player earns a specific advancement.
-
-**Syntax:** `@on_advancement("advancement_id")`
-
-```rs
-@on_advancement("story/mine_diamond")
-fn got_diamonds() {
-    tellraw(@s, "You found diamonds! Here's a reward.");
-    give(@s, "emerald", 5);
-}
-```
-
-**Compiles to:** Uses advancement reward function mechanism.
-
-**Context:** `@s` refers to the player who earned the advancement.
-
-## @on_craft
-
-Runs when a player crafts a specific item.
-
-**Syntax:** `@on_craft("item_id")`
-
-```rs
-@on_craft("minecraft:diamond_sword")
-fn crafted_sword() {
-    tellraw(@s, "You crafted a diamond sword!");
-    effect(@s, "strength", 200, 1);
-}
-```
-
-**Compiles to:** Advancement with `inventory_changed` trigger condition.
-
-**Context:** `@s` refers to the crafting player.
-
-## @on_join_team
-
-Runs when a player joins a specific team.
-
-**Syntax:** `@on_join_team("team_name")`
-
-```rs
-@on_join_team("red")
-fn joined_red_team() {
-    title(@s, "Red Team!");
-    effect(@s, "speed", 200, 1);
-}
-```
-
-**Compiles to:** Team join detection.
-
-**Context:** `@s` refers to the player who joined the team.
+- `@on(PlayerDeath)` / `@on(PlayerJoin)` / `@on(EntityKill)` / `@on(ItemUse)` for compiler-known runtime events.
+- `@function_tag("namespace:path")` plus an explicit Minecraft or stdlib dispatcher for custom event wiring.
 
 ## @on(EventType)
 
@@ -491,12 +418,8 @@ fn test_addition() {
 | `@tick(rate=N)` | Every N ticks | Server |
 | `@function_tag("namespace:path")` | Function tag registration | Caller / tag runtime |
 | `@on_trigger("x")` | Player runs `/trigger x` | Triggering player |
-| `@on_death` | Entity death | Dying entity |
-| `@on_login` | Player joins server | Joining player |
-| `@on_advancement("id")` | Player earns advancement | Player |
-| `@on_craft("item")` | Player crafts item | Crafting player |
-| `@on_join_team("team")` | Player joins team | Player |
 | `@on(EventType)` | Runtime-backed event fires | Event executor (`Player` for built-in events) |
+| legacy `@on_*` event decorators | Parser compatibility only | Do not use for runtime events |
 | `@schedule(ticks=N)` | Runs function once N ticks after datapack load | Server |
 | `@keep` | (Optimizer hint, no runtime effect) | — |
 | `@coroutine` | Marks function as a coroutine (yields at loop back-edges) | — |

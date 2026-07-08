@@ -77,14 +77,10 @@ fn name() { }
 | `@tick` | 每个游戏刻运行 |
 | `@tick(rate=N)` | 每 N 个游戏刻运行 |
 | `@on_trigger("name")` | 玩家激活触发器时运行 |
-| `@on_death` | 实体死亡时运行 |
-| `@on_login` | 玩家加入服务器时运行 |
-| `@on_advancement("id")` | 玩家获得进度时运行 |
-| `@on_craft("item")` | 玩家合成物品时运行 |
-| `@on_join_team("team")` | 玩家加入队伍时运行 |
+| `@on(EventType)` | 接入运行时的事件（`PlayerDeath`、`PlayerJoin`、`EntityKill`、`ItemUse`） |
 | `@function_tag("namespace:path")` | 将函数注册到 Minecraft function tag |
-| `@on(EventType)` | runtime 支撑的事件触发时运行（PlayerDeath、PlayerJoin、EntityKill、ItemUse） |
 | `@keep` | 阻止 DCE 移除该函数 |
+| 旧式 `@on_*` 事件装饰器 | 仅保留解析兼容；运行时事件请用 `@on(EventType)` |
 
 ## 控制流
 

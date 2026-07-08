@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 48 stdlib modules. Import any module with `import <name>;`.
+RedScript ships with 51 stdlib modules. Import any module with `import <name>;`.
 
 ## Categories
 
@@ -16,6 +16,9 @@ RedScript ships with 48 stdlib modules. Import any module with `import <name>;`.
 ### Data Structures
 - [list](/en/stdlib/list) — array aggregates (`sum`, `avg`, `min`, `max`, `sort3`–`sort5`, `shuffle`, ...)
 - [sets](/en/stdlib/sets) — set operations (`set_new`, `set_add`, `set_contains`, `set_remove`)
+- [set_int](/en/stdlib/set_int) — integer set helpers
+- [map](/en/stdlib/map) — key/value map helpers
+- [queue](/en/stdlib/queue) — FIFO queue helpers
 - [graph](/en/stdlib/graph) — weighted directed/undirected graphs (BFS, DFS, reachability, Dijkstra; up to 64 nodes, 256 edges)
 - [matrix](/en/stdlib/matrix) — matrix math for Display Entities (2D/3D rotation, scale, quaternion helpers)
 - [vec](/en/stdlib/vec) — 2D/3D vectors (`dot2d`, `cross3d`, `length2d_fixed`, `atan2_fixed`, `normalize2d_x`, ...)
@@ -48,6 +51,7 @@ RedScript ships with 48 stdlib modules. Import any module with `import <name>;`.
 - [state](/en/stdlib/state) — scoreboard-backed state machine (`get_state`, `set_state`, `transition`)
 - [scheduler](/en/stdlib/scheduler) — per-entity/global delayed tasks (`task_schedule`, `gtask_ready`)
 - [result](/en/stdlib/result) — tagged success/error return values (`Result::Ok`, `Result::Err`)
+- [dialog](/en/stdlib/dialog) — dialog/UI flow helpers
 
 ### Minecraft Game Mechanics
 - [player](/en/stdlib/player) — player utilities (`heal`, `damage`, `is_op`)
@@ -65,3 +69,4 @@ RedScript ships with 48 stdlib modules. Import any module with `import <name>;`.
 - [teams](/en/stdlib/teams) — team management (`setup_two_teams`, `setup_four_teams`, `add_to_team`)
 - [world](/en/stdlib/world) — world queries (`set_day`, `weather_clear`, `sun_altitude`, `glass_box`, ...)
 - [events](/en/stdlib/events) — event dispatcher for join/death/kill/item-use function tags
+- [pathfind](/en/stdlib/pathfind) — 16×16 grid BFS pathfinding

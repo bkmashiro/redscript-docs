@@ -58,11 +58,11 @@ RedScript generates dispatcher functions for each subscribed event and wires you
 
 This keeps event code concise while still compiling to regular datapack functions.
 
-## Choosing Between `@on(...)` and Older Decorators
+## Choosing an Event Entry Point
 
-Use `@on(...)` when you want a typed event API shared across different event kinds. Keep using specialized decorators when you want their existing semantics.
+Use `@on(...)` for the built-in event runtime. Older specialized names such as `@on_death` and `@on_login` are still recognized by the parser for compatibility, but they are not the current runtime-backed event path.
 
-`@on(...)` works well with f-strings and entity typing, so player-oriented event handlers can stay both concise and type-safe.
+If you need an event outside the built-in set, use `@function_tag(...)` with an explicit Minecraft/stdlib dispatcher instead of assuming a specialized decorator exists.
 
 ## Next Steps
 

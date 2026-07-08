@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 35 stdlib modules. Import any module with `import <name>;`.
+这个 README 是一个本地简版模块地图。RedScript 当前内置 51 个标准库模块；完整列表请看 [index.md](index.md) 或站点侧边栏。使用 `import <name>;` 导入任意模块。
 
 ## Categories
 

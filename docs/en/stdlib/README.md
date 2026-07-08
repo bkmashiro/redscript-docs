@@ -1,6 +1,6 @@
 # Standard Library
 
-RedScript ships with 35 stdlib modules. Import any module with `import <name>;`.
+This README is a compact local module map. RedScript currently ships with 51 stdlib modules; use [index.md](index.md) or the site sidebar for the complete list. Import any module with `import <name>;`.
 
 ## Categories
 

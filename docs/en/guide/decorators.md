@@ -61,67 +61,11 @@ Players trigger it in-game with:
 /trigger shop
 ```
 
-## @on_death
+## Runtime Events: @on(EventType)
 
-Runs when an entity dies (advancement-based detection):
+Use `@on(EventType)` for compiler-backed event dispatch. This is the event API that currently wires handlers into the generated runtime assets.
 
-```rs
-@on_death
-fn on_player_death() {
-    say("A player has fallen!");
-    scoreboard_add(@s, "deaths", 1);
-}
-```
-
-## @on_login
-
-Runs when a player logs in (joins) the server:
-
-```rs
-@on_login
-fn welcome() {
-    title(@s, "Welcome!");
-    tellraw(@s, "Type /trigger help for commands");
-}
-```
-
-## @on_advancement
-
-Runs when a player earns a specific advancement:
-
-```rs
-@on_advancement("story/mine_diamond")
-fn got_diamonds() {
-    tellraw(@s, "You found diamonds!");
-}
-```
-
-## @on_craft
-
-Runs when a player crafts a specific item:
-
-```rs
-@on_craft("minecraft:diamond_sword")
-fn crafted_sword() {
-    tellraw(@s, "You crafted a diamond sword!");
-}
-```
-
-## @on_join_team
-
-Runs when a player joins a specific team:
-
-```rs
-@on_join_team("red")
-fn joined_red() {
-    title(@s, "Red Team");
-    effect(@s, "speed", 200, 1);
-}
-```
-
-## @on(EventType)
-
-Handles a static event. The supported event types are:
+Supported event types:
 
 | Event | Description |
 |-------|-------------|
@@ -132,8 +76,8 @@ Handles a static event. The supported event types are:
 
 ```rs
 @on(PlayerDeath)
-fn handle_death(player: Player) {
-    say("A player has died!");
+fn handle_death() {
+    scoreboard_add(@s, "deaths", 1);
 }
 
 @on(PlayerJoin)
@@ -141,6 +85,16 @@ fn handle_join() {
     title(@s, "Welcome!");
 }
 ```
+
+The event runtime sets the executor context for the triggering player/entity, so prefer zero-argument handlers and use `@s` inside the function body.
+
+## Legacy Specialized Event Decorators
+
+The parser still recognizes older names such as `@on_death`, `@on_login`, `@on_advancement("id")`, `@on_craft("item")`, and `@on_join_team("team")` for compatibility. Do not use them for new event logic: they are not the runtime-backed event path. Use `@on(PlayerDeath)`, `@on(PlayerJoin)`, `@on(EntityKill)`, `@on(ItemUse)`, or an explicit `@function_tag(...)` plus your own dispatcher.
+
+## @on(EventType)
+
+This is the canonical event decorator. It is documented in more detail in [Static Events](/en/guide/events).
 
 ## @keep
 
@@ -172,7 +126,7 @@ RedScript's dead code elimination (DCE) optimizer automatically removes unreacha
 
 - Functions **not** starting with `_` are **public** — always emitted as callable via `/function`
 - Functions starting with `_` are **private** — only kept if called from somewhere or decorated with `@keep`
-- Decorated functions (`@tick`, `@load`, `@on_*`, etc.) are always kept regardless of name
+- Decorated entry-point functions (`@tick`, `@load`, `@on_trigger`, `@on(EventType)`, etc.) are always kept regardless of name
 
 ## How Decorators Work
 
@@ -184,12 +138,8 @@ Decorators compile to Minecraft's function tag system:
 | `@tick` | `#minecraft:tick` tag |
 | `@tick(rate=N)` | Schedule command with interval |
 | `@on_trigger("x")` | Trigger scoreboard detection |
-| `@on_death` | Advancement-based death detection |
-| `@on_login` | Tag-based join detection |
-| `@on_advancement("id")` | Advancement reward function |
-| `@on_craft("item")` | Advancement inventory_changed detection |
-| `@on_join_team("team")` | Team join detection |
-| `@on(EventType)` | Event tag polling per tick |
+| `@on(EventType)` | Runtime event dispatch for PlayerDeath/PlayerJoin/EntityKill/ItemUse |
+| legacy `@on_*` event decorators | Parser compatibility only; prefer `@on(EventType)` |
 
 ## Next Steps
 

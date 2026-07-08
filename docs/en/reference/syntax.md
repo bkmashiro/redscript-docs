@@ -77,14 +77,10 @@ fn name() { }
 | `@tick` | Run every game tick |
 | `@tick(rate=N)` | Run every N ticks |
 | `@on_trigger("name")` | Run when player activates trigger |
-| `@on_death` | Run on entity death |
-| `@on_login` | Run when player joins server |
-| `@on_advancement("id")` | Run when player earns advancement |
-| `@on_craft("item")` | Run when player crafts item |
-| `@on_join_team("team")` | Run when player joins a team |
+| `@on(EventType)` | Run on runtime-backed event (`PlayerDeath`, `PlayerJoin`, `EntityKill`, `ItemUse`) |
 | `@function_tag("namespace:path")` | Register a function in a Minecraft function tag |
-| `@on(EventType)` | Run on runtime-backed event (PlayerDeath, PlayerJoin, EntityKill, ItemUse) |
 | `@keep` | Prevent DCE from removing the function |
+| legacy `@on_*` event decorators | Parser compatibility only; use `@on(EventType)` for runtime events |
 
 ## Control Flow
 

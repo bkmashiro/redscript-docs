@@ -64,20 +64,22 @@ fn grant_reward(player: selector) {
 
 ## 第 5 步：欢迎新玩家
 
+使用接入运行时的 `@on(PlayerJoin)` 事件。handler 会在加入玩家的 execute 上下文中运行，因此 `@s` 就是加入的玩家：
+
 ```rs
-@on_login
-fn welcome(player: selector) {
-    title(player, "Kill Counter");
-    subtitle(player, "Kill mobs to earn rewards!");
-    scoreboard_set(player, "kills", 0);
-    scoreboard_set(player, "level", 0);
+@on(PlayerJoin)
+fn welcome() {
+    title(@s, "Kill Counter");
+    subtitle(@s, "Kill mobs to earn rewards!");
+    scoreboard_set(@s, "kills", 0);
+    scoreboard_set(@s, "level", 0);
 }
 ```
 
 ## 第 6 步：死亡消息
 
 ```rs
-@on_death
+@on(PlayerDeath)
 fn on_death() {
     scoreboard_set(@s, "kills", 0);
     tellraw(@s, "You died! Kill count reset.");
@@ -117,15 +119,15 @@ fn grant_reward(player: selector) {
     tellraw(@a, "A player leveled up!");
 }
 
-@on_login
-fn welcome(player: selector) {
-    title(player, "Kill Counter");
-    subtitle(player, "Kill mobs to earn rewards!");
-    scoreboard_set(player, "kills", 0);
-    scoreboard_set(player, "level", 0);
+@on(PlayerJoin)
+fn welcome() {
+    title(@s, "Kill Counter");
+    subtitle(@s, "Kill mobs to earn rewards!");
+    scoreboard_set(@s, "kills", 0);
+    scoreboard_set(@s, "level", 0);
 }
 
-@on_death
+@on(PlayerDeath)
 fn on_death() {
     scoreboard_set(@s, "kills", 0);
     tellraw(@s, "You died! Kill count reset.");
@@ -155,7 +157,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 
 - `@load` — 在数据包加载时运行代码
 - `@tick(rate=N)` — 定期运行代码
-- `@on_login` / `@on_death` — 响应玩家事件
+- `@on(PlayerJoin)` / `@on(PlayerDeath)` — 响应接入运行时的玩家事件
 - 记分板函数 — 追踪和显示数据
 - `give` / `effect` / `title` — 与玩家交互
 

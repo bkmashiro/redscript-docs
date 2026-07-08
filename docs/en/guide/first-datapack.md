@@ -66,20 +66,22 @@ fn grant_reward(player: selector) {
 
 ## Step 5: Welcome New Players
 
+Use the runtime-backed `@on(PlayerJoin)` event. The handler runs in the joining player's execute context, so `@s` is the player who joined:
+
 ```rs
-@on_login
-fn welcome(player: selector) {
-    title(player, "Kill Counter");
-    subtitle(player, "Kill mobs to earn rewards!");
-    scoreboard_set(player, "kills", 0);
-    scoreboard_set(player, "level", 0);
+@on(PlayerJoin)
+fn welcome() {
+    title(@s, "Kill Counter");
+    subtitle(@s, "Kill mobs to earn rewards!");
+    scoreboard_set(@s, "kills", 0);
+    scoreboard_set(@s, "level", 0);
 }
 ```
 
 ## Step 6: Death Messages
 
 ```rs
-@on_death
+@on(PlayerDeath)
 fn on_death() {
     scoreboard_set(@s, "kills", 0);
     tellraw(@s, "You died! Kill count reset.");
@@ -119,15 +121,15 @@ fn grant_reward(player: selector) {
     tellraw(@a, "A player leveled up!");
 }
 
-@on_login
-fn welcome(player: selector) {
-    title(player, "Kill Counter");
-    subtitle(player, "Kill mobs to earn rewards!");
-    scoreboard_set(player, "kills", 0);
-    scoreboard_set(player, "level", 0);
+@on(PlayerJoin)
+fn welcome() {
+    title(@s, "Kill Counter");
+    subtitle(@s, "Kill mobs to earn rewards!");
+    scoreboard_set(@s, "kills", 0);
+    scoreboard_set(@s, "level", 0);
 }
 
-@on_death
+@on(PlayerDeath)
 fn on_death() {
     scoreboard_set(@s, "kills", 0);
     tellraw(@s, "You died! Kill count reset.");
@@ -157,7 +159,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 
 - `@load` — Run code when the datapack loads
 - `@tick(rate=N)` — Run code periodically
-- `@on_login` / `@on_death` — React to player events
+- `@on(PlayerJoin)` / `@on(PlayerDeath)` — React to runtime-backed player events
 - Scoreboard functions — Track and display data
 - `give` / `effect` / `title` — Interact with players
 

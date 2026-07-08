@@ -39,9 +39,9 @@ RedScript 会自动将其编译为优化的 `.mcfunction` 文件。
 
 | 特性 | 描述 |
 |------|------|
-| **类型系统** | `int`、`string`、`bool`、`float`、数组、结构体、枚举 |
+| **类型系统** | `int`、`fixed`、`double`、`string`、`bool`、选择器、数组、结构体、枚举 |
 | **函数** | 参数、返回值、默认参数 |
-| **装饰器** | `@tick`、`@load`、`@on_trigger`、`@on_death` |
+| **装饰器** | `@tick`、`@load`、`@on_trigger`、`@on(EventType)` |
 | **选择器** | 完整的 MC 选择器支持：`@a[tag=vip,distance=..10]` |
 | **NBT** | 结构化的 NBT 参数，用于 give/summon |
 | **Lambda** | 高阶函数和闭包 |

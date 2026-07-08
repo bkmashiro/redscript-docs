@@ -1,6 +1,6 @@
 # 标准库
 
-RedScript 内置 48 个标准库模块。使用 `import <name>;` 导入任意模块。
+RedScript 内置 51 个标准库模块。使用 `import <name>;` 导入任意模块。
 
 ## 分类
 
@@ -16,6 +16,9 @@ RedScript 内置 48 个标准库模块。使用 `import <name>;` 导入任意模
 ### 数据结构
 - [list](/zh/stdlib/list) — 数组聚合（`sum`, `avg`, `min`, `max`, `sort3`–`sort5`, `shuffle`, ...）
 - [sets](/zh/stdlib/sets) — 集合操作（`set_new`, `set_add`, `set_contains`, `set_remove`）
+- [set_int](/zh/stdlib/set_int) — 整数集合辅助
+- [map](/zh/stdlib/map) — 键值映射辅助
+- [queue](/zh/stdlib/queue) — FIFO 队列辅助
 - [graph](/zh/stdlib/graph) — 带权有向/无向图（BFS、DFS、可达性、Dijkstra；最多 64 点、256 边）
 - [matrix](/zh/stdlib/matrix) — Display Entity 矩阵数学（2D/3D 旋转、缩放、四元数辅助）
 - [vec](/zh/stdlib/vec) — 2D/3D 向量（`dot2d`, `cross3d`, `length2d_fixed`, `atan2_fixed`, `normalize2d_x`, ...）
@@ -48,6 +51,7 @@ RedScript 内置 48 个标准库模块。使用 `import <name>;` 导入任意模
 - [state](/zh/stdlib/state) — 基于 scoreboard 的状态机（`get_state`, `set_state`, `transition`）
 - [scheduler](/zh/stdlib/scheduler) — 实体/全局延迟任务调度（`task_schedule`, `gtask_ready`）
 - [result](/zh/stdlib/result) — 成功/失败返回值封装（`Result::Ok`, `Result::Err`）
+- [dialog](/zh/stdlib/dialog) — 对话/UI 流程辅助
 
 ### Minecraft 游戏机制
 - [player](/zh/stdlib/player) — 玩家工具（`heal`, `damage`, `is_op`）
