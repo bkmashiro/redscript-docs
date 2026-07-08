@@ -9,10 +9,12 @@ RedScript 所有内置函数的完整列表。
 | `say(message)` | 向所有玩家广播消息 |
 | `tell(target, message)` | 向目标发送纯文本私信（悄悄话） |
 | `tellraw(target, message)` | 向目标发送格式化消息 |
+| `announce(message)` | 向所有玩家广播（@a） |
 | `raw(command)` | 原样输出原始 Minecraft 命令字符串 |
 | `title(target, text)` | 在屏幕上显示标题 |
 | `subtitle(target, text)` | 在屏幕上显示副标题 |
 | `actionbar(target, text)` | 在动作栏显示文本 |
+| `title_times(target, fadeIn, stay, fadeOut)` | 设置标题显示时间（tick） |
 
 ```rs
 say("Hello everyone!");
@@ -48,6 +50,8 @@ actionbar(@a, f"Score: {score}");
 | `kill(target)` | 杀死实体 |
 | `tp(target, x, y, z)` | 传送实体 |
 | `tp(target, destination)` | 传送到实体 |
+| `tp_to(target, destination)` | 将目标传送到另一个实体 |
+| `kick(target, reason)` | 将玩家踢出服务器 |
 
 ```rs
 summon("zombie", ~0, ~5, ~0);
@@ -135,6 +139,7 @@ scoreboard_set(@s, #kills, 0);        // 裸标识符（无引号）
 | `team_join(name, target)` | 加入队伍 |
 | `team_leave(target)` | 离开队伍 |
 | `team_modify(name, option, value)` | 修改队伍选项 |
+| `team_option(name, option, value)` | `team_modify` 的别名 |
 
 ```rs
 team_add("red");
@@ -152,6 +157,7 @@ team_join("red", @s);
 | `clone(x1, y1, z1, x2, y2, z2, dx, dy, dz)` | 克隆方块 |
 | `weather(type)` | 设置天气 |
 | `time_set(value)` | 设置时间 |
+| `time_add(value)` | 增加当前时间 |
 | `difficulty(level)` | 设置难度 |
 | `gamerule(rule, value)` | 设置游戏规则 |
 
@@ -255,6 +261,50 @@ heap_free(h);
 
 > **实现说明：** `heap_new` 将数据存储在 Minecraft 的 `storage` NBT 中，位于数据包命名空间下。每个句柄是记分板追踪的数字 ID。调用 `heap_free` 后不要再使用该句柄——行为未定义。
 
+## Bossbar
+
+| 函数 | 描述 |
+|------|------|
+| `bossbar_add(id, name)` | 创建新的 bossbar |
+| `bossbar_remove(id)` | 移除 bossbar |
+| `bossbar_set_value(id, value)` | 设置当前值 |
+| `bossbar_set_max(id, max)` | 设置最大值 |
+| `bossbar_set_color(id, color)` | 设置颜色（blue/green/pink/purple/red/white/yellow） |
+| `bossbar_set_style(id, style)` | 设置样式（progress/notched_6/10/12/20） |
+| `bossbar_set_visible(id, visible)` | 显示/隐藏 bossbar |
+| `bossbar_set_players(id, target)` | 设置哪些玩家可见 |
+| `bossbar_get_value(id)` | 获取当前值 |
+
+```rs
+bossbar_add("boss_hp", "Boss Health");
+bossbar_set_max("boss_hp", 100);
+bossbar_set_value("boss_hp", 75);
+bossbar_set_color("boss_hp", "red");
+bossbar_set_players("boss_hp", @a);
+bossbar_set_visible("boss_hp", true);
+```
+
+## Sets
+
+运行时 set 数据结构，用于高效成员测试。
+
+| 函数 | 描述 |
+|------|------|
+| `set_new(name)` | 创建新的命名 set |
+| `set_add(name, value)` | 向 set 添加值 |
+| `set_contains(name, value)` | 检查 set 是否包含值 |
+| `set_remove(name, value)` | 从 set 移除值 |
+| `set_clear(name)` | 清空 set 中所有值 |
+
+```rs
+set_new("visited");
+set_add("visited", 42);
+if (set_contains("visited", 42)) {
+    say("Already visited!");
+}
+set_remove("visited", 42);
+```
+
 ## 进度
 
 | 函数 | 描述 |
@@ -276,6 +326,8 @@ advancement_revoke(@a, "story/mine_diamond");
 | `map(array, lambda)` | 转换数组 |
 | `filter(array, lambda)` | 过滤数组 |
 | `random(min, max)` | 随机整数 |
+| `random_native(min, max)` | 使用 MC 1.20+ 原生随机数 |
+| `random_sequence(name, min, max)` | 从命名随机序列中取值 |
 
 ## 调度
 

@@ -253,6 +253,162 @@ fn on_done() {
 - 将繁重的地图生成分散到多个 tick 中
 - 分块批量操作（物品栏扫描、世界编辑）
 
+## @inline
+
+提示编译器在调用点内联该函数。
+
+**语法：** `@inline`
+
+```rs
+@inline
+fn add(a: int, b: int): int {
+    return a + b;
+}
+```
+
+**使用场景：**
+- 性能敏感的小函数
+- 避免函数调用开销
+
+## @deprecated
+
+将函数标记为已弃用。调用时编译器会发出警告。
+
+**语法：** `@deprecated` 或 `@deprecated("message")`
+
+```rs
+@deprecated("Use new_api() instead")
+fn old_api() { }
+```
+
+## @singleton
+
+将结构体标记为全局记分板支持的状态，并暴露合成的 `StructName::get()` / `StructName::set(value)` helper。
+
+**语法：** 在 `struct` 上使用 `@singleton`
+
+```rs
+@singleton
+struct GameState {
+    phase: int,
+    tick_count: int,
+}
+
+@keep
+fn update_state() {
+    let state = GameState::get()
+    state.tick_count = state.tick_count + 1
+    GameState::set(state)
+}
+```
+
+## @watch
+
+当玩家在被监听的记分板 objective 中的值发生变化时，运行一个无参数 handler。
+
+**语法：** `@watch("objective")`
+
+```rs
+@watch("rs.kills")
+fn on_score_change() {
+    say("Score changed!")
+}
+```
+
+## @config
+
+将数值型编译期配置注入到全局 `let` 声明中。
+
+**语法：** `@config("key", default: N)`
+
+```rs
+@config("max_players", default: 16)
+let MAX_PLAYERS: int
+```
+
+## @profile
+
+为该函数启用性能分析。
+
+**语法：** `@profile`
+
+```rs
+@profile
+fn expensive_calculation() {
+    // Timing data emitted to game output
+}
+```
+
+## @throttle
+
+将函数执行限流为每 N 个 tick 最多一次。
+
+**语法：** `@throttle(N)`
+
+```rs
+@throttle(20)
+fn rate_limited() {
+    // 即使被更频繁调用，也最多每秒运行一次
+}
+```
+
+## @retry
+
+函数失败时自动重试，最多 N 次。
+
+**语法：** `@retry(N)`
+
+```rs
+@retry(3)
+fn unstable_operation() {
+    // 记分板检查失败时最多重试 3 次
+}
+```
+
+## @memoize
+
+为单参数 `int` 函数缓存结果（LRU-1）。
+
+**语法：** `@memoize`
+
+```rs
+@memoize
+fn fibonacci(n: int): int {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+## @benchmark
+
+启用 tick 级基准测试，输出耗时统计。
+
+**语法：** `@benchmark`
+
+```rs
+@benchmark
+fn heavy_work() {
+    // Timing stats logged to game output
+}
+```
+
+## @test
+
+将函数标记为测试。使用 `redscript test` 运行。
+
+**语法：** `@test`
+
+```rs
+@test
+fn test_addition() {
+    assert(1 + 1 == 2);
+}
+```
+
+**使用场景：**
+- 对数据包逻辑做单元测试
+- CI/CD 校验
+
 ## 装饰器总结
 
 | 装饰器 | 触发条件 | `@s` 上下文 |
@@ -267,3 +423,14 @@ fn on_done() {
 | `@schedule(ticks=N)` | 数据包加载后 N 个 tick 运行一次函数 | 服务器 |
 | `@keep` | （优化器提示，无运行时效果） | — |
 | `@coroutine` | 将函数标记为协程（在循环回边处让出控制权） | — |
+| `@inline` | 在调用点内联 | — |
+| `@deprecated` | 使用时发出警告 | — |
+| `@singleton` | 结构体支持的全局状态 | — |
+| `@watch` | 每玩家记分板变化 | 玩家（`@s`） |
+| `@config` | 数值型编译期配置 | — |
+| `@profile` | 性能计时 | — |
+| `@throttle(N)` | 限流为每 N tick 一次 | — |
+| `@retry(N)` | 自动重试 N 次 | — |
+| `@memoize` | 缓存结果 | — |
+| `@benchmark` | tick 级计时 | — |
+| `@test` | 测试函数 | — |
