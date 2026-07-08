@@ -123,7 +123,7 @@ fn increment_killer_streak(victim: Player) {
 }
 
 // A cleaner approach: run a tick check for new kills
-@tick(rate=1)
+@throttle(ticks=1)
 fn check_new_kills() {
     // For each player with kills > their tracked last value, increment streak
     for_each_player() {
@@ -280,7 +280,7 @@ fn on_death(player: Player) {
 
 // ─── Kill Streak Tracker ────────────────────────────────────
 
-@tick(rate=1)
+@throttle(ticks=1)
 fn check_new_kills() {
     for_each_player() {
         let kills:  int = scoreboard_get(@s, "kills")

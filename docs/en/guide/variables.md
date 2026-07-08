@@ -31,7 +31,7 @@ RedScript has a small set of primitive types plus a few Minecraft-facing value c
 | Type | Description | Example |
 |------|-------------|---------|
 | `int` | Integer (scoreboard, 32-bit) | `42`, `-7`, `0` |
-| `fixed` | Fixed-point decimal, scale ×10000 | `10000` (= 1.0), `15000` (= 1.5) |
+| `fixed` | Fixed-point decimal, stored at scale ×10000 | `1.0`, `1.5` |
 | `double` | IEEE 754 double (NBT-backed) | `x as double` |
 | `string` | Text | `"hello"`, `"Steve"` |
 | `bool` | Boolean | `true`, `false` |
@@ -51,18 +51,18 @@ score = score + 1;
 
 ### Fixed-point (`fixed`)
 
-`fixed` represents decimal values as integers scaled by ×10000. This is the language-level fixed-point representation for fractional math in datapacks.
+`fixed` represents decimal values on scoreboards as integers scaled by ×10000. This is the language-level fixed-point representation for fractional math in datapacks.
 
 ```rs
-let speed: fixed = 15000;   // 1.5 — stored as int 15000
-let half: fixed  = 5000;    // 0.5
-let one: fixed   = 10000;   // 1.0
+let speed: fixed = 1.5;   // stored as int 15000
+let half: fixed  = 0.5;   // stored as int 5000
+let one: fixed   = 1.0;   // stored as int 10000
 ```
 
 **Key rules:**
-- `10000` = 1.0, `15000` = 1.5, `0` = 0.0
+- Decimal literals are scaled for storage: `1.0` → `10000`, `1.5` → `15000`, `0.0` → `0`
 - `fixed` arithmetic is scale-aware: `a * b` and `a / b` are lowered by the compiler with `×10000` compensation.
-- Use `as fixed` to convert from `int` or `double`.
+- Raw integer literals are `int`; use `as fixed` to convert from `int` or `double`.
 
 ```rs
 let x: int = 5;
@@ -90,7 +90,7 @@ let pi: double = 3 as double;   // start from int 3
 let n: int    = 42;
 let d: double = n as double;    // 42.0
 
-let f: fixed  = 15000;          // 1.5
+let f: fixed  = 1.5;
 let d2: double = f as double;   // 1.5 (divided by 10000 automatically)
 
 let d3: double = /* some double */;
@@ -205,7 +205,7 @@ Variables declared at the top level are global and accessible from any function:
 ```rs
 let score: int = 0;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn update() {
     score = score + 1;
     actionbar(@a, f"Score: {score}");

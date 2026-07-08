@@ -64,7 +64,7 @@ foreach (p in @a) {
 ```rs
 import effects::*
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_zone() {
     // Players within 10 blocks of the executor
     foreach (p in @a[distance=..10]) {

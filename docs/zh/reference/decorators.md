@@ -39,36 +39,28 @@ fn update() {
 **编译为：** 将函数添加到 `#minecraft:tick` 函数标签。
 
 ::: warning
-谨慎使用 `@tick`。每秒运行 20 次复杂逻辑可能导致卡顿。尽量使用 `@tick(rate=N)`。
+谨慎使用 `@tick`。每秒运行 20 次复杂逻辑可能导致卡顿。周期性但不需要每 tick 精度的工作请优先使用 `@throttle(ticks=N)`。
 :::
 
 ## @tick(rate=N)
 
-每 N 个游戏刻运行函数。
+为了兼容旧示例，解析器仍接受该写法；但当前 emitter 会把它注册为普通 `@tick` root，**不会**使用 `rate` 做降频。不要依赖 `@tick(rate=N)` 控制运行频率。
 
-**语法：** `@tick(rate=N)`
-
-| 频率 | 运行间隔 |
-|------|----------|
-| `rate=1` | 每个游戏刻（同 `@tick`） |
-| `rate=20` | 每秒 |
-| `rate=100` | 每 5 秒 |
-| `rate=200` | 每 10 秒 |
-| `rate=1200` | 每分钟 |
+请改用 `@throttle(ticks=N)`：
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
-    // 每秒运行一次
+    // 通过生成的 throttle dispatcher 每秒运行一次
 }
 
-@tick(rate=1200)
+@throttle(ticks=1200)
 fn every_minute() {
     // 每分钟运行一次
 }
 ```
 
-**编译为：** 使用 `schedule` 命令和指定间隔。
+**编译为：** `@tick(rate=N)` 当前与 `@tick` 相同；`@throttle(ticks=N)` 会生成带记分板计数器的 tick dispatcher。
 
 ## @function_tag
 
@@ -193,7 +185,7 @@ fn end_game() {
 **编译为：** 编译器生成调度包装入口，并从启动路径执行 `schedule function <ns>:<name> <ticks>t`。
 
 ::: tip
-对于重复性调度任务，请使用 `@tick(rate=N)`。`@schedule` 仅用于一次性的启动延迟。
+对于重复性调度任务，请使用 `@throttle(ticks=N)`。`@schedule` 仅用于一次性的启动延迟。
 :::
 
 ## @keep
@@ -343,10 +335,10 @@ fn expensive_calculation() {
 
 将函数执行限流为每 N 个 tick 最多一次。
 
-**语法：** `@throttle(N)`
+**语法：** `@throttle(ticks=N)`
 
 ```rs
-@throttle(20)
+@throttle(ticks=20)
 fn rate_limited() {
     // 即使被更频繁调用，也最多每秒运行一次
 }
@@ -415,7 +407,7 @@ fn test_addition() {
 |--------|----------|-------------|
 | `@load` | 数据包加载 / `/reload` | 服务器 |
 | `@tick` | 每个游戏刻（20次/秒） | 服务器 |
-| `@tick(rate=N)` | 每 N 个游戏刻 | 服务器 |
+| `@tick(rate=N)` | 旧式兼容写法；当前等同 `@tick` | 服务器 |
 | `@function_tag("namespace:path")` | Function tag 注册 | 调用方 / tag runtime |
 | `@on_trigger("x")` | 玩家运行 `/trigger x` | 触发的玩家 |
 | `@on(EventType)` | runtime 支撑的事件触发 | 事件执行者（内置事件为 `Player`） |
@@ -429,7 +421,7 @@ fn test_addition() {
 | `@watch` | 每玩家记分板变化 | 玩家（`@s`） |
 | `@config` | 数值型编译期配置 | — |
 | `@profile` | 性能计时 | — |
-| `@throttle(N)` | 限流为每 N tick 一次 | — |
+| `@throttle(ticks=N)` | 限流为每 N tick 一次 | — |
 | `@retry(N)` | 自动重试 N 次 | — |
 | `@memoize` | 缓存结果 | — |
 | `@benchmark` | tick 级计时 | — |

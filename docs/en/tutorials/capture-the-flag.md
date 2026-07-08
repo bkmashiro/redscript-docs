@@ -24,6 +24,8 @@ Two teams compete to steal the enemy flag and bring it back to their base.
 ```mcrs
 import teams::*
 import effects::*
+import world::*
+import inventory::*
 import particles::*
 
 // Base positions
@@ -47,7 +49,7 @@ struct GameState {
     blue_flag_taken: int
 }
 
-let game: GameState = GameState {
+let game: GameState = {
     running: 0,
     red_score: 0,
     blue_score: 0,
@@ -83,10 +85,10 @@ fn assign_teams() {
     
     foreach (p in @a) {
         if (count % 2 == 0) {
-            team_join(p, "red");
+            team_join("red", p);
             scoreboard_set(p, "ctf_team", 1);
         } else {
-            team_join(p, "blue");
+            team_join("blue", p);
             scoreboard_set(p, "ctf_team", 2);
         }
         count = count + 1;
@@ -110,10 +112,8 @@ fn start_game() {
     
     // Give equipment
     foreach (p in @a) {
-        clear(p);
-        give(p, "minecraft:iron_sword", 1);
-        give(p, "minecraft:bow", 1);
-        give(p, "minecraft:arrow", 32);
+        clear_inventory(p);
+        give_kit_warrior(p);
     }
     
     place_flags();
@@ -238,20 +238,21 @@ fn end_game(winner: string) {
     // Cleanup
     foreach (p in @a[tag=has_flag]) {
         tag_remove(p, "has_flag");
-        effect_clear(p);
+        effect_clear(p, "minecraft:glowing");
     }
 }
 ```
 
-## Step 9: Flag Drop on Death
+## Step 9: Flag Return on Death
 
-When a flag carrier dies, drop the flag:
+When a flag carrier dies, return the flag:
 
 ```mcrs
-fn on_player_death(player: selector) {
+@on(PlayerDeath)
+fn on_player_death() {
     // Check if they had the flag
-    execute if entity player[tag=has_flag] run {
-        let team: int = scoreboard_get(player, "ctf_team");
+    execute if entity @s[tag=has_flag] run {
+        let team: int = scoreboard_get(@s, "ctf_team");
         
         if (team == 1) {
             // Red player had blue flag
@@ -265,8 +266,8 @@ fn on_player_death(player: selector) {
             announce("§cRed Flag §freturned!");
         }
         
-        tag_remove(player, "has_flag");
-        effect_clear(player, "minecraft:glowing");
+        tag_remove(@s, "has_flag");
+        effect_clear(@s, "minecraft:glowing");
     }
 }
 ```

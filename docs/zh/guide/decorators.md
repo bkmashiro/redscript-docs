@@ -29,17 +29,17 @@ fn check_health() {
 }
 ```
 
-### @tick(rate=N)
+### @throttle(ticks=N)
 
 每 N 个游戏刻运行一次：
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
     say("One second passed");
 }
 
-@tick(rate=100)
+@throttle(ticks=100)
 fn every_five_seconds() {
     actionbar(@a, "Server running");
 }
@@ -113,7 +113,7 @@ fn _internal_helper() {
 
 ```rs
 @load
-@tick(rate=200)
+@throttle(ticks=200)
 fn scoreboard_display() {
     // 在加载时和每 10 秒都运行
     sidebar_set("Kills", @a, "kills");
@@ -136,7 +136,7 @@ RedScript 的死代码消除（DCE）优化器会自动移除不可达的函数�
 |--------|--------|
 | `@load` | `#minecraft:load` 标签 |
 | `@tick` | `#minecraft:tick` 标签 |
-| `@tick(rate=N)` | 带间隔的 schedule 命令 |
+| `@throttle(ticks=N)` | 带间隔的 schedule 命令 |
 | `@on_trigger("x")` | 触发器记分板检测 |
 | `@on(EventType)` | PlayerDeath/PlayerJoin/EntityKill/ItemUse 的运行时事件分发 |
 | 旧式 `@on_*` 事件装饰器 | 仅保留解析兼容；新代码优先用 `@on(EventType)` |

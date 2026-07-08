@@ -39,36 +39,28 @@ fn update() {
 **Compiles to:** Adds function to `#minecraft:tick` function tag.
 
 ::: warning
-Use `@tick` sparingly. Running complex logic 20 times per second can cause lag. Prefer `@tick(rate=N)` when possible.
+Use `@tick` sparingly. Running complex logic 20 times per second can cause lag. Prefer `@throttle(ticks=N)` for periodic work that does not need every-tick precision.
 :::
 
 ## @tick(rate=N)
 
-Runs the function every N ticks.
+Parsed for compatibility with older examples, but the current emitter registers the function as a normal `@tick` root and does **not** use `rate` for throttling. Do not rely on `@tick(rate=N)` for runtime cadence.
 
-**Syntax:** `@tick(rate=N)`
-
-| Rate | Frequency |
-|------|-----------|
-| `rate=1` | Every tick (same as `@tick`) |
-| `rate=20` | Every second |
-| `rate=100` | Every 5 seconds |
-| `rate=200` | Every 10 seconds |
-| `rate=1200` | Every minute |
+Use `@throttle(ticks=N)` instead:
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
-    // runs once per second
+    // runs once per second through the generated throttle dispatcher
 }
 
-@tick(rate=1200)
+@throttle(ticks=1200)
 fn every_minute() {
     // runs once per minute
 }
 ```
 
-**Compiles to:** Uses `schedule` command with the specified interval.
+**Compiles to:** `@tick(rate=N)` currently compiles like `@tick`; `@throttle(ticks=N)` generates a tick-registered dispatcher with a scoreboard counter.
 
 ## @function_tag
 
@@ -193,7 +185,7 @@ fn end_game() {
 **Compiles to:** a compiler-generated scheduling wrapper that runs `schedule function <ns>:<name> <ticks>t` from the startup path.
 
 ::: tip
-For recurring scheduled tasks, use `@tick(rate=N)`. Use `@schedule` only for one-shot startup delays.
+For recurring scheduled tasks, use `@throttle(ticks=N)`. Use `@schedule` only for one-shot startup delays.
 :::
 
 ## @keep
@@ -343,10 +335,10 @@ fn expensive_calculation() {
 
 Rate-limits function execution to once per N ticks.
 
-**Syntax:** `@throttle(N)`
+**Syntax:** `@throttle(ticks=N)`
 
 ```rs
-@throttle(20)
+@throttle(ticks=20)
 fn rate_limited() {
     // Only runs once per second, even if called more often
 }
@@ -415,7 +407,7 @@ fn test_addition() {
 |-----------|---------|--------------|
 | `@load` | Datapack load / `/reload` | Server |
 | `@tick` | Every tick (20/sec) | Server |
-| `@tick(rate=N)` | Every N ticks | Server |
+| `@tick(rate=N)` | Legacy-compatible spelling; currently behaves like `@tick` | Server |
 | `@function_tag("namespace:path")` | Function tag registration | Caller / tag runtime |
 | `@on_trigger("x")` | Player runs `/trigger x` | Triggering player |
 | `@on(EventType)` | Runtime-backed event fires | Event executor (`Player` for built-in events) |
@@ -429,7 +421,7 @@ fn test_addition() {
 | `@watch` | Per-player scoreboard change | Player (`@s`) |
 | `@config` | Numeric compile-time config | — |
 | `@profile` | Performance timing | — |
-| `@throttle(N)` | Rate limit to 1/N ticks | — |
+| `@throttle(ticks=N)` | Rate limit to 1/N ticks | — |
 | `@retry(N)` | Auto-retry N times | — |
 | `@memoize` | Cache results | — |
 | `@benchmark` | Tick-level timing | — |

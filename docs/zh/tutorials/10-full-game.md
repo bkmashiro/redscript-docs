@@ -85,7 +85,7 @@ fn setup() {
 
 // ─── 1 秒计时器（rate=20 tick）──────────────────────────────────────────────
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_timer() {
     if (game.active == 0) {
         return
@@ -134,7 +134,7 @@ fn playing_tick() {
 // ─── 击杀追踪 ─────────────────────────────────────────────────────────────────
 
 // 每 tick 检查：在游戏阶段是否有玩家击杀
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_kill_streaks() {
     if (game.phase != PHASE_PLAYING) {
         return
@@ -382,7 +382,7 @@ fn setup() {
 ### 第四步 —— 1 秒 tick
 
 ```mcrs
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_timer() {
     if (game.active == 0) { return }
     if (game.phase == PHASE_COUNTDOWN) {
@@ -395,7 +395,7 @@ fn game_timer() {
 }
 ```
 
-`@tick(rate=20)` 每 20 个游戏 tick 触发一次 = 每现实秒一次。在 `active == 0` 时提前返回意味着空闲时此函数几乎什么都不做 —— 对服务器性能很重要。
+`@throttle(ticks=20)` 每 20 个游戏 tick 触发一次 = 每现实秒一次。在 `active == 0` 时提前返回意味着空闲时此函数几乎什么都不做 —— 对服务器性能很重要。
 
 **`countdown_tick`** 递减计时器并显示 actionbar 消息。归零时调用 `begin_game()`。
 
@@ -409,7 +409,7 @@ fn game_timer() {
 ### 第五步 —— 连杀奖励
 
 ```mcrs
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_kill_streaks() {
     if (game.phase != PHASE_PLAYING) { return }
 
@@ -534,7 +534,7 @@ fn announce_winner() {
 |--------|-----------|
 | `struct` | `GameState` 存储所有可变游戏数据 |
 | `@load` | 一次性 scoreboard 初始化 |
-| `@tick(rate=20)` | 每秒游戏循环 |
+| `@throttle(ticks=20)` | 每秒游戏循环 |
 | `@on_trigger` | 自助加入/开始命令 |
 | `@schedule` | 延迟赛后清理 |
 | `foreach` + selector 过滤 | 只遍历已加入的玩家 |

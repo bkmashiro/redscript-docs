@@ -5,9 +5,6 @@
   <span class="time">⏱️ 20 min</span>
 </div>
 
-
-**难度：** 入门  
-**时长：** ~20 分钟  
 **前置条件：** [快速上手](../guide/getting-started)
 
 ## 你将构建什么
@@ -133,14 +130,14 @@ fn player_says_hello() {
 
 ```rs
 // 每 10 分钟（12000 tick）执行一次
-@tick(rate=12000)
+@throttle(ticks=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] 迄今共有 {total} 次问候记录！")
 }
 ```
 
-`@tick(rate=N)` 每 `N` 个 tick 执行一次，而不是每 tick 都执行。对于不频繁的任务，这比裸 `@tick` 要节省很多性能。
+`@throttle(ticks=N)` 每 `N` 个 tick 执行一次，而不是每 tick 都执行。对于不频繁的任务，这比裸 `@tick` 要节省很多性能。
 
 ---
 
@@ -189,7 +186,7 @@ fn player_says_hello() {
 
 // ─── 定期 Tick ──────────────────────────────────────────────
 
-@tick(rate=12000)
+@throttle(ticks=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] 迄今共有 {total} 次问候记录！")
@@ -209,6 +206,16 @@ cp -r out/ ~/.minecraft/saves/MyWorld/datapacks/hello_world/
 ```
 
 然后在游戏内运行 `/reload`，你应该能在聊天框看到加载消息。
+
+---
+
+## 相关源代码
+
+<CodePreview title="src/examples/tutorial_01_hello.mcrs" github="https://github.com/bkmashiro/redscript/blob/main/src/examples/tutorial_01_hello.mcrs">
+
+源码仓库中提供了一个更小的 Hello 教程配套示例。本页的完整代码以上方示例为准。
+
+</CodePreview>
 
 ---
 

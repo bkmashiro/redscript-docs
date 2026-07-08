@@ -186,7 +186,7 @@ enum GameState { Idle, CountingDown, Running }
 let state: GameState = GameState::Idle
 let timer: int = 5
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_loop() {
     match state {
         GameState::Idle => {
@@ -218,7 +218,7 @@ This tutorial uses:
 
 - `match` for the high-level mode
 - `if` for the timer condition
-- `@tick(rate=20)` to step once per second
+- `@throttle(ticks=20)` to step once per second
 
 ## When to Use Which Form
 

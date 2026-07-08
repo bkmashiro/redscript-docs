@@ -23,6 +23,7 @@ Players race through a parkour course, checkpoints save progress, and best times
 
 ```mcrs
 import effects::*
+import world::*
 import particles::*
 
 const START_X: int = 0;
@@ -79,7 +80,7 @@ fn start_race(player: selector) {
     tp(player, START_X, START_Y, START_Z);
     
     // Clear any effects
-    effect_clear(player);
+    clear_effects(player);
     
     title(player, "§bGO!");
     

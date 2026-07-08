@@ -39,7 +39,7 @@ Use `@tick` to check scores and give rewards:
 ```rs
 const REWARD_THRESHOLD: int = 10;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_rewards() {
     // Check if any player reached the threshold
     foreach (player in @a) {
@@ -103,7 +103,7 @@ fn init() {
     say("Kill Counter datapack loaded!");
 }
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_rewards() {
     foreach (player in @a) {
         if (scoreboard_get(player, "kills") >= REWARD_THRESHOLD) {
@@ -158,7 +158,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 ## What You Learned
 
 - `@load` — Run code when the datapack loads
-- `@tick(rate=N)` — Run code periodically
+- `@throttle(ticks=N)` — Run code periodically
 - `@on(PlayerJoin)` / `@on(PlayerDeath)` — React to runtime-backed player events
 - Scoreboard functions — Track and display data
 - `give` / `effect` / `title` — Interact with players

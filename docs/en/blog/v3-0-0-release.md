@@ -49,7 +49,7 @@ struct Boss extends Enemy { name: string }
 | Decorator | Description |
 |-----------|-------------|
 | `@memoize` | LRU-1 caching for int functions |
-| `@throttle(N)` | Rate-limit to once per N ticks |
+| `@throttle(ticks=N)` | Rate-limit to once per N ticks |
 | `@retry(N)` | Auto-retry on failure |
 | `@test` | Mark test functions |
 

@@ -26,7 +26,9 @@ import teams::*
 import effects::*
 
 const RED_BASE_X: int = -50;
+const RED_BASE_Z: int = 0;
 const BLUE_BASE_X: int = 50;
+const BLUE_BASE_Z: int = 0;
 const BASE_Y: int = 64;
 const WIN_SCORE: int = 3;
 ```
@@ -41,25 +43,45 @@ struct GameState {
     red_flag_taken: int,
     blue_flag_taken: int
 }
+
+let game: GameState = {
+    running: 0,
+    red_score: 0,
+    blue_score: 0,
+    red_flag_taken: 0,
+    blue_flag_taken: 0
+};
 ```
 
-## 第三步：队伍分配
+## 第三步：初始化
+
+```mcrs
+@load
+fn init() {
+    scoreboard_add_objective("ctf_team", "dummy");
+    setup_two_teams();
+}
+```
+
+## 第四步：队伍分配
 
 ```mcrs
 fn assign_teams() {
     let count: int = 0;
     foreach (p in @a) {
         if (count % 2 == 0) {
-            team_join(p, "red");
+            team_join("red", p);
+            scoreboard_set(p, "ctf_team", 1);
         } else {
-            team_join(p, "blue");
+            team_join("blue", p);
+            scoreboard_set(p, "ctf_team", 2);
         }
         count = count + 1;
     }
 }
 ```
 
-## 第四步：旗帜拾取
+## 第五步：旗帜拾取
 
 ```mcrs
 fn check_flag_pickup() {
@@ -76,7 +98,7 @@ fn check_flag_pickup() {
 }
 ```
 
-## 第五步：夺旗得分
+## 第六步：夺旗得分
 
 ```mcrs
 fn check_flag_capture() {
@@ -91,6 +113,38 @@ fn check_flag_capture() {
 }
 ```
 
+## 第七步：死亡时归还旗帜
+
+玩家死亡事件由当前的 `@on(PlayerDeath)` 触发。事件处理器以死亡玩家为 `@s` 执行，适合用来检查和清理旗手状态。
+
+```mcrs
+@on(PlayerDeath)
+fn on_player_death() {
+    execute if entity @s[tag=has_flag] run {
+        let team: int = scoreboard_get(@s, "ctf_team");
+
+        if (team == 1) {
+            game.blue_flag_taken = 0;
+            announce("§9蓝旗 §f已归还！");
+        } else {
+            game.red_flag_taken = 0;
+            announce("§c红旗 §f已归还！");
+        }
+
+        place_flags();
+        tag_remove(@s, "has_flag");
+        effect_clear(@s, "minecraft:glowing");
+    }
+}
+```
+
 ## 完整代码
 
 查看完整示例：[capture_the_flag.mcrs](https://github.com/bkmashiro/redscript/blob/main/src/examples/capture_the_flag.mcrs)
+
+## 可继续改进
+
+- 添加带冷却的重生系统
+- 添加职业选择（更快的旗手、更高伤害等）
+- 添加在中场刷新的增益道具
+- 添加旗帜自动归还计时器（例如 30 秒后归还）

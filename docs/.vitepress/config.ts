@@ -101,6 +101,7 @@ export default defineConfig({
               text: 'Advanced',
               items: [
                 { text: 'Optimization', link: '/en/advanced/optimization' },
+                { text: 'Compiler Internals', link: '/en/advanced/compiler-internals' },
                 { text: 'Module System', link: '/en/advanced/module-system' },
                 { text: 'Decorators', link: '/en/advanced/decorators' },
               ]
@@ -304,6 +305,7 @@ export default defineConfig({
               text: '进阶',
               items: [
                 { text: '优化器', link: '/zh/advanced/optimization' },
+                { text: '编译器内部实现', link: '/zh/advanced/compiler-internals' },
                 { text: '模块系统', link: '/zh/advanced/module-system' },
                 { text: '装饰器', link: '/zh/advanced/decorators' },
               ]

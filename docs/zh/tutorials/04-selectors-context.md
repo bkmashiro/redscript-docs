@@ -64,7 +64,7 @@ foreach (p in @a) {
 ```rs
 import effects::*
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_zone() {
     // 执行者 10 格范围内的玩家
     foreach (p in @a[distance=..10]) {

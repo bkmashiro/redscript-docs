@@ -10,7 +10,6 @@
 
 ```rs verify-skip
 struct PlayerState {
-    name: string,
     score: int,
     alive: bool,
 }
@@ -22,13 +21,11 @@ struct PlayerState {
 
 ```rs verify-skip
 let p: PlayerState = PlayerState {
-    name: "Alex",
     score: 0,
     alive: true,
 };
 
 let p2: PlayerState = {
-    name: "Steve",
     score: 10,
     alive: true,
 };
@@ -37,7 +34,7 @@ let p2: PlayerState = {
 ### 访问字段
 
 ```rs verify-skip
-say(p.name);          // Alex
+say(f"Score: {p.score}");
 p.score = p.score + 1;
 ```
 
@@ -45,15 +42,15 @@ p.score = p.score + 1;
 
 ```rs verify-skip
 fn announce(p: PlayerState) {
-    say(f"{p.name} has {p.score} points");
+    say(f"Score: {p.score}");
 }
 
 fn mark_dead(p: PlayerState) -> PlayerState {
-    return PlayerState { name: p.name, score: p.score, alive: false };
+    return PlayerState { score: p.score, alive: false };
 }
 ```
 
-结构体适合表示总是一起传递的值：位置、玩家快照、计时器配置、小玩法的状态记录等。
+结构体适合表示总是一起传递的值：位置、记分板快照、计时器配置、小玩法的状态记录等。
 
 ## 枚举
 
@@ -164,7 +161,7 @@ struct GamePlayer {
 
 let game_phase: GamePhase = GamePhase::Lobby;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_loop() {
     match game_phase {
         GamePhase::Running => {

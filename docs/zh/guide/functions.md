@@ -24,7 +24,7 @@ RedScript 的函数仍然面向 datapack：它会编译成一个或多个 `.mcfu
 
 - 普通函数用于复用逻辑。
 - 带装饰器的函数是 Minecraft 进入 RedScript 逻辑的入口。
-- 名字以 `_` 开头的函数是私有 helper；如果没有被触达，可能会被死代码消除移除。
+- 名字以 `_` 开头的函数遵循私有 helper 命名约定。你在源码中定义的 helper 仍会被输出；未被触达的导入库 helper 可能会被编译器剪枝。
 - `target: selector` 这类参数携带 Minecraft 目标上下文；`@s` 表示当前 execute 主体，不是某个固定玩家。
 
 ## 参数

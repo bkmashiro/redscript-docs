@@ -5,26 +5,21 @@
 ## 基本语法
 
 ```mcrs verify-skip
-struct Timer {
-    _id: int,
-    _duration: int,
+struct Counter {
+    value: int,
 }
 
-impl Timer {
-    fn new(duration: int) -> Timer {
-        return Timer { _id: 0, _duration: duration };
+impl Counter {
+    fn new(value: int) -> Counter {
+        return Counter { value: value };
     }
 
-    fn start(self) {
-        timer_start(self._id, self._duration);
+    fn increment(self) {
+        self.value = self.value + 1;
     }
 
-    fn tick(self) {
-        timer_tick(self._id);
-    }
-
-    fn done(self) -> bool {
-        return timer_done(self._id);
+    fn get(self) -> int {
+        return self.value;
     }
 }
 ```
@@ -43,14 +38,14 @@ impl Counter {
         say(f"Value: {self.value}");
     }
 
-    fn add(self, n: int) -> Counter {
-        return Counter { value: self.value + n };
+    fn increment(self) {
+        self.value = self.value + 1;
     }
 }
 
 let counter = Counter { value: 5 };
 counter.show();
-let next: Counter = counter.add(1);
+counter.increment();
 ```
 
 可以通过 `self` 访问字段，也可以调用其他实例方法。
@@ -60,13 +55,13 @@ let next: Counter = counter.add(1);
 不接收 `self` 的方法相当于类型级函数，使用 `Type::method(...)` 调用。
 
 ```mcrs verify-skip
-impl Timer {
-    fn new(duration: int) -> Timer {
-        return Timer { _id: 0, _duration: duration };
+impl Counter {
+    fn new(value: int) -> Counter {
+        return Counter { value: value };
     }
 }
 
-let timer = Timer::new(100);
+let counter = Counter::new(5);
 ```
 
 这类方法通常用作构造函数或辅助函数。
@@ -76,13 +71,12 @@ let timer = Timer::new(100);
 RedScript 同时支持静态方法和实例方法语法：
 
 ```mcrs verify-skip
-let timer = Timer::new(200);
+let counter = Counter::new(5);
 
-timer.start();
-timer.tick();
+counter.increment();
 
-if (timer.done()) {
-    say("Finished!");
+if (counter.get() > 5) {
+    say("Advanced!");
 }
 ```
 
@@ -91,15 +85,15 @@ if (timer.done()) {
 - 把行为和数据放在一起。
 - 为结构体构建小型的对象风格 API。
 - 用 `Type::new(...)` 暴露构造函数。
-- 让领域操作更容易读：`timer.start()` 通常比 `timer_start(timer_id, duration)` 更清楚。
+- 让领域操作更容易读：`counter.increment()` 通常比松散的 helper 调用更清楚。
 
 不要为了隐藏全局可变状态而滥用 `impl`。如果方法主要操作选择器、记分板或 NBT 副作用，应在方法名或旁边注释里说清楚。
 
 ## 编译方式
 
-`impl` 块是编译期语法糖。方法最终仍会编译成普通的数据包函数，但 RedScript 会保留方法调用语法和类型检查。
+`impl` 块是编译期语法糖。方法最终仍会编译成普通的数据包函数；这套语法背后没有隐藏的对象运行时或动态分发。
 
-以 `_` 开头的方法遵循和顶层函数相同的私有 helper 约定：如果无法从入口触达，可能会被死代码消除移除。
+以 `_` 开头的方法遵循和顶层函数相同的私有 helper 命名约定。你在源码中定义的方法仍会被输出；未被触达的导入库方法可能会被编译器剪枝。
 
 ## Timer 注意事项
 

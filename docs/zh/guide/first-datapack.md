@@ -37,7 +37,7 @@ fn init() {
 使用 `@tick` 检查分数并发放奖励：
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_rewards() {
     // 检查是否有玩家达到阈值
     foreach (player in @a) {
@@ -101,7 +101,7 @@ fn init() {
     say("Kill Counter datapack loaded!");
 }
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_rewards() {
     foreach (player in @a) {
         if (scoreboard_get(player, "kills") >= REWARD_THRESHOLD) {
@@ -156,7 +156,7 @@ redscript compile killcount.mcrs -o ./kill-counter-pack
 ## 你学到了什么
 
 - `@load` — 在数据包加载时运行代码
-- `@tick(rate=N)` — 定期运行代码
+- `@throttle(ticks=N)` — 定期运行代码
 - `@on(PlayerJoin)` / `@on(PlayerDeath)` — 响应接入运行时的玩家事件
 - 记分板函数 — 追踪和显示数据
 - `give` / `effect` / `title` — 与玩家交互

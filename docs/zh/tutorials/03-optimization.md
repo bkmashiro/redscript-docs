@@ -5,9 +5,6 @@
   <span class="time">⏱️ 20 min</span>
 </div>
 
-
-**难度：** 入门  
-**时长：** ~25 分钟  
 **前置条件：** [Hello World](./01-hello-world)、[游戏机制](./02-game-mechanics)
 
 ## 为什么优化很重要
@@ -16,10 +13,10 @@ Minecraft 服务器以每秒 20 tick 的速度运行。datapack 中每个在 tic
 
 RedScript 的优化器会自动消除死代码、折叠常量并简化循环——但当你有意识地编写高性能代码并使用正确的装饰器时，它的效果最佳。
 
-## 本教程介绍：
+本教程介绍：
 
 - 了解固定优化流水线
-- `@tick(rate=N)` — 将工作分散到不同时间
+- `@throttle(ticks=N)` — 将工作分散到不同时间
 - `@inline` — 消除小函数的调用开销
 - `@keep` — 防止 DCE 移除需要的函数
 - `@coroutine` — 处理耗时操作而不冻结服务器
@@ -57,32 +54,36 @@ redscript compile src/main.mcrs \
 ```rs
 @tick
 fn update_sidebar() {
-    let kills: int = scoreboard_get("#top", "kills")
-    sidebar_set("最高击杀", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"击杀数：{kills}")
+    }
 }
 ```
 
 ✅ **好——每秒运行一次：**
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn update_sidebar() {
-    let kills: int = scoreboard_get("#top", "kills")
-    sidebar_set("最高击杀", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"击杀数：{kills}")
+    }
 }
 ```
 
 ✅ **更优——每 5 秒运行一次（适合慢更新）：**
 
 ```rs
-@tick(rate=100)
+@throttle(ticks=100)
 fn update_leaderboard() {
     // 耗时的逐玩家计算
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
         if (d > 0) {
-            scoreboard_set(@s, "kd", k * 100 / d)
+            scoreboard_set(p, "kd", k * 100 / d)
         }
     }
 }
@@ -93,9 +94,9 @@ fn update_leaderboard() {
 | 所需更新频率 | Rate |
 |------------|------|
 | 每 tick（反应敏感型） | `@tick` |
-| 视觉流畅（HUD） | `@tick(rate=2)` |
-| 数据统计更新 | `@tick(rate=20)` – `@tick(rate=100)` |
-| 排行榜、公告 | `@tick(rate=200)` – `@tick(rate=1200)` |
+| 视觉流畅（HUD） | `@throttle(ticks=2)` |
+| 数据统计更新 | `@throttle(ticks=20)` – `@throttle(ticks=100)` |
+| 排行榜、公告 | `@throttle(ticks=200)` – `@throttle(ticks=1200)` |
 
 ---
 
@@ -123,12 +124,12 @@ fn clamp(val: int, lo: int, hi: int) -> int {
 使用方式完全相同——只有编译输出不同：
 
 ```rs
-@tick(rate=1)
+@throttle(ticks=1)
 fn clamp_health() {
-    for_each_player() {
-        let hp: int = scoreboard_get(@s, "hp")
+    foreach (p in @a) {
+        let hp: int = scoreboard_get(p, "hp")
         let clamped: int = clamp(hp, 0, 200)   // 已内联：无函数调用
-        scoreboard_set(@s, "hp", clamped)
+        scoreboard_set(p, "hp", clamped)
     }
 }
 ```
@@ -153,12 +154,12 @@ fn clamp_health() {
 
 ```rs
 // 这些都在编译期折叠——运行时零开销
-let TICKS_PER_SECOND: int  = 20
-let TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
-let GRACE_PERIOD:     int  = 3 * 20        // → 60 tick = 3 秒
-let MAX_STREAK_BONUS: int  = 5 * 10        // → 50
+const TICKS_PER_SECOND: int  = 20
+const TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
+const GRACE_PERIOD:     int  = 3 * 20        // → 60 tick = 3 秒
+const MAX_STREAK_BONUS: int  = 5 * 10        // → 50
 
-@tick(rate=TICKS_PER_MINUTE)
+@throttle(ticks=TICKS_PER_MINUTE)
 fn hourly_announcement() {
     say("记得给服务器投票哦！")
 }
@@ -183,15 +184,27 @@ fn grace_period(player: Player) {
 // 但我们希望在游戏内能用 `/function killboard:debug_dump` 调用它。
 @keep
 fn _debug_dump() {
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
-        tell(@s, f"kills={k} deaths={d}")
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
+        tell(p, f"kills={k} deaths={d}")
     }
 }
 ```
 
 没有 `@keep` 时，DCE 会移除 `_debug_dump`，因为没有代码调用它。有了 `@keep`，它始终会被输出。
+
+---
+
+## 手动实验选项：`--experimental-lir-local-copy-rewrite`
+
+仅用于显式优化实验：
+
+```bash
+redscript compile src/main.mcrs --experimental-lir-local-copy-rewrite
+```
+
+该开关默认关闭，会开启额外的 LIR 局部副本重写 pass。当前结论按报告应按“证据导向、手动验证”方式看待，不应作为默认生产路径。
 
 ---
 
@@ -222,22 +235,9 @@ fn scan_all_entities() {
 fn scan_complete() {
     say("实体扫描已完成，分散在 10 个 tick 中执行！")
 }
-
 ```
 
 `batch=50` 时，编译器将 500 次迭代的循环拆分为 10 个可恢复的 50 次迭代块。每块在单独的 tick 中运行，全部完成后调用 `scan_complete`。
-
----
-
-## 手动实验选项：`--experimental-lir-local-copy-rewrite`
-
-仅用于显式优化实验：
-
-```bash
-redscript compile src/main.mcrs --experimental-lir-local-copy-rewrite
-```
-
-该开关默认关闭，会开启额外的 LIR 局部副本重写 pass。当前结论按报告应按“证据导向、手动验证”方式看待，不应作为默认生产路径。
 
 ---
 
@@ -245,15 +245,14 @@ redscript compile src/main.mcrs --experimental-lir-local-copy-rewrite
 
 以下是教程 02 击杀排行榜的优化版本：
 
-
 ```rs
 namespace killboard_optimized
 
 // ─── 常量 ────────────────────────────────────────────────────
 
-let SIDEBAR_RATE:     int = 20     // 每秒更新一次侧边栏
-let LEADERBOARD_RATE: int = 200    // 每 10 秒更新一次 K/D
-let GRACE_TICKS:      int = 3 * 20 // 3 秒出生保护
+const SIDEBAR_RATE:     int = 20     // 每秒更新一次侧边栏
+const LEADERBOARD_RATE: int = 200    // 每 10 秒更新一次 K/D
+const GRACE_TICKS:      int = 3 * 20 // 3 秒出生保护
 
 // ─── 初始化 ─────────────────────────────────────────────────
 
@@ -264,7 +263,7 @@ fn init() {
     scoreboard_add_objective("streak",     "dummy")
     scoreboard_add_objective("kd",         "dummy")
     scoreboard_add_objective("prev_kills", "dummy")
-    scoreboard_set_display("sidebar", "kills")
+    scoreboard_display("sidebar", "kills")
     say("击杀排行榜（优化版）已加载！")
 }
 
@@ -278,17 +277,20 @@ fn safe_kd(k: int, d: int) -> int {
 
 // ─── 限速 Tick ───────────────────────────────────────────────
 
-@tick(rate=SIDEBAR_RATE)
+@throttle(ticks=SIDEBAR_RATE)
 fn update_sidebar() {
-    sidebar_set("击杀数", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"击杀数：{kills}")
+    }
 }
 
-@tick(rate=LEADERBOARD_RATE)
+@throttle(ticks=LEADERBOARD_RATE)
 fn update_kd() {
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
-        scoreboard_set(@s, "kd", safe_kd(k, d))
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
+        scoreboard_set(p, "kd", safe_kd(k, d))
     }
 }
 
@@ -313,11 +315,11 @@ fn on_death(player: Player) {
 
 @keep
 fn _debug_stats() {
-    for_each_player() {
-        let k:  int = scoreboard_get(@s, "kills")
-        let d:  int = scoreboard_get(@s, "deaths")
-        let kd: int = scoreboard_get(@s, "kd")
-        tell(@s, f"kills={k} deaths={d} kd={kd / 100}.{kd % 100}")
+    foreach (p in @a) {
+        let k:  int = scoreboard_get(p, "kills")
+        let d:  int = scoreboard_get(p, "deaths")
+        let kd: int = scoreboard_get(p, "kd")
+        tell(p, f"kills={k} deaths={d} kd={kd / 100}.{kd % 100}")
     }
 }
 ```
@@ -344,15 +346,15 @@ redscript compile src/main.mcrs -o out
 
 ## 小结
 
-|| 技术 | 何时使用 |
-||------|---------|
-|| 固定编译默认设置 | 始终使用 `redscript compile`，它会执行固定安全流水线 |
-|| `@tick(rate=N)` | 不需要每 tick 精度的 tick 函数 |
-|| `@inline` | 循环中调用的小型纯辅助函数 |
-|| `@keep` | 需要通过 `/function` 外部调用的函数 |
-|| `@coroutine` | 遍历大量实体或多步骤耗时计算 |
-|| `--experimental-lir-local-copy-rewrite` | 明确目标为手动优化实验，并配合证据导向验证 |
-|| 常量 | 在多个地方使用的魔法数字 |
+| 技术 | 何时使用 |
+|------|---------|
+| 固定编译默认设置 | 始终使用 `redscript compile`，它会执行固定安全流水线 |
+| `@throttle(ticks=N)` | 不需要每 tick 精度的 tick 函数 |
+| `@inline` | 循环中调用的小型纯辅助函数 |
+| `@keep` | 需要通过 `/function` 外部调用的函数 |
+| `@coroutine` | 遍历大量实体或多步骤耗时计算 |
+| `--experimental-lir-local-copy-rewrite` | 明确目标为手动优化实验，并配合证据导向验证 |
+| 常量 | 在多个地方使用的魔法数字 |
 
 ---
 

@@ -4,12 +4,12 @@ This page collects the advanced and compiler-oriented decorators used in recent 
 
 ## `@tick`
 
-**Syntax:** `@tick` or `@tick(rate=N)`
+**Syntax:** `@tick` or `@throttle(ticks=N)`
 
-**Compile behaviour:** Registers the function as a tick entrypoint. `@tick` runs every tick. `@tick(rate=N)` lowers to scheduled repeated execution every `N` ticks.
+**Compile behaviour:** Registers `@tick` as a direct tick entrypoint. `@throttle(ticks=N)` generates a tick-registered dispatcher that counts ticks and calls the function every `N` ticks.
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn update_sidebar() {
     sidebar_set("Kills", @a, "kills")
 }

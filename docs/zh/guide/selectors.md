@@ -176,7 +176,7 @@ buff(@a[tag=team_blue]);
 let arena_center_x: int = 0;
 let arena_center_z: int = 0;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn arena_check() {
     // 治疗竞技场内的玩家
     effect(@a[tag=playing, distance=..50], "regeneration", 2, 0);

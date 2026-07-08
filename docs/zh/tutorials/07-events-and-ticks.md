@@ -44,10 +44,10 @@ fn every_tick() {
 
 要克制使用。Tick 函数天然在热路径上。
 
-如果不需要这么频繁，优先用 `@tick(rate=N)`：
+如果不需要这么频繁，优先用 `@throttle(ticks=N)`：
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
     actionbar(@a, "One second passed")
 }
@@ -102,7 +102,7 @@ fn setup() {
     say("Event tutorial loaded")
 }
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn heartbeat() {
     actionbar(@a, f"Tracked players: {online_count}")
 }
@@ -129,7 +129,7 @@ fn on_death() {
 ## 该怎么选入口
 
 - 一次性初始化用 `@load`
-- 周期逻辑用 `@tick(rate=N)`
+- 周期逻辑用 `@throttle(ticks=N)`
 - 玩家主动操作用 `@on_trigger`
 - 事件反应用 `@on(...)`
 

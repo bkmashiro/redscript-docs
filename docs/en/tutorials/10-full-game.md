@@ -85,7 +85,7 @@ fn setup() {
 
 // ─── 1-second timer (rate=20 ticks) ─────────────────────────────────────────
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_timer() {
     if (game.active == 0) {
         return
@@ -134,7 +134,7 @@ fn playing_tick() {
 // ─── Kill tracking ────────────────────────────────────────────────────────────
 
 // Every tick: check for players who got kills during PLAYING phase
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_kill_streaks() {
     if (game.phase != PHASE_PLAYING) {
         return
@@ -382,7 +382,7 @@ fn setup() {
 ### Step 4 — The 1-Second Tick
 
 ```mcrs
-@tick(rate=20)
+@throttle(ticks=20)
 fn game_timer() {
     if (game.active == 0) { return }
     if (game.phase == PHASE_COUNTDOWN) {
@@ -395,7 +395,7 @@ fn game_timer() {
 }
 ```
 
-`@tick(rate=20)` fires every 20 game ticks = once per real second. The early return on `active == 0` means this function does almost nothing when idle — important for server performance.
+`@throttle(ticks=20)` runs through a generated dispatcher every 20 game ticks = once per real second. The early return on `active == 0` means this function does almost nothing when idle — important for server performance.
 
 **`countdown_tick`** decrements the timer and shows an actionbar message. When it hits zero, it calls `begin_game()`.
 
@@ -409,7 +409,7 @@ fn game_timer() {
 ### Step 5 — Kill Streak Rewards
 
 ```mcrs
-@tick(rate=20)
+@throttle(ticks=20)
 fn check_kill_streaks() {
     if (game.phase != PHASE_PLAYING) { return }
 
@@ -534,7 +534,7 @@ Two passes over joined players: first to find `top_kills`, then to reward everyo
 |--------|-----------|
 | `struct` | `GameState` for all mutable game data |
 | `@load` | One-time scoreboard initialization |
-| `@tick(rate=20)` | Per-second game loop |
+| `@throttle(ticks=20)` | Per-second game loop |
 | `@on_trigger` | Self-service join/start commands |
 | `@schedule` | Delayed post-game cleanup |
 | `foreach` + selector filtering | Iterating only joined players |

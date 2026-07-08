@@ -148,14 +148,14 @@ Use `@tick` to run code every game tick (20 times per second). Keep tick functio
 
 ```rs
 // Run every 10 minutes (12000 ticks)
-@tick(rate=12000)
+@throttle(ticks=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] {total} greetings recorded so far!")
 }
 ```
 
-`@tick(rate=N)` runs the function every `N` ticks instead of every tick. This is much cheaper than a bare `@tick` for infrequent work.
+`@throttle(ticks=N)` runs the function through a generated tick dispatcher every `N` ticks. This is much cheaper than a bare `@tick` for infrequent work.
 
 ---
 
@@ -204,7 +204,7 @@ fn player_says_hello() {
 
 // ─── Periodic Tick ──────────────────────────────────────────
 
-@tick(rate=12000)
+@throttle(ticks=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] {total} greetings recorded so far!")
@@ -227,11 +227,11 @@ Then run `/reload` in-game. You should see the load message in chat.
 
 ---
 
-## Full Source Code
+## Related Source Code
 
-<CodePreview title="hello_world/main.mcrs" github="https://github.com/bkmashiro/redscript/blob/main/examples/readme-demo.mcrs">
+<CodePreview title="src/examples/tutorial_01_hello.mcrs" github="https://github.com/bkmashiro/redscript/blob/main/src/examples/tutorial_01_hello.mcrs">
 
-The complete code for this tutorial is available in the RedScript examples repository.
+The source repository includes a smaller companion Hello tutorial. The complete code for this page is the example above.
 
 </CodePreview>
 

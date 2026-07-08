@@ -5,26 +5,21 @@
 ## Basic Syntax
 
 ```mcrs verify-skip
-struct Timer {
-    _id: int,
-    _duration: int,
+struct Counter {
+    value: int,
 }
 
-impl Timer {
-    fn new(duration: int) -> Timer {
-        return Timer { _id: 0, _duration: duration };
+impl Counter {
+    fn new(value: int) -> Counter {
+        return Counter { value: value };
     }
 
-    fn start(self) {
-        timer_start(self._id, self._duration);
+    fn increment(self) {
+        self.value = self.value + 1;
     }
 
-    fn tick(self) {
-        timer_tick(self._id);
-    }
-
-    fn done(self) -> bool {
-        return timer_done(self._id);
+    fn get(self) -> int {
+        return self.value;
     }
 }
 ```
@@ -43,14 +38,14 @@ impl Counter {
         say(f"Value: {self.value}");
     }
 
-    fn add(self, n: int) -> Counter {
-        return Counter { value: self.value + n };
+    fn increment(self) {
+        self.value = self.value + 1;
     }
 }
 
 let counter = Counter { value: 5 };
 counter.show();
-let next: Counter = counter.add(1);
+counter.increment();
 ```
 
 Use `self` to access fields and call other instance methods.
@@ -60,13 +55,13 @@ Use `self` to access fields and call other instance methods.
 Methods without `self` act like type-level functions and are called with `Type::method(...)`.
 
 ```mcrs verify-skip
-impl Timer {
-    fn new(duration: int) -> Timer {
-        return Timer { _id: 0, _duration: duration };
+impl Counter {
+    fn new(value: int) -> Counter {
+        return Counter { value: value };
     }
 }
 
-let timer = Timer::new(100);
+let counter = Counter::new(5);
 ```
 
 This is commonly used for constructors and helpers.
@@ -76,13 +71,12 @@ This is commonly used for constructors and helpers.
 RedScript supports both static and instance method syntax:
 
 ```mcrs verify-skip
-let timer = Timer::new(200);
+let counter = Counter::new(5);
 
-timer.start();
-timer.tick();
+counter.increment();
 
-if (timer.done()) {
-    say("Finished!");
+if (counter.get() > 5) {
+    say("Advanced!");
 }
 ```
 
@@ -91,15 +85,15 @@ if (timer.done()) {
 - Group behavior with the data it operates on.
 - Build small object-like APIs over structs.
 - Expose constructors with `Type::new(...)`.
-- Keep domain operations discoverable: `timer.start()` is easier to scan than `timer_start(timer_id, duration)`.
+- Keep domain operations discoverable: `counter.increment()` is easier to scan than a loose helper call.
 
 Do not use `impl` just to hide global mutable state. If the method mostly manipulates selectors, scoreboards, or NBT side effects, document that behavior in the method name or nearby comments.
 
 ## Compilation Model
 
-`impl` blocks are compile-time sugar. Methods still compile to regular datapack functions, but RedScript keeps method-call syntax and type checking.
+`impl` blocks are compile-time sugar. Methods still compile to regular datapack functions; there is no object runtime or dynamic dispatch hidden behind the syntax.
 
-Names starting with `_` follow the same private-helper convention as top-level functions and may be removed by dead-code elimination if unreachable.
+Names starting with `_` follow the same private-helper naming convention as top-level functions. User-defined methods in your source are still emitted; unreachable imported library methods can be pruned by the compiler.
 
 ## Timer Caveat
 

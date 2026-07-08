@@ -176,7 +176,7 @@ Arena mini-game with selector-based logic:
 let arena_center_x: int = 0;
 let arena_center_z: int = 0;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn arena_check() {
     // Heal players inside the arena
     effect(@a[tag=playing, distance=..50], "regeneration", 2, 0);

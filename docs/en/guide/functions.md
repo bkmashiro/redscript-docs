@@ -24,7 +24,7 @@ Keep this split in mind:
 
 - Normal functions are reusable logic.
 - Decorated functions are entry points from Minecraft.
-- Functions whose names start with `_` are private helpers and may be removed by dead-code elimination if nothing reaches them.
+- Functions whose names start with `_` follow a private-helper naming convention. User-defined helpers in your source are still emitted; unreachable imported library helpers can be pruned by the compiler.
 - Selector parameters (`target: selector`) carry Minecraft target context; `@s` means the current execute subject, not a global player.
 
 ## Parameters

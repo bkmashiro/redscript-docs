@@ -18,7 +18,7 @@ With RedScript, you write clean, typed code:
 ```rs
 let countdown: int = 60;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
     countdown = countdown - 1;
     actionbar(@a, f"Time: {countdown}s");

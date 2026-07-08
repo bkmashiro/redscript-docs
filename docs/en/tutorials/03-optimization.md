@@ -5,9 +5,6 @@
   <span class="time">⏱️ 20 min</span>
 </div>
 
-
-**Difficulty:** Beginner  
-**Time:** ~25 minutes  
 **Prerequisites:** [Hello World](./01-hello-world), [Game Mechanics](./02-game-mechanics)
 
 ## Why Optimization Matters
@@ -19,7 +16,7 @@ RedScript's optimizer automatically eliminates dead code, folds constants, and s
 This tutorial teaches:
 
 - Understanding the fixed optimization pipeline
-- `@tick(rate=N)` — spreading work over time
+- `@throttle(ticks=N)` — spreading work over time
 - `@inline` — eliminating small function call overhead
 - `@keep` — preventing DCE from removing needed functions
 - `@coroutine` — handling expensive work without freezing the server
@@ -58,32 +55,36 @@ redscript compile src/main.mcrs \
 ```rs
 @tick
 fn update_sidebar() {
-    let kills: int = scoreboard_get("#top", "kills")
-    sidebar_set("Top Kills", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"Kills: {kills}")
+    }
 }
 ```
 
 ✅ **Good — runs once per second:**
 
 ```rs
-@tick(rate=20)
+@throttle(ticks=20)
 fn update_sidebar() {
-    let kills: int = scoreboard_get("#top", "kills")
-    sidebar_set("Top Kills", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"Kills: {kills}")
+    }
 }
 ```
 
 ✅ **Better for slow updates — runs every 5 seconds:**
 
 ```rs
-@tick(rate=100)
+@throttle(ticks=100)
 fn update_leaderboard() {
     // Expensive per-player calculation
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
         if (d > 0) {
-            scoreboard_set(@s, "kd", k * 100 / d)
+            scoreboard_set(p, "kd", k * 100 / d)
         }
     }
 }
@@ -94,9 +95,9 @@ fn update_leaderboard() {
 | Update frequency needed | Rate |
 |------------------------|------|
 | Every tick (reaction-critical) | `@tick` |
-| Visual smoothness (HUD) | `@tick(rate=2)` |
-| Stat updates | `@tick(rate=20)` – `@tick(rate=100)` |
-| Leaderboard, announcements | `@tick(rate=200)` – `@tick(rate=1200)` |
+| Visual smoothness (HUD) | `@throttle(ticks=2)` |
+| Stat updates | `@throttle(ticks=20)` – `@throttle(ticks=100)` |
+| Leaderboard, announcements | `@throttle(ticks=200)` – `@throttle(ticks=1200)` |
 
 ---
 
@@ -124,12 +125,12 @@ fn clamp(val: int, lo: int, hi: int) -> int {
 Usage is identical — only the compiled output changes:
 
 ```rs
-@tick(rate=1)
+@throttle(ticks=1)
 fn clamp_health() {
-    for_each_player() {
-        let hp: int = scoreboard_get(@s, "hp")
+    foreach (p in @a) {
+        let hp: int = scoreboard_get(p, "hp")
         let clamped: int = clamp(hp, 0, 200)   // inlined: no function call
-        scoreboard_set(@s, "hp", clamped)
+        scoreboard_set(p, "hp", clamped)
     }
 }
 ```
@@ -154,12 +155,12 @@ The optimizer evaluates constant expressions at compile time. Write configuratio
 
 ```rs
 // These are all folded at compile time — zero runtime cost
-let TICKS_PER_SECOND: int  = 20
-let TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
-let GRACE_PERIOD:     int  = 3 * 20        // → 60 ticks = 3 seconds
-let MAX_STREAK_BONUS: int  = 5 * 10        // → 50
+const TICKS_PER_SECOND: int  = 20
+const TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
+const GRACE_PERIOD:     int  = 3 * 20        // → 60 ticks = 3 seconds
+const MAX_STREAK_BONUS: int  = 5 * 10        // → 50
 
-@tick(rate=TICKS_PER_MINUTE)
+@throttle(ticks=TICKS_PER_MINUTE)
 fn hourly_announcement() {
     say("Remember to vote for the server!")
 }
@@ -184,10 +185,10 @@ Dead code elimination (DCE) removes functions not reachable from any entrypoint.
 // but we want `/function killboard:debug_dump` to work in-game.
 @keep
 fn _debug_dump() {
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
-        tell(@s, f"kills={k} deaths={d}")
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
+        tell(p, f"kills={k} deaths={d}")
     }
 }
 ```
@@ -250,9 +251,9 @@ namespace killboard_optimized
 
 // ─── Constants ──────────────────────────────────────────────
 
-let SIDEBAR_RATE:     int = 20     // update sidebar every second
-let LEADERBOARD_RATE: int = 200    // update K/D every 10 seconds
-let GRACE_TICKS:      int = 3 * 20 // 3-second spawn protection
+const SIDEBAR_RATE:     int = 20     // update sidebar every second
+const LEADERBOARD_RATE: int = 200    // update K/D every 10 seconds
+const GRACE_TICKS:      int = 3 * 20 // 3-second spawn protection
 
 // ─── Init ───────────────────────────────────────────────────
 
@@ -263,7 +264,7 @@ fn init() {
     scoreboard_add_objective("streak",     "dummy")
     scoreboard_add_objective("kd",         "dummy")
     scoreboard_add_objective("prev_kills", "dummy")
-    scoreboard_set_display("sidebar", "kills")
+    scoreboard_display("sidebar", "kills")
     say("Kill Leaderboard (optimized) loaded!")
 }
 
@@ -277,17 +278,20 @@ fn safe_kd(k: int, d: int) -> int {
 
 // ─── Rate-Limited Ticks ─────────────────────────────────────
 
-@tick(rate=SIDEBAR_RATE)
+@throttle(ticks=SIDEBAR_RATE)
 fn update_sidebar() {
-    sidebar_set("Kills", @a, "kills")
+    foreach (p in @a) {
+        let kills: int = scoreboard_get(p, "kills")
+        actionbar(p, f"Kills: {kills}")
+    }
 }
 
-@tick(rate=LEADERBOARD_RATE)
+@throttle(ticks=LEADERBOARD_RATE)
 fn update_kd() {
-    for_each_player() {
-        let k: int = scoreboard_get(@s, "kills")
-        let d: int = scoreboard_get(@s, "deaths")
-        scoreboard_set(@s, "kd", safe_kd(k, d))
+    foreach (p in @a) {
+        let k: int = scoreboard_get(p, "kills")
+        let d: int = scoreboard_get(p, "deaths")
+        scoreboard_set(p, "kd", safe_kd(k, d))
     }
 }
 
@@ -312,11 +316,11 @@ fn on_death(player: Player) {
 
 @keep
 fn _debug_stats() {
-    for_each_player() {
-        let k:  int = scoreboard_get(@s, "kills")
-        let d:  int = scoreboard_get(@s, "deaths")
-        let kd: int = scoreboard_get(@s, "kd")
-        tell(@s, f"kills={k} deaths={d} kd={kd / 100}.{kd % 100}")
+    foreach (p in @a) {
+        let k:  int = scoreboard_get(p, "kills")
+        let d:  int = scoreboard_get(p, "deaths")
+        let kd: int = scoreboard_get(p, "kd")
+        tell(p, f"kills={k} deaths={d} kd={kd / 100}.{kd % 100}")
     }
 }
 ```
@@ -346,7 +350,7 @@ If you need machine-readable stage boundaries, pass `--snapshot-stages` and `--s
 | Technique | When to use |
 |-----------|-------------|
 | Compile defaults | Always use `redscript compile` for the fixed default optimizer |
-| `@tick(rate=N)` | Any tick function that doesn’t need every-tick precision |
+| `@throttle(ticks=N)` | Any periodic function that does not need every-tick precision |
 | `@inline` | Small pure helpers called in loops |
 | `@keep` | Functions you call via `/function` externally |
 | `@coroutine` | Loops over hundreds of entities or expensive multi-step calculations |

@@ -75,7 +75,8 @@ fn name() { }
 |-----------|-------------|
 | `@load` | Run on datapack load |
 | `@tick` | Run every game tick |
-| `@tick(rate=N)` | Run every N ticks |
+| `@tick(rate=N)` | Legacy-compatible spelling; currently behaves like `@tick` |
+| `@throttle(ticks=N)` | Run through a generated dispatcher every N ticks |
 | `@on_trigger("name")` | Run when player activates trigger |
 | `@on(EventType)` | Run on runtime-backed event (`PlayerDeath`, `PlayerJoin`, `EntityKill`, `ItemUse`) |
 | `@function_tag("namespace:path")` | Register a function in a Minecraft function tag |

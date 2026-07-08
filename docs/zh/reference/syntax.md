@@ -74,8 +74,9 @@ fn name() { }
 | 装饰器 | 描述 |
 |--------|------|
 | `@load` | 数据包加载时运行 |
-| `@tick` | 每个游戏刻运行 |
-| `@tick(rate=N)` | 每 N 个游戏刻运行 |
+| `@tick` | 每游戏刻运行 |
+| `@tick(rate=N)` | 旧式兼容写法；当前行为等同 `@tick` |
+| `@throttle(ticks=N)` | 通过生成的 dispatcher 每 N tick 运行 |
 | `@on_trigger("name")` | 玩家激活触发器时运行 |
 | `@on(EventType)` | 接入运行时的事件（`PlayerDeath`、`PlayerJoin`、`EntityKill`、`ItemUse`） |
 | `@function_tag("namespace:path")` | 将函数注册到 Minecraft function tag |

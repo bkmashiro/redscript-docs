@@ -18,7 +18,7 @@
 
 - `@load` — 世界加载时执行一次
 - `@tick` — 每游戏刻（每秒 20 次）
-- `@tick(rate=N)` — 每 N 个 tick 执行一次
+- `@throttle(ticks=N)` — 每 N 个 tick 执行一次
 - `@on_trigger("name")` — 玩家激活
 - `@schedule(N)` — N 个 tick 后执行一次
 
@@ -28,8 +28,8 @@
 |-----------|-------------|
 | `@load` | 世界加载或 `/reload` 时执行一次 |
 | `@tick` | 每 tick 执行（每秒 20 次）—— 请谨慎使用！ |
-| `@tick(rate=20)` | 每 20 tick = 每秒执行一次 |
-| `@tick(rate=100)` | 每 100 tick = 每 5 秒执行一次 |
+| `@throttle(ticks=20)` | 每 20 tick = 每秒执行一次 |
+| `@throttle(ticks=100)` | 每 100 tick = 每 5 秒执行一次 |
 | `@on_trigger("x")` | 玩家执行 `/trigger x` 时 |
 | `@schedule(40)` | 调用后 40 tick（2 秒）后执行一次 |
 
@@ -47,7 +47,7 @@ fn on_load() {
 
 ```rs
 // 每 20 tick 运行一次 = 精确地每秒一次
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
     if (timer.running == 0) {
         return   // 无事可做
@@ -63,7 +63,7 @@ fn every_second() {
 }
 ```
 
-`@tick(rate=20)` 比 `@tick` 开销小得多 —— 你的函数每秒只运行 1 次而非 20 次。
+`@throttle(ticks=20)` 比 `@tick` 开销小得多 —— 你的函数每秒只运行 1 次而非 20 次。
 
 ## 第三步：倒计时显示
 
@@ -150,8 +150,8 @@ fn delayed_deliver() {
 ## decorator 选择指南
 
 ```
-需要持续运行？          → @tick 或 @tick(rate=N)
-精确每秒一次？          → @tick(rate=20)
+需要持续运行？          → @tick 或 @throttle(ticks=N)
+精确每秒一次？          → @throttle(ticks=20)
 世界加载时？            → @load
 玩家激活？              → @on_trigger("name")
 延迟单次执行？          → @schedule(N)

@@ -18,7 +18,7 @@ A countdown timer system. Players trigger a 10-second countdown with `/trigger s
 
 - `@load` — once on world load
 - `@tick` — every game tick (20/sec)
-- `@tick(rate=N)` — every N ticks
+- `@throttle(ticks=N)` — every N ticks
 - `@on_trigger("name")` — player-activated
 - `@schedule(N)` — one-shot after N ticks
 
@@ -28,8 +28,8 @@ A countdown timer system. Players trigger a 10-second countdown with `/trigger s
 |-----------|-------------|
 | `@load` | Once when world loads or `/reload` |
 | `@tick` | Every tick (20×/sec) — be careful! |
-| `@tick(rate=20)` | Every 20 ticks = once per second |
-| `@tick(rate=100)` | Every 100 ticks = every 5 seconds |
+| `@throttle(ticks=20)` | Every 20 ticks = once per second |
+| `@throttle(ticks=100)` | Every 100 ticks = every 5 seconds |
 | `@on_trigger("x")` | When a player runs `/trigger x` |
 | `@schedule(40)` | Once, 40 ticks (2 seconds) after called |
 
@@ -47,7 +47,7 @@ fn on_load() {
 
 ```rs
 // Runs every 20 ticks = exactly once per second
-@tick(rate=20)
+@throttle(ticks=20)
 fn every_second() {
     if (timer.running == 0) {
         return   // nothing to do
@@ -63,7 +63,7 @@ fn every_second() {
 }
 ```
 
-`@tick(rate=20)` is much cheaper than `@tick` — your function only runs 1 time per second instead of 20.
+`@throttle(ticks=20)` is much cheaper than `@tick` — your function only runs 1 time per second instead of 20.
 
 ## Step 3: Countdown Display
 
@@ -150,8 +150,8 @@ Full example: [tutorial_05_decorators.mcrs](https://github.com/bkmashiro/redscri
 ## Decorator Decision Guide
 
 ```
-Need it to run continuously?  → @tick or @tick(rate=N)
-Once per second exactly?      → @tick(rate=20)
+Need it to run continuously?  → @tick or @throttle(ticks=N)
+Once per second exactly?      → @throttle(ticks=20)
 On world load?                → @load
 Player-activated?             → @on_trigger("name")
 Delayed one-shot?             → @schedule(N)

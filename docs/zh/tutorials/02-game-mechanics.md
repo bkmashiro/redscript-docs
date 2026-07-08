@@ -110,7 +110,7 @@ fn announce_big_streak(victim: Player) {
 在 tick 中更新击杀后的连杀计数：
 
 ```rs
-@tick(rate=1)
+@throttle(ticks=1)
 fn check_new_kills() {
     for_each_player() {
         let kills:  int = scoreboard_get(@s, "kills")
@@ -261,7 +261,7 @@ fn on_death(player: Player) {
 
 // ─── 连杀追踪 ────────────────────────────────────────────────
 
-@tick(rate=1)
+@throttle(ticks=1)
 fn check_new_kills() {
     for_each_player() {
         let kills: int = scoreboard_get(@s, "kills")

@@ -31,7 +31,7 @@ RedScript 有一组较小的基本类型，外加几个实际写 datapack 时经
 | 类型 | 描述 | 示例 |
 |------|------|------|
 | `int` | 整数（记分板，32 位有符号） | `42`、`-7`、`0` |
-| `fixed` | 定点数，缩放 ×10000（v2.5.0 中 `float` 重命名） | `10000`（= 1.0）、`15000`（= 1.5） |
+| `fixed` | 定点数，按 ×10000 缩放存储（v2.5.0 中 `float` 重命名） | `1.0`、`1.5` |
 | `double` | IEEE 754 双精度，NBT 存储（v2.5.0 新增） | `x as double` |
 | `string` | 字符串 | `"hello"`、`"Steve"` |
 | `bool` | 布尔值 | `true`、`false` |
@@ -51,18 +51,18 @@ score = score + 1;
 
 ### 定点数（`fixed`）
 
-`fixed` 将小数表示为 ×10000 缩放的整数。这是语言级的定点表示，用于在数据包中进行分数运算。
+`fixed` 会把小数作为 ×10000 缩放后的整数存入记分板。这是语言级的定点表示，用于在数据包中进行分数运算。
 
 ```rs
-let speed: fixed = 15000;   // 1.5 — 存储为整数 15000
-let half: fixed  = 5000;    // 0.5
-let one: fixed   = 10000;   // 1.0
+let speed: fixed = 1.5;   // 存储为整数 15000
+let half: fixed  = 0.5;   // 存储为整数 5000
+let one: fixed   = 1.0;   // 存储为整数 10000
 ```
 
 **关键规则：**
-- `10000` = 1.0，`15000` = 1.5，`0` = 0.0
+- 小数字面量会按比例存储：`1.0` → `10000`，`1.5` → `15000`，`0.0` → `0`
 - `fixed` 运算是按比例感知的：`a * b` 与 `a / b` 会由编译器自动补偿 `×10000`。
-- 用 `as fixed` 从 `int` 或 `double` 转换
+- 原始整数字面量是 `int`；从 `int` 或 `double` 转成 `fixed` 时使用 `as fixed`
 
 ```rs
 let x: int = 5;
@@ -83,7 +83,7 @@ let df: fixed = d as fixed;   // floor(3.0 * 10000) = 30000
 let n: int    = 42;
 let d: double = n as double;   // 42.0
 
-let f: fixed  = 15000;          // 1.5
+let f: fixed  = 1.5;
 let d2: double = f as double;   // 1.5（自动除以 10000）
 
 let back: fixed = d as fixed;   // floor(d * 10000)
@@ -197,7 +197,7 @@ const RATE = 0.5;           // 推断为 fixed
 ```rs
 let score: int = 0;
 
-@tick(rate=20)
+@throttle(ticks=20)
 fn update() {
     score = score + 1;
     actionbar(@a, f"Score: {score}");
