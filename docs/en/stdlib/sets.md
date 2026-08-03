@@ -14,13 +14,13 @@
 
 ## `set_new` <Badge type="info" text="v1.1.0" />
 
-Create a new empty set and return its unique set ID (string handle).
+Create a new empty set and return its unique runtime handle.
 
 ```redscript
 fn set_new(): string
 ```
 
-**Returns:** A unique set ID used by all other set operations
+**Returns:** A unique path-safe set ID used by all other set operations
 
 **Example**
 
@@ -33,7 +33,7 @@ set_add(s, "apple");
 
 ## `set_add` <Badge type="info" text="v1.1.0" />
 
-Add a value to the set if it is not already present (no-op if already contained).
+Add a path-safe value to a set. Repeated adds are idempotent.
 
 ```redscript
 fn set_add(set: string, value: string)
@@ -44,13 +44,13 @@ fn set_add(set: string, value: string)
 | Parameter | Description |
 |-----------|-------------|
 | `set` | Set ID returned by `set_new` |
-| `value` | Value to add |
+| `value` | Path-safe value to add |
 
 ---
 
 ## `set_contains` <Badge type="info" text="v1.1.0" />
 
-Test whether a value exists in the set.
+Return 1 when a path-safe value exists, otherwise 0.
 
 ```redscript
 fn set_contains(set: string, value: string): int
@@ -61,7 +61,7 @@ fn set_contains(set: string, value: string): int
 | Parameter | Description |
 |-----------|-------------|
 | `set` | Set ID returned by `set_new` |
-| `value` | Value to look up |
+| `value` | Path-safe value to look up |
 
 **Returns:** 1 if the value is in the set, 0 otherwise
 
@@ -69,7 +69,7 @@ fn set_contains(set: string, value: string): int
 
 ## `set_remove` <Badge type="info" text="v1.1.0" />
 
-Remove a value from the set (no-op if not present).
+Remove a path-safe value. Missing values are a no-op.
 
 ```redscript
 fn set_remove(set: string, value: string)
@@ -80,13 +80,13 @@ fn set_remove(set: string, value: string)
 | Parameter | Description |
 |-----------|-------------|
 | `set` | Set ID returned by `set_new` |
-| `value` | Value to remove |
+| `value` | Path-safe value to remove |
 
 ---
 
 ## `set_clear` <Badge type="info" text="v1.1.0" />
 
-Remove all values from the set, leaving it empty.
+Remove every value while preserving the set handle.
 
 ```redscript
 fn set_clear(set: string)
