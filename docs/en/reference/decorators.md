@@ -124,7 +124,7 @@ These names are kept for compatibility and tooling, but they are **not** the cur
 
 Use one of these instead:
 
-- `@on(PlayerDeath)` / `@on(PlayerJoin)` / `@on(EntityKill)` / `@on(ItemUse)` for compiler-known runtime events.
+- `@on(PlayerDeath)` / `@on(PlayerJoin)` / `@on(EntityKill)` for compiler-known runtime events.
 - `@function_tag("namespace:path")` plus an explicit Minecraft or stdlib dispatcher for custom event wiring.
 
 ## @on(EventType)
@@ -138,9 +138,10 @@ Handles a compiler-known runtime event type. The event runtime injects the execu
 | Event | Description | Detection | `@s` context |
 |-------|-------------|-----------|--------------|
 | `PlayerDeath` | A player dies | Scoreboard/runtime asset | `Player` |
-| `PlayerJoin` | A player joins | Tag/runtime asset | `Player` |
+| `PlayerJoin` | A player first appears or reconnects | Scoreboard/runtime asset | `Player` |
 | `EntityKill` | A player kills an entity | Scoreboard/runtime asset | `Player` |
-| `ItemUse` | A player uses an item | Scoreboard/runtime asset | `Player` |
+
+Generic item use is not a compiler-known event. Use `@function_tag(...)` with an item-specific scoreboard or advancement dispatcher.
 
 ```rs
 @on(PlayerDeath)

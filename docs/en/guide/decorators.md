@@ -70,9 +70,8 @@ Supported event types:
 | Event | Description |
 |-------|-------------|
 | `PlayerDeath` | A player dies |
-| `PlayerJoin` | A player joins the server |
+| `PlayerJoin` | A player first appears or reconnects |
 | `EntityKill` | A player kills an entity |
-| `ItemUse` | A player uses an item |
 
 ```rs
 @on(PlayerDeath)
@@ -90,7 +89,7 @@ The event runtime sets the executor context for the triggering player/entity, so
 
 ## Legacy Specialized Event Decorators
 
-The parser still recognizes older names such as `@on_death`, `@on_login`, `@on_advancement("id")`, `@on_craft("item")`, and `@on_join_team("team")` for compatibility. Do not use them for new event logic: they are not the runtime-backed event path. Use `@on(PlayerDeath)`, `@on(PlayerJoin)`, `@on(EntityKill)`, `@on(ItemUse)`, or an explicit `@function_tag(...)` plus your own dispatcher.
+The parser still recognizes older names such as `@on_death`, `@on_login`, `@on_advancement("id")`, `@on_craft("item")`, and `@on_join_team("team")` for compatibility. Do not use them for new event logic: they are not the runtime-backed event path. Use `@on(PlayerDeath)`, `@on(PlayerJoin)`, `@on(EntityKill)`, or an explicit `@function_tag(...)` plus your own dispatcher. Item-specific use behavior requires the explicit dispatcher form.
 
 ## @on(EventType)
 
@@ -138,7 +137,7 @@ Decorators compile to Minecraft's function tag system:
 | `@tick` | `#minecraft:tick` tag |
 | `@throttle(ticks=N)` | Schedule command with interval |
 | `@on_trigger("x")` | Trigger scoreboard detection |
-| `@on(EventType)` | Runtime event dispatch for PlayerDeath/PlayerJoin/EntityKill/ItemUse |
+| `@on(EventType)` | Runtime event dispatch for PlayerDeath/PlayerJoin/EntityKill |
 | legacy `@on_*` event decorators | Parser compatibility only; prefer `@on(EventType)` |
 
 ## Next Steps

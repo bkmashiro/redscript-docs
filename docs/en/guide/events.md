@@ -23,11 +23,12 @@ The event runtime injects the executor context. Prefer zero-argument handlers an
 | Event | Payload | Triggered When |
 |-------|---------|----------------|
 | `PlayerDeath` | `Player` | A player dies |
-| `PlayerJoin` | `Player` | A player joins |
+| `PlayerJoin` | `Player` | A player first appears or reconnects |
 | `EntityKill` | `Player` | A player kills an entity |
-| `ItemUse` | `Player` | A player uses an item |
 
 Multiple handlers can subscribe to the same event. RedScript generates one dispatcher per event kind and invokes each matching handler.
+
+There is no generic built-in item-use event. For item-specific behavior, use `@function_tag(...)` with a user-owned scoreboard or advancement dispatcher.
 
 ## Example
 
@@ -40,11 +41,6 @@ fn welcome(player: Player) {
 @on(EntityKill)
 fn reward_kill() {
     scoreboard_add(@s, "kills", 1);
-}
-
-@on(ItemUse)
-fn on_item_use(player: Player) {
-    effect(player, "speed", 100, 1);
 }
 ```
 

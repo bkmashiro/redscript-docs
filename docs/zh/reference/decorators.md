@@ -124,7 +124,7 @@ fn open_menu() {
 
 请改用：
 
-- `@on(PlayerDeath)` / `@on(PlayerJoin)` / `@on(EntityKill)` / `@on(ItemUse)` 处理编译器已知的运行时事件。
+- `@on(PlayerDeath)` / `@on(PlayerJoin)` / `@on(EntityKill)` 处理编译器已知的运行时事件。
 - `@function_tag("namespace:path")` 搭配显式的 Minecraft 或 stdlib dispatcher，处理自定义事件接线。
 
 ## @on(EventType)
@@ -138,9 +138,10 @@ fn open_menu() {
 | 事件 | 描述 | 检测方式 | `@s` 上下文 |
 |------|------|----------|-------------|
 | `PlayerDeath` | 玩家死亡 | 记分板 / runtime asset | `Player` |
-| `PlayerJoin` | 玩家加入服务器 | 标签 / runtime asset | `Player` |
+| `PlayerJoin` | 玩家首次出现或重新加入服务器 | 记分板 / runtime asset | `Player` |
 | `EntityKill` | 玩家击杀实体 | 记分板 / runtime asset | `Player` |
-| `ItemUse` | 玩家使用物品 | 记分板 / runtime asset | `Player` |
+
+通用物品使用不是编译器已知事件。请用 `@function_tag(...)` 搭配物品特定的记分板或进度 dispatcher。
 
 ```rs
 @on(PlayerDeath)

@@ -88,7 +88,8 @@ fn welcome(player: Player) {
 - `PlayerJoin`
 - `PlayerDeath`
 - `EntityKill`
-- `ItemUse`
+
+物品特定的使用行为需要显式注册 `@function_tag(...)` handler，并提供对应的记分板或进度 dispatcher。
 
 ## 一个完整的事件驱动示例
 
@@ -144,6 +145,6 @@ fn on_death() {
 
 1. 再加一个 `@on_trigger("rules")`。
 2. 把 heartbeat 频率从 20 tick 改成 100 tick。
-3. 再加一个 `@on(ItemUse)` 处理器。
+3. 添加一个 `@on(EntityKill)` handler，或用 `@function_tag(...)` 设计一个显式的物品特定 dispatcher。
 
 下一篇：[教程 08：进阶主题](./08-advanced)

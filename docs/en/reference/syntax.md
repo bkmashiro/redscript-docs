@@ -78,7 +78,7 @@ fn name() { }
 | `@tick(rate=N)` | Legacy-compatible spelling; currently behaves like `@tick` |
 | `@throttle(ticks=N)` | Run through a generated dispatcher every N ticks |
 | `@on_trigger("name")` | Run when player activates trigger |
-| `@on(EventType)` | Run on runtime-backed event (`PlayerDeath`, `PlayerJoin`, `EntityKill`, `ItemUse`) |
+| `@on(EventType)` | Run on runtime-backed event (`PlayerDeath`, `PlayerJoin`, `EntityKill`) |
 | `@function_tag("namespace:path")` | Register a function in a Minecraft function tag |
 | `@keep` | Prevent DCE from removing the function |
 | legacy `@on_*` event decorators | Parser compatibility only; use `@on(EventType)` for runtime events |

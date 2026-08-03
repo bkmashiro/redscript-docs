@@ -44,7 +44,6 @@ RedScript 内置 51 个标准库模块。使用 `import <name>;` 导入任意模
 
 ### 物理
 - [physics](/zh/stdlib/physics) — 速度、重力、碰撞（抛体运动、阻力、弹簧、摩擦力）
-- [strings](/zh/stdlib/strings) — 字符串工具（`str_len`）
 
 ### 实体与游戏系统
 - [ecs](/zh/stdlib/ecs) — 实体组件系统（生命、速度、伤害组件；注册表；标签约定）
@@ -69,4 +68,4 @@ RedScript 内置 51 个标准库模块。使用 `import <name>;` 导入任意模
 - [teams](/zh/stdlib/teams) — 队伍管理（`setup_two_teams`, `setup_four_teams`, `add_to_team`）
 - [world](/zh/stdlib/world) — 世界查询（`set_day`, `weather_clear`, `sun_altitude`, `glass_box`, ...）
 - [pathfind](/zh/stdlib/pathfind) — 16×16 网格 BFS 寻路
-- [events](/zh/stdlib/events) — 玩家加入/死亡/击杀/物品使用事件分发
+- [events](/zh/stdlib/events) — 玩家加入/死亡/击杀事件分发

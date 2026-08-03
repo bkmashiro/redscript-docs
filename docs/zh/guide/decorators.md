@@ -70,9 +70,8 @@ fn open_shop() {
 | 事件 | 说明 |
 |------|------|
 | `PlayerDeath` | 玩家死亡 |
-| `PlayerJoin` | 玩家加入服务器 |
+| `PlayerJoin` | 玩家首次出现或重新加入服务器 |
 | `EntityKill` | 玩家击杀实体 |
-| `ItemUse` | 玩家使用物品 |
 
 ```rs
 @on(PlayerDeath)
@@ -90,7 +89,7 @@ fn handle_join() {
 
 ## 旧式专用事件装饰器
 
-解析器仍会为了兼容识别 `@on_death`、`@on_login`、`@on_advancement("id")`、`@on_craft("item")`、`@on_join_team("team")` 等旧名字。新代码不要用它们写事件逻辑：它们不是当前接入运行时事件系统的路径。请改用 `@on(PlayerDeath)`、`@on(PlayerJoin)`、`@on(EntityKill)`、`@on(ItemUse)`，或使用显式的 `@function_tag(...)` 配合你自己的 dispatcher。
+解析器仍会为了兼容识别 `@on_death`、`@on_login`、`@on_advancement("id")`、`@on_craft("item")`、`@on_join_team("team")` 等旧名字。新代码不要用它们写事件逻辑：它们不是当前接入运行时事件系统的路径。请改用 `@on(PlayerDeath)`、`@on(PlayerJoin)`、`@on(EntityKill)`，或使用显式的 `@function_tag(...)` 配合你自己的 dispatcher。物品特定的使用行为必须使用后一种显式接线方式。
 
 ## @on(EventType)
 
@@ -138,7 +137,7 @@ RedScript 的死代码消除（DCE）优化器会自动移除不可达的函数�
 | `@tick` | `#minecraft:tick` 标签 |
 | `@throttle(ticks=N)` | 带间隔的 schedule 命令 |
 | `@on_trigger("x")` | 触发器记分板检测 |
-| `@on(EventType)` | PlayerDeath/PlayerJoin/EntityKill/ItemUse 的运行时事件分发 |
+| `@on(EventType)` | PlayerDeath/PlayerJoin/EntityKill 的运行时事件分发 |
 | 旧式 `@on_*` 事件装饰器 | 仅保留解析兼容；新代码优先用 `@on(EventType)` |
 
 ## 下一步

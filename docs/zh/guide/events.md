@@ -23,11 +23,12 @@ fn handle_join(player: Player) {
 | 事件 | 负载 | 触发时机 |
 |------|------|----------|
 | `PlayerDeath` | `Player` | 玩家死亡时 |
-| `PlayerJoin` | `Player` | 玩家加入时 |
+| `PlayerJoin` | `Player` | 玩家首次出现或重新加入时 |
 | `EntityKill` | `Player` | 玩家击杀实体时 |
-| `ItemUse` | `Player` | 玩家使用物品时 |
 
 同一个事件可以注册多个处理函数。RedScript 会为每种事件生成一个分发器，并依次调用匹配的处理函数。
+
+RedScript 不提供通用的内置物品使用事件。物品特定行为请使用 `@function_tag(...)`，并配合你自己维护的记分板或进度 dispatcher。
 
 ## 示例
 
@@ -40,11 +41,6 @@ fn welcome(player: Player) {
 @on(EntityKill)
 fn reward_kill() {
     scoreboard_add(@s, "kills", 1);
-}
-
-@on(ItemUse)
-fn on_item_use(player: Player) {
-    effect(player, "speed", 100, 1);
 }
 ```
 

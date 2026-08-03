@@ -44,7 +44,6 @@ RedScript ships with 51 stdlib modules. Import any module with `import <name>;`.
 
 ### Physics
 - [physics](/en/stdlib/physics) — velocity, gravity, collision (projectile motion, drag, spring, friction)
-- [strings](/en/stdlib/strings) — string utilities (`str_len`)
 
 ### Entity & Game Systems
 - [ecs](/en/stdlib/ecs) — Entity Component System (health, velocity, damage components; registry; tag convention)
@@ -68,5 +67,5 @@ RedScript ships with 51 stdlib modules. Import any module with `import <name>;`.
 - [tags](/en/stdlib/tags) — Minecraft block/entity/item/damage type tag string constants
 - [teams](/en/stdlib/teams) — team management (`setup_two_teams`, `setup_four_teams`, `add_to_team`)
 - [world](/en/stdlib/world) — world queries (`set_day`, `weather_clear`, `sun_altitude`, `glass_box`, ...)
-- [events](/en/stdlib/events) — event dispatcher for join/death/kill/item-use function tags
+- [events](/en/stdlib/events) — event dispatcher for player join/death/kill function tags
 - [pathfind](/en/stdlib/pathfind) — 16×16 grid BFS pathfinding

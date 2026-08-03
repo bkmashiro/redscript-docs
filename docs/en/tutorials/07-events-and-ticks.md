@@ -88,7 +88,8 @@ Examples of event kinds already documented in the reference include:
 - `PlayerJoin`
 - `PlayerDeath`
 - `EntityKill`
-- `ItemUse`
+
+For item-specific use behavior, register an explicit `@function_tag(...)` handler and provide the matching scoreboard or advancement dispatcher.
 
 ## A Full Event-Driven Example
 
@@ -144,6 +145,6 @@ fn on_death() {
 
 1. Add a second trigger such as `@on_trigger("rules")`.
 2. Change the heartbeat rate from 20 to 100 ticks.
-3. Add one more static event handler such as `@on(ItemUse)`.
+3. Add an `@on(EntityKill)` handler, or design an explicit item-specific dispatcher with `@function_tag(...)`.
 
 Next: [Tutorial 08: Advanced](./08-advanced)

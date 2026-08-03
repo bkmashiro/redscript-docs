@@ -78,7 +78,7 @@ fn name() { }
 | `@tick(rate=N)` | 旧式兼容写法；当前行为等同 `@tick` |
 | `@throttle(ticks=N)` | 通过生成的 dispatcher 每 N tick 运行 |
 | `@on_trigger("name")` | 玩家激活触发器时运行 |
-| `@on(EventType)` | 接入运行时的事件（`PlayerDeath`、`PlayerJoin`、`EntityKill`、`ItemUse`） |
+| `@on(EventType)` | 接入运行时的事件（`PlayerDeath`、`PlayerJoin`、`EntityKill`） |
 | `@function_tag("namespace:path")` | 将函数注册到 Minecraft function tag |
 | `@keep` | 阻止 DCE 移除该函数 |
 | 旧式 `@on_*` 事件装饰器 | 仅保留解析兼容；运行时事件请用 `@on(EventType)` |

@@ -36,7 +36,6 @@
 
 ### Physics
 - [physics](physics.md) — velocity, gravity, collision (projectile motion, drag, spring, friction)
-- [strings](strings.md) — string utilities (`str_len`)
 
 ### Minecraft Game Mechanics
 - [player](player.md) — player utilities (`heal`, `damage`, `is_op`)
