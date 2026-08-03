@@ -7,9 +7,10 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
-    "docs:verify": "npx ts-node scripts/verify-docs.ts"
+    "docs:verify": "tsx scripts/verify-docs.ts"
   },
   "devDependencies": {
+    "tsx": "^4.23.5",
     "vitepress": "^1.0.0"
   },
   "packageManager": "pnpm@10.30.3"
