@@ -1,7 +1,7 @@
 # Project builds in 4.0
 
-This workflow belongs to the 4.0 release candidate. Project/package compilation
-is available through the CLI and compiler session API.
+Project/package compilation is available in RedScript 4.0 through the CLI and
+compiler session API.
 
 ## Create, inspect and compile
 

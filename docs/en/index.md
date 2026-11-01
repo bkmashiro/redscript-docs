@@ -28,3 +28,15 @@ features:
     title: Fast Compilation
     details: Compile your project with optimizer passes including dead code elimination, then iterate quickly with tooling support.
 ---
+
+
+## RedScript 4.0
+
+Project/package builds, native floor integer arithmetic, periodic `@tick(rate=N)`
+and explicit cooldown state are available in the npm CLI.
+
+- [Project build workflow](./guide/project-builds)
+- [Integer and lifecycle migration](https://github.com/bkmashiro/redscript/blob/v4.0.0/docs/MIGRATION_4.md)
+
+The online IDE and editor extensions update independently. Use the npm CLI for
+the 4.0 features documented here.

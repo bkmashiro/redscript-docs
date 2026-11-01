@@ -1,6 +1,6 @@
 # 4.0 项目构建
 
-本流程适用于 4.0 候选版本。CLI 和 compiler session API 已支持项目与包构建。
+RedScript 4.0 的 CLI 和 compiler session API 已支持项目与包构建。
 
 ## 创建、查看与编译
 

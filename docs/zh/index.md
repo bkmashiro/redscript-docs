@@ -28,3 +28,13 @@ features:
     title: 快速编译
     details: 通过包含死代码消除在内的优化流程快速编译项目，并保持高效迭代。
 ---
+
+
+## RedScript 4.0
+
+项目与包构建、原生向下取整整数运算、周期 `@tick(rate=N)` 和显式冷却状态已在 npm CLI 中提供。
+
+- [项目构建流程](./guide/project-builds)
+- [整数与生命周期迁移指南](https://github.com/bkmashiro/redscript/blob/v4.0.0/docs/MIGRATION_4.md)
+
+在线 IDE 与编辑器扩展独立更新。使用本文档中的 4.0 功能时，请使用 npm CLI。
