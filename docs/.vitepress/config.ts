@@ -49,6 +49,7 @@ export default defineConfig({
                 { text: 'What is RedScript?', link: '/en/guide/what-is-redscript' },
                 { text: 'Getting Started', link: '/en/guide/getting-started' },
                 { text: 'Your First Datapack', link: '/en/guide/first-datapack' },
+                { text: 'Project Builds (4.0)', link: '/en/guide/project-builds' },
               ]
             },
             {
@@ -253,6 +254,7 @@ export default defineConfig({
                 { text: 'RedScript 是什么？', link: '/zh/guide/what-is-redscript' },
                 { text: '快速开始', link: '/zh/guide/getting-started' },
                 { text: '第一个数据包', link: '/zh/guide/first-datapack' },
+                { text: '项目构建（4.0）', link: '/zh/guide/project-builds' },
               ]
             },
             {
