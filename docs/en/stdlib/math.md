@@ -17,6 +17,8 @@
 - [div_fx1000](#div-fx1000)
 - [smoothstep_t1000](#smoothstep-t1000)
 - [smootherstep_t1000](#smootherstep-t1000)
+- [div_trunc](#div-trunc)
+- [mod_trunc](#mod-trunc)
 
 ---
 
@@ -263,5 +265,45 @@ Explicit alias for legacy ×1000 smootherstep output.
 ```redscript
 fn smootherstep_t1000(lo: int, hi: int, x: int) -> int
 ```
+
+---
+
+## `div_trunc` <Badge type="info" text="v4.0.0" />
+
+Integer division toward zero, for code migrating from pre-4.0 fold semantics.
+Native `/` uses floor division. The divisor must be nonzero.
+
+```redscript
+fn div_trunc(a: int, b: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | Dividend |
+| `b` | Nonzero divisor |
+
+**Returns:** Quotient rounded toward zero
+
+---
+
+## `mod_trunc` <Badge type="info" text="v4.0.0" />
+
+Integer remainder with the dividend's sign (paired with div_trunc).
+Native `%` uses floor remainder with the divisor's sign. Nonzero divisor.
+
+```redscript
+fn mod_trunc(a: int, b: int): int
+```
+
+**Parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `a` | Dividend |
+| `b` | Nonzero divisor |
+
+**Returns:** Remainder with the dividend's sign
 
 ---

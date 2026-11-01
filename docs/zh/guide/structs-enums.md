@@ -161,7 +161,7 @@ struct GamePlayer {
 
 let game_phase: GamePhase = GamePhase::Lobby;
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn game_loop() {
     match game_phase {
         GamePhase::Running => {

@@ -184,7 +184,7 @@ enum GameState { Idle, CountingDown, Running }
 let state: GameState = GameState::Idle
 let timer: int = 5
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn game_loop() {
     match state {
         GameState::Idle => {
@@ -216,7 +216,7 @@ fn start_game() {
 
 - `match` 管理大状态
 - `if` 处理局部条件
-- `@throttle(ticks=20)` 每秒推进一次逻辑
+- `@tick(rate=20)` 每秒推进一次逻辑
 
 ## 什么时候用哪一种
 

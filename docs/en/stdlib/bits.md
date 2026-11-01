@@ -145,7 +145,7 @@ let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 
 ## `bit_shr` <Badge type="info" text="v1.0.0" />
 
-Logical right-shift x by n bits (equivalent to x / 2^n, truncating toward zero).
+Arithmetic right-shift x by n bits, using native floor division by 2^n.
 
 ```redscript
 fn bit_shr(x: int, n: int): int
@@ -158,7 +158,7 @@ fn bit_shr(x: int, n: int): int
 | `x` | Integer to shift |
 | `n` | Number of bit positions to shift right, range [0, 30] |
 
-**Returns:** x >> n (logical, not arithmetic for positive values)
+**Returns:** x >> n, preserving the sign for negative inputs
 
 **Example**
 

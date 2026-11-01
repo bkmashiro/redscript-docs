@@ -39,28 +39,28 @@ fn update() {
 **编译为：** 将函数添加到 `#minecraft:tick` 函数标签。
 
 ::: warning
-谨慎使用 `@tick`。每秒运行 20 次复杂逻辑可能导致卡顿。周期性但不需要每 tick 精度的工作请优先使用 `@throttle(ticks=N)`。
+谨慎使用 `@tick`。每秒运行 20 次复杂逻辑可能导致卡顿。周期性但不需要每 tick 精度的工作请优先使用 `@tick(rate=N)`。
 :::
 
 ## @tick(rate=N)
 
-为了兼容旧示例，解析器仍接受该写法；但当前 emitter 会把它注册为普通 `@tick` root，**不会**使用 `rate` 做降频。不要依赖 `@tick(rate=N)` 控制运行频率。
+注册周期回调。N 必须是 1 到 2147483647 的整数字面量，加载后经过 N 个模拟 tick 首次调用，reload 会重置相位。计数器归模块所有，不同命名空间、模块限定函数使用独立周期状态。直接调用该函数仍是普通调用。
 
-请改用 `@throttle(ticks=N)`：
+以下示例按 20 TPS 换算：
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn every_second() {
-    // 通过生成的 throttle dispatcher 每秒运行一次
+    // 通过生成的 周期 dispatcher 每秒运行一次
 }
 
-@throttle(ticks=1200)
+@tick(rate=1200)
 fn every_minute() {
     // 每分钟运行一次
 }
 ```
 
-**编译为：** `@tick(rate=N)` 当前与 `@tick` 相同；`@throttle(ticks=N)` 会生成带记分板计数器的 tick dispatcher。
+**编译为：** 使用模块自有记分板计数器的周期 dispatcher。裸 `@tick` 和 `rate=1` 直接注册，不创建计数器。dispatcher 本身仍每 tick 检查，收益取决于函数体成本。
 
 ## @function_tag
 
@@ -186,7 +186,7 @@ fn end_game() {
 **编译为：** 编译器生成调度包装入口，并从启动路径执行 `schedule function <ns>:<name> <ticks>t`。
 
 ::: tip
-对于重复性调度任务，请使用 `@throttle(ticks=N)`。`@schedule` 仅用于一次性的启动延迟。
+对于重复性调度任务，请使用 `@tick(rate=N)`。`@schedule` 仅用于一次性的启动延迟。
 :::
 
 ## @keep
@@ -332,18 +332,11 @@ fn expensive_calculation() {
 }
 ```
 
-## @throttle
+<a id="throttle"></a>
 
-将函数执行限流为每 N 个 tick 最多一次。
+## 已退役：@throttle
 
-**语法：** `@throttle(ticks=N)`
-
-```rs
-@throttle(ticks=20)
-fn rate_limited() {
-    // 即使被更频繁调用，也最多每秒运行一次
-}
-```
+4.0 已移除。周期注册使用 `@tick(rate=N)`，调用冷却使用[调用者保存的到期刻](../stdlib/cooldown)。tick 注册不会限制普通函数调用。
 
 ## @retry
 
@@ -408,7 +401,7 @@ fn test_addition() {
 |--------|----------|-------------|
 | `@load` | 数据包加载 / `/reload` | 服务器 |
 | `@tick` | 每个游戏刻（20次/秒） | 服务器 |
-| `@tick(rate=N)` | 旧式兼容写法；当前等同 `@tick` | 服务器 |
+| `@tick(rate=N)` | 每 N 个游戏 tick（正整数字面量） | 服务器 |
 | `@function_tag("namespace:path")` | Function tag 注册 | 调用方 / tag runtime |
 | `@on_trigger("x")` | 玩家运行 `/trigger x` | 触发的玩家 |
 | `@on(EventType)` | runtime 支撑的事件触发 | 事件执行者（内置事件为 `Player`） |
@@ -422,7 +415,6 @@ fn test_addition() {
 | `@watch` | 每玩家记分板变化 | 玩家（`@s`） |
 | `@config` | 数值型编译期配置 | — |
 | `@profile` | 性能计时 | — |
-| `@throttle(ticks=N)` | 限流为每 N tick 一次 | — |
 | `@retry(N)` | 自动重试 N 次 | — |
 | `@memoize` | 缓存结果 | — |
 | `@benchmark` | tick 级计时 | — |

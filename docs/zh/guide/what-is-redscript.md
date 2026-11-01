@@ -18,7 +18,7 @@ RedScript 是一种**类型化脚本语言**，可编译为 Minecraft 数据包�
 ```rs
 let countdown: int = 60;
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn every_second() {
     countdown = countdown - 1;
     actionbar(@a, f"Time: {countdown}s");

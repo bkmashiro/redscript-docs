@@ -29,17 +29,17 @@ fn check_health() {
 }
 ```
 
-### @throttle(ticks=N)
+### @tick(rate=N)
 
 Runs every N ticks instead of every tick:
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn every_second() {
     say("One second passed");
 }
 
-@throttle(ticks=100)
+@tick(rate=100)
 fn every_five_seconds() {
     actionbar(@a, "Server running");
 }
@@ -112,7 +112,7 @@ A function can have multiple decorators:
 
 ```rs
 @load
-@throttle(ticks=200)
+@tick(rate=200)
 fn scoreboard_display() {
     // Runs on load AND every 10 seconds
     sidebar_set("Kills", @a, "kills");
@@ -135,7 +135,7 @@ Decorators compile to Minecraft's function tag system:
 |-----------|-------------|
 | `@load` | `#minecraft:load` tag |
 | `@tick` | `#minecraft:tick` tag |
-| `@throttle(ticks=N)` | Schedule command with interval |
+| `@tick(rate=N)` | Tick dispatcher with module-owned counter |
 | `@on_trigger("x")` | Trigger scoreboard detection |
 | `@on(EventType)` | Runtime event dispatch for PlayerDeath/PlayerJoin/EntityKill |
 | legacy `@on_*` event decorators | Parser compatibility only; prefer `@on(EventType)` |

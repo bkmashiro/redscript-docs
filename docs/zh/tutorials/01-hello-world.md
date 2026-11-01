@@ -130,14 +130,14 @@ fn player_says_hello() {
 
 ```rs
 // 每 10 分钟（12000 tick）执行一次
-@throttle(ticks=12000)
+@tick(rate=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] 迄今共有 {total} 次问候记录！")
 }
 ```
 
-`@throttle(ticks=N)` 每 `N` 个 tick 执行一次，而不是每 tick 都执行。对于不频繁的任务，这比裸 `@tick` 要节省很多性能。
+`@tick(rate=N)` 每 `N` 个 tick 执行一次，而不是每 tick 都执行。这会减少函数体调用次数；dispatcher 每 tick 仍有检查成本，净收益取决于函数体。
 
 ---
 
@@ -186,7 +186,7 @@ fn player_says_hello() {
 
 // ─── 定期 Tick ──────────────────────────────────────────────
 
-@throttle(ticks=12000)
+@tick(rate=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] 迄今共有 {total} 次问候记录！")

@@ -220,7 +220,7 @@ fn list_sum3(a: int, b: int, c: int): int
 
 ## `avg3` <Badge type="info" text="v1.0.0" />
 
-Integer average of three values (truncates toward zero).
+Integer average of three values (native floor division).
 
 ```redscript
 fn avg3(a: int, b: int, c: int): int
@@ -240,7 +240,7 @@ fn avg3(a: int, b: int, c: int): int
 
 ## `avg5` <Badge type="info" text="v1.0.0" />
 
-Integer average of five values (truncates toward zero).
+Integer average of five values (native floor division).
 
 ```redscript
 fn avg5(a: int, b: int, c: int, d: int, e: int): int

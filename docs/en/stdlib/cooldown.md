@@ -6,77 +6,71 @@
 
 - [cooldown_start](#cooldown-start)
 - [cooldown_ready](#cooldown-ready)
-- [cooldown_tick](#cooldown-tick)
+- [cooldown_remaining](#cooldown-remaining)
 
 ---
 
-## `cooldown_start` <Badge type="info" text="v1.2.0" />
+## `cooldown_start` <Badge type="info" text="v4.0.0" />
 
-Start (or restart) a cooldown for the given slot.
-The cooldown expires after `ticks` game ticks.
+Create a deadline from a clock value and duration, without owning any state.
+Non-positive durations are immediately ready. The deadline saturates at the
+signed-i32 maximum rather than overflowing into an already-expired value.
 
 ```redscript
-fn cooldown_start(name: string, ticks: int)
+fn cooldown_start(now: int, ticks: int) -> int
 ```
 
 **Parameters**
 
 | Parameter | Description |
 |-----------|-------------|
-| `name` | Cooldown slot identifier (reserved for future multi-slot support) |
-| `ticks` | Duration in game ticks (20 ticks = 1 second) |
+| `now` | Current tick in the caller's non-negative clock epoch |
+| `ticks` | Duration in ticks |
+
+**Returns:** Deadline to persist in caller-owned state
 
 **Example**
 
 ```redscript
-cooldown_start("sword", 40); // 2-second cooldown
+let sword_ready_at: int = cooldown_start(now, 40);
 ```
 
 ---
 
-## `cooldown_ready` <Badge type="info" text="v1.2.0" />
+## `cooldown_ready` <Badge type="info" text="v4.0.0" />
 
-Check whether the cooldown has expired (i.e. is ready to fire again).
+Check a caller-owned deadline. A fresh/reset zero deadline is ready.
 
 ```redscript
-fn cooldown_ready(name: string) -> int
+fn cooldown_ready(ready_at: int, now: int) -> bool
 ```
 
 **Parameters**
 
 | Parameter | Description |
 |-----------|-------------|
-| `name` | Cooldown slot identifier (reserved for future multi-slot support) |
+| `ready_at` | Persisted deadline for this ability/entity |
+| `now` | Current tick in the same clock epoch |
 
-**Returns:** 1 if the cooldown is ready (inactive or ticks remaining ≤ 0), 0 otherwise
-
-**Example**
-
-```redscript
-if (cooldown_ready("sword") == 1) { attack(); cooldown_start("sword", 40); }
-```
+**Returns:** true when the deadline has been reached
 
 ---
 
-## `cooldown_tick` <Badge type="info" text="v1.2.0" />
+## `cooldown_remaining` <Badge type="info" text="v4.0.0" />
 
-Advance the cooldown by one tick. Call this every tick from a `@tick` function.
-Automatically marks the cooldown inactive when the remaining ticks reach zero.
+Remaining ticks for a caller-owned deadline, clamped to zero.
 
 ```redscript
-fn cooldown_tick(name: string)
+fn cooldown_remaining(ready_at: int, now: int) -> int
 ```
 
 **Parameters**
 
 | Parameter | Description |
 |-----------|-------------|
-| `name` | Cooldown slot identifier (reserved for future multi-slot support) |
+| `ready_at` | Persisted deadline for this ability/entity |
+| `now` | Current tick in the same clock epoch |
 
-**Example**
-
-```redscript
-@tick fn game_tick() { cooldown_tick("sword"); }
-```
+**Returns:** Zero if ready, otherwise the remaining ticks
 
 ---

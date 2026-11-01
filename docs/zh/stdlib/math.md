@@ -17,6 +17,8 @@
 - [div_fx1000](#div-fx1000)
 - [smoothstep_t1000](#smoothstep-t1000)
 - [smootherstep_t1000](#smootherstep-t1000)
+- [div_trunc](#div-trunc)
+- [mod_trunc](#mod-trunc)
 
 ---
 
@@ -263,5 +265,43 @@ Explicit alias for legacy ×1000 smootherstep output.
 ```redscript
 fn smootherstep_t1000(lo: int, hi: int, x: int) -> int
 ```
+
+---
+
+## `div_trunc` <Badge type="info" text="v4.0.0" />
+
+向零取整的整数除法，供需要旧折叠语义的程序显式使用；原生 / 使用向下取整。
+
+```redscript
+fn div_trunc(a: int, b: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 被除数 |
+| `b` | 非零除数 |
+
+**返回：** 向零取整的商
+
+---
+
+## `mod_trunc` <Badge type="info" text="v4.0.0" />
+
+与 div_trunc 配对、符号跟随被除数的余数；原生 % 的符号跟随除数。
+
+```redscript
+fn mod_trunc(a: int, b: int): int
+```
+
+**参数**
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 被除数 |
+| `b` | 非零除数 |
+
+**返回：** 向零取整除法对应的余数
 
 ---

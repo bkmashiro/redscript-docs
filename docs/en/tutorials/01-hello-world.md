@@ -148,14 +148,14 @@ Use `@tick` to run code every game tick (20 times per second). Keep tick functio
 
 ```rs
 // Run every 10 minutes (12000 ticks)
-@throttle(ticks=12000)
+@tick(rate=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] {total} greetings recorded so far!")
 }
 ```
 
-`@throttle(ticks=N)` runs the function through a generated tick dispatcher every `N` ticks. This is much cheaper than a bare `@tick` for infrequent work.
+`@tick(rate=N)` runs the function through a generated tick dispatcher every `N` ticks. It reduces body invocations; the per-tick dispatcher has its own cost, so the net gain depends on the body.
 
 ---
 
@@ -204,7 +204,7 @@ fn player_says_hello() {
 
 // ─── Periodic Tick ──────────────────────────────────────────
 
-@throttle(ticks=12000)
+@tick(rate=12000)
 fn periodic_announcement() {
     let total: int = scoreboard_get("#total", "greetings")
     say(f"[Hello World] {total} greetings recorded so far!")

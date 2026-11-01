@@ -33,7 +33,7 @@ Every compile emits a namespace objective setup function at `data/<namespace>/fu
 
 `@watch("objective")` creates a previous-value scoreboard objective, emits a tick-registered `__watch_<name>` dispatcher, and runs the user function as each player whose watched objective changed.
 
-Other wrapper decorators are emitted in `src/emit/index.ts`: `@throttle` uses a per-function tick counter, `@retry` uses a retry counter plus tick dispatcher, `@memoize` rewrites the function to `<name>_impl` and generates an LRU-1 scoreboard cache wrapper, and debug profiling/benchmark decorators add timing objectives and helper functions.
+Other wrapper decorators are emitted in `src/emit/index.ts`: `@tick(rate=N)` uses a per-function tick counter, `@retry` uses a retry counter plus tick dispatcher, `@memoize` rewrites the function to `<name>_impl` and generates an LRU-1 scoreboard cache wrapper, and debug profiling/benchmark decorators add timing objectives and helper functions.
 
 ## Emitting Model
 
@@ -85,7 +85,7 @@ The static budget pass estimates command count from LIR. It warns above half of 
 ## Practical Advice
 
 - Inspect generated `data/<namespace>/function` output when behavior or cost matters. It is the best source of truth for selectors, function splitting, and wrappers.
-- Keep hot `@tick` roots small. Move slower work behind `@throttle`, `@schedule`, explicit counters, `setInterval`, or `@coroutine`.
+- Keep hot `@tick` roots small. Move slower work behind `@tick(rate=N)`, `@schedule`, explicit counters, `setInterval`, or `@coroutine`.
 - Avoid broad selectors in nested loops. A helper called through `execute as @a` and then doing `foreach @e[...]` multiplies both selector costs.
 - Prefer scoreboard variables for hot counters, flags, and small numeric state.
 - Use arrays, sets, heap, and double precision where they buy clarity or capability, but treat them as storage-backed operations.

@@ -37,7 +37,7 @@ fn midpoint(a: int, b: int): int
 | `a` | First coordinate (any unit) |
 | `b` | Second coordinate (any unit) |
 
-**Returns:** (a + b) / 2 (integer truncation)
+**Returns:** (a + b) / 2 (native floor integer division)
 
 **Example**
 

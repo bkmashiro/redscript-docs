@@ -33,7 +33,7 @@
 
 `@watch("objective")` 会创建 previous-value scoreboard objective，生成 tick 注册的 `__watch_<name>` dispatcher，并在玩家的被观察 objective 发生变化时以该玩家上下文运行用户函数。
 
-其他 wrapper 类装饰器在 `src/emit/index.ts` 中生成：`@throttle` 使用每函数 tick 计数器，`@retry` 使用 retry 计数器和 tick dispatcher，`@memoize` 把原函数改名为 `<name>_impl` 并生成 LRU-1 scoreboard 缓存 wrapper，debug profiling/benchmark 装饰器会添加计时 objective 和辅助函数。
+其他 wrapper 类装饰器在 `src/emit/index.ts` 中生成：`@tick(rate=N)` 使用每函数 tick 计数器，`@retry` 使用 retry 计数器和 tick dispatcher，`@memoize` 把原函数改名为 `<name>_impl` 并生成 LRU-1 scoreboard 缓存 wrapper，debug profiling/benchmark 装饰器会添加计时 objective 和辅助函数。
 
 ## 生成模型
 
@@ -85,7 +85,7 @@ LIR 层算术是二地址形式。MIR 中的 `dst = a + b` 会先把 `a` copy �
 ## 实用建议
 
 - 当行为或成本重要时，直接检查生成的 `data/<namespace>/function` 输出。它是 selector、函数切分和 wrapper 的最可靠真相。
-- 保持热 `@tick` root 短小。较慢工作放到 `@throttle`、`@schedule`、显式计数器、`setInterval` 或 `@coroutine` 后面。
+- 保持热 `@tick` root 短小。较慢工作放到 `@tick(rate=N)`、`@schedule`、显式计数器、`setInterval` 或 `@coroutine` 后面。
 - 避免在嵌套循环中使用宽 selector。一个经 `execute as @a` 调用的 helper 再执行 `foreach @e[...]`，会把两层 selector 成本相乘。
 - 热路径计数器、标志位和小型数字状态优先使用 scoreboard 变量。
 - 数组、集合、heap 和 double precision 在需要表达能力时很有用，但应按 storage-backed 操作看待。

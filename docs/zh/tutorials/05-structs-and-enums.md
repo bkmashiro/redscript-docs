@@ -145,7 +145,7 @@ fn start_match() {
     say("Match is starting")
 }
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn tick_game() {
     match game.state {
         MatchState::Lobby => {

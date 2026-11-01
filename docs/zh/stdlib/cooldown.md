@@ -6,79 +6,69 @@
 
 - [cooldown_start](#cooldown-start)
 - [cooldown_ready](#cooldown-ready)
-- [cooldown_tick](#cooldown-tick)
+- [cooldown_remaining](#cooldown-remaining)
 
 ---
 
-## `cooldown_start` <Badge type="info" text="v1.2.0" />
+## `cooldown_start` <Badge type="info" text="v4.0.0" />
 
-启动（或重启）指定槽位的冷却计时，持续 ticks 游戏刻。
+计算由调用者保存的冷却到期刻，不创建全局状态，也不注册每刻更新。
 
 ```redscript
-fn cooldown_start(name: string, ticks: int)
+fn cooldown_start(now: int, ticks: int) -> int
 ```
 
 **参数**
 
 | 参数 | 说明 |
 |------|------|
-| `name` | 冷却槽位标识符（保留，供未来多槽位使用） |
-| `ticks` | 冷却持续时间（游戏刻，20 刻 = 1 秒） |
+| `now` | 当前非负、单调时钟的刻数，与到期刻属于同一时钟周期 |
+| `ticks` | 持续刻数，非正数立即就绪 |
 
-**返回：** 无返回值
+**返回：** 到期刻；溢出时饱和到有符号 32 位整数上限
 
 **示例**
 
 ```redscript
-cooldown_start("sword", 40); // 2-second cooldown
+let sword_ready_at: int = cooldown_start(now, 40);
 ```
 
 ---
 
-## `cooldown_ready` <Badge type="info" text="v1.2.0" />
+## `cooldown_ready` <Badge type="info" text="v4.0.0" />
 
-检查冷却是否已到期（可再次触发）。
+检查调用者保存的到期刻是否已达到；新建或重置为零的状态立即就绪。
 
 ```redscript
-fn cooldown_ready(name: string) -> int
+fn cooldown_ready(ready_at: int, now: int) -> bool
 ```
 
 **参数**
 
 | 参数 | 说明 |
 |------|------|
-| `name` | 冷却槽位标识符 |
+| `ready_at` | 调用者保存的技能或实体到期刻 |
+| `now` | 同一时钟周期中的当前刻数 |
 
-**返回：** 1 表示已就绪（非活跃或剩余刻数 ≤ 0），0 表示仍在冷却
-
-**示例**
-
-```redscript
-if (cooldown_ready("sword") == 1) { attack(); cooldown_start("sword", 40); }
-```
+**返回：** 已达到到期刻时为 true，否则为 false
 
 ---
 
-## `cooldown_tick` <Badge type="info" text="v1.2.0" />
+## `cooldown_remaining` <Badge type="info" text="v4.0.0" />
 
-冷却计时推进一刻，须在 @tick 函数中每刻调用。剩余刻数归零时自动标记为非活跃。
+计算剩余冷却刻数，已到期时返回零。
 
 ```redscript
-fn cooldown_tick(name: string)
+fn cooldown_remaining(ready_at: int, now: int) -> int
 ```
 
 **参数**
 
 | 参数 | 说明 |
 |------|------|
-| `name` | 冷却槽位标识符 |
+| `ready_at` | 调用者保存的到期刻 |
+| `now` | 同一时钟周期中的当前刻数 |
 
-**返回：** 无返回值
-
-**示例**
-
-```redscript
-@tick fn game_tick() { cooldown_tick("sword"); }
-```
+**返回：** 非负的剩余刻数
 
 ---

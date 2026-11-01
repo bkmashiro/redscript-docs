@@ -4,12 +4,12 @@
 
 ## `@tick`
 
-**语法：** `@tick` 或 `@throttle(ticks=N)`
+**语法：** `@tick` 或 `@tick(rate=N)`
 
-**编译行为：** `@tick` 会注册为直接 tick 入口。`@throttle(ticks=N)` 会生成一个注册到 tick 的 dispatcher，由它计数并每隔 `N` 个 tick 调用该函数。
+**编译行为：** `@tick` 会注册为直接 tick 入口。`@tick(rate=N)` 会生成一个注册到 tick 的 dispatcher，由它计数并每隔 `N` 个 tick 调用该函数。
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn update_sidebar() {
     sidebar_set("Kills", @a, "kills")
 }

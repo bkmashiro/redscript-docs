@@ -220,7 +220,7 @@ fn list_sum3(a: int, b: int, c: int): int
 
 ## `avg3` <Badge type="info" text="v1.0.0" />
 
-三个值的整数均值（向零截断）。
+三个值的整数均值（使用原生向下取整除法）。
 
 ```redscript
 fn avg3(a: int, b: int, c: int): int
@@ -240,7 +240,7 @@ fn avg3(a: int, b: int, c: int): int
 
 ## `avg5` <Badge type="info" text="v1.0.0" />
 
-五个值的整数均值（向零截断）。
+五个值的整数均值（使用原生向下取整除法）。
 
 ```redscript
 fn avg5(a: int, b: int, c: int, d: int, e: int): int

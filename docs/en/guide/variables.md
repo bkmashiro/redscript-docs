@@ -205,7 +205,7 @@ Variables declared at the top level are global and accessible from any function:
 ```rs
 let score: int = 0;
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn update() {
     score = score + 1;
     actionbar(@a, f"Score: {score}");

@@ -16,7 +16,7 @@ RedScript's optimizer automatically eliminates dead code, folds constants, and s
 This tutorial teaches:
 
 - Understanding the fixed optimization pipeline
-- `@throttle(ticks=N)` — spreading work over time
+- `@tick(rate=N)` — spreading work over time
 - `@inline` — eliminating small function call overhead
 - `@keep` — preventing DCE from removing needed functions
 - `@coroutine` — handling expensive work without freezing the server
@@ -65,7 +65,7 @@ fn update_sidebar() {
 ✅ **Good — runs once per second:**
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn update_sidebar() {
     foreach (p in @a) {
         let kills: int = scoreboard_get(p, "kills")
@@ -77,7 +77,7 @@ fn update_sidebar() {
 ✅ **Better for slow updates — runs every 5 seconds:**
 
 ```rs
-@throttle(ticks=100)
+@tick(rate=100)
 fn update_leaderboard() {
     // Expensive per-player calculation
     foreach (p in @a) {
@@ -95,9 +95,9 @@ fn update_leaderboard() {
 | Update frequency needed | Rate |
 |------------------------|------|
 | Every tick (reaction-critical) | `@tick` |
-| Visual smoothness (HUD) | `@throttle(ticks=2)` |
-| Stat updates | `@throttle(ticks=20)` – `@throttle(ticks=100)` |
-| Leaderboard, announcements | `@throttle(ticks=200)` – `@throttle(ticks=1200)` |
+| Visual smoothness (HUD) | `@tick(rate=2)` |
+| Stat updates | `@tick(rate=20)` – `@tick(rate=100)` |
+| Leaderboard, announcements | `@tick(rate=200)` – `@tick(rate=1200)` |
 
 ---
 
@@ -125,7 +125,7 @@ fn clamp(val: int, lo: int, hi: int) -> int {
 Usage is identical — only the compiled output changes:
 
 ```rs
-@throttle(ticks=1)
+@tick(rate=1)
 fn clamp_health() {
     foreach (p in @a) {
         let hp: int = scoreboard_get(p, "hp")
@@ -151,6 +151,8 @@ fn clamp_health() {
 
 ## Step 4: Constant Folding in Practice
 
+Decorator rates currently require integer literals. Use named constants in ordinary code; the examples below spell interval values explicitly.
+
 The optimizer evaluates constant expressions at compile time. Write configuration as named constants and let the compiler crunch them.
 
 ```rs
@@ -160,7 +162,7 @@ const TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
 const GRACE_PERIOD:     int  = 3 * 20        // → 60 ticks = 3 seconds
 const MAX_STREAK_BONUS: int  = 5 * 10        // → 50
 
-@throttle(ticks=TICKS_PER_MINUTE)
+@tick(rate=1200)
 fn hourly_announcement() {
     say("Remember to vote for the server!")
 }
@@ -278,7 +280,7 @@ fn safe_kd(k: int, d: int) -> int {
 
 // ─── Rate-Limited Ticks ─────────────────────────────────────
 
-@throttle(ticks=SIDEBAR_RATE)
+@tick(rate=20)
 fn update_sidebar() {
     foreach (p in @a) {
         let kills: int = scoreboard_get(p, "kills")
@@ -286,7 +288,7 @@ fn update_sidebar() {
     }
 }
 
-@throttle(ticks=LEADERBOARD_RATE)
+@tick(rate=200)
 fn update_kd() {
     foreach (p in @a) {
         let k: int = scoreboard_get(p, "kills")
@@ -350,7 +352,7 @@ If you need machine-readable stage boundaries, pass `--snapshot-stages` and `--s
 | Technique | When to use |
 |-----------|-------------|
 | Compile defaults | Always use `redscript compile` for the fixed default optimizer |
-| `@throttle(ticks=N)` | Any periodic function that does not need every-tick precision |
+| `@tick(rate=N)` | Any periodic function that does not need every-tick precision |
 | `@inline` | Small pure helpers called in loops |
 | `@keep` | Functions you call via `/function` externally |
 | `@coroutine` | Loops over hundreds of entities or expensive multi-step calculations |

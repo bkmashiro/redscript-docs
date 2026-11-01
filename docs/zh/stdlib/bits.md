@@ -145,7 +145,7 @@ let v: int = bit_shl(1, 4)  // result: 16 (1 << 4)
 
 ## `bit_shr` <Badge type="info" text="v1.0.0" />
 
-逻辑右移 x n 位（等效于 x / 2^n，向零截断）
+算术右移 x n 位，使用原生向下取整除法，负数保留符号
 
 ```redscript
 fn bit_shr(x: int, n: int): int

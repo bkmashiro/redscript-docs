@@ -44,10 +44,10 @@ fn every_tick() {
 
 Use it carefully. Tick functions are hot paths.
 
-For slower loops, prefer `@throttle(ticks=N)`:
+For slower loops, prefer `@tick(rate=N)`:
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn every_second() {
     actionbar(@a, "One second passed")
 }
@@ -103,7 +103,7 @@ fn setup() {
     say("Event tutorial loaded")
 }
 
-@throttle(ticks=20)
+@tick(rate=20)
 fn heartbeat() {
     actionbar(@a, f"Tracked players: {online_count}")
 }
@@ -130,7 +130,7 @@ fn on_death() {
 ## Choosing the Right Entry Point
 
 - use `@load` for one-time setup
-- use `@throttle(ticks=N)` for periodic logic
+- use `@tick(rate=N)` for periodic logic
 - use `@on_trigger` for explicit player actions
 - use `@on(...)` for event-driven reactions
 

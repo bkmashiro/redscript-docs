@@ -16,7 +16,7 @@ RedScript 的优化器会自动消除死代码、折叠常量并简化循环—�
 本教程介绍：
 
 - 了解固定优化流水线
-- `@throttle(ticks=N)` — 将工作分散到不同时间
+- `@tick(rate=N)` — 将工作分散到不同时间
 - `@inline` — 消除小函数的调用开销
 - `@keep` — 防止 DCE 移除需要的函数
 - `@coroutine` — 处理耗时操作而不冻结服务器
@@ -64,7 +64,7 @@ fn update_sidebar() {
 ✅ **好——每秒运行一次：**
 
 ```rs
-@throttle(ticks=20)
+@tick(rate=20)
 fn update_sidebar() {
     foreach (p in @a) {
         let kills: int = scoreboard_get(p, "kills")
@@ -76,7 +76,7 @@ fn update_sidebar() {
 ✅ **更优——每 5 秒运行一次（适合慢更新）：**
 
 ```rs
-@throttle(ticks=100)
+@tick(rate=100)
 fn update_leaderboard() {
     // 耗时的逐玩家计算
     foreach (p in @a) {
@@ -94,9 +94,9 @@ fn update_leaderboard() {
 | 所需更新频率 | Rate |
 |------------|------|
 | 每 tick（反应敏感型） | `@tick` |
-| 视觉流畅（HUD） | `@throttle(ticks=2)` |
-| 数据统计更新 | `@throttle(ticks=20)` – `@throttle(ticks=100)` |
-| 排行榜、公告 | `@throttle(ticks=200)` – `@throttle(ticks=1200)` |
+| 视觉流畅（HUD） | `@tick(rate=2)` |
+| 数据统计更新 | `@tick(rate=20)` – `@tick(rate=100)` |
+| 排行榜、公告 | `@tick(rate=200)` – `@tick(rate=1200)` |
 
 ---
 
@@ -124,7 +124,7 @@ fn clamp(val: int, lo: int, hi: int) -> int {
 使用方式完全相同——只有编译输出不同：
 
 ```rs
-@throttle(ticks=1)
+@tick(rate=1)
 fn clamp_health() {
     foreach (p in @a) {
         let hp: int = scoreboard_get(p, "hp")
@@ -150,6 +150,8 @@ fn clamp_health() {
 
 ## 第四步：常量折叠实战
 
+装饰器 rate 目前要求整数字面量；命名常量可用于普通代码。以下周期参数直接写出数值。
+
 优化器会在编译期对常量表达式求值。将配置写成命名常量，让编译器去计算它们。
 
 ```rs
@@ -159,7 +161,7 @@ const TICKS_PER_MINUTE: int  = 20 * 60       // → 1200
 const GRACE_PERIOD:     int  = 3 * 20        // → 60 tick = 3 秒
 const MAX_STREAK_BONUS: int  = 5 * 10        // → 50
 
-@throttle(ticks=TICKS_PER_MINUTE)
+@tick(rate=1200)
 fn hourly_announcement() {
     say("记得给服务器投票哦！")
 }
@@ -277,7 +279,7 @@ fn safe_kd(k: int, d: int) -> int {
 
 // ─── 限速 Tick ───────────────────────────────────────────────
 
-@throttle(ticks=SIDEBAR_RATE)
+@tick(rate=20)
 fn update_sidebar() {
     foreach (p in @a) {
         let kills: int = scoreboard_get(p, "kills")
@@ -285,7 +287,7 @@ fn update_sidebar() {
     }
 }
 
-@throttle(ticks=LEADERBOARD_RATE)
+@tick(rate=200)
 fn update_kd() {
     foreach (p in @a) {
         let k: int = scoreboard_get(p, "kills")
@@ -349,7 +351,7 @@ redscript compile src/main.mcrs -o out
 | 技术 | 何时使用 |
 |------|---------|
 | 固定编译默认设置 | 始终使用 `redscript compile`，它会执行固定安全流水线 |
-| `@throttle(ticks=N)` | 不需要每 tick 精度的 tick 函数 |
+| `@tick(rate=N)` | 不需要每 tick 精度的 tick 函数 |
 | `@inline` | 循环中调用的小型纯辅助函数 |
 | `@keep` | 需要通过 `/function` 外部调用的函数 |
 | `@coroutine` | 遍历大量实体或多步骤耗时计算 |
